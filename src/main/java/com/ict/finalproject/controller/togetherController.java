@@ -1,6 +1,8 @@
 package com.ict.finalproject.controller;
+import java.util.List;
 
 import com.ict.finalproject.service.togetherService;
+import com.ict.finalproject.vo.TogetherVO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class togetherController {
 
     @Autowired
-    togetherService togetherservice;
+    togetherService service;
 
     @GetMapping("/matching")
-    public String matchingList(){//
-
+    public String matchingList(HttpServletRequest request, Model model){//
+        List<TogetherVO> list = service.selectAll();
+        model.addAttribute("list",list);
+        System.out.println(list);
     return "together/matching";
     }
 }
