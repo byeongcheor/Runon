@@ -16,7 +16,7 @@ public class togetherController {
     togetherService togetherservice;
 
     @GetMapping("/matching")
-    public String matchingList(HttpServletRequest request, Model model){//페이징추가
+    public String matchingList(){//
 
     return "together/matching";
     }
