@@ -1,17 +1,17 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 	<title>Document</title>
-
-	<link rel="stylesheet" href="/css/slick.css" type="text/css">
-	<link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  	<link rel="stylesheet" href="/css/slick.css" type="text/css">
+  	<link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
     <link rel="stylesheet" href="/css/main.css" type="text/css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
-
+  	<script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
+</head>
 	<script>
 		$( document ).ready( function() {
 			$('.center').slick({
@@ -444,24 +444,7 @@
             });
     </script>
 </head>
-
 <body>
-	<header>
-        <div id="header">
-            <nav>
-                <div class="logo">
-                    <img src="" />
-                </div>
-                <ul>
-                    <li><a>MARATHON</a></li>
-                    <li><a>TOGETHER</a></li>
-                    <li><a>GOODS</a></li>
-                    <li><a>NOTICE</a></li>
-                    <li><a>MY</a></li>
-                </ul>
-            </nav>
-        </div>
-	</header>
 	<div id="mainBox">
 		<div class="section1">
 			<img src="./img/banner.png">
@@ -619,12 +602,5 @@
 			</div>
 		</div>
 	</div>
-    <footer>
-		<div class="inner">
-		  <div class="footer-message">마라톤 준비부터 대회 정보까지, 건강한 라이프 스타일을 지향하는 모든 이들을 위한 플랫폼</div>
-		  <div class="footer-contact">컨택: watermelon@google.com</div>
-		  <div class="footer-copyright">Copyrigh 2024 All ⓒ rights reserved</div>
-		</div>
-	</footer>
 </body>
 </html>
