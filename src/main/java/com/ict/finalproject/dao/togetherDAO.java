@@ -1,7 +1,11 @@
 package com.ict.finalproject.dao;
 
 
+import com.ict.finalproject.vo.TogetherVO;
+
+import java.util.List;
+
 public interface togetherDAO {
 
-    public String selectAll();
+    public List<TogetherVO> selectAll();;
 }
