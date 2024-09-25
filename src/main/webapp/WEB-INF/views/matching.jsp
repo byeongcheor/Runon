@@ -21,10 +21,14 @@
 			height: 100px;
 		}
         .section4 #inner2{
-			background-color: #f1f3f5;
-			width:100%;
-			height:800px;
-			text-align: center;
+ background-color: #f1f3f5;
+  width: 100%;
+  height: 800px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* 수직 중앙 정렬 */
+  align-items: center;      /* 수평 중앙 정렬 */
 		}
 
 		    .select-box-container {
@@ -162,17 +166,40 @@
 			<div id="inner1"></div>
 			<div id="inner2">
                 <div class="select-box-container">
-                    <div class="select-box active">
-                      내 대회 <span>▼</span>
-                    </div>
-                    <div class="select-box">
-                      나이 <span>▼</span>
-                    </div>
-                    <div class="select-box">
-                      성별 <span>▼</span>
-                    </div>
+                    <div class="select-box active" onclick="toggleDropdown(this)">
+                        내 대회 <span>▼</span>
+                        <ul class="dropdown-menu">
+                          <li>대회 1</li>
+                          <li>대회 2</li>
+                          <li>대회 3</li>
+                        </ul>
+                      </div>
+                      <div class="select-box" onclick="toggleDropdown(this)">
+                        나이 <span>▼</span>
+                        <ul class="dropdown-menu">
+                          <li>10대</li>
+                          <li>20대</li>
+                          <li>30대</li>
+                          <li>40대 이상</li>
+                          <li>모든나이</li>
+                        </ul>
+                      </div>
+                      <div class="select-box" onclick="toggleDropdown(this)">
+                        성별 <span>▼</span>
+                        <ul class="dropdown-menu">
+                          <li>남성</li>
+                          <li>여성</li>
+                          <li>모두</li>
+                        </ul>
+                      </div>
                     <div class="select-box">
                       참가횟수 <span>▼</span>
+                      <ul class="dropdown-menu">
+                        <li>1~5</li>
+                        <li>6~10</li>
+                        <li>11~15</li>
+                        <li>15회이상</li>
+                      </ul>
                     </div>
                     <div class="select-box">
                       목표 <span>▼</span>
