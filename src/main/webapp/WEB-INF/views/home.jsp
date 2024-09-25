@@ -31,7 +31,7 @@
 					}
 					},
 					{
-					breakpoint: 480,
+					breakpoint:  480,
 					settings: {
 						arrows: false,
 						centerMode: true,
