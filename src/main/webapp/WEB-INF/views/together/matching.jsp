@@ -21,43 +21,85 @@
 			height: 100px;
 		}
         .section4 #inner2{
- background-color: #f1f3f5;
-  width: 100%;
-  height: 800px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;  /* 수직 중앙 정렬 */
-  align-items: center;      /* 수평 중앙 정렬 */
+          background-color: #f1f3f5;
+          width: 100%;
+          height: 800px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;  /* 수직 중앙 정렬 */
+          align-items: center;      /* 수평 중앙 정렬 */
 		}
 
-		    .select-box-container {
-              display: flex;
-              gap: 10px;
-            }
+        .select-box-container {
+          display: flex;
+          gap: 10px;
+          justify-content: center;  /* 셀렉트 박스 수평 중앙 정렬 */
+          align-items: center;
+          margin-bottom: 30px;      /* 셀렉트 박스 아래 간격 추가 */
+        }
 
-            .select-box {
-              display: flex;
-              align-items: center;
-              padding: 10px 20px;
-              border: 1px solid #dcdcdc;
-              border-radius: 30px;
-              background-color: #f8f8f8;
-              color: #8b8b8b;
-              font-size: 14px;
-              cursor: pointer;
-            }
+        .select-box {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px 20px;
+          border: 1px solid #dcdcdc;
+          border-radius: 30px;
+          background-color: #f8f8f8;
+          color: #8b8b8b;
+          font-size: 14px;
+          cursor: pointer;
+          width: 120px; /* 고정된 가로 크기 설정 */
+          text-align: center;
+        }
 
-            .select-box.active {
-              border-color: #0066ff;
-              color: #0066ff;
-            }
+        .select-box.active {
+          border-color: #0066ff;
+          color: #0066ff;
+        }
 
-            .select-box img {
-              width: 20px;
-              height: 20px;
-              margin-right: 5px;
-            }
+        .select-box img {
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
+
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown-menu {
+          display: none; /* 기본적으로 숨김 */
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background-color: white;
+          border: 1px solid #dcdcdc;
+          border-radius: 5px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          width: 100%;
+        }
+
+        .dropdown-menu li {
+          padding: 10px;
+          cursor: pointer;
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-menu li:hover {
+          background-color: #f0f0f0;
+        }
+
+        /* 드롭다운이 열렸을 때 보이도록 설정 */
+        .select-box.active .dropdown-menu {
+          display: block;
+        }
+
+
+
+
 		#inner2 p{
 			font-size: 20pt;
 			padding-bottom: 20px;
