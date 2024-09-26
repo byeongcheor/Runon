@@ -156,7 +156,7 @@
 		}
 
 		.section1{
-			width: 1920px;
+			width: 100%;
 			height: auto;
 			font-size: 0;
 			position:relative;
@@ -447,7 +447,7 @@
 <body>
 	<div id="mainBox">
 		<div class="section1">
-			<img src="./img/banner.png">
+			<img src="./img/banner.png" style="width:100%;">
 			<div class="center" id="slide">
 				<div class="slideBox">
 					<div id="posterrecruit"><span>모집중</span></div>
