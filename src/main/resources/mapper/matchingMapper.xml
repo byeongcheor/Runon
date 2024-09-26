@@ -2,10 +2,25 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ict.finalproject.dao.togetherDAO">
-    <select id="selectAll" resultType="com.ict.finalproject.vo.MatchingVO">
-      select *
-      from user_tbl
+<mapper namespace="com.ict.finalproject.dao.matchingDAO">
+    <select id="ranking" resultType="com.ict.finalproject.vo.MatchingVO">
+        select a.*
+        from
+        (
+            select @rownum := @rownum + 1 as ranking, nickname, profile_img, point_code
+            from user_tbl, (select @rownum := 0) as r
+            order by point_code desc
+        ) a
+        limit 10;
+    </select>
+
+    <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MatchingVO">
+        select a.marathon_code, a.marathon_name
+        from   marathon_list_tbl a, cart_tbl b, order_tbl c, payment_tbl d
+        where  d.order_code = c.order_code
+        and    c.cart_code  = b.cart_code
+        and    b.marathon_code =a.marathon_code
+        and    b.usercode =${param1}
     </select>
 
 </mapper>

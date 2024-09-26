@@ -17,11 +17,13 @@ public class matchingController {
     @Autowired
     matchingService service;
 
-    @GetMapping("/matching")
+    @GetMapping("/matching2")
     public String matchingList(HttpServletRequest request, Model model){//
-        List<MatchingVO> list = service.selectAll();
-        model.addAttribute("list",list);
-        System.out.println(list);
-    return "matching/matching";
+        int user_code = 2;//유저코드
+        List<MatchingVO> marathon_code_list = service.marathon_code_list(user_code);
+        List<MatchingVO> ranking = service.ranking();
+        model.addAttribute("marathon_code_list",marathon_code_list);
+        model.addAttribute("ranking",ranking);
+    return "matching/matching2";
     }
 }

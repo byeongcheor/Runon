@@ -310,7 +310,6 @@
         box.classList.toggle('active');
     }
 </script>
-
 <body>
     <div class="section4">
         <div id="inner1"></div> <!-- 상단 빈 공간, 필요하다면 콘텐츠 추가 -->
@@ -322,10 +321,10 @@
                 <div class="select-box-container">
                     <div class="select-box" onclick="toggleDropdown(this)">
                         내 대회 <span>&nbsp;▼</span>
-                        <ul class="dropdown-menu">
-                            <li>대회 1</li>
-                            <li>대회 2</li>
-                            <li>대회 3</li>
+                        <ul class="dropdown-menu" id=marathon_code>
+                         <c:forEach var="vo" items="${marathon_code_list}">
+                            <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
+                         </c:forEach>
                         </ul>
                     </div>
                     <div class="select-box" onclick="toggleDropdown(this)">
@@ -482,24 +481,18 @@
              <div id="ranking">
                 <h2>랭킹</h2>
                 <ol>
-                    <li>
-                        <div class="rank-item">
-                            <img src="/img/profile1.jpg" alt="프로필 이미지">
-                            <div class="rank-info">
-                                <span class="nickname">사용자 A</span>
-                                <span class="distance">15km</span>
+                    <c:forEach var="rank" items="${ranking}">
+                        <li>
+                            <div class="rank-item">
+                                <img src="/img/${rank.profile_img}" alt="프로필 이미지">
+                                <div class="rank-info">
+                                    <span class="nickname">${rank.ranking}등</span>
+                                    <span class="nickname">${rank.nickname}</span>
+                                    <span class="distance">${rank.point_code}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="rank-item">
-                            <img src="/img/profile2.jpg" alt="프로필 이미지">
-                            <div class="rank-info">
-                                <span class="nickname">사용자 B</span>
-                                <span class="distance">13.5km</span>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    </c:forEach>
                     <!-- 10위까지 항목 추가 -->
                 </ol>
             </div>
