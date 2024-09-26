@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.togetherDAO">
-    <select id="selectAll" resultType="com.ict.finalproject.vo.TogetherVO">
+    <select id="selectAll" resultType="com.ict.finalproject.vo.MatchingVO">
       select *
       from user_tbl
     </select>
