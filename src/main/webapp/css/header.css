@@ -14,11 +14,11 @@
 #header nav{
     top:0; left:0;
     width:100%;
-    max-width:1700px;
+    max-width: 1800px;
     margin:0 auto;
 }
 #header nav .logo{ float:left; padding:0; height:82px; }
-#header nav .logo img{height:60px; vertical-align: center;}
+#header nav .logo img{height:80px; vertical-align: center;}
 #header nav ul{ float:right; margin:0;padding:30px 0;}
 #header nav ul li{ float:left; display:block; list-style: none;}
 #header nav ul li a{ padding:0 15px; line-height: 22px; text-decoration: none; color: white; font-size:16px;}
@@ -38,6 +38,7 @@
 #header.active nav ul{padding:20px 0; transition:.5s;}
 #header.active nav ul li a{
     color:#fff;
-    font-size:14px;
+    font-size:18px;
 }
-#header.active  nav .logo img{height:50px;}
+#header.active nav ul li{line-height: 50px;}
+#header.active  nav .logo img{height:80px;}
