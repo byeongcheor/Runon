@@ -1,0 +1,90 @@
+#crew_body{
+    width: 50%;
+    margin: 0 auto;
+}
+
+#bannerBox{
+    width:100%;
+    height:400px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#crew_nav{
+    height:100px;
+}
+#crew_nav ul, #crew_nav li{
+    float:left;
+    list-style: none;
+}
+#crew_nav li{
+    font-size: 18pt;
+    color:grey;
+    margin: 20px;
+}
+#crew_nav li:hover{
+    color: black;
+    font-size: 18pt;
+}
+
+.crew_list{
+    width: 50%;
+    margin: 0 auto;
+}
+.list_item{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no wrap;
+    align-content: normal;
+    justify-content: normal;
+    border-bottom: 0.5px solid lightgrey;
+    padding: 20px;
+}
+.profileBox{
+    width: 60px;
+    height: 60px;
+    border-radius: 200px;
+    margin-right: 40px;
+    padding: 5px;
+}
+.profileImg{
+    width: 100%;
+    height: 100%;
+    border-radius: 200px;
+    object-fit: cover;
+}
+.crew_content{
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+.crew_title{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no wrap;
+    margin-bottom: 10px;
+}
+.crew_info{
+    display: flex;
+    flex-direction: column;
+}
+.crewhit{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.count{
+    margin-left: 5px;
+}
+.crewaddr{
+    margin-bottom: 3px;
+}
+.recruitbtn{
+
+}
+.recruit{
+    margin-top: 40px;
+}
