@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/matching")
+@RequestMapping("/mate")
 public class matchingController {
 
     @Autowired
     matchingService service;
 
-    @GetMapping("/matching2")
+    @GetMapping("/mate")
     public String matchingList(HttpServletRequest request, Model model){//
         int user_code = 2;//유저코드
         List<MatchingVO> marathon_code_list = service.marathon_code_list(user_code);
         List<MatchingVO> ranking = service.ranking();
         model.addAttribute("marathon_code_list",marathon_code_list);
         model.addAttribute("ranking",ranking);
-    return "matching/matching2";
+    return "mate/mate";
     }
 }
