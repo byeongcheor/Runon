@@ -1,0 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="/css/footer.css" type="text/css">
+<footer>
+    <div class="inner">
+      <br><br><br>
+      <div class="footer-message">마라톤 준비부터 대회 정보까지, 건강한 라이프 스타일을 지향하는 모든 이들을 위한 플랫폼</div>
+      <div class="footer-contact">컨택: watermelon@google.com</div>
+      <div class="footer-copyright">Copyrigh 2024 All ⓒ rights reserved</div>
+    </div>
+</footer>
+</body>
+</html>

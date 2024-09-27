@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MemberDAO">
+    <select id="findByUsername" parameterType="String" resultType="com.ict.finalproject.vo.MemberVO">
+        SELECT * FROM user_tbl WHERE username = #{username}
+    </select>
+
+    <select id="existsByUsername" parameterType="String" resultType="Boolean">
+        SELECT EXISTS(SELECT 1 FROM usertbl WHERE username = #{username})
+    </select>
+
+    <insert id="saveUser" parameterType="com.ict.finalproject.vo.MemberVO">
+        INSERT INTO user_tbl(username, password, role,name,nickname,email,addr,addr_details,zip_code,birthdate,gender,tel,is_pacemaker,
+        is_mate,profile_img, is_info_disclosure,is_google)
+        VALUES(#{username}, #{password}, #{role},#{name},#{nickname},#{email},#{addr},#{addr_details},#{zip_code},#{birthdate},#{gender},
+        #{tel},#{is_pacemaker} ,#{is_mate},#{profile_img}, #{is_info_disclosure},#{is_google})
+    </insert>
+
+</mapper>
