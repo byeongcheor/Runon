@@ -84,11 +84,7 @@
 	</style>
 
 	<style>
-		*{
-			font-family: "Noto Sans KR", sans-serif;
-			font-optical-sizing: auto;
-			font-style: normal;
-		}
+
 		/**{
 			max-width: 1920px;
 		}
@@ -110,45 +106,7 @@
 				opacity:1;
 			}
 		}
-		#header{
-			position:fixed;
-			z-index: 999;
-			width:100%;
-			box-sizing: border-box;
-			background:rgba(18,18,18,0.8);
-			transition:.5s;
-		}
-		#header nav{
-			top:0; left:0;
-			width:100%;
-			max-width:1700px;
-			margin:0 auto;
-		}
 
-
-		#header nav .logo{ float:left;padding:30px 0;}
-		#header nav .logo img{height:22px;}
-		#header nav ul{ float:right; margin:0;padding:30px 0;}
-		#header nav ul li{ float:left; display:block; list-style: none;}
-		#header nav ul li a{ padding:0 15px; line-height: 22px; text-decoration: none; color: white; font-size:16px;}
-		#header nav ul li:hover a{text-decoration: none; color: #CCFF47; cursor: pointer; font-weight: bold;}
-
-		#header nav ul li a, #header nav .logo img{transition:.5s;}
-
-		/* 스크롤 내렸을때 CSS .active */
-		#header.active{
-			background:#121212;
-			border-radius: 10px;
-			width:98%;
-			margin: 20px;
-		}
-		#header.active nav ul li:hover a{color: #CCFF47;}
-		#header.active nav .logo ,#header.active nav ul{padding:20px 0; transition:.5s;}
-		#header.active nav ul li a{
-			color:#fff;
-			font-size:14px;
-		}
-		#header.active  nav .logo img{height:18px;}
 
 		#div{
 			width:100%;
@@ -156,7 +114,7 @@
 		}
 
 		.section1{
-			width: 1920px;
+			width: 100%;
 			height: auto;
 			font-size: 0;
 			position:relative;
@@ -405,33 +363,7 @@
 			background-color: #CCFF47;
 		}
 	</style>
-	<style>
-		footer{
-			background-image: url(./img/푸터배경.png);
-			background-repeat: no-repeat;
-			width: 100%;
-			padding:0;
-			margin:0;
-			text-align: center;
-			height: 300px;
-		}
 
-		.footer-message{
-			font-weight: bold;
-			font-size:12pt;
-			color:white;
-		}
-		.footer-contact{
-			font-size:12pt;
-			color:white;
-			margin:0.6rem;
-		}
-		.footer-copyright{
-			font-size:12pt;
-			color:white;
-			margin:0.6rem;
-		}
-	</style>
 
 	<!--헤더 스크롤-->
 	<script>
@@ -447,7 +379,7 @@
 <body>
 	<div id="mainBox">
 		<div class="section1">
-			<img src="./img/banner.png">
+			<img src="./img/banner.png" style="width:100%;">
 			<div class="center" id="slide">
 				<div class="slideBox">
 					<div id="posterrecruit"><span>모집중</span></div>
