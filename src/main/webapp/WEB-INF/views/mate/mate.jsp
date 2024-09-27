@@ -471,41 +471,44 @@ body {
            <div class="sidebar">
                <div class="menu-title">랭킹</div>
                <ul class="rank-list">
-                   <li>
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="rank-info">
-                           <span class="rank-name">아카네</span>
-                           <span class="runkm">2,442</span>
-                       </div>
-                   </li>
-                   <li>
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="rank-info">
-                           <span class="rank-name">쿠하</span>
-                           <span class="runkm">243</span>
-                       </div>
-                   </li>
-                   <li>
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="rank-info">
-                           <span class="rank-name">하니</span>
-                           <span class="runkm">160</span>
-                       </div>
-                   </li>
-                   <li>
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="rank-info">
-                           <span class="rank-name"> Soyeoni</span>
-                           <span class="runkm">131</span>
-                       </div>
-                   </li>
-                   <li>
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="rank-info">
-                           <span class="rank-name">진수0</span>
-                           <span class="runkm">119</span>
-                       </div>
-                   </li>
+                   <c:forEach var="rank" items="${ranking}">
+                        <li>
+                            <span class="grade">${rank.ranking}등</span>
+                            <img src="/img/${rank.profile_img}" alt="프로필 이미지" class="profile-img">
+                            <div class="rank-info">
+                                <span class="rank-name">${rank.nickname}</span>
+                                <span class="runkm">${rank.point_code}</span>
+                            </div>
+                        </li>
+                    </c:forEach>
+                        <li>
+                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                            <div class="rank-info">
+                                <span class="rank-name">쿠하</span>
+                                <span class="runkm">243</span>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                            <div class="rank-info">
+                                <span class="rank-name">하니</span>
+                                <span class="runkm">160</span>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                            <div class="rank-info">
+                                <span class="rank-name"> Soyeoni</span>
+                                <span class="runkm">131</span>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                            <div class="rank-info">
+                                <span class="rank-name">진수0</span>
+                                <span class="runkm">119</span>
+                            </div>
+                        </li>
                </ul>
                <div class="more">더보기</div>
            </div>
@@ -518,10 +521,10 @@ body {
                    <div class="select-box-container">
                        <div class="select-box" onclick="toggleDropdown(this)">
                            내 대회 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu">
-                               <li>대회 1</li>
-                               <li>대회 2</li>
-                               <li>대회 3</li>
+                           <ul class="dropdown-menu" id=marathon_code>
+                              <c:forEach var="vo" items="${marathon_code_list}">
+                                 <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
+                              </c:forEach>
                            </ul>
                        </div>
                        <div class="select-box" onclick="toggleDropdown(this)">

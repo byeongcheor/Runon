@@ -19,7 +19,7 @@ public class matchingController {
 
     @GetMapping("/mate")
     public String matchingList(HttpServletRequest request, Model model){//
-        int user_code = 2;//유저코드
+        int user_code = 122;//유저코드
         List<MatchingVO> marathon_code_list = service.marathon_code_list(user_code);
         List<MatchingVO> ranking = service.ranking();
         model.addAttribute("marathon_code_list",marathon_code_list);
