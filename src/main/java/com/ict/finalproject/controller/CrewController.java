@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
@@ -16,9 +14,10 @@ public class CrewController {
     CrewService service;
 
     @GetMapping("crew/crewList")
-    public ModelAndView crewList(){
+    public String crewList(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("/crew/crewList");
-        return mav;
+        log.info("테스트");
+        mav.setViewName("crew/crewList");
+        return "crew/crewList";
     }
 }

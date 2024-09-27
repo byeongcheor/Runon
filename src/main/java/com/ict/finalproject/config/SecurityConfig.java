@@ -60,9 +60,9 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/css/**", "/js/**","/img/**").permitAll()
-                        .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/css/**", "/js/**","/img/**","/views/**").permitAll()
+                        .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp","/WEB-INF/views/crew/crewList.jsp").permitAll()
+                        //.requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll());
                         //.anyRequest().authenticated());
 

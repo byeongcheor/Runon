@@ -42,3 +42,16 @@
 }
 #header.active nav ul li{line-height: 50px;}
 #header.active  nav .logo img{height:80px;}
+body{
+    margin:0;
+    padding:0;
+    animation: fadein 4s;
+}
+@keyframes fadein {
+    0% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
