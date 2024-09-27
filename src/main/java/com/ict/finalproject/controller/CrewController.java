@@ -16,7 +16,7 @@ public class CrewController {
     @GetMapping("crew/crewList")
     public String crewList(){
         ModelAndView mav = new ModelAndView();
-        log.info("테스트");
+
         mav.setViewName("crew/crewList");
         return "crew/crewList";
     }

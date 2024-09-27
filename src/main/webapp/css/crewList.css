@@ -21,6 +21,10 @@
     float:left;
     list-style: none;
 }
+#crew_nav li a{
+    text-decoration: none;
+    color: black;
+}
 #crew_nav li{
     font-size: 18pt;
     color:grey;
