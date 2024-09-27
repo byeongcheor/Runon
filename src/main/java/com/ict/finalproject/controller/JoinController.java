@@ -1,7 +1,8 @@
 package com.ict.finalproject.controller;
 
-import com.ict.finalproject.dto.JoinDTO;
+
 import com.ict.finalproject.service.JoinService;
+import com.ict.finalproject.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,11 @@ public class JoinController {
     private JoinService service;
 
     @PostMapping("/join")
-    public String joinProcess(JoinDTO joinDTO) {
-       service.joinProcess(joinDTO);
+    public String joinProcess(MemberVO vo) {
+       service.joinProcess(vo);
 
         return "ok";
     }
+
 
 }

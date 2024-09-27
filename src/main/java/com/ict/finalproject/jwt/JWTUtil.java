@@ -21,22 +21,39 @@ public class JWTUtil {
 
     public String getUsername(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("username", String.class);
     }
 
     public String getRole(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 
     public Boolean isExpired(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        return Jwts.parser()
+                .setAllowedClockSkewSeconds(2) // 2초 시간 차이 허용
+                .setSigningKey(secretKey)  // verifyWith 대신 setSigningKey 사용
+                .build()
+                .parseClaimsJws(token)  // parseSignedClaims 대신 parseClaimsJws 사용
+                .getBody()
+                .getExpiration()
+                .before(new Date());
     }
 
 
     public String createJwt(String username, String role, Long expiredMs) {
-
+        // 토큰발행 claim에 필요한 key와 값을 넣기 session기능 생각
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
