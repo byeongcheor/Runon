@@ -8,5 +8,6 @@ import java.util.List;
 public interface MateDAO {
 
     public List<MateVO> marathon_code_list(int user_code);
+    public List<MateVO> more(int more);
     public List<MateVO> ranking();
 }

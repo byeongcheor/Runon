@@ -451,17 +451,6 @@ body {
 
 </style>
 
-<script>
-    function toggleDropdown(box) {
-        const selectBoxes = document.querySelectorAll('.select-box');
-        selectBoxes.forEach(b => {
-            if (b !== box) {
-                b.classList.remove('active');
-            }
-        });
-        box.classList.toggle('active');
-    }
-</script>
 <body>
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
@@ -473,44 +462,17 @@ body {
                <ul class="rank-list">
                    <c:forEach var="rank" items="${ranking}">
                         <li>
-                            <span class="grade">${rank.ranking}등</span>
+                            <span class="grade" id="grade">${rank.ranking}등</span>
                             <img src="/img/${rank.profile_img}" alt="프로필 이미지" class="profile-img">
                             <div class="rank-info">
                                 <span class="rank-name">${rank.nickname}</span>
                                 <span class="runkm">${rank.point_code}</span>
+                                <span class="crew_name">${rank.crew_name}</span>
                             </div>
                         </li>
                     </c:forEach>
-                        <li>
-                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                            <div class="rank-info">
-                                <span class="rank-name">쿠하</span>
-                                <span class="runkm">243</span>
-                            </div>
-                        </li>
-                        <li>
-                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                            <div class="rank-info">
-                                <span class="rank-name">하니</span>
-                                <span class="runkm">160</span>
-                            </div>
-                        </li>
-                        <li>
-                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                            <div class="rank-info">
-                                <span class="rank-name"> Soyeoni</span>
-                                <span class="runkm">131</span>
-                            </div>
-                        </li>
-                        <li>
-                            <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                            <div class="rank-info">
-                                <span class="rank-name">진수0</span>
-                                <span class="runkm">119</span>
-                            </div>
-                        </li>
                </ul>
-               <div class="more">더보기</div>
+                <div class="more" id="more" onclick="add();">더보기</div>
            </div>
 
            <!-- 중앙 메인 콘텐츠 -->
@@ -519,62 +481,63 @@ body {
                <!-- 필터 -->
                <div class="select-section">
                    <div class="select-box-container">
-                       <div class="select-box" onclick="toggleDropdown(this)">
-                           내 대회 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu" id=marathon_code>
+                       <div class="select-box" id="marathonSelect">
+                           내대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
+                           <ul class="dropdown-menu options-list">
                               <c:forEach var="vo" items="${marathon_code_list}">
                                  <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
                               </c:forEach>
                            </ul>
                        </div>
-                       <div class="select-box" onclick="toggleDropdown(this)">
+                       <div class="select-box" id="ageSelect">
                            나이 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu">
-                               <li>10대</li>
-                               <li>20대</li>
-                               <li>30대</li>
-                               <li>40대 이상</li>
-                               <li>모든 나이</li>
+                           <ul class="dropdown-menu options-list">
+                               <li data-value="10">10대</li>
+                               <li data-value="20">20대</li>
+                               <li data-value="30">30대</li>
+                               <li data-value="40">40대 이상</li>
+                               <li data-value="All">모든 나이</li>
                            </ul>
                        </div>
-                       <div class="select-box" onclick="toggleDropdown(this)">
+                       <div class="select-box" id="genderSelect">
                            성별 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu">
-                               <li>남성</li>
-                               <li>여성</li>
-                               <li>모두</li>
+                           <ul class="dropdown-menu options-list">
+                               <li data-value="M">남성</li>
+                               <li data-value="F">여성</li>
+                               <li data-value="All">모두</li>
                            </ul>
                        </div>
-                       <div class="select-box" onclick="toggleDropdown(this)">
+                       <div class="select-box" id="participationCountSelect">
                            참가횟수 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu">
-                               <li>1~5</li>
-                               <li>6~10</li>
-                               <li>11~15</li>
-                               <li>15회 이상</li>
+                           <ul class="dropdown-menu options-list">
+							   <li data-value="1,5">1~5</li>
+                               <li data-value="6,10">6~10</li>
+                               <li data-value="11,15">11~15</li>
+                               <li data-value="16">15회 이상</li>
                            </ul>
                        </div>
-                       <div class="select-box" onclick="toggleDropdown(this)">
+                       <div class="select-box" id="mateCountSelect">
                            메이트인원 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu">
-                               <li>1명</li>
-                               <li>2명</li>
-                               <li>3명</li>
-                               <li>4명</li>
-                               <li>5명</li>
-                               <li>6명</li>
-                               <li>7명</li>
-                               <li>8명</li>
-                               <li>9명</li>
-                               <li>10명</li>
-                               <li>11명</li>
-                               <li>12명</li>
-                               <li>13명</li>
-                               <li>14명</li>
-                               <li>15명</li>
+                           <ul class="dropdown-menu options-list">
+                               <li data-value="2">1명</li>
+                               <li data-value="3">2명</li>
+                               <li data-value="4">3명</li>
+                               <li data-value="5">4명</li>
+                               <li data-value="6">5명</li>
+                               <li data-value="7">6명</li>
+                               <li data-value="8">7명</li>
+                               <li data-value="9">8명</li>
+                               <li data-value="10">9명</li>
+                               <li data-value="11">10명</li>
+                               <li data-value="12">11명</li>
+                               <li data-value="13">12명</li>
+                               <li data-value="14">13명</li>
+                               <li data-value="15">14명</li>
+                               <li data-value="16">15명</li>
+                               <li data-value="17">16명</li>
                            </ul>
                        </div>
-                       <button class="search_match">&nbsp;매칭하기&nbsp;</button>
+                       <button class="search_match" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
                    </div>
                </div>
 
@@ -720,3 +683,88 @@ body {
            </div>
        </div>
 </body>
+<script>
+var clog = console.log;
+
+
+$(document).ready(function() {
+    // 드롭다운을 토글하는 함수
+    function toggleDropdown(box) {
+        $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
+        $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+    }
+
+    // 옵션을 선택하는 함수
+    function selectOption(li, box) {
+        var selectedText = $(li).text(); // li의 텍스트를 가져옴
+        $(box).find('span').text(' : '+selectedText); // 선택된 텍스트로 span 업데이트
+        $(box).removeClass('active'); // 드롭다운 닫기
+
+        // 선택된 li에 따라 다른 동작을 수행
+        var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
+        $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
+        $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+    }
+
+    // 페이지가 로드되었을 때 실행
+    $('.select-box').each(function() {
+        var box = $(this);
+        box.find('.dropdown-menu li').on('click', function() {
+            selectOption(this, box); // li 선택 시 텍스트를 업데이트
+        });
+
+        // 드롭다운 토글
+        box.on('click', function() {
+            toggleDropdown(this);
+        });
+    });
+});
+
+    var more =0;
+    function add(){
+           more +=5;
+           $.ajax({
+              url:'/mate/more',
+              type:'post',
+              async: false,
+              data:{
+                 more:more
+              },success:function(result){
+                var list='';
+                clog(result);
+                for (var i in result) {
+                    list+='<li>';
+                    list+='<span class="grade" id="grade">'+result[i].ranking+'등</span>';
+                    list+='<img src="/img/'+result[i].profile_img+'" alt="프로필 이미지" class="profile-img">';
+                    list+='<div class="rank-info">';
+                    list+='<span class="rank-name">'+result[i].nickname+'</span>';
+                    list+='<span class="runkm">'+result[i].point_code+'</span>';
+                    list+='<span class="crew_name">'+result[i].crew_name+'</span>';
+                    list+='</div>';
+                    list+='</li>';
+                }
+                $('.rank-list').append(list);
+              },
+              error:function(e){
+
+              }
+           });
+    }
+    function matching() {
+        // 각 select-box에서 선택된 값 가져오기
+        var marathonValue = $('#marathonSelect').data('selected-value');
+        var ageValue = $('#ageSelect').data('selected-value');
+        var genderValue = $('#genderSelect').data('selected-value');
+        var participationCountValue = $('#participationCountSelect').data('selected-value');
+        var mateCountValue = $('#mateCountSelect').data('selected-value');
+
+        // 선택된 값을 로그로 확인
+        console.log("마라톤: " + marathonValue);
+        console.log("나이: " + ageValue);
+        console.log("성별: " + genderValue);
+        console.log("참가횟수: " + participationCountValue);
+        console.log("메이트인원: " + mateCountValue);
+
+        }
+
+</script>

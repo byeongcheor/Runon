@@ -22,6 +22,7 @@ public class MateVO {
     private String addr;
     private String marathon_code;
     private String marathon_name;
+    private String crew_name;
 
     private int is_active;
     private int is_disabled;
@@ -33,6 +34,7 @@ public class MateVO {
     private int usercode;
     private int role;
     private int ranking;
+    private int more=10;
 
     private String updated_date;
     private String deleted_date;

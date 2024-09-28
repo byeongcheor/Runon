@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MateDAO">
+    <select id="ranking" resultType="com.ict.finalproject.vo.MateVO">
+        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
+        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
+        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
+        where  a.usercode = b.usercode
+        and    a.usercode = c.usercode
+        and    c.create_crew_code = d.create_crew_code
+        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
+        limit 5;
+
+    </select>
+
+    <select id="more" resultType="com.ict.finalproject.vo.MateVO">
+        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
+        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
+        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
+        where  a.usercode = b.usercode
+        and    a.usercode = c.usercode
+        and    c.create_crew_code = d.create_crew_code
+        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
+        limit 5 OFFSET ${param1};
+    </select>
+
+    <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MateVO">
+        select a.marathon_code, a.marathon_name
+        from   marathon_list_tbl a, cart_tbl b, order_tbl c, payment_tbl d
+        where  d.order_code = c.order_code
+        and    c.cart_code  = b.cart_code
+        and    b.marathon_code =a.marathon_code
+        and    b.usercode =${param1}
+    </select>
+
+
+</mapper>

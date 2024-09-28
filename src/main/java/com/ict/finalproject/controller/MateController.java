@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/mate")
@@ -25,5 +27,12 @@ public class MateController {
         model.addAttribute("marathon_code_list",marathon_code_list);
         model.addAttribute("ranking",ranking);
     return "mate/mate";
+    }
+    @PostMapping("/more")
+    @ResponseBody
+    public List<MateVO> likeInsert(int more){
+        List<MateVO> list =service.more(more);
+    return  list;
+
     }
 }

@@ -20,6 +20,11 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
+    public List<MateVO> more(int more) {
+        return dao.more(more);
+    }
+
+    @Override
     public List<MateVO> ranking() {
         return dao.ranking();
     }
