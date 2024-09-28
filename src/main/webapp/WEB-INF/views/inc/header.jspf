@@ -37,7 +37,7 @@
                     <li><a href="/mate/mate">MATE</a></li>
                     <li><a href="/crew/crewList">CREW</a></li>
                     <li><a>NOTICE</a></li>
-                    <li><a>MY</a></li>
+                    <li><a href="/mypage/mypageHome">MY</a></li>
                 </ul>
             </nav>
         </div>

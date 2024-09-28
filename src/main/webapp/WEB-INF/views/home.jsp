@@ -2,6 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="js/home.js" type="text/javascript"></script>
 <link rel="stylesheet" href="/css/main.css" type="text/css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+      duration: 1200,
+    })
+</script>
 
 <body>
 <div id="mainBox">
@@ -29,12 +36,17 @@
       <a><p>러닝메이트 매칭하기 →</p></a>
    </div>
    <div class="section3">
-      <h1>Everywhere we run!</h1>
-      <p>러닝을 사랑하는 모든 사람들을 위한 커뮤니티, 샤샤샥. <br>
-         이곳에서는 다양한 러닝 크루를 모집하고, 마라톤 대회 및 관련 정보를 한눈에 확인하세요. <br>
-         함께 달리며 건강한 삶을 추구하고, 목표를 향해 나아가는 여정을 공유하는 것은 덤입니다. <br>
-         여러분의 러닝을 항상 응원합니다!
-      </p>
+        <div data-aos="fade-up">
+            <h1>Everywhere we run!</h1>
+        </div>
+        <div data-aos="fade-up">
+              <p>러닝을 사랑하는 모든 사람들을 위한 커뮤니티, 샤샤샥. <br>
+                 이곳에서는 다양한 러닝 크루를 모집하고, 마라톤 대회 및 관련 정보를 한눈에 확인하세요. <br>
+                 함께 달리며 건강한 삶을 추구하고, 목표를 향해 나아가는 여정을 공유하는 것은 덤입니다. <br>
+                 여러분의 러닝을 항상 응원합니다!
+              </p>
+        </div>
+      <div data-aos="fade-up">
       <div class="hitmarathon">
          <div class="hit_poster">
             <div class="poster_img">
@@ -77,13 +89,21 @@
             </div>
          </div>
       </div>
-      <button id="more1">&nbsp;더알아보기→&nbsp;</button>
+      </div>
+      <div data-aos="fade-up">
+        <button id="more1">&nbsp;더알아보기→&nbsp;</button>
+      </div>
    </div>
    <div class="section4">
       <div id="inner1"></div>
       <div id="inner2">
+      <div data-aos="fade-up">
          <h1>Recruiting</h1>
+      </div>
+      <div data-aos="fade-up">
          <p>현재 진행 중인 러닝이벤트를 살펴보세요.</p>
+      </div>
+      <div data-aos="fade-up">
          <div class="hitmarathon">
             <div class="hit_poster">
                <div class="poster_img">
@@ -126,7 +146,10 @@
                </div>
             </div>
          </div>
+      </div>
+      <div data-aos="fade-up">
          <button id="more2">&nbsp;더알아보기→&nbsp;</button>
+      </div>
       </div>
    </div>
    <div class="section5">
@@ -135,16 +158,28 @@
       </div>
 
       <div id="inner4">
+         <div data-aos="fade-up">
          <h1>Run Together</h1>
+         </div>
+         <div data-aos="fade-up">
          <p>러닝메이트를 만들어 함께 달려보세요.</p>
+         </div>
          <div id="chatImgBox">
-            <img src="./img/채팅2.png" id="chatImg">
+            <div data-aos="fade-right">
+                <img src="./img/채팅2.png" id="chatImg">
+            </div>
             <div id="crewInfo">
+               <div data-aos="fade-left">
                <p>시간맞는 크루끼리 모여</br>정기러닝부터 번개러닝까지</p>
+               </div>
+               <div data-aos="fade-left">
                <p>러닝크루모집페이지에서 원하는 날짜,<br> 원하는 시간에 함께 뛸 크루들을 모집하세요.<br>
                   샤샤샥에서 인증된 크루들과 함께 <br>더욱 폭넓고 즐거운 러닝활동을 만들어 가보세요!</p>
+               </div>
             </div>
+            <div data-aos="fade-up">
             <button id="more3">&nbsp;더알아보기→&nbsp;</button>
+            </div>
          </div>
       </div>
    </div>
@@ -153,11 +188,15 @@
          <div id="inner5"></div>
       </div>
       <div id="inner6">
+      <div data-aos="fade-up">
          <h1>Feel this Mood!</h1>
+      </div>
+      <div data-aos="fade-up">
          <p>
             샤샤샥과 함께 러닝한 분들은 현재 이런 느낌을 느끼고 있어요!<br>
             여러분도 함께 느껴요!
          </p>
+      </div>
       </div>
    </div>
 </div>

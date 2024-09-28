@@ -139,8 +139,8 @@
             <div id="crew_nav">
                 <ul>
                     <li><a href="/crew/crewList">크루모집</a></li>
-                    <li>크루생성</li>
-                    <li>나의크루</li>
+                    <li><a href="/crew/crewCreate">크루생성</a></li>
+                    <li><a href="/crew/crewManage">나의크루</a></li>
                 </ul>
             </div>
         </div>
@@ -148,41 +148,36 @@
             <div class="select-section">
                <div class="select-box-container">
                    <div class="select-box" onclick="toggleDropdown(this)">
-                       내 대회 <span>&nbsp;▼</span>
+                       지역 <span>&nbsp;▼</span>
                        <ul class="dropdown-menu">
-                           <li>대회 1</li>
-                           <li>대회 2</li>
-                           <li>대회 3</li>
-                       </ul>
-                   </div>
-                   <div class="select-box" onclick="toggleDropdown(this)">
-                       나이 <span>&nbsp;▼</span>
-                       <ul class="dropdown-menu">
-                           <li>10대</li>
-                           <li>20대</li>
-                           <li>30대</li>
-                           <li>40대 이상</li>
-                           <li>모든 나이</li>
+                           <li>서울</li>
+                           <li>경기</li>
+                           <li>강원</li>
+                           <li>충청</li>
+                           <li>경상</li>
+                           <li>전라</li>
                        </ul>
                    </div>
                    <div class="select-box" onclick="toggleDropdown(this)">
                        성별 <span>&nbsp;▼</span>
                        <ul class="dropdown-menu">
+                           <li>남녀무관</li>
                            <li>남성</li>
                            <li>여성</li>
-                           <li>모두</li>
                        </ul>
                    </div>
                    <div class="select-box" onclick="toggleDropdown(this)">
-                       참가횟수 <span>&nbsp;▼</span>
+                       연령 <span>&nbsp;▼</span>
                        <ul class="dropdown-menu">
-                           <li>1~5</li>
-                           <li>6~10</li>
-                           <li>11~15</li>
-                           <li>15회 이상</li>
+                            <li>연령무관</li>
+                            <li>10대</li>
+                            <li>20대</li>
+                            <li>30대</li>
+                            <li>40대</li>
+                            <li>50대 이상</li>
                        </ul>
                    </div>
-                   <button class="search_match">&nbsp;매칭하기&nbsp;</button>
+                   <button class="search_match">&nbsp;검색하기&nbsp;</button>
                </div>
            </div>
         </div>

@@ -12,12 +12,19 @@ import org.springframework.web.servlet.ModelAndView;
 public class CrewController {
     @Autowired
     CrewService service;
-
+    //크루모집페이지폼이동
     @GetMapping("crew/crewList")
     public String crewList(){
         ModelAndView mav = new ModelAndView();
 
         mav.setViewName("crew/crewList");
         return "crew/crewList";
+    }
+    //크루생성페이지폼
+    @GetMapping("crew/crewCreate")
+    public ModelAndView crewCreate(){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("crew/crewCreate");
+        return mav;
     }
 }
