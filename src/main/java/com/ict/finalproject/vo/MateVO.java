@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class MatchingVO {
+public class MateVO {
     private String profile_img;
     private String email;
     private String addr_details;

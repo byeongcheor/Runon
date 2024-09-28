@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ict.finalproject.dao.matchingDAO">
-    <select id="ranking" resultType="com.ict.finalproject.vo.MatchingVO">
+<mapper namespace="com.ict.finalproject.dao.MateDAO">
+    <select id="ranking" resultType="com.ict.finalproject.vo.MateVO">
         select a.*
         from
         (
@@ -14,7 +14,7 @@
         limit 10;
     </select>
 
-    <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MatchingVO">
+    <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MateVO">
         select a.marathon_code, a.marathon_name
         from   marathon_list_tbl a, cart_tbl b, order_tbl c, payment_tbl d
         where  d.order_code = c.order_code
