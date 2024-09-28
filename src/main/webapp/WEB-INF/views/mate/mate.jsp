@@ -14,6 +14,7 @@
 </head>
 
 <style>
+
 body {
         margin: 0;
         padding: 0;
@@ -36,135 +37,27 @@ body {
     .layout {
         display: flex;
         justify-content: space-between;
-        padding-top: 80px; /* 헤더 아래에 충분한 공간 */
-        padding-left: 20px; /* 사이드바와의 간격 */
-        padding-right: 20px; /* 채팅창과의 간격 */
+        padding-top: 50px; /* 헤더 아래에 충분한 공간 */
+        padding-left: 50px; /* 사이드바와의 간격 */
         box-sizing: border-box;
-    }
-    /* 왼쪽 사이드바 */
-    .sidebar {
-        position: sticky;
-        top: 100px;
-        width: 250px;
-        background-color: #1e1e1e;
-        color: #fff;
-        padding: 10px;
-        border-radius: 10px;
-        z-index: 1000;
-        margin-left: 40px;
-        max-height: 600px;
-        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 1000;
-        position: -webkit-sticky; /* 사파리 브라우저 대응 */
-        position: sticky;
-        top: 100px; /* 해더 아래로 100px 고정 */
-        z-index: 10;
-    }
-
-    .sidebar::-webkit-scrollbar {
-        width: 6px; /* 스크롤바 너비 */
-    }
-    .sidebar::-webkit-scrollbar-thumb {
-        background-color: #888; /* 스크롤바 색상 */
-        border-radius: 10px;
-    }
-    .sidebar::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-    .sidebar .menu-title {
-        font-size: 16px;
-        margin-bottom: 15px;
-    }
-
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .sidebar ul li {
-        padding: 10px 5px;
-        cursor: pointer;
-        color: white;
-        transition: 0.3s;
-    }
-
-    .sidebar ul li:hover {
-        background-color: #2e2e2e;
-        color: #CCFF47;
-    }
-
-
-    .menu-title {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .rank-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .rank-list li {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #444;
-    }
-    .profile-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%; /* 이미지를 둥글게 */
-        margin-right: 10px;
-    }
-
-
-    .rank-list li:hover .profile-img {
-        border-color: #CCFF47; /* 마우스 오버 시 연두색 테두리 */
-        box-shadow: 0 0 8px #CCFF47; /* 마우스 오버 시 부각되는 효과 */
-    }
-    .rank-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .rank-name {
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .runkm {
-        font-size: 12px;
-        color: #ff4d4d;
-    }
-
-    .more {
-        margin-top: 10px;
-        text-align: center;
-        font-size: 14px;
-        cursor: pointer;
-        color: #00bfff;
     }
 
     /* 중앙 메인 콘텐츠 */
     .main-content {
-        width: 60%;
+        width: 70%;
         display: flex;
-        justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin:0;
+        margin-left:60px;
     }
 
     /* 프로필 박스 컨테이너 */
     .profile-container {
-        width: 80%;
+        margin-top: 30px;
+        width: 75%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-gap: 20px;
+        grid-gap: 40px;
     }
 
     /* 개별 프로필 박스 */
@@ -217,16 +110,17 @@ body {
         margin: 5px 0;
     }
 
-   /* 셀렉트박스 섹션 */
+/* 셀렉트박스 섹션 */
     .select-section {
         display: flex;
         gap: 5px;  /* 셀렉트 박스 간격을 줄임 */
         justify-content: center;  /* 가운데 정렬 */
         align-items: center;
-        margin: 35px 0;
-        margin-bottom:55px;
+        margin: 30px 0;
+        margin-bottom:50px;
     }
-   .select-box-container {
+.select-box-container {
+        margin-top: 10px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -246,7 +140,7 @@ body {
         font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
         font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
         cursor: pointer;
-        width: 150px;
+        width: 140px;
         text-align: center;
         transition: transform 0.3s ease, border-color 0.3s ease;
     }
@@ -289,27 +183,27 @@ body {
     }
 
 
-     .dropdown-menu li:hover {
+    .dropdown-menu li:hover {
         background-color: transparent;
         color: #CCFF47;
         font-size: 16px;  /* hover 시에도 동일한 크기 */
         font-weight: bold;
         cursor: pointer;
         transition: color 0.3s ease, font-size 0.3s ease;
-     }
+    }
 
-     .select-box.active .dropdown-menu {
+    .select-box.active .dropdown-menu {
         display: block;
         opacity: 1;
         transform: scaleY(1);
-     }
-     .select-box:hover {
-         transform: scale(1.05);
-         border-color: #CCFF47;
-     }
+    }
+    .select-box:hover {
+        transform: scale(1.05);
+        border-color: #CCFF47;
+    }
 
 
-     .search_match {
+    .search_match {
         position: relative;
         display: flex;
         align-items: center;
@@ -331,29 +225,154 @@ body {
         color: white;  /* hover 시 텍스트 색상 흰색 */
     }
 
+    /* 랭킹 */
+    .ranking-container {
+        position: -webkit-sticky; /* 사파리 브라우저 대응 */
+        position: sticky;
+        top: 100px; /* 헤더 아래로 100px 고정 */
+        z-index: 20; /* chatbox보다 높은 z-index로 설정 */
+        margin-right: 20px; /* chatbox와의 간격 유지 */
+    }
+    .ranking {
+        top: 100px;
+        width: 300px;
+        background-color: #1e1e1e;
+        color: #fff;
+        margin: 15px 0;
+        margin-right:250px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        max-height: 210px;
+        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
+    }
+
+    .ranking::-webkit-scrollbar {
+        width: 8px;
+        margin-top: 10px;
+    }
+
+    .ranking::-webkit-scrollbar-thumb {
+        background-color: #899cb5;
+        border-radius: 10px;
+    }
+
+    .ranking::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+    .ranking .menu-title {
+        position: sticky; /* 스크롤에 따라 고정되게 설정 */
+        top: 0; /* 상단에 고정 */
+        background-color: #1e1e1e; /* 배경색 고정 */
+        z-index: 100; /* 다른 요소보다 위에 있도록 설정 */
+        padding: 10px 10px; /* select-box와 동일한 패딩 */
+        margin-bottom: 5px;
+        margin-top: 15px;
+        font-size: 16px; /* select-box와 동일한 텍스트 크기 */
+        font-weight: 500; /* select-box와 동일한 텍스트 굵기 */
+        text-align: center;
+        color: white; /* select-box와 동일한 텍스트 색상 */
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        border: 1px solid #fff; /* select-box와 동일한 테두리 */
+        border-radius: 10px; /* select-box와 동일한 둥근 모서리 */
+    }
+    .ranking ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .ranking ul li {
+        padding: 5px 5px;
+        cursor: pointer;
+        color: white;
+        transition: 0.3s;
+        margin-left: 15px;
+    }
+
+    .ranking ul li:hover {
+        background-color: #2e2e2e;
+        color: #CCFF47;
+    }
+
+    .rank-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .rank-list li {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .profile-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%; /* 이미지를 둥글게 */
+
+
+    }
+    .rank-list li:hover .profile-img {
+        border-color: #CCFF47; /* 마우스 오버 시 연두색 테두리 */
+        box-shadow: 0 0 8px #CCFF47; /* 마우스 오버 시 부각되는 효과 */
+    }
+    .rank-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .rank-name {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .rank-details {
+        display: flex;
+        align-items: center; /* 세로 정렬을 맞추기 위해 사용 */
+    }
+
+    .runkm {
+        font-size: 12px;
+        color: #ff4d4d;
+    }
+
+    .crew-name {
+        font-size: 12px;
+        color: #CCFF47;
+        margin-left: 10px; /* .runkm 옆에 배치 */
+    }
+    .more {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 14px;
+        cursor: pointer;
+        color: #00bfff;
+    }
+
+
     /* 오른쪽 채팅창 */
     .chatbox {
-         width: 380px;
-         background-color: #1e1e1e;
-         display: flex;
-         flex-direction: column;
-         justify-content: space-between;
-         padding: 10px;
-         border-radius: 10px;
-         z-index: 1000;
-         margin-right: 20px;
-         max-height: 600px; /* 원하는 고정된 높이로 변경 */
-         overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
-         position: -webkit-sticky; /* 사파리 브라우저 대응 */
-         position: sticky;
-         top: 100px; /* 해더 아래로 100px 고정 */
-         z-index: 10;
+        width: 380px;
+        height: 600px;
+        background-color: #1e1e1e;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+        border-radius: 10px;
+        margin-right: 20px;
+        max-height: 600px; /* 원하는 고정된 높이로 변경 */
+        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
+        position: -webkit-sticky; /* 사파리 브라우저 대응 */
+        position: sticky;
+        top: 100px; /* 해더 아래로 100px 고정 */
+        z-index: 10;
     }
     .chatbox::-webkit-scrollbar {
         width: 6px;
+        margin-bottom: 10px; /* 하단에 10px 간격 추가 */
     }
     .chatbox::-webkit-scrollbar-thumb {
-        background-color: #888;
+        background-color: #fcf6f6; /* 스크롤바 색상 */
         border-radius: 10px;
     }
     .chatbox::-webkit-scrollbar-thumb:hover {
@@ -397,7 +416,8 @@ body {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin: 0 15px;
+        margin-left:20px;
     }
 
     .message-info {
@@ -435,7 +455,7 @@ body {
             padding: 20px;
         }
 
-        .sidebar {
+        .ranking {
             width: 100%;
             margin-bottom: 20px;
         }
@@ -450,242 +470,242 @@ body {
     }
 
 </style>
-
 <body>
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
     </div>
-   <div class="layout">
-           <!-- 왼쪽 사이드바 -->
-           <div class="sidebar">
-               <div class="menu-title">랭킹</div>
-               <ul class="rank-list">
-                   <c:forEach var="rank" items="${ranking}">
+    <div class="layout">
+            <!-- 중앙 메인 콘텐츠 -->
+            <div class="main-content">
+                <!-- 필터 -->
+                <div class="select-section">
+                    <div class="select-box-container">
+                        <div class="select-box" id="marathonSelect">
+                            <span>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
+                            <ul class="dropdown-menu options-list">
+                                <c:forEach var="vo" items="${marathon_code_list}">
+                                    <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <div class="select-box" id="ageSelect">
+                            나이 <span>&nbsp;▼</span>
+                            <ul class="dropdown-menu options-list">
+                                <li data-value="10">10대</li>
+                                <li data-value="20">20대</li>
+                                <li data-value="30">30대</li>
+                                <li data-value="40">40대 이상</li>
+                                <li data-value="All">모든 나이</li>
+                            </ul>
+                        </div>
+                        <div class="select-box" id="genderSelect">
+                            성별 <span>&nbsp;▼</span>
+                            <ul class="dropdown-menu options-list">
+                                <li data-value="M">남성</li>
+                                <li data-value="F">여성</li>
+                                <li data-value="All">모두</li>
+                            </ul>
+                        </div>
+                        <div class="select-box" id="participationCountSelect">
+                           참가횟수 <span>&nbsp;▼</span>
+                           <ul class="dropdown-menu options-list">
+                               <li data-value="1">1~5</li>
+                               <li data-value="6">6~10</li>
+                               <li data-value="11">11~15</li>
+                               <li data-value="16">15회 이상</li>
+                           </ul>
+                        </div>
+                        <div class="select-box" id="mateCountSelect">
+                            메이트인원 <span>&nbsp;▼</span>
+                            <ul class="dropdown-menu options-list">
+                                <li data-value="2">1명</li>
+                                <li data-value="3">2명</li>
+                                <li data-value="4">3명</li>
+                                <li data-value="5">4명</li>
+                                <li data-value="6">5명</li>
+                                <li data-value="7">6명</li>
+                                <li data-value="8">7명</li>
+                                <li data-value="9">8명</li>
+                                <li data-value="10">9명</li>
+                                <li data-value="11">10명</li>
+                                <li data-value="12">11명</li>
+                                <li data-value="13">12명</li>
+                                <li data-value="14">13명</li>
+                                <li data-value="15">14명</li>
+                                <li data-value="16">15명</li>
+                                <li data-value="17">16명</li>
+                            </ul>
+                        </div>
+                        <button class="search_match" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
+                        <button class="search_match">&nbsp;나가기&nbsp;</button>
+                    </div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 2 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 3 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 2 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 3 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                </div>
+            </div>
+        <!-- 랭킹 -->
+            <div class="ranking-container">
+            <div class="ranking">
+                <div style="margin-top: 5px;">
+                <div class="menu-title">랭킹</div>
+                <ul class="rank-list">
+                    <c:forEach var="rank" items="${ranking}">
                         <li>
                             <span class="grade" id="grade">${rank.ranking}등</span>
                             <img src="/img/${rank.profile_img}" alt="프로필 이미지" class="profile-img">
                             <div class="rank-info">
                                 <span class="rank-name">${rank.nickname}</span>
-                                <span class="runkm">${rank.point_code}</span>
-                                <span class="crew_name">${rank.crew_name}</span>
+                                <div class="rank-details">
+                                        <span class="runkm">${rank.point_code}</span>
+                                        <span class="crew_name">${rank.crew_name}</span>
+                                </div>
                             </div>
                         </li>
                     </c:forEach>
-               </ul>
+                </ul>
                 <div class="more" id="more" onclick="add();">더보기</div>
-           </div>
-
-           <!-- 중앙 메인 콘텐츠 -->
-           <div class="main-content">
-
-               <!-- 필터 -->
-               <div class="select-section">
-                   <div class="select-box-container">
-                       <div class="select-box" id="marathonSelect">
-                           내대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-                              <c:forEach var="vo" items="${marathon_code_list}">
-                                 <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
-                              </c:forEach>
-                           </ul>
-                       </div>
-                       <div class="select-box" id="ageSelect">
-                           나이 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-                               <li data-value="10">10대</li>
-                               <li data-value="20">20대</li>
-                               <li data-value="30">30대</li>
-                               <li data-value="40">40대 이상</li>
-                               <li data-value="All">모든 나이</li>
-                           </ul>
-                       </div>
-                       <div class="select-box" id="genderSelect">
-                           성별 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-                               <li data-value="M">남성</li>
-                               <li data-value="F">여성</li>
-                               <li data-value="All">모두</li>
-                           </ul>
-                       </div>
-                       <div class="select-box" id="participationCountSelect">
-                           참가횟수 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-							   <li data-value="1,5">1~5</li>
-                               <li data-value="6,10">6~10</li>
-                               <li data-value="11,15">11~15</li>
-                               <li data-value="16">15회 이상</li>
-                           </ul>
-                       </div>
-                       <div class="select-box" id="mateCountSelect">
-                           메이트인원 <span>&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-                               <li data-value="2">1명</li>
-                               <li data-value="3">2명</li>
-                               <li data-value="4">3명</li>
-                               <li data-value="5">4명</li>
-                               <li data-value="6">5명</li>
-                               <li data-value="7">6명</li>
-                               <li data-value="8">7명</li>
-                               <li data-value="9">8명</li>
-                               <li data-value="10">9명</li>
-                               <li data-value="11">10명</li>
-                               <li data-value="12">11명</li>
-                               <li data-value="13">12명</li>
-                               <li data-value="14">13명</li>
-                               <li data-value="15">14명</li>
-                               <li data-value="16">15명</li>
-                               <li data-value="17">16명</li>
-                           </ul>
-                       </div>
-                       <button class="search_match" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
-                   </div>
-               </div>
-
-               <div class="profile-container">
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 2 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 3 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                   <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                       <p>사용자 1</p>
-                       <p>뭐라뭐라하노</p>
-                   </div>
-                    <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 2 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 3 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-                      <div class="profile-box">
-                          <div id="profile_img">
-                              <img src="/img/woman.png" alt="프로필 1 이미지">
-                          </div>
-                          <p>사용자 1</p>
-                          <p>뭐라뭐라하노</p>
-                      </div>
-
-               </div>
-           </div>
-
-           <!-- 오른쪽 채팅창 -->
-           <div class="chatbox">
-               <div class="chat-messages">
-                   <div class="chat-message">
-                       <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="message-info">
-                           <span class="nickname">아카네</span>
-                           <p>안녕하세요</p>
-                       </div>
-                   </div>
-                   <div class="chat-message">
-                       <img src="/img/profile2.jpg" alt="프로필 이미지" class="profile-img">
-                       <div class="message-info">
-                           <span class="nickname">쿠하</span>
-                           <p>러닝 메이트 구합니다.</p>
-                       </div>
-                   </div>
-               </div>
-               <div class="chat-input">
-                   <input type="text" placeholder="채팅을 입력해 주세요">
-                   <button>전송</button>
-               </div>
-           </div>
-       </div>
+            </div>
+            </div>
+            <!-- 오른쪽 채팅창 -->
+            <div class="chatbox">
+                <div class="chat-messages">
+                    <div class="chat-message">
+                        <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                        <div class="message-info">
+                            <span class="nickname">아카네</span>
+                            <p>안녕하세요</p>
+                        </div>
+                    </div>
+                    <div class="chat-message">
+                        <img src="/img/profile2.jpg" alt="프로필 이미지" class="profile-img">
+                        <div class="message-info">
+                            <span class="nickname">쿠하</span>
+                            <p>러닝 메이트 구합니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="채팅을 입력해 주세요">
+                    <button>전송</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
 var clog = console.log;
-
 
 $(document).ready(function() {
     // 드롭다운을 토글하는 함수
@@ -766,5 +786,29 @@ $(document).ready(function() {
         console.log("메이트인원: " + mateCountValue);
 
         }
+    function matching() {
+            var marathonValue = $('#marathonSelect').data('selected-value');
+            var ageValue = $('#ageSelect').data('selected-value');
+            var genderValue = $('#genderSelect').data('selected-value');
+            var participationCountValue = $('#participationCountSelect').data('selected-value');
+            var mateCountValue = $('#mateCountSelect').data('selected-value');
+            $.ajax({
+                      url:'/mate/matching',
+                      type:'post',
+                      async: false,
+                      data:{
+                         marathonValue:marathonValue,
+                         ageValue:ageValue,
+                         genderValue:genderValue,
+                         participationCountValue:participationCountValue,
+                         mateCountValue:mateCountValue
+                      },success:function(result){
+                        clog(result);
 
+                      },
+                      error:function(e){
+
+                      }
+            });
+        }
 </script>

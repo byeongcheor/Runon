@@ -12,7 +12,6 @@
         and    c.create_crew_code = d.create_crew_code
         group by  a.usercode, a.nickname, a.profile_img,d.crew_name
         limit 5;
-
     </select>
 
     <select id="more" resultType="com.ict.finalproject.vo.MateVO">
@@ -35,5 +34,41 @@
         and    b.usercode =${param1}
     </select>
 
+    <select id="matching_select" resultType="int">
+        SELECT COALESCE(
+        (SELECT matching_room_code
+        FROM matching_room_tbl
+        where  marathon_no = ${param1}
+        and    age = ${param2}
+        and    gender = '${param3}'
+        and    marathon_count = '${param4}'
+        and    max_personnel = ${param5}     LIMIT 1), 0)
+    </select>
+
+    <insert id="matching_insert_room">
+        insert into matching_room_tbl
+        (
+            now_personnel
+            ,marathon_no
+            ,age
+            ,gender
+            ,marathon_count
+            ,max_personnel
+            ,room_status
+            ,entry_time
+        )
+        values
+        (
+            1
+            ,${param1}
+            ,${param2}
+            ,'${param3}'
+            ,'${param4}'
+            ,${param5}
+            ,'1'
+            ,now()
+        )
+
+    </insert>
 
 </mapper>

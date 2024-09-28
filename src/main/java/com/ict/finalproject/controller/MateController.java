@@ -30,9 +30,30 @@ public class MateController {
     }
     @PostMapping("/more")
     @ResponseBody
-    public List<MateVO> likeInsert(int more){
-        List<MateVO> list =service.more(more);
+    public List<MateVO> more(int more){
+        List<MateVO> list = service.more(more);
     return  list;
 
+    }
+    @PostMapping("/matching")
+    @ResponseBody
+    public String  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue){
+        int user_code = 2;//유저코드
+        String yn="Y";
+        try {
+            int matching_room_code = service.matching_select(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+            if(matching_room_code==0){
+                service.matching_insert_room(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+                matching_room_code = service.matching_select(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+            }
+
+
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+
+
+        return yn;
     }
 }

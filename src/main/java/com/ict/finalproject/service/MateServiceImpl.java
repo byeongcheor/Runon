@@ -28,4 +28,13 @@ public class MateServiceImpl implements MateService {
     public List<MateVO> ranking() {
         return dao.ranking();
     }
+
+    @Override
+    public int matching_select(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_select(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    }
+    @Override
+    public int matching_insert_room(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_insert_room(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    }
 }
