@@ -23,7 +23,12 @@ public class MateVO {
     private String marathon_code;
     private String marathon_name;
     private String crew_name;
+    private String tbuf_s;
+    private String buff_s;
 
+    private int tbuf_n;
+    private int buff_n;
+    private int all_km;
     private int is_active;
     private int is_disabled;
     private int is_updated;

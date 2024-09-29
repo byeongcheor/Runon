@@ -35,14 +35,17 @@
     </select>
 
     <select id="matching_select" resultType="int">
-        SELECT COALESCE(
-        (SELECT matching_room_code
-        FROM matching_room_tbl
+        select coalesce(
+        (select matching_room_code
+        from matching_room_tbl
         where  marathon_no = ${param1}
         and    age = ${param2}
         and    gender = '${param3}'
         and    marathon_count = '${param4}'
-        and    max_personnel = ${param5}     LIMIT 1), 0)
+        and    max_personnel = ${param5}     limit 1), 0)
+        from dual
+        order by rand()
+        limit 1;
     </select>
 
     <insert id="matching_insert_room">
@@ -68,7 +71,36 @@
             ,'1'
             ,now()
         )
-
     </insert>
+
+    <insert id="applicant_insert">
+        insert into applicant_tbl
+        (
+             matching_room_code
+            ,usercode
+            ,is_Completion
+            ,writedate
+        )
+        values
+        (
+             ${param1}
+            ,${param2}
+            ,0
+            ,now()
+        )
+    </insert>
+
+    <select id="room_select" resultType="com.ict.finalproject.vo.MateVO">
+        select b.gender,b.nickname,sum(c.score_change) as tbuf_n, e.crew_name, f.max_personnel as buff_n
+        from   applicant_tbl a, user_tbl b, record_tbl c, crew_member_tbl d, create_crew_tbl e, matching_room_tbl f
+        where  a.usercode = b.usercode
+        and    b.usercode = c.usercode
+        and    a.usercode = d.usercode
+        and    d.create_crew_code = e.create_crew_code
+        and    a.matching_room_code = f.matching_room_code
+        and    a.matching_room_code = ${param1}
+        group by  b.gender,b.nickname, e.crew_name, f.max_personnel
+
+    </select>
 
 </mapper>

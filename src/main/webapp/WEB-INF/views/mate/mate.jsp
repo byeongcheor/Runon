@@ -540,121 +540,7 @@ body {
                         <button class="search_match">&nbsp;나가기&nbsp;</button>
                     </div>
                 </div>
-                <div class="profile-container">
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 2 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 3 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 2 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 3 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                </div>
-            </div>
+                <div class="profile-container"></div>
         <!-- 랭킹 -->
             <div class="ranking-container">
             <div class="ranking">
@@ -708,6 +594,7 @@ body {
 var clog = console.log;
 
 $(document).ready(function() {
+    start_view()
     // 드롭다운을 토글하는 함수
     function toggleDropdown(box) {
         $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
@@ -770,22 +657,7 @@ $(document).ready(function() {
               }
            });
     }
-    function matching() {
-        // 각 select-box에서 선택된 값 가져오기
-        var marathonValue = $('#marathonSelect').data('selected-value');
-        var ageValue = $('#ageSelect').data('selected-value');
-        var genderValue = $('#genderSelect').data('selected-value');
-        var participationCountValue = $('#participationCountSelect').data('selected-value');
-        var mateCountValue = $('#mateCountSelect').data('selected-value');
 
-        // 선택된 값을 로그로 확인
-        console.log("마라톤: " + marathonValue);
-        console.log("나이: " + ageValue);
-        console.log("성별: " + genderValue);
-        console.log("참가횟수: " + participationCountValue);
-        console.log("메이트인원: " + mateCountValue);
-
-        }
     function matching() {
             var marathonValue = $('#marathonSelect').data('selected-value');
             var ageValue = $('#ageSelect').data('selected-value');
@@ -803,7 +675,10 @@ $(document).ready(function() {
                          participationCountValue:participationCountValue,
                          mateCountValue:mateCountValue
                       },success:function(result){
-                        clog(result);
+                        var list = '';
+                        var length = result[0].buff_n;
+                        clog(length);
+
 
                       },
                       error:function(e){
@@ -811,4 +686,21 @@ $(document).ready(function() {
                       }
             });
         }
+    function start_view() {
+        var list = '';
+        for (var i=0; i<8; i++) {
+            list+='<div class="profile-box">';
+            list+='<div id="profile_img">';
+            list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+            list+='</div>';
+            list+='<div class="rank-info">';
+            list+=' <p class="rank-name"></p>';
+            list+='<p class="runkm"style="font-size: 15px;">Km</p>';
+            list+='<p class="crew-name"style="font-size: 15px;"></p>';
+            list+='</div>';
+        }
+        $('.profile-container').append(list);
+
+    }
+
 </script>
