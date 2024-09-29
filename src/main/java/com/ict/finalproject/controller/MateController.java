@@ -109,6 +109,7 @@ public class MateController {
         try {
             service.match_out(matching_room_code, user_code);
             service.matching_room_personnel_update_minus(matching_room_code);
+            service.matching_room_personnel_zero_delete();
 
 
         } catch (Exception e) {

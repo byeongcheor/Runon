@@ -74,4 +74,9 @@ public class MateServiceImpl implements MateService {
         return dao.matching_room_personnel_update_minus(matching_room_code);
     }
 
+    @Override
+    public int matching_room_personnel_zero_delete() {
+        return dao.matching_room_personnel_zero_delete();
+    }
+
 }

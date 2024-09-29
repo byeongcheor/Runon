@@ -475,7 +475,7 @@ body {
                     <div class="select-box-container">
                         <div class="select-box" id="marathonSelect">
                             <span>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
-                            <ul class="dropdown-menu options-list">
+                            <ul class="dropdown-menu options-list" id="options_list">
                             </ul>
                         </div>
                         <div class="select-box" id="ageSelect">
@@ -583,51 +583,52 @@ body {
 </body>
 <script>
 var clog = console.log;
-var match_yn, now_personnel, new_personnel;
+var match_yn, now_personnel, new_personnel, intervalId;
 var more =0;
-
 
 $(document).ready(function() {
     match_yn();//매칭여부
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
-        if(match_yn>0)match_view(match_yn)
+        if(match_yn>0){
+            match_view(match_yn);
+            match_view_start(match_yn);
+        }
         else start_view();
-    }, 100);
-    var intervalId = setInterval(function() {
-        match_view(match_yn);
-    }, 2000);
+    }, 200);
 
-    // 드롭다운을 토글하는 함수
-    function toggleDropdown(box) {
-        $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
-        $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
-    }
+    setTimeout(function() {
+        // 드롭다운을 토글하는 함수
+        function toggleDropdown(box) {
+            $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
+            $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+        }
 
-    // 옵션을 선택하는 함수
-    function selectOption(li, box) {
-        var selectedText = $(li).text(); // li의 텍스트를 가져옴
-        $(box).find('span').text(' : '+selectedText); // 선택된 텍스트로 span 업데이트
-        $(box).removeClass('active'); // 드롭다운 닫기
+        // 옵션을 선택하는 함수
+        function selectOption(li, box) {
+            var selectedText = $(li).text(); // li의 텍스트를 가져옴
+            $(box).find('span').text(' : '+selectedText); // 선택된 텍스트로 span 업데이트
+            $(box).removeClass('active'); // 드롭다운 닫기
 
-        // 선택된 li에 따라 다른 동작을 수행
-        var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
-        $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
-        $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
-    }
+            // 선택된 li에 따라 다른 동작을 수행
+            var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
+            $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
+            $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+        }
 
-    // 페이지가 로드되었을 때 실행
-    $('.select-box').each(function() {
-        var box = $(this);
-        box.find('.dropdown-menu li').on('click', function() {
-            selectOption(this, box); // li 선택 시 텍스트를 업데이트
+        // 페이지가 로드되었을 때 실행
+        $('.select-box').each(function() {
+            var box = $(this);
+            box.find('.dropdown-menu li').on('click', function() {
+                selectOption(this, box); // li 선택 시 텍스트를 업데이트
+            });
+
+            // 드롭다운 토글
+            box.on('click', function() {
+                toggleDropdown(this);
+            });
         });
-
-        // 드롭다운 토글
-        box.on('click', function() {
-            toggleDropdown(this);
-        });
-    });
+    }, 200);
 });
     function match_yn(){
         $.ajax({
@@ -642,6 +643,12 @@ $(document).ready(function() {
        });
     }
 
+    function match_view_start(matching_room_code){
+           intervalId = setInterval(function() {
+            match_view(matching_room_code);
+        }, 2000);
+    }
+
     function match_view(matching_room_code){
         $.ajax({
           url:'/mate/match_view',
@@ -651,6 +658,7 @@ $(document).ready(function() {
            matching_room_code:matching_room_code
           },
           success:function(result){
+               clog(result[0].buff_n);
                var list = '';
                var length = result[0].buff_n;
                var remainder = length % 4;
@@ -754,6 +762,7 @@ $(document).ready(function() {
                    },success:function(result){
                        var list = '';
                        var length = result[0].buff_n;
+                       match_yn = result[0].b_n;
                        var remainder = length % 4;
                        if (remainder !== 0) {
                            length += 4 - remainder;
@@ -785,7 +794,7 @@ $(document).ready(function() {
                        $('#matching').hide();
                        $('#accept').show();
                        $('#out').show();
-
+                       match_view_start(match_yn);
                    },
                      error:function(e){
               }
@@ -819,14 +828,12 @@ $(document).ready(function() {
                   for(var i in result){
                       list+='<li class="marathon_code" data-value='+result[i].marathon_code+'>'+result[i].marathon_name+'</li>';
                   }
-                  $('.options-list').append(list);
+                  $('#options_list').append(list);
               },
               error:function(e){
               }
            });
     }
-
-
 
 function match_out(){
         $.ajax({
@@ -839,6 +846,7 @@ function match_out(){
           success:function(result){
                match_yn=0;
                start_view();
+               clearInterval(intervalId);
           },
           error:function(e){
           }
