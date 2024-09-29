@@ -48,12 +48,12 @@ body {
         display: flex;
         align-items: center;
         flex-direction: column;
-        margin-left:60px;
+        margin-left:80px;
     }
 
     /* 프로필 박스 컨테이너 */
     .profile-container {
-        margin-top: 30px;
+        margin: 30px 0;
         width: 75%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -231,7 +231,7 @@ body {
         position: sticky;
         top: 100px; /* 헤더 아래로 100px 고정 */
         z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-right: 20px; /* chatbox와의 간격 유지 */
+        margin-right: 30px; /* chatbox와의 간격 유지 */
     }
     .ranking {
         top: 100px;
@@ -239,7 +239,7 @@ body {
         background-color: #1e1e1e;
         color: #fff;
         margin: 15px 0;
-        margin-right:250px;
+        margin-right:230px;
         padding: 10px 20px;
         border-radius: 10px;
         max-height: 210px;
@@ -540,8 +540,125 @@ body {
                         <button class="search_match">&nbsp;나가기&nbsp;</button>
                     </div>
                 </div>
-                <div class="profile-container"></div>
-        <!-- 랭킹 -->
+<div class="profile-container">
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <span class="rank-name">${rank.nickname}</span>
+                        <div class="rank-details">
+                                <span class="runkm">${rank.point_code}</span>
+                                <span class="crew_name">${rank.crew_name}</span>
+                        </div>
+                    </div>
+                    <div class="profile-box">
+                       <div id="profile_img">
+                           <img src="/img/woman.png" alt="프로필 1 이미지">
+                       </div>
+                           <span class="rank-name">빵꾸똥꾸</span>
+                           <span class="runkm">12345KM</span>
+                           <span class="crew_name">또러닝</span>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 2 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 3 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 2 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 3 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                    <div class="profile-box">
+                        <div id="profile_img">
+                            <img src="/img/woman.png" alt="프로필 1 이미지">
+                        </div>
+                        <p>사용자 1</p>
+                        <p>뭐라뭐라하노</p>
+                    </div>
+                </div>
+            </div>        <!-- 랭킹 -->
             <div class="ranking-container">
             <div class="ranking">
                 <div style="margin-top: 5px;">
