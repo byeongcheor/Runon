@@ -584,6 +584,7 @@ body {
 <script>
 var clog = console.log;
 var match_yn, now_personnel, new_personnel, intervalId;
+   //매칭룸코드
 var more =0;
 
 $(document).ready(function() {
@@ -642,22 +643,21 @@ $(document).ready(function() {
        });
     }
 
-    function match_view_start(matching_room_code){
+    function match_view_start(match_yn){
            intervalId = setInterval(function() {
-            match_view(matching_room_code);
+            match_view(match_yn);
         }, 2000);
     }
 
-    function match_view(matching_room_code){
+    function match_view(match_yn){//선택한 인원수대로 매칭 자리만들기
         $.ajax({
           url:'/mate/match_view',
           type:'post',
           async: false,
           data:{
-           matching_room_code:matching_room_code
+           matching_room_code:match_yn //matching_room_code
           },
           success:function(result){
-               clog(result[0].buff_n);
                var list = '';
                var length = result[0].buff_n;
                var remainder = length % 4;
@@ -667,7 +667,7 @@ $(document).ready(function() {
                }
                length=length-result.length;
                for (var i in result) {
-                   if(result[i].a_s!=='Y') var style =""
+                   if(result[i].a_s!=='Y') var style ="" //result[i].a_s 수락여부 값
                    else var style ="transform: scale(1.05);border-color: #CCFF47;";
                    list+='<div class="profile-box" onclick="profile_update();" style="'+style+'">';
                    list+='<div id="profile_img">';
@@ -688,7 +688,7 @@ $(document).ready(function() {
                    list+='<span class="crew_name">&nbsp;</span>';
                    list+='</div>';
                }
-               $('.profile-container').empty();
+               $('.profile-container').empty(); //매칭룸비우기
                $('.profile-container').append(list);
                $('#matching').hide();
                $('#accept').show();
@@ -760,8 +760,8 @@ $(document).ready(function() {
                       mateCountValue:mateCountValue
                    },success:function(result){
                        var list = '';
-                       var length = result[0].buff_n;
-                       match_yn = result[0].b_n;
+                       var length = result[0].buff_n;//최대인원수
+                       match_yn = result[0].b_n;//매칭 룸 번호 넣기
                        var remainder = length % 4;
                        if (remainder !== 0) {
                            length += 4 - remainder;
@@ -799,9 +799,9 @@ $(document).ready(function() {
               }
             });
         }
-    function start_view() {
+    function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
         var list = '';
-       $('.profile-container').empty();
+        $('.profile-container').empty();
         $('#matching').show();
         $('#accept').hide();
         $('#out').hide();
@@ -818,23 +818,24 @@ $(document).ready(function() {
         $('.profile-container').append(list);
     }
     function marathon_code(){
-  $.ajax({
-            url:'/mate/marathon_code',
-            type:'post',
-            async: false,
-            success:function(result){
-                var list = '';
-                for(var i in result){
-                    list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
+          $.ajax({
+                url:'/mate/marathon_code',
+                type:'post',
+                async: false,
+                success:function(result){
+                    var list = '';
+                    for(var i in result){
+                        list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
+                    }
+                    // 옵션 리스트에 항목 추가
+                    $('#marathonSelect .dropdown-menu').empty(); // 기존 옵션 삭제
+                    $('#marathonSelect .dropdown-menu').append(list); // 새 옵션 추가
+                },
+                error:function(e){
+                    console.error('Error fetching marathon code:', e);
                 }
-                // 옵션 리스트에 항목 추가
-                $('#marathonSelect .dropdown-menu').empty(); // 기존 옵션 삭제
-                $('#marathonSelect .dropdown-menu').append(list); // 새 옵션 추가
-            },
-            error:function(e){
-                console.error('Error fetching marathon code:', e);
-            }
-        });    }
+          });
+    }
 
 
 function match_out(){

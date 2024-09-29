@@ -23,11 +23,8 @@ public class MateController {
     @GetMapping("/mate")
     public String matchingList(HttpServletRequest request, Model model){//
         try {
-
             //int user_code = 4;//유저코드
-            List<MateVO> marathon_code_list = service.marathon_code_list(user_code);
             List<MateVO> ranking = service.ranking();
-            model.addAttribute("marathon_code_list",marathon_code_list);
             model.addAttribute("ranking",ranking);
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
@@ -53,18 +50,18 @@ public class MateController {
     @PostMapping("/matching")
     @ResponseBody
     public List<MateVO>  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue, Model model) {
-
+        //participationCountValue 다시 봐야됨
         //int user_code = 4;//유저코드
         List<MateVO> room_list = null;
         try {
             int matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
             if (matching_room_code == 0) {
-                service.matching_insert_room(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+                service.matching_insert_room(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);//방 만들기
                 matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
             }
-            service.matching_room_personnel_update_plus(matching_room_code);
-            service.applicant_insert(matching_room_code, user_code);
-            room_list = service.match_view(matching_room_code);
+            service.applicant_insert(matching_room_code, user_code);//방입장
+            service.matching_room_personnel_update_plus(matching_room_code);//현재인원수 증가
+            room_list = service.match_view(matching_room_code);//방에 있는사람 정보 들고오기
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -76,15 +73,15 @@ public class MateController {
     @ResponseBody
     public int likeInsert(){
         //int user_code = 4;//유저코드
-        int like_cnt=0;
+        int match_yn=0;
         try {
-            like_cnt = service.match_yn(user_code);
+            match_yn = service.match_yn(user_code);
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
         }
-        return like_cnt;
+        return match_yn;
     }
 
     @PostMapping("/match_view")
@@ -110,8 +107,6 @@ public class MateController {
             service.match_out(matching_room_code, user_code);
             service.matching_room_personnel_update_minus(matching_room_code);
             service.matching_room_personnel_zero_delete();
-
-
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -126,8 +121,6 @@ public class MateController {
         int a=0;
         try {
             service.accept(matching_room_code, user_code);
-
-
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -140,6 +133,6 @@ public class MateController {
     public List<MateVO> marathon_code(){
         // int user_code = 4;//유저코드
         List<MateVO> list = service.marathon_code_list(user_code);
-        return  list;
+    return  list;
     }
 }
