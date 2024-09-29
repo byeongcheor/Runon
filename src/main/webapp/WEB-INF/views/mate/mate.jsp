@@ -34,7 +34,7 @@ body {
         object-fit: cover;
     }
     /* 전체 레이아웃 */
-    .script {
+    .layout {
         display: flex;
         justify-content: space-between;
         padding-top: 50px; /* 헤더 아래에 충분한 공간 */
@@ -443,7 +443,7 @@ body {
 
 
     @media screen and (max-width: 768px) {
-        .script {
+        .layout {
             flex-direction: column;
             padding: 20px;
         }
@@ -467,7 +467,7 @@ body {
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
     </div>
-    <div class="script">
+    <div class="layout">
             <!-- 중앙 메인 콘텐츠 -->
             <div class="main-content">
                 <!-- 필터 -->
