@@ -559,14 +559,14 @@ body {
             <div class="chatbox">
                 <div class="chat-messages">
                     <div class="chat-message">
-                        <img src="/img/profile1.jpg" alt="프로필 이미지" class="profile-img">
+                        <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
                         <div class="message-info">
                             <span class="nickname">아카네</span>
                             <p>안녕하세요</p>
                         </div>
                     </div>
                     <div class="chat-message">
-                        <img src="/img/profile2.jpg" alt="프로필 이미지" class="profile-img">
+                        <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
                         <div class="message-info">
                             <span class="nickname">쿠하</span>
                             <p>러닝 메이트 구합니다.</p>
@@ -588,30 +588,15 @@ var more =0;
 
 
 $(document).ready(function() {
-
-    $('.profile-box').click(function(){
-        // 팝업 창의 너비와 높이 설정
-        var width = 920;
-        var height = 850;
-
-        // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
-        var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
-        var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
-
-        // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
-        window.open('/mate/profileList', 'ProfileList',
-            'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
-    });
-
     match_yn();//매칭여부
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
         if(match_yn>0)match_view(match_yn)
         else start_view();
     }, 100);
-   // var intervalId = setInterval(function() {
-   //     match_view(match_yn);
-   // }, 2000);
+    var intervalId = setInterval(function() {
+        match_view(match_yn);
+    }, 2000);
 
     // 드롭다운을 토글하는 함수
     function toggleDropdown(box) {
@@ -650,9 +635,7 @@ $(document).ready(function() {
           type:'post',
           async: false,
           success:function(result){
-            clog(result);
             match_yn=result;
-            clog(match_yn);
           },
           error:function(e){
           }
@@ -675,15 +658,13 @@ $(document).ready(function() {
                    length += 4 - remainder;
                    length = length<8? 8:length;
                }
-                clog('1');
                length=length-result.length;
                for (var i in result) {
                    if(result[i].a_s!=='Y') var style =""
                    else var style ="transform: scale(1.05);border-color: #CCFF47;";
-                   clog(style);
-                   list+='<div class="profile-box" style="'+style+'">';
+                   list+='<div class="profile-box" onclick="profile_update();" style="'+style+'">';
                    list+='<div id="profile_img">';
-                   list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                   list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
                    list+='</div>';
                    list+='<span class="rank-name">'+result[i].nickname+'</span>';
                    list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
@@ -693,7 +674,7 @@ $(document).ready(function() {
                for (var i=0; i<length; i++) {
                    list+='<div class="profile-box">';
                    list+='<div id="profile_img">';
-                   list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                   list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
                    list+='</div>';
                    list+='<span class="rank-name">&nbsp; </span>';
                    list+='<span class="runkm">&nbsp;</span>';
@@ -739,6 +720,20 @@ $(document).ready(function() {
               }
            });
     }
+    function profile_update() {
+                // 팝업 창의 너비와 높이 설정
+                var width = 920;
+                var height = 850;
+
+                // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
+                var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
+                var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+
+                // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
+                window.open('/mate/profileList', 'ProfileList',
+                'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+
+    }
 
     function matching() {
             var marathonValue = $('#marathonSelect').data('selected-value');
@@ -768,7 +763,7 @@ $(document).ready(function() {
                        for (var i in result) {
                            list+='<div class="profile-box">';
                            list+='<div id="profile_img">';
-                           list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
                            list+='</div>';
                            list+='<span class="rank-name">'+result[i].nickname+'</span>';
                            list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
@@ -778,7 +773,7 @@ $(document).ready(function() {
                        for (var i=0; i<length; i++) {
                            list+='<div class="profile-box">';
                            list+='<div id="profile_img">';
-                           list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
                            list+='</div>';
                            list+='<span class="rank-name">&nbsp; </span>';
                            list+='<span class="runkm">&nbsp;</span>';
@@ -805,7 +800,7 @@ $(document).ready(function() {
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
             list+='<div id="profile_img">';
-            list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+            list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
             list+='</div>';
             list+='<span class="rank-name">&nbsp; </span>';
             list+='<span class="runkm">&nbsp;</span>';
@@ -859,7 +854,6 @@ function accept(){
            matching_room_code:match_yn
           },
           success:function(result){
-            clog('수락완료');
           },
           error:function(e){
           }
