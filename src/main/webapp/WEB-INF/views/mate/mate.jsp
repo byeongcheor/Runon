@@ -663,8 +663,8 @@ $(document).ready(function() {
                var remainder = length % 4;
                if (remainder !== 0) {
                    length += 4 - remainder;
-                   length = length<8? 8:length;
                }
+               length = length<8? 8:length;
                length=length-result.length;
                for (var i in result) {
                    if(result[i].a_s!=='Y') var style ="" //result[i].a_s 수락여부 값
@@ -763,10 +763,11 @@ $(document).ready(function() {
                        var length = result[0].buff_n;//최대인원수
                        match_yn = result[0].b_n;//매칭 룸 번호 넣기
                        var remainder = length % 4;
+
                        if (remainder !== 0) {
                            length += 4 - remainder;
-                           length = length<8? 8:length;
                        }
+                       length = length<8? 8:length;
                        length=length-result.length;
                        for (var i in result) {
                            list+='<div class="profile-box">';

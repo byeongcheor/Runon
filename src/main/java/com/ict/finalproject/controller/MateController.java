@@ -125,6 +125,7 @@ public class MateController {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
         }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
         return a;
     }
 
