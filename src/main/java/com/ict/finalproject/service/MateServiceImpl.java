@@ -30,8 +30,8 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
-    public List<MateVO> room_select(int matching_room_code) {
-        return dao.room_select(matching_room_code);
+    public List<MateVO> match_view(int matching_room_code) {
+        return dao.match_view(matching_room_code);
     }
 
     @Override
@@ -47,6 +47,31 @@ public class MateServiceImpl implements MateService {
     @Override
     public int applicant_insert(int applicant_insert, int user_code) {
         return dao.applicant_insert(applicant_insert, user_code);
+    }
+
+    @Override
+    public int match_yn( int user_code) {
+        return dao.match_yn(user_code);
+    }
+
+    @Override
+    public int match_out( int matching_room_code, int user_code) {
+        return dao.match_out(matching_room_code, user_code);
+    }
+
+    @Override
+    public int accept( int matching_room_code, int user_code) {
+        return dao.accept(matching_room_code, user_code);
+    }
+
+    @Override
+    public int matching_room_personnel_update_plus( int matching_room_code) {
+        return dao.matching_room_personnel_update_plus(matching_room_code);
+    }
+
+    @Override
+    public int matching_room_personnel_update_minus( int matching_room_code) {
+        return dao.matching_room_personnel_update_minus(matching_room_code);
     }
 
 }

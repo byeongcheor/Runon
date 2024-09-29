@@ -483,9 +483,6 @@ body {
                         <div class="select-box" id="marathonSelect">
                             <span>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
                             <ul class="dropdown-menu options-list">
-                                <c:forEach var="vo" items="${marathon_code_list}">
-                                    <li class="marathon_code" data-value=${vo.marathon_code} >${vo.marathon_name}</li>
-                                </c:forEach>
                             </ul>
                         </div>
                         <div class="select-box" id="ageSelect">
@@ -536,128 +533,12 @@ body {
                                 <li data-value="17">16명</li>
                             </ul>
                         </div>
-                        <button class="search_match" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
-                        <button class="search_match">&nbsp;나가기&nbsp;</button>
+                        <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
+                        <button class="search_match" id="accept" onclick="accept();">&nbsp;수락하기&nbsp;</button>
+                        <button class="search_match" id="out" onclick="match_out();">&nbsp;나가기&nbsp;</button>
                     </div>
                 </div>
-<div class="profile-container">
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <span class="rank-name">${rank.nickname}</span>
-                        <div class="rank-details">
-                                <span class="runkm">${rank.point_code}</span>
-                                <span class="crew_name">${rank.crew_name}</span>
-                        </div>
-                    </div>
-                    <div class="profile-box">
-                       <div id="profile_img">
-                           <img src="/img/woman.png" alt="프로필 1 이미지">
-                       </div>
-                           <span class="rank-name">빵꾸똥꾸</span>
-                           <span class="runkm">12345KM</span>
-                           <span class="crew_name">또러닝</span>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 2 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 3 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 2 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 3 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                    <div class="profile-box">
-                        <div id="profile_img">
-                            <img src="/img/woman.png" alt="프로필 1 이미지">
-                        </div>
-                        <p>사용자 1</p>
-                        <p>뭐라뭐라하노</p>
-                    </div>
-                </div>
+                <div class="profile-container"></div>
             </div>        <!-- 랭킹 -->
             <div class="ranking-container">
             <div class="ranking">
@@ -709,8 +590,21 @@ body {
 </body>
 <script>
 var clog = console.log;
+var match_yn, now_personnel, new_personnel;
+var more =0;
+
 
 $(document).ready(function() {
+    match_yn();//매칭여부
+    marathon_code();//내가 결제한 대회리스트 불러오기
+    setTimeout(function() {
+        if(match_yn>0)match_view(match_yn)
+        else start_view();
+    }, 100);
+   // var intervalId = setInterval(function() {
+   //     match_view(match_yn);
+   // }, 2000);
+
     // 드롭다운을 토글하는 함수
     function toggleDropdown(box) {
         $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
@@ -742,8 +636,73 @@ $(document).ready(function() {
         });
     });
 });
+    function match_yn(){
+        $.ajax({
+          url:'/mate/match_yn',
+          type:'post',
+          async: false,
+          success:function(result){
+            clog(result);
+            match_yn=result;
+            clog(match_yn);
+          },
+          error:function(e){
+          }
+       });
+    }
 
-    var more =0;
+    function match_view(matching_room_code){
+        $.ajax({
+          url:'/mate/match_view',
+          type:'post',
+          async: false,
+          data:{
+           matching_room_code:matching_room_code
+          },
+          success:function(result){
+               var list = '';
+               var length = result[0].buff_n;
+               var remainder = length % 4;
+               if (remainder !== 0) {
+                   length += 4 - remainder;
+                   length = length<8? 8:length;
+               }
+                clog('1');
+               length=length-result.length;
+               for (var i in result) {
+                   if(result[i].a_s!=='Y') var style =""
+                   else var style ="transform: scale(1.05);border-color: #CCFF47;";
+                   clog(style);
+                   list+='<div class="profile-box" style="'+style+'">';
+                   list+='<div id="profile_img">';
+                   list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                   list+='</div>';
+                   list+='<span class="rank-name">'+result[i].nickname+'</span>';
+                   list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
+                   list+='<span class="crew_name">'+result[i].crew_name+'</span>';
+                   list+='</div>';
+               }
+               for (var i=0; i<length; i++) {
+                   list+='<div class="profile-box">';
+                   list+='<div id="profile_img">';
+                   list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                   list+='</div>';
+                   list+='<span class="rank-name">&nbsp; </span>';
+                   list+='<span class="runkm">&nbsp;</span>';
+                   list+='<span class="crew_name">&nbsp;</span>';
+                   list+='</div>';
+               }
+               $('.profile-container').empty();
+               $('.profile-container').append(list);
+               $('#matching').hide();
+               $('#accept').show();
+               $('#out').show();
+          },
+          error:function(e){
+          }
+       });
+    }
+
     function add(){
            more +=5;
            $.ajax({
@@ -754,7 +713,6 @@ $(document).ready(function() {
                  more:more
               },success:function(result){
                 var list='';
-                clog(result);
                 for (var i in result) {
                     list+='<li>';
                     list+='<span class="grade" id="grade">'+result[i].ranking+'등</span>';
@@ -781,42 +739,124 @@ $(document).ready(function() {
             var participationCountValue = $('#participationCountSelect').data('selected-value');
             var mateCountValue = $('#mateCountSelect').data('selected-value');
             $.ajax({
-                      url:'/mate/matching',
-                      type:'post',
-                      async: false,
-                      data:{
-                         marathonValue:marathonValue,
-                         ageValue:ageValue,
-                         genderValue:genderValue,
-                         participationCountValue:participationCountValue,
-                         mateCountValue:mateCountValue
-                      },success:function(result){
-                        var list = '';
-                        var length = result[0].buff_n;
-                        clog(length);
+                  url:'/mate/matching',
+                  type:'post',
+                  async: false,
+                  data:{
+                      marathonValue:marathonValue,
+                      ageValue:ageValue,
+                      genderValue:genderValue,
+                      participationCountValue:participationCountValue,
+                      mateCountValue:mateCountValue
+                   },success:function(result){
+                       var list = '';
+                       var length = result[0].buff_n;
+                       var remainder = length % 4;
+                       if (remainder !== 0) {
+                           length += 4 - remainder;
+                           length = length<8? 8:length;
+                       }
+                       length=length-result.length;
+                       for (var i in result) {
+                           list+='<div class="profile-box">';
+                           list+='<div id="profile_img">';
+                           list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                           list+='</div>';
+                           list+='<span class="rank-name">'+result[i].nickname+'</span>';
+                           list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
+                           list+='<span class="crew_name">'+result[i].crew_name+'</span>';
+                           list+='</div>';
+                       }
+                       for (var i=0; i<length; i++) {
+                           list+='<div class="profile-box">';
+                           list+='<div id="profile_img">';
+                           list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
+                           list+='</div>';
+                           list+='<span class="rank-name">&nbsp; </span>';
+                           list+='<span class="runkm">&nbsp;</span>';
+                           list+='<span class="crew_name">&nbsp;</span>';
+                           list+='</div>';
+                       }
+                       $('.profile-container').empty();
+                       $('.profile-container').append(list);
+                       $('#matching').hide();
+                       $('#accept').show();
+                       $('#out').show();
 
-
-                      },
-                      error:function(e){
-
-                      }
+                   },
+                     error:function(e){
+              }
             });
         }
     function start_view() {
         var list = '';
+       $('.profile-container').empty();
+        $('#matching').show();
+        $('#accept').hide();
+        $('#out').hide();
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
             list+='<div id="profile_img">';
             list+='<img src="/img/woman.png" alt="프로필 1 이미지">';
             list+='</div>';
-            list+='<div class="rank-info">';
-            list+=' <p class="rank-name"></p>';
-            list+='<p class="runkm"style="font-size: 15px;">Km</p>';
-            list+='<p class="crew-name"style="font-size: 15px;"></p>';
+            list+='<span class="rank-name">&nbsp; </span>';
+            list+='<span class="runkm">&nbsp;</span>';
+            list+='<span class="crew_name">&nbsp;</span>';
             list+='</div>';
         }
         $('.profile-container').append(list);
-
     }
+    function marathon_code(){
+            $.ajax({
+              url:'/mate/marathon_code',
+              type:'post',
+              async: false,
+              success:function(result){
+                  var list='';
+                  for(var i in result){
+                      list+='<li class="marathon_code" data-value='+result[i].marathon_code+'>'+result[i].marathon_name+'</li>';
+                  }
+                  $('.options-list').append(list);
+              },
+              error:function(e){
+              }
+           });
+    }
+
+
+
+function match_out(){
+        $.ajax({
+          url:'/mate/match_out',
+          type:'post',
+          async: false,
+          data:{
+           matching_room_code:match_yn
+          },
+          success:function(result){
+               match_yn=0;
+               start_view();
+          },
+          error:function(e){
+          }
+       });
+}
+
+function accept(){
+        $.ajax({
+          url:'/mate/accept',
+          type:'post',
+          async: false,
+          data:{
+           matching_room_code:match_yn
+          },
+          success:function(result){
+            clog('수락완료');
+          },
+          error:function(e){
+          }
+       });
+}
+
 
 </script>
