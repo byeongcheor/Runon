@@ -474,7 +474,7 @@ body {
                 <div class="select-section">
                     <div class="select-box-container">
                         <div class="select-box" id="marathonSelect">
-                            <span>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
+                           내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
                             <ul class="dropdown-menu options-list">
                             </ul>
                         </div>
@@ -607,7 +607,7 @@ $(document).ready(function() {
     // 옵션을 선택하는 함수
     function selectOption(li, box) {
         var selectedText = $(li).text(); // li의 텍스트를 가져옴
-        $(box).find('span').text(' : '+selectedText); // 선택된 텍스트로 span 업데이트
+        $(box).find('span:first').text(': '+selectedText); // 선택된 텍스트로 span 업데이트
         $(box).removeClass('active'); // 드롭다운 닫기
 
         // 선택된 li에 따라 다른 동작을 수행
@@ -810,22 +810,24 @@ $(document).ready(function() {
         $('.profile-container').append(list);
     }
     function marathon_code(){
-            $.ajax({
-              url:'/mate/marathon_code',
-              type:'post',
-              async: false,
-              success:function(result){
-                  var list='';
-                  for(var i in result){
-                      list+='<li class="marathon_code" data-value='+result[i].marathon_code+'>'+result[i].marathon_name+'</li>';
-                  }
-                  $('.options-list').append(list);
-              },
-              error:function(e){
-              }
-           });
+        $.ajax({
+            url:'/mate/marathon_code',
+            type:'post',
+            async: false,
+            success:function(result){
+                var list = '';
+                for(var i in result){
+                    list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
+                }
+                // 옵션 리스트에 항목 추가
+                $('#marathonSelect .dropdown-menu').empty(); // 기존 옵션 삭제
+                $('#marathonSelect .dropdown-menu').append(list); // 새 옵션 추가
+            },
+            error:function(e){
+                console.error('Error fetching marathon code:', e);
+            }
+        });
     }
-
 
 
 function match_out(){
