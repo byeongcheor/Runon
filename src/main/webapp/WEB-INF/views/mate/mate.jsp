@@ -34,11 +34,11 @@ body {
         object-fit: cover;
     }
     /* 전체 레이아웃 */
-    .layout {
+    .script {
         display: flex;
         justify-content: space-between;
         padding-top: 50px; /* 헤더 아래에 충분한 공간 */
-        padding-left: 50px; /* 사이드바와의 간격 */
+        padding-left: 30px; /* 사이드바와의 간격 */
         box-sizing: border-box;
     }
 
@@ -48,7 +48,7 @@ body {
         display: flex;
         align-items: center;
         flex-direction: column;
-        margin-left:80px;
+        margin-left:40px;
     }
 
     /* 프로필 박스 컨테이너 */
@@ -79,30 +79,23 @@ body {
         border-color: #CCFF47;
     }
 
-    .profile-box img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
     #profile_img {
         width: 100px;
         height: 100px;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 5px;/*동그라미 태두리*/
+        margin: 10px;/*동그라미 태두리*/
+        padding: 12px;
+        background-color: #333;
+        border-radius: 50%;
     }
 
     #profile_img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
 
@@ -231,7 +224,7 @@ body {
         position: sticky;
         top: 100px; /* 헤더 아래로 100px 고정 */
         z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-right: 30px; /* chatbox와의 간격 유지 */
+        margin-right: 10px; /* chatbox와의 간격 유지 */
     }
     .ranking {
         top: 100px;
@@ -450,7 +443,7 @@ body {
 
 
     @media screen and (max-width: 768px) {
-        .layout {
+        .script {
             flex-direction: column;
             padding: 20px;
         }
@@ -474,7 +467,7 @@ body {
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
     </div>
-    <div class="layout">
+    <div class="script">
             <!-- 중앙 메인 콘텐츠 -->
             <div class="main-content">
                 <!-- 필터 -->
@@ -595,6 +588,21 @@ var more =0;
 
 
 $(document).ready(function() {
+
+    $('.profile-box').click(function(){
+        // 팝업 창의 너비와 높이 설정
+        var width = 920;
+        var height = 850;
+
+        // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
+        var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
+        var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+
+        // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
+        window.open('/mate/profileList', 'ProfileList',
+            'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+    });
+
     match_yn();//매칭여부
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
@@ -857,6 +865,4 @@ function accept(){
           }
        });
 }
-
-
 </script>
