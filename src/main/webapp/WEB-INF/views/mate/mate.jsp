@@ -711,7 +711,6 @@ body {
 var clog = console.log;
 
 $(document).ready(function() {
-    start_view()
     // 드롭다운을 토글하는 함수
     function toggleDropdown(box) {
         $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
