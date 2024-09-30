@@ -2,7 +2,7 @@ package com.ict.finalproject.vo;
 
 public class PagingVO {
     private int nowPage = 1; //현재페이지 -> 페이지번호가 없을때 무조건 1페이지가 된다.
-    private int onePageRecord = 4; //한번에 표시할 레코드 수 : limit의 값
+    private int onePageRecord = 5; //한번에 표시할 레코드 수 : limit의 값
     private int offset; //페이지에 해당하는 레코드 선택할 때 시작위치
     private int totalRecord; //총 레코드수 DB에서 count()함수
     private int totalPage; //총 페이지수 = 총 레코드수와 한페이지 출력할 레코드로 계산

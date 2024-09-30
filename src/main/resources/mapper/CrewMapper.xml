@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.CrewDAO">
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CreateCrew">
-        select crew_name, max_num, addr, addr_gu
+        select crew_name, max_num, addr, addr_gu, content, logo
         from create_crew_tbl
         where 1=1
         <choose>
@@ -19,6 +19,7 @@
         <if test="addr != null and addr != '' and addr != '전체'">
             and addr like concat('%', #{addr}, '%')
         </if>
+        order by create_crew_code desc
         limit #{onePageRecord} offset #{offset}
     </select>
     <select id="totalRecord" resultType="int">

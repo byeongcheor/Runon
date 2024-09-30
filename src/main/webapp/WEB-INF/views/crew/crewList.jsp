@@ -62,7 +62,7 @@
                         <li class="list_item">
                             <div class="crew_profileimage">
                                 <div class="profileBox">
-                                    <img src="/img/a8.png" class="profileImg">
+                                    <img src="/crewProfile/${cvo.logo}" class="profileImg">
                                 </div>
                             </div>
                             <div class="crew_content">
@@ -72,8 +72,8 @@
                                 </div>
                                 <div class="crew_info">
                                     <span class="crewaddr">${cvo.addr}&nbsp;${cvo.addr_gu}</span>
-                                    <span class="crewIntro">남녀모두 환영합니다. 함께하실 분을 찾습니다.</span>
-                                    <span class="crewhit">조회 3,490</span>
+                                    <span class="crewIntro">${cvo.content}</span>
+                                    <span class="crewhit">🖤 3,490</span>
                                 </div>
                             </div>
                             <div class="recruit">
