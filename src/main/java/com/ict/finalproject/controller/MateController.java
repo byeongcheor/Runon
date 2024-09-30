@@ -16,16 +16,21 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/mate")
 public class MateController {
-    int user_code = 2;
+    private int user_code = 2;
     @Autowired
     MateService service;
 
     @GetMapping("/mate")
-    public String matchingList(HttpServletRequest request, Model model){//
+    public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
             //int user_code = 4;//유저코드
             List<MateVO> ranking = service.ranking();
+            vo.setUsercode(user_code);
+            vo.setMatch_yn(service.match_yn(user_code));
+            System.out.println("user_code : "+user_code);
+            System.out.println("match_yn : "+service.match_yn(user_code));
             model.addAttribute("ranking",ranking);
+            model.addAttribute("vo",vo);
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -49,39 +54,24 @@ public class MateController {
     }
     @PostMapping("/matching")
     @ResponseBody
-    public List<MateVO>  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue, Model model) {
+    public int  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue, Model model) {
         //participationCountValue 다시 봐야됨
         //int user_code = 4;//유저코드
-        List<MateVO> room_list = null;
+        int matching_room_code=0;
         try {
-            int matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+             matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
             if (matching_room_code == 0) {
                 service.matching_insert_room(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);//방 만들기
                 matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
             }
             service.applicant_insert(matching_room_code, user_code);//방입장
             service.matching_room_personnel_update_plus(matching_room_code);//현재인원수 증가
-            room_list = service.match_view(matching_room_code);//방에 있는사람 정보 들고오기
-        } catch (Exception e) {
-            // 에러가 발생한 경우 로그 출력
-            e.printStackTrace();
-        }
-        return room_list;
-    }
-
-    @PostMapping("/match_yn")
-    @ResponseBody
-    public int likeInsert(){
-        //int user_code = 4;//유저코드
-        int match_yn=0;
-        try {
-            match_yn = service.match_yn(user_code);
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
         }
-        return match_yn;
+        return matching_room_code;
     }
 
     @PostMapping("/match_view")

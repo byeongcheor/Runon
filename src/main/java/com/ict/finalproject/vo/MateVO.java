@@ -46,6 +46,10 @@ public class MateVO {
     private int role;
     private int ranking;
     private int more=10;
+    private int accept_cnt;
+    private int update_cnt;
+    private int match_yn;
+
 
     private String updated_date;
     private String deleted_date;

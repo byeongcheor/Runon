@@ -552,7 +552,7 @@ body {
                         </li>
                     </c:forEach>
                 </ul>
-                <div class="more" id="more" onclick="add();">더보기</div>
+                <div class="more" id="more" onclick="ranking_more();">더보기</div>
             </div>
             </div>
             <!-- 오른쪽 채팅창 -->
@@ -583,12 +583,16 @@ body {
 </body>
 <script>
 var clog = console.log;
-var match_yn, now_personnel, new_personnel, intervalId;
+var now_personnel, new_personnel, intervalId;
    //매칭룸코드
-var more =0;
+var more = 0;
+var cnt  = 0;
+var accept_cnt = 0;
+var update_cnt = 0;
+var match_yn="${vo.match_yn}";
+var usercode="${vo.usercode}";
 
 $(document).ready(function() {
-    match_yn();//매칭여부
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
         if(match_yn>0){
@@ -630,18 +634,6 @@ $(document).ready(function() {
         });
     }, 200);
 });
-    function match_yn(){
-        $.ajax({
-          url:'/mate/match_yn',
-          type:'post',
-          async: false,
-          success:function(result){
-            match_yn=result;
-          },
-          error:function(e){
-          }
-       });
-    }
 
     function match_view_start(match_yn){
            intervalId = setInterval(function() {
@@ -658,48 +650,23 @@ $(document).ready(function() {
            matching_room_code:match_yn //matching_room_code
           },
           success:function(result){
-               var list = '';
                var length = result[0].buff_n;
-               var remainder = length % 4;
-               if (remainder !== 0) {
-                   length += 4 - remainder;
+               if(accept_cnt != result[0].accept_cnt || update_cnt != result[0].update_cnt){
+                   grid_draw(length,result);
+                   accept_cnt = result[0].accept_cnt;
+                   update_cnt = result[0].update_cnt;
+              }
+               if(cnt==0){
+                   match_view_start(match_yn);
+                   cnt++;
                }
-               length = length<8? 8:length;
-               length=length-result.length;
-               for (var i in result) {
-                   if(result[i].a_s!=='Y') var style ="" //result[i].a_s 수락여부 값
-                   else var style ="transform: scale(1.05);border-color: #CCFF47;";
-                   list+='<div class="profile-box" onclick="profile_update();" style="'+style+'">';
-                   list+='<div id="profile_img">';
-                   list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-                   list+='</div>';
-                   list+='<span class="rank-name">'+result[i].nickname+'</span>';
-                   list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
-                   list+='<span class="crew_name">'+result[i].crew_name+'</span>';
-                   list+='</div>';
-               }
-               for (var i=0; i<length; i++) {
-                   list+='<div class="profile-box">';
-                   list+='<div id="profile_img">';
-                   list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-                   list+='</div>';
-                   list+='<span class="rank-name">&nbsp; </span>';
-                   list+='<span class="runkm">&nbsp;</span>';
-                   list+='<span class="crew_name">&nbsp;</span>';
-                   list+='</div>';
-               }
-               $('.profile-container').empty(); //매칭룸비우기
-               $('.profile-container').append(list);
-               $('#matching').hide();
-               $('#accept').show();
-               $('#out').show();
           },
           error:function(e){
           }
        });
     }
 
-    function add(){
+    function ranking_more(){
            more +=5;
            $.ajax({
               url:'/mate/more',
@@ -739,7 +706,6 @@ $(document).ready(function() {
                 // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
                 window.open('/mate/profileList', 'ProfileList',
                 'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
-
     }
 
     function matching() {
@@ -759,65 +725,13 @@ $(document).ready(function() {
                       participationCountValue:participationCountValue,
                       mateCountValue:mateCountValue
                    },success:function(result){
-                       var list = '';
-                       var length = result[0].buff_n;//최대인원수
-                       match_yn = result[0].b_n;//매칭 룸 번호 넣기
-                       var remainder = length % 4;
-
-                       if (remainder !== 0) {
-                           length += 4 - remainder;
-                       }
-                       length = length<8? 8:length;
-                       length=length-result.length;
-                       for (var i in result) {
-                           list+='<div class="profile-box">';
-                           list+='<div id="profile_img">';
-                           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-                           list+='</div>';
-                           list+='<span class="rank-name">'+result[i].nickname+'</span>';
-                           list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
-                           list+='<span class="crew_name">'+result[i].crew_name+'</span>';
-                           list+='</div>';
-                       }
-                       for (var i=0; i<length; i++) {
-                           list+='<div class="profile-box">';
-                           list+='<div id="profile_img">';
-                           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-                           list+='</div>';
-                           list+='<span class="rank-name">&nbsp; </span>';
-                           list+='<span class="runkm">&nbsp;</span>';
-                           list+='<span class="crew_name">&nbsp;</span>';
-                           list+='</div>';
-                       }
-                       $('.profile-container').empty();
-                       $('.profile-container').append(list);
-                       $('#matching').hide();
-                       $('#accept').show();
-                       $('#out').show();
-                       match_view_start(match_yn);
+                      match_yn=result;
+                      match_view(result);
                    },
                      error:function(e){
               }
             });
         }
-    function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
-        var list = '';
-        $('.profile-container').empty();
-        $('#matching').show();
-        $('#accept').hide();
-        $('#out').hide();
-        for (var i=0; i<8; i++) {
-            list+='<div class="profile-box">';
-            list+='<div id="profile_img">';
-            list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-            list+='</div>';
-            list+='<span class="rank-name">&nbsp; </span>';
-            list+='<span class="runkm">&nbsp;</span>';
-            list+='<span class="crew_name">&nbsp;</span>';
-            list+='</div>';
-        }
-        $('.profile-container').append(list);
-    }
     function marathon_code(){
           $.ajax({
                 url:'/mate/marathon_code',
@@ -839,36 +753,94 @@ $(document).ready(function() {
     }
 
 
-function match_out(){
-        $.ajax({
-          url:'/mate/match_out',
-          type:'post',
-          async: false,
-          data:{
-           matching_room_code:match_yn
-          },
-          success:function(result){
-               match_yn=0;
-               start_view();
-               clearInterval(intervalId);
-          },
-          error:function(e){
-          }
-       });
-}
+    function match_out(){
+            $.ajax({
+              url:'/mate/match_out',
+              type:'post',
+              async: false,
+              data:{
+               matching_room_code:match_yn
+              },
+              success:function(result){
+                   location.reload();  // 페이지 새로고침 추가
+              },
+              error:function(e){
+              }
+           });
+    }
 
-function accept(){
-        $.ajax({
-          url:'/mate/accept',
-          type:'post',
-          async: false,
-          data:{
-           matching_room_code:match_yn
-          },
-          success:function(result){
-          },
-          error:function(e){
-          }
-       });
-}
+    function accept(){
+            $.ajax({
+              url:'/mate/accept',
+              type:'post',
+              async: false,
+              data:{
+               matching_room_code:match_yn
+              },
+              success:function(result){
+              },
+              error:function(e){
+              }
+           });
+    }
+
+
+    function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
+        var list = '';
+        $('.profile-container').empty();
+        $('#matching').show();
+        $('#accept').hide();
+        $('#out').hide();
+        for (var i=0; i<8; i++) {
+            list+='<div class="profile-box">';
+            list+='<div id="profile_img">';
+            list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
+            list+='</div>';
+            list+='<span class="rank-name">&nbsp; </span>';
+            list+='<span class="runkm">&nbsp;</span>';
+            list+='<span class="crew_name">&nbsp;</span>';
+            list+='</div>';
+        }
+        $('.profile-container').append(list);
+    }
+
+    function grid_draw(length,result){
+        var list = '';
+        var length = length;//최대인원수
+        var remainder = length % 4;
+        if (remainder !== 0) length += 4 - remainder;
+        length = length<8? 8:length;
+        length=length-result.length;
+        for (var i in result) {
+           if(result[i].a_s!=='Y') var style ="" //result[i].a_s 수락여부 값
+           else var style ="transform: scale(1.05);border-color: #CCFF47;";
+           list+='<div class="profile-box" onclick="profile_update();" style="'+style+'">';
+           list+='<div id="profile_img">';
+           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
+           list+='</div>';
+           list+='<span class="rank-name">'+result[i].nickname+'</span>';
+           list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
+           list+='<span class="crew_name">'+result[i].crew_name+'</span>';
+           list+='</div>';
+       }
+       for (var i=0; i<length; i++) {
+           list+='<div class="profile-box">';
+           list+='<div id="profile_img">';
+           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
+           list+='</div>';
+           list+='<span class="rank-name">&nbsp; </span>';
+           list+='<span class="runkm">&nbsp;</span>';
+           list+='<span class="crew_name">&nbsp;</span>';
+           list+='</div>';
+       }
+        $('.profile-container').empty();
+        $('.profile-container').append(list);
+        $('#matching').hide();
+        $('#accept').show();
+        $('#out').show();
+    }
+
+
+
+
 </script>
