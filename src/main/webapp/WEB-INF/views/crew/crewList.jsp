@@ -1,139 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+<script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
 <link rel="stylesheet" href="/css/crewList.css" type="text/css">
 <script>
-    function toggleDropdown(box) {
-        const selectBoxes = document.querySelectorAll('.select-box');
-        selectBoxes.forEach(b => {
-            if (b !== box) {
-                b.classList.remove('active');
-            }
-        });
-        box.classList.toggle('active');
+    var searchKey="${pvo.searchKey}";
+    var searchWord="${pvo.searchWord}";
+    var addr = "${pvo.addr}";
+    function reloadPage(page){
+        var url = "/crew/crewList?nowPage="+page;
+        if(searchWord!=null && searchWord!=""){
+           url += "&searchKey="+searchKey+"&searchWord="+searchWord;
+        }
+        if (addr != null && addr != "") {
+            url += "&addr=" + addr;
+        }
+        location.href = url;
     }
 </script>
-<style>
-    /* 셀렉트박스 섹션 */
-    .crew_filter{
-        width: 50%;
-        margin: 0 auto;
-    }
-    .select-section {
-        display: flex;
-        gap: 5px;  /* 셀렉트 박스 간격을 줄임 */
-        justify-content: flex-start;  /* 가운데 정렬 */
-        align-items: center;
-        margin: 35px 0;
-        margin-bottom:55px;
-    }
-    .select-box-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;  /* 간격을 조금 줄임 */
-        margin-left: 50px;
-    }
-
-    .select-box {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;  /* 텍스트 중간 정렬 */
-        padding: 10px 10px;
-        border: 1px solid grey;  /* 헤더의 메뉴와 같은 테두리 색상 */
-        border-radius: 20px;
-        color: black;  /* 헤더 메뉴 텍스트 색상 */
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
-        cursor: pointer;
-        width: 100px;
-        text-align: center;
-        transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-
-    .select-box.active {
-        border-color: #CCFF47;  /* hover 시 강조 색상 */
-        background: rgba(18, 18, 18, 0.8);
-        color: white;
-    }
-
-
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: rgba(18, 18, 18, 0.8);
-        border: 1px solid #fff;
-        border-radius: 10px;
-        list-style: none;
-        padding: 0;
-        margin-top: 5px;
-        width: 100%;
-        z-index: 1000;
-        opacity: 0;
-        transform: scaleY(0);
-        transform-origin: top;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    .dropdown-menu li {
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: none;
-        color: white;
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
-    }
-
-
-     .dropdown-menu li:hover {
-        background-color: transparent;
-        color: #CCFF47;
-        font-size: 16px;  /* hover 시에도 동일한 크기 */
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.3s ease, font-size 0.3s ease;
-     }
-
-     .select-box.active .dropdown-menu {
-        display: block;
-        opacity: 1;
-        transform: scaleY(1);
-     }
-     .select-box:hover {
-         transform: scale(1.05);
-         border-color: #CCFF47;
-     }
-
-
-     .search_match {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 20px;
-        border: 2px solid #fff;
-        border-radius: 10px;
-        background-color: #CCFF47;
-        color: black;
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
-        cursor: pointer;
-        text-align: center;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .search_match:hover {
-        background-color: black;  /* hover 시 배경색 검정 */
-        color: white;  /* hover 시 텍스트 색상 흰색 */
-    }
-</style>
-    <div class="container">
+    <div>
         <div id="bannerBox">
-            <img src="/img/크루배너.jpg" id="bannerImg"/>
+            <img src="/img/러닝고화질.jpg" id="bannerImg"/>
         </div>
         <div id="crew_body">
             <div id="crew_nav">
@@ -144,47 +40,25 @@
                 </ul>
             </div>
         </div>
-        <div class="crew_filter">
-            <div class="select-section">
-               <div class="select-box-container">
-                   <div class="select-box" onclick="toggleDropdown(this)">
-                       지역 <span>&nbsp;▼</span>
-                       <ul class="dropdown-menu">
-                           <li>서울</li>
-                           <li>경기</li>
-                           <li>강원</li>
-                           <li>충청</li>
-                           <li>경상</li>
-                           <li>전라</li>
-                       </ul>
-                   </div>
-                   <div class="select-box" onclick="toggleDropdown(this)">
-                       성별 <span>&nbsp;▼</span>
-                       <ul class="dropdown-menu">
-                           <li>남녀무관</li>
-                           <li>남성</li>
-                           <li>여성</li>
-                       </ul>
-                   </div>
-                   <div class="select-box" onclick="toggleDropdown(this)">
-                       연령 <span>&nbsp;▼</span>
-                       <ul class="dropdown-menu">
-                            <li>연령무관</li>
-                            <li>10대</li>
-                            <li>20대</li>
-                            <li>30대</li>
-                            <li>40대</li>
-                            <li>50대 이상</li>
-                       </ul>
-                   </div>
-                   <button class="search_match">&nbsp;검색하기&nbsp;</button>
-               </div>
-           </div>
+        <div class="crew_search">
+            <form class="searchForm">
+                <select class="form-select" name="searchKey">
+                    <option value="">전체</option>
+                    <option value="crew_name" ${pvo.searchKey == 'crew_name' ? 'selected' : ''}>크루명</option>
+                </select>
+                <select class="form-select" name="addr">
+                    <option value="">전체</option>
+                    <option value="경기" ${pvo.addr == '경기' ? 'selected' : ''}>경기</option>
+                    <option value="서울" ${pvo.addr == '서울' ? 'selected' : ''}>서울</option>
+                </select>
+                <input type="text" name="searchWord" id="searchWord" />
+                <button type="submit" class="btn btn-outline-secondary">Search</button>
+            </form>
         </div>
         <div class="crew_list">
             <div class="list_wrapper">
                 <ul>
-                    <c:forEach var="i" begin="1" end="8">
+                    <c:forEach var="cvo" items="${list}">
                         <li class="list_item">
                             <div class="crew_profileimage">
                                 <div class="profileBox">
@@ -193,21 +67,54 @@
                             </div>
                             <div class="crew_content">
                                 <div class="crew_title">
-                                    <span class="crewname"><b>말달리자</b></span>
-                                    <span class="count">🏃‍♀️8<span>
+                                    <span class="crewname"><b>${cvo.crew_name}</b></span>
+                                    <span class="count">🏃‍♀️${cvo.max_num}<span>
                                 </div>
                                 <div class="crew_info">
-                                    <span class="crewaddr">서울시 영등포구</span>
+                                    <span class="crewaddr">${cvo.addr}&nbsp;${cvo.addr_gu}</span>
                                     <span class="crewIntro">남녀모두 환영합니다. 함께하실 분을 찾습니다.</span>
                                     <span class="crewhit">조회 3,490</span>
                                 </div>
                             </div>
                             <div class="recruit">
-                                <button class="recruitbtn">가입신청하기</button>
+                                <button type="button" class="btn btn-outline-dark" id="recruitbtn">가입신청하기</button>
                             </div>
                         </li>
                     </c:forEach>
                 </ul>
             </div>
         </div>
+        <!-- 페이징 -->
+        <ul class="pagination justify-content-center" style="margin:100px;">
+            <!-- 이전페이지 -->
+            <!-- 첫번째 페이지 -->
+            <c:if test="${pvo.nowPage==1}">
+                <li class="page-item"><a class="page-link"
+                href="javascript:void(0);"><</a></li>
+            </c:if>
+            <!-- 첫번째 페이지가 아니면 -->
+            <c:if test="${pvo.nowPage>1}">
+                <li class="page-item"><a class="page-link"
+                href="javascript:reloadPage(${pvo.nowPage-1});">Previous</a></li>
+            </c:if>
+            <c:forEach var="p" begin="${pvo.startPageNum}"
+            end="${pvo.startPageNum+pvo.onePageNum-1}">
+                <c:if test="${p<=pvo.totalPage}">
+                    <li class='page-item <c:if test="${p==pvo.nowPage}">active</c:if>'><a
+                      class="page-link" href="javascript:reloadPage(${p});">${p}</a></li>
+                </c:if>
+            </c:forEach>
+
+        <!-- 다음페이지 -->
+        <!-- 다음페이지가 없을때 -->
+            <c:if test="${pvo.nowPage==pvo.totalPage}">
+                <li class="page-item"><a class="page-link"
+                href="javascript:void(0);">Next</a></li>
+            </c:if>
+            <!-- 다음페이지가 있을때 -->
+            <c:if test="${pvo.nowPage<pvo.totalPage}">
+                <li class="page-item"><a class="page-link"
+                href="javascript:reloadPage(${pvo.nowPage+1});">></a></li>
+            </c:if>
+        </ul>
     </div>

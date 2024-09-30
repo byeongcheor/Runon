@@ -3,5 +3,26 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.CrewDAO">
-
+    <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CreateCrew">
+        select crew_name, max_num, addr, addr_gu
+        from create_crew_tbl
+        where 1=1
+        <choose>
+            <when test="searchKey == 'crew_name' and searchWord != ''">
+                and crew_name like concat('%', #{searchWord}, '%')
+            </when>
+            <otherwise>
+                <!-- No search key, no filter applied -->
+            </otherwise>
+        </choose>
+        <!-- 일정 필터 -->
+        <if test="addr != null and addr != '' and addr != '전체'">
+            and addr like concat('%', #{addr}, '%')
+        </if>
+        limit #{onePageRecord} offset #{offset}
+    </select>
+    <select id="totalRecord" resultType="int">
+        select count(create_crew_code)
+        from create_crew_tbl
+    </select>
 </mapper>

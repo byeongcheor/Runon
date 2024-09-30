@@ -1,11 +1,16 @@
 package com.ict.finalproject.controller;
 
 import com.ict.finalproject.service.CrewService;
+import com.ict.finalproject.vo.CreateCrew;
+import com.ict.finalproject.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -14,10 +19,11 @@ public class CrewController {
     CrewService service;
     //크루모집페이지폼이동
     @GetMapping("crew/crewList")
-    public String crewList(){
-        ModelAndView mav = new ModelAndView();
-
-        mav.setViewName("crew/crewList");
+    public String crewList(CreateCrew cvo, PagingVO pvo, Model model){
+        List<CreateCrew> list = service.crewSelectPaging(pvo);
+        pvo.setTotalRecord(service.totalRecord(pvo));
+        model.addAttribute("list", list);
+        model.addAttribute("pvo", pvo);
         return "crew/crewList";
     }
     //크루생성페이지폼

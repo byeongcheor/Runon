@@ -86,9 +86,32 @@
 .crewaddr{
     margin-bottom: 3px;
 }
-.recruitbtn{
-
-}
 .recruit{
     margin-top: 40px;
+}
+.page-link{
+    color: black;
+}
+.active>.page-link{
+    background-color: #121212;
+    border-color: #121212;
+    color: white;
+}
+.crew_search{
+    width: 50%;
+    margin: 0 auto;
+}
+.searchForm{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 45px;
+    margin-bottom: 30px;
+}
+.form-select{
+    width: 100px;
+}
+#searchWord{
+    border-radius: 5px;
+    border: 1px solid #ced4da;
 }
