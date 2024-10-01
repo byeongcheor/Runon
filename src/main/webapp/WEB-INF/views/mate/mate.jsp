@@ -207,7 +207,12 @@ $(document).ready(function() {
                    accept_cnt = result[0].accept_cnt;
                    update_cnt = result[0].update_cnt;
               }
-
+              if(result[0].update_cnt!==1&&result[0].update_cnt==result[0].accept_cnt){
+                   setTimeout(function() {
+                      alert('메이트가 되었습니다. 마이페이지에서 확인해주세요.');
+                      mate_complite();
+                      },2000);
+              }
                if(cnt==0){
                    match_view_start(match_yn);
                    cnt++;
@@ -324,6 +329,22 @@ $(document).ready(function() {
               }
            });
     }
+
+    function mate_complite(){
+        $.ajax({
+          url:'/mate/mate_complite',
+          type:'post',
+          async: false,
+          data:{
+           matching_room_code:match_yn
+          },
+          success:function(result){
+              window.location.assign("/mate/mate");
+          },
+          error:function(e){
+          }
+        });
+    };
 
 
 $(document).ready(function() {

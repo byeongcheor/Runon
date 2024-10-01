@@ -149,4 +149,9 @@
         where now_personnel = 0
     </delete>
 
+    <update id="mate_complite">
+        update applicant_tbl set is_Completion=1
+        where  matching_room_code=${param1}
+    </update>
+
 </mapper>
