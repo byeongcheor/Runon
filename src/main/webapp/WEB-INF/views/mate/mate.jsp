@@ -7,12 +7,8 @@
 <title>Document</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/css/slick.css" type="text/css">
-<link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
-<link rel="stylesheet" href="/css/main.css" type="text/css">
-<link rel="stylesheet" href="/css/mate.css" type="text/css">
-<script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 </head>
+
 <body>
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
@@ -24,6 +20,7 @@
                 <div class="select-section">
                     <div class="select-box-container">
                         <div class="select-box" id="marathonSelect">
+                         
                             <p>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span></p>
                             <ul class="dropdown-menu options-list" id="options_list">
                             </ul>
@@ -58,6 +55,7 @@
                         <div class="select-box" id="mateCountSelect">
                             메이트인원 <span>&nbsp;▼</span>
                             <ul class="dropdown-menu options-list">
+                               
                                 <li data-value="2">2명</li>
                                 <li data-value="3">3명</li>
                                 <li data-value="4">4명</li>
@@ -95,6 +93,7 @@
                                 <span class="rank-name">${rank.nickname}</span>
                                 <div class="rank-details">
                                         <span class="runkm">${rank.point_code}</span>
+                                     
                                         <span class="crew-name">${rank.crew_name}</span>
                                 </div>
                             </div>
@@ -170,6 +169,7 @@ $(document).ready(function() {
             localStorage.setItem(box.attr('id'), selectedValue); // select-box의 ID를 키로 사용하여 값 저장
         }
 
+
     $('.select-box').each(function() {
             var box = $(this);
             var storedValue = localStorage.getItem(box.attr('id')); // 로컬 스토리지에서 값 불러오기
@@ -241,6 +241,7 @@ $(document).ready(function() {
                     list+='<div class="rank-info">';
                     list+='<span class="rank-name">'+result[i].nickname+'</span>';
                     list+='<span class="runkm">'+result[i].point_code+'</span>';
+
                     list+='<span class="crew-name">'+result[i].crew_name+'</span>';
                     list+='</div>';
                     list+='</li>';
@@ -335,6 +336,7 @@ $(document).ready(function() {
            });
     }
 
+
 $(document).ready(function() {
     // 초기 수락 버튼에 대한 이벤트 핸들러 등록
     $(document).on('click', '#accept', function() {
@@ -408,7 +410,6 @@ $(document).ready(function() {
         $('.profile-container').empty();
         $('#matching').show();
         $('#accept').hide();
-        $('#acceptN').hide();
         $('#out').hide();
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
@@ -422,7 +423,7 @@ $(document).ready(function() {
         }
         $('.profile-container').append(list);
     }
-
+;
 function grid_draw(length, result) {
     var list = '';
 

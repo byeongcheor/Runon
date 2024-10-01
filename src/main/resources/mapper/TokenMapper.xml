@@ -10,5 +10,11 @@
             #{param1},
             date_add(now(),interval 30 day)
     </insert>
+    <select id="checkToken" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM tokentbl WHERE usercode = (select usercode from user_tbl where username=#{param1})) as is_true
+    </select>
+    <update id="updateToken">
+        update tokentbl set create_date =now(), deleted_date= date_add(now(),interval 30 day),refresh_no=#{param1} where usercode =(select usercode from user_tbl where username=#{param2});
+    </update>
 
 </mapper>

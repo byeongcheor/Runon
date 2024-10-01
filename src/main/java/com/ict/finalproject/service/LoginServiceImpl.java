@@ -13,4 +13,14 @@ public class LoginServiceImpl implements LoginService {
     public void addToken(String refreshToken,String username) {
         dao.addToken(refreshToken,username);
     }
+
+    @Override
+    public Boolean checkToken(String username) {
+        return dao.checkToken(username);
+    }
+
+    @Override
+    public void updateToken(String refreshToken, String username) {
+        dao.updateToken(refreshToken,username);
+    }
 }
