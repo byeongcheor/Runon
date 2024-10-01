@@ -35,24 +35,6 @@
                             <ul class="dropdown-menu options-list" id="options_list">
                             </ul>
                         </div>
-                        <div class="select-box" id="ageSelect">
-                            나이 <span>&nbsp;▼</span>
-                            <ul class="dropdown-menu options-list">
-                                <li data-value="10">10대</li>
-                                <li data-value="20">20대</li>
-                                <li data-value="30">30대</li>
-                                <li data-value="40">40대 이상</li>
-                                <li data-value="All">모든 나이</li>
-                            </ul>
-                        </div>
-                        <div class="select-box" id="genderSelect">
-                            성별 <span>&nbsp;▼</span>
-                            <ul class="dropdown-menu options-list">
-                                <li data-value="M">남성</li>
-                                <li data-value="F">여성</li>
-                                <li data-value="All">모두</li>
-                            </ul>
-                        </div>
                         <div class="select-box" id="participationCountSelect">
                            참가횟수 <span>&nbsp;▼</span>
                            <ul class="dropdown-menu options-list">
@@ -282,18 +264,19 @@ $(document).ready(function() {
 
     function matching() {
             var marathonValue = $('#marathonSelect').data('selected-value');
-            var ageValue = $('#ageSelect').data('selected-value');
-            var genderValue = $('#genderSelect').data('selected-value');
             var participationCountValue = $('#participationCountSelect').data('selected-value');
             var mateCountValue = $('#mateCountSelect').data('selected-value');
+            clog(marathonValue);
+            if(marathonValue===undefined||participationCountValue===undefined||mateCountValue===undefined){
+                alert('옵션을 선택해주세요');
+                return false;
+            }
             $.ajax({
                   url:'/mate/matching',
                   type:'post',
                   async: false,
                   data:{
                       marathonValue:marathonValue,
-                      ageValue:ageValue,
-                      genderValue:genderValue,
                       participationCountValue:participationCountValue,
                       mateCountValue:mateCountValue
                    },success:function(result){
