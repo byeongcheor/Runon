@@ -63,6 +63,10 @@ public class MateServiceImpl implements MateService {
     public int accept( int matching_room_code, int user_code) {
         return dao.accept(matching_room_code, user_code);
     }
+    @Override
+    public int accept_n( int matching_room_code, int user_code) {
+        return dao.accept_n(matching_room_code, user_code);
+    }
 
     @Override
     public int matching_room_personnel_update_plus( int matching_room_code) {

@@ -138,6 +138,11 @@
         where  matching_room_code=${param1}
         and    usercode=${param2}
     </update>
+    <update id="accept_n">
+        update applicant_tbl set accept_yn='N'
+        where  matching_room_code=${param1}
+        and    usercode=${param2}
+    </update>
     <delete id="matching_room_personnel_zero_delete">
         delete from matching_room_tbl
         where now_personnel = 0

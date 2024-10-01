@@ -15,10 +15,10 @@ public interface MateDAO {
     int matching_insert_room(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue);
     int applicant_insert(int applicant_insert, int user_code);
     int accept(int applicant_insert, int user_code);
+    int accept_n(int matchingRoomCode, int userCode);
     int match_yn(int user_code);
     int match_out(int matching_room_code, int user_code);
     int matching_room_personnel_update_plus(int matching_room_code);
     int matching_room_personnel_update_minus(int matching_room_code);
     int matching_room_personnel_zero_delete();
-
 }

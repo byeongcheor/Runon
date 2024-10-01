@@ -118,6 +118,22 @@ public class MateController {
         //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
         return a;
     }
+    // 수락거절
+    @PostMapping("/accept_n")
+    @ResponseBody
+    public int  accept_n(int matching_room_code) {
+        // int user_code = 4;//유저코드
+        int a=1;
+        try {
+            service.accept_n(matching_room_code, user_code);
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
+        return a;
+    }
+
 
     @PostMapping("/marathon_code")
     @ResponseBody

@@ -10,459 +10,9 @@
 <link rel="stylesheet" href="/css/slick.css" type="text/css">
 <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
 <link rel="stylesheet" href="/css/main.css" type="text/css">
+<link rel="stylesheet" href="/css/mate.css" type="text/css">
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 </head>
-
-<style>
-
-body {
-        margin: 0;
-        padding: 0;
-        font-family: "Noto Sans KR", sans-serif;
-        background-color: #121212;
-        color: white;
-    }
-
-    #bannerBox{
-        width:100%;
-        height:400px;
-        margin: 0 auto;
-    }
-    #bannerImg{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    /* 전체 레이아웃 */
-    .layout {
-        display: flex;
-        justify-content: space-between;
-        padding-top: 50px; /* 헤더 아래에 충분한 공간 */
-        padding-left: 30px; /* 사이드바와의 간격 */
-        box-sizing: border-box;
-    }
-
-    /* 중앙 메인 콘텐츠 */
-    .main-content {
-        width: 70%;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        margin-left:40px;
-    }
-
-    /* 프로필 박스 컨테이너 */
-    .profile-container {
-        margin: 30px 0;
-        width: 75%;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 40px;
-    }
-
-    /* 개별 프로필 박스 */
-    .profile-box {
-        background-color: #1e1e1e;
-        border: 2px solid #333;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;  /* 중앙 정렬 */
-    }
-
-
-    .profile-box:hover {
-        transform: scale(1.05);
-        border-color: #CCFF47;
-    }
-
-    #profile_img {
-        width: 100px;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 10px;/*동그라미 태두리*/
-        padding: 12px;
-        background-color: #333;
-        border-radius: 50%;
-    }
-
-    #profile_img img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-
-    .profile-box p {
-        margin: 5px 0;
-    }
-
-/* 셀렉트박스 섹션 */
-    .select-section {
-        display: flex;
-        gap: 5px;  /* 셀렉트 박스 간격을 줄임 */
-        justify-content: center;  /* 가운데 정렬 */
-        align-items: center;
-        margin: 30px 0;
-        margin-bottom:50px;
-    }
-.select-box-container {
-        margin-top: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;  /* 간격을 조금 줄임 */
-    }
-
-    .select-box {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;  /* 텍스트 중간 정렬 */
-        padding: 10px 10px;
-        border: 1px solid #fff;  /* 헤더의 메뉴와 같은 테두리 색상 */
-        border-radius: 10px;
-        background-color: #1e1e1e;
-        color: white;  /* 헤더 메뉴 텍스트 색상 */
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
-        cursor: pointer;
-        width: 140px;
-        text-align: center;
-        transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-
-    .select-box.active {
-        border-color: #CCFF47;  /* hover 시 강조 색상 */
-        background: rgba(18, 18, 18, 0.8);
-        color: white;
-    }
-
-
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: rgba(18, 18, 18, 0.8);
-        border: 1px solid #fff;
-        border-radius: 10px;
-        list-style: none;
-        padding: 0;
-        margin-top: 5px;
-        width: 100%;
-        z-index: 1000;
-        opacity: 0;
-        transform: scaleY(0);
-        transform-origin: top;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    .dropdown-menu li {
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: none;
-        color: white;
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
-    }
-
-
-    .dropdown-menu li:hover {
-        background-color: transparent;
-        color: #CCFF47;
-        font-size: 16px;  /* hover 시에도 동일한 크기 */
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.3s ease, font-size 0.3s ease;
-    }
-
-    .select-box.active .dropdown-menu {
-        display: block;
-        opacity: 1;
-        transform: scaleY(1);
-    }
-    .select-box:hover {
-        transform: scale(1.05);
-        border-color: #CCFF47;
-    }
-
-
-    .search_match {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 20px;
-        border: 2px solid #fff;
-        border-radius: 10px;
-        background-color: #CCFF47;
-        color: black;
-        font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-        font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
-        cursor: pointer;
-        text-align: center;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .search_match:hover {
-        background-color: black;  /* hover 시 배경색 검정 */
-        color: white;  /* hover 시 텍스트 색상 흰색 */
-    }
-
-    /* 랭킹 */
-    .ranking-container {
-        position: -webkit-sticky; /* 사파리 브라우저 대응 */
-        position: sticky;
-        top: 100px; /* 헤더 아래로 100px 고정 */
-        z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-right: 10px; /* chatbox와의 간격 유지 */
-    }
-    .ranking {
-        top: 100px;
-        width: 300px;
-        background-color: #1e1e1e;
-        color: #fff;
-        margin: 15px 0;
-        margin-right:230px;
-        padding: 10px 20px;
-        border-radius: 10px;
-        max-height: 210px;
-        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
-    }
-
-    .ranking::-webkit-scrollbar {
-        width: 8px;
-        margin-top: 10px;
-    }
-
-    .ranking::-webkit-scrollbar-thumb {
-        background-color: #899cb5;
-        border-radius: 10px;
-    }
-
-    .ranking::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-    .ranking .menu-title {
-        position: sticky; /* 스크롤에 따라 고정되게 설정 */
-        top: 0; /* 상단에 고정 */
-        background-color: #1e1e1e; /* 배경색 고정 */
-        z-index: 100; /* 다른 요소보다 위에 있도록 설정 */
-        padding: 10px 10px; /* select-box와 동일한 패딩 */
-        margin-bottom: 5px;
-        margin-top: 15px;
-        font-size: 16px; /* select-box와 동일한 텍스트 크기 */
-        font-weight: 500; /* select-box와 동일한 텍스트 굵기 */
-        text-align: center;
-        color: white; /* select-box와 동일한 텍스트 색상 */
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-        border: 1px solid #fff; /* select-box와 동일한 테두리 */
-        border-radius: 10px; /* select-box와 동일한 둥근 모서리 */
-    }
-    .ranking ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .ranking ul li {
-        padding: 5px 5px;
-        cursor: pointer;
-        color: white;
-        transition: 0.3s;
-        margin-left: 15px;
-    }
-
-    .ranking ul li:hover {
-        background-color: #2e2e2e;
-        color: #CCFF47;
-    }
-
-    .rank-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .rank-list li {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-    }
-    .profile-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%; /* 이미지를 둥글게 */
-
-
-    }
-    .rank-list li:hover .profile-img {
-        border-color: #CCFF47; /* 마우스 오버 시 연두색 테두리 */
-        box-shadow: 0 0 8px #CCFF47; /* 마우스 오버 시 부각되는 효과 */
-    }
-    .rank-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .rank-name {
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .rank-details {
-        display: flex;
-        align-items: center; /* 세로 정렬을 맞추기 위해 사용 */
-    }
-
-    .runkm {
-        font-size: 12px;
-        color: #ff4d4d;
-    }
-
-    .crew-name {
-        font-size: 12px;
-        color: #CCFF47;
-        margin-left: 10px; /* .runkm 옆에 배치 */
-    }
-    .more {
-        margin-top: 10px;
-        text-align: center;
-        font-size: 14px;
-        cursor: pointer;
-        color: #00bfff;
-    }
-
-
-    /* 오른쪽 채팅창 */
-    .chatbox {
-        width: 380px;
-        height: 600px;
-        background-color: #1e1e1e;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 10px;
-        border-radius: 10px;
-        margin-right: 20px;
-        max-height: 600px; /* 원하는 고정된 높이로 변경 */
-        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
-        position: -webkit-sticky; /* 사파리 브라우저 대응 */
-        position: sticky;
-        top: 100px; /* 해더 아래로 100px 고정 */
-        z-index: 10;
-    }
-    .chatbox::-webkit-scrollbar {
-        width: 6px;
-        margin-bottom: 10px; /* 하단에 10px 간격 추가 */
-    }
-    .chatbox::-webkit-scrollbar-thumb {
-        background-color: #fcf6f6; /* 스크롤바 색상 */
-        border-radius: 10px;
-    }
-    .chatbox::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-    .chat-message {
-        display: flex;
-        align-items: flex-start; /* 프로필과 텍스트 정렬 */
-        margin-bottom: 5px; /* 각 메시지 간의 간격을 줄임 */
-    }
-    .chatbox .chat-messages {
-        flex-grow: 1;
-        padding: 10px;
-        color: white;
-        overflow-y: auto;
-    }
-
-    .chat-message p {
-        margin: 0;
-        padding: 10px;
-        background-color: #333;
-        border-radius: 10px;
-        max-width: 80%;
-        word-wrap: break-word;
-    }
-
-    .chatbox .chat-input {
-        display: flex;
-        padding: 10px;
-        background-color: #2e2e2e;
-    }
-
-    .chatbox .chat-input input {
-        flex-grow: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        margin-right: 10px;
-    }
-    .profile-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin: 0 15px;
-        margin-left:20px;
-    }
-
-    .message-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nickname {
-        font-weight: bold;
-        font-size: 14px;
-        margin-bottom: 2px;
-    }
-
-
-    .chatbox .chat-input button {
-        padding: 10px 20px;
-        background-color: #CCFF47;
-        border: 2px solid #fff;
-        border-radius: 10px;
-        color: black;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .chatbox .chat-input button:hover {
-        background-color: black;
-        color: white;
-    }
-
-
-    @media screen and (max-width: 768px) {
-        .layout {
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .ranking {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .main-content {
-            width: 100%;
-        }
-
-        .chatbox {
-            width: 100%;
-        }
-    }
-
-</style>
 <body>
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
@@ -474,7 +24,7 @@ body {
                 <div class="select-section">
                     <div class="select-box-container">
                         <div class="select-box" id="marathonSelect">
-                           내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span>
+                            <p>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span></p>
                             <ul class="dropdown-menu options-list" id="options_list">
                             </ul>
                         </div>
@@ -508,22 +58,21 @@ body {
                         <div class="select-box" id="mateCountSelect">
                             메이트인원 <span>&nbsp;▼</span>
                             <ul class="dropdown-menu options-list">
-                                <li data-value="2">1명</li>
-                                <li data-value="3">2명</li>
-                                <li data-value="4">3명</li>
-                                <li data-value="5">4명</li>
-                                <li data-value="6">5명</li>
-                                <li data-value="7">6명</li>
-                                <li data-value="8">7명</li>
-                                <li data-value="9">8명</li>
-                                <li data-value="10">9명</li>
-                                <li data-value="11">10명</li>
-                                <li data-value="12">11명</li>
-                                <li data-value="13">12명</li>
-                                <li data-value="14">13명</li>
-                                <li data-value="15">14명</li>
-                                <li data-value="16">15명</li>
-                                <li data-value="17">16명</li>
+                                <li data-value="2">2명</li>
+                                <li data-value="3">3명</li>
+                                <li data-value="4">4명</li>
+                                <li data-value="5">5명</li>
+                                <li data-value="6">6명</li>
+                                <li data-value="7">7명</li>
+                                <li data-value="8">8명</li>
+                                <li data-value="9">9명</li>
+                                <li data-value="10">10명</li>
+                                <li data-value="11">11명</li>
+                                <li data-value="12">12명</li>
+                                <li data-value="13">13명</li>
+                                <li data-value="14">14명</li>
+                                <li data-value="15">15명</li>
+                                <li data-value="16">16명</li>
                             </ul>
                         </div>
                         <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
@@ -546,7 +95,7 @@ body {
                                 <span class="rank-name">${rank.nickname}</span>
                                 <div class="rank-details">
                                         <span class="runkm">${rank.point_code}</span>
-                                        <span class="crew_name">${rank.crew_name}</span>
+                                        <span class="crew-name">${rank.crew_name}</span>
                                 </div>
                             </div>
                         </li>
@@ -618,11 +167,20 @@ $(document).ready(function() {
             var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
             $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
             $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+            localStorage.setItem(box.attr('id'), selectedValue); // select-box의 ID를 키로 사용하여 값 저장
         }
 
-        // 페이지가 로드되었을 때 실행
-        $('.select-box').each(function() {
+    $('.select-box').each(function() {
             var box = $(this);
+            var storedValue = localStorage.getItem(box.attr('id')); // 로컬 스토리지에서 값 불러오기
+            if (storedValue) {
+                var selectedOption = box.find("li[data-value='" + storedValue + "']");
+                var selectedText = selectedOption.text();
+                box.find('span:first').text(': ' + selectedText); // 선택된 텍스트로 span 업데이트
+                box.data('selected-value', storedValue); // 선택된 값 설정
+            }
+
+            // 드롭다운 메뉴 클릭 시 값 선택 처리
             box.find('.dropdown-menu li').on('click', function() {
                 selectOption(this, box); // li 선택 시 텍스트를 업데이트
             });
@@ -683,7 +241,7 @@ $(document).ready(function() {
                     list+='<div class="rank-info">';
                     list+='<span class="rank-name">'+result[i].nickname+'</span>';
                     list+='<span class="runkm">'+result[i].point_code+'</span>';
-                    list+='<span class="crew_name">'+result[i].crew_name+'</span>';
+                    list+='<span class="crew-name">'+result[i].crew_name+'</span>';
                     list+='</div>';
                     list+='</li>';
                 }
@@ -709,6 +267,13 @@ $(document).ready(function() {
     }
 
     function matching() {
+
+            // 매칭 버튼을 누르면 select 박스 비활성화
+            $('.select-box').each(function() {
+                // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
+                $(this).css('pointer-events', 'none');
+            });
+
             var marathonValue = $('#marathonSelect').data('selected-value');
             var ageValue = $('#ageSelect').data('selected-value');
             var genderValue = $('#genderSelect').data('selected-value');
@@ -762,6 +327,7 @@ $(document).ready(function() {
                matching_room_code:match_yn
               },
               success:function(result){
+                   localStorage.clear(); // 전체 로컬 스토리지 값 초기화 (또는 특정 값을 초기화)
                    location.reload();  // 페이지 새로고침 추가
               },
               error:function(e){
@@ -769,27 +335,80 @@ $(document).ready(function() {
            });
     }
 
-    function accept(){
-            $.ajax({
-              url:'/mate/accept',
-              type:'post',
-              async: false,
-              data:{
-               matching_room_code:match_yn
-              },
-              success:function(result){
-              },
-              error:function(e){
-              }
-           });
-    }
+$(document).ready(function() {
+    // 초기 수락 버튼에 대한 이벤트 핸들러 등록
+    $(document).on('click', '#accept', function() {
+        // 버튼을 비활성화하여 중복 클릭 방지
+        $('#accept').prop('disabled', true);
 
+        $.ajax({
+            url: '/mate/accept',
+            type: 'post',
+            async: false,
+            data: {
+                matching_room_code: match_yn
+            },
+            success: function(result) {
+                console.log("result-->>>", result);
+                if (result === 0) {  // result가 0이면 수락 처리 성공
+                    // 1.0초 후에 '수락하기' 버튼을 '수락거절'로 변경
+                    setTimeout(function() {
+                        $('#accept').text('수락거절');
+                        $('#accept').attr('id', 'accept_n'); // ID 변경
+
+                        // 버튼을 다시 활성화
+                        $('#accept_n').prop('disabled', false);
+                    }, 1000);  // 1.0초 지연
+                }
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+                $('#accept').prop('disabled', false); // 에러 발생 시 버튼 다시 활성화
+            }
+        });
+    });
+
+    // '수락거절' 버튼에 대한 이벤트 위임 처리
+    $(document).on('click', '#accept_n', function() {
+        console.log('수락거절 버튼이 눌렸습니다');
+
+        // 수락거절 버튼을 비활성화하여 중복 클릭 방지
+        $('#accept_n').prop('disabled', true);
+
+        $.ajax({
+            url: '/mate/accept_n', // 거절 요청 URL
+            type: 'post',
+            async: false,
+            data: {
+                matching_room_code: match_yn // 필요한 데이터 전달
+            },
+            success: function(response) {
+                console.log("response-->>>", response);
+                if (response === 1) {  // response가 1이면 수락거절 성공
+                    // 1초 후에 '수락거절' 버튼을 '수락하기'로 변경
+                    setTimeout(function() {
+                        $('#accept_n').text('수락하기');
+                        $('#accept_n').attr('id', 'accept'); // ID 변경
+
+                        // 버튼 다시 활성화
+                        $('#accept').prop('disabled', false);
+                    }, 1000);  // 1.0초 지연
+                }
+            },
+            error: function(e) {
+                console.error('Error:', e);
+                $('#accept_n').prop('disabled', false); // 에러 발생 시 버튼 다시 활성화
+            }
+        });
+    });
+});
 
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
         var list = '';
         $('.profile-container').empty();
         $('#matching').show();
         $('#accept').hide();
+        $('#acceptN').hide();
         $('#out').hide();
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
@@ -804,41 +423,69 @@ $(document).ready(function() {
         $('.profile-container').append(list);
     }
 
-    function grid_draw(length,result){
-        var list = '';
-        var length = length;//최대인원수
-        var remainder = length % 4;
-        if (remainder !== 0) length += 4 - remainder;
-        length = length<8? 8:length;
-        length=length-result.length;
-        for (var i in result) {
-           if(result[i].a_s!=='Y') var style ="" //result[i].a_s 수락여부 값
-           else var style ="transform: scale(1.05);border-color: #CCFF47;";
-           list+='<div class="profile-box" onclick="profile_update();" style="'+style+'">';
-           list+='<div id="profile_img">';
-           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-           list+='</div>';
-           list+='<span class="rank-name">'+result[i].nickname+'</span>';
-           list+='<span class="runkm">'+result[i].tbuf_n+'Km</span>';
-           list+='<span class="crew_name">'+result[i].crew_name+'</span>';
-           list+='</div>';
-       }
-       for (var i=0; i<length; i++) {
-           list+='<div class="profile-box">';
-           list+='<div id="profile_img">';
-           list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
-           list+='</div>';
-           list+='<span class="rank-name">&nbsp; </span>';
-           list+='<span class="runkm">&nbsp;</span>';
-           list+='<span class="crew_name">&nbsp;</span>';
-           list+='</div>';
-       }
-        $('.profile-container').empty();
-        $('.profile-container').append(list);
-        $('#matching').hide();
-        $('#accept').show();
-        $('#out').show();
+function grid_draw(length, result) {
+    var list = '';
+
+    // 선택한 메이트 인원 + 4의 배수로 맞춘 방 개수 계산
+    var total_mates = length;
+    var remainder = total_mates % 4;
+
+    // 선택한 메이트 인원 + 4의 배수로 맞추기
+    if (remainder !== 0) total_mates += 4 - remainder;
+    total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
+
+    // 현재 방에 들어온 인원의 정보를 표시 (result에 있는 사람들)
+
+     // usercode와 result[i].usercode 값 확인
+     //console.log("usercode:", usercode);  // 전역 변수로 설정된 usercode 값 확인
+     //console.log("result[" + i + "].usercode:", result[i].usercode);  // result 내 각 항목의 usercode 값 확인
+     // 값과 데이터 타입이 일치하는지 확인 후 비교
+     //var onClickEvent = (usercode == result[i].usercode) ? 'onclick="profile_update();"' : ''; // ==로 변경하여 값 비교
+
+    for (var i = 0; i < result.length; i++) {
+        var style = result[i].a_s === 'Y' ? "transform: scale(1.05);border-color: #CCFF47;" : ""; // 수락 여부에 따른 스타일
+        list += '<div class="profile-box" onclick="profile_update();" style="' + style + '">';
+        list += '<div id="profile_img">';
+        list += '<img src="/img/woman0.png" alt="프로필 1 이미지">';
+        list += '</div>';
+        list += '<span class="rank-name">' + result[i].nickname + '</span>';
+        list += '<span class="runkm">' + result[i].tbuf_n + 'Km</span>';
+        list += '<span class="crew_name">' + result[i].crew_name + '</span>';
+        list += '</div>';
     }
+
+    // 현재 result에 없는, 선택한 메이트 인원에 대해 woman0.png 표시
+    for (var i = result.length; i < length; i++) {
+        list += '<div class="profile-box" style="">';
+        list += '<div id="profile_img">';
+        list += '<img src="/img/woman0.png" alt="프로필 1 이미지">';
+        list += '</div>';
+        list += '<span class="rank-name">&nbsp;</span>';
+        list += '<span class="runkm">&nbsp;</span>';
+        list += '<span class="crew_name">&nbsp;</span>';
+        list += '</div>';
+    }
+
+    // 나머지 비활성화된 방은 이미지 없이 처리
+    for (var i = length; i < total_mates; i++) {
+        list += '<div class="profile-box" style="pointer-events: none;">';
+        list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
+        list += '</div>';
+        list += '<span class="rank-name">&nbsp;</span>';
+        list += '<span class="runkm">&nbsp;</span>';
+        list += '<span class="crew_name">&nbsp;</span>';
+        list += '</div>';
+    }
+
+    // 프로필 컨테이너에 결과 반영
+    $('.profile-container').empty();
+    $('.profile-container').append(list);
+
+    // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
+    $('#matching').hide();
+    $('#accept').show();
+    $('#out').show();
+}
 
 
 
