@@ -1,88 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-$('#header').hide();
-</script>
-<style>
- /* 중앙 메인 콘텐츠 */
- .main-content {
-        width: 100%;
-        padding-top:50px;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        background-color: #1e1e1e;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function profile_draw(isFemale) {
+            var list = '';
+            var gender = isFemale ? 'woman' : 'man';  // 성별에 따른 값 설정
+           // list += '<p class="rank-name">' + (isFemale ? '여성 프로필 ' : '남성 프로필 ') + (i + 1) + '</p>';
+            for (var i = 0; i < 16; i++) {  // 15개의 프로필 박스 생성
+                list += '<div class="profile-box">';
+                list += '<div id="profile_img">';
+                list += '<img src="/img/' + gender + (i + 1) + '.png" alt="프로필 이미지">';  // 이미지 이름을 gender와 i+1로 설정
+                list += '</div>';
+                list += '</div>';
+            }
 
-    /* 프로필 박스 컨테이너 */
-    .profile-container {
-        margin: 30px 0;
-        width: 75%;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 35px;
-    }
+            // 프로필 컨테이너에 결과 반영
+            $('.profile-container').empty();
+            $('.profile-container').append(list);
+        }
 
-    /* 개별 프로필 박스 */
-    .profile-box {
-        background-color: #333;
-        border: 2px solid #474545;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;  /* 중앙 정렬 */
-    }
-    .rank-name {
-        font-size: 14px;
-        font-weight: bold;
-        color:azure;
-    }
+        // 페이지 로딩 후 강제로 여성 프로필 생성
+        $(document).ready(function () {
+            profile_draw(true);  // true면 여성 프로필, false면 남성 프로필
+        });
+    </script>
+    <style>
+        /* 중앙 메인 콘텐츠 */
+        .main-content {
+            width: 100%;
+            padding-top: 50px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background-color: #1e1e1e;
+        }
 
-    .profile-box:hover {
-        transform: scale(1.05);
-        border-color: #CCFF47;
+        /* 프로필 박스 컨테이너 */
+        .profile-container {
+            margin: 30px 0;
+            width: 75%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 35px;
+        }
 
-    }
+        /* 개별 프로필 박스 */
+        .profile-box {
+            background-color: #333;
+            border: 2px solid #474545;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .profile-box img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+        .rank-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: azure;
+        }
 
-    #profile_img {
-        width: 100px;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px;/*동그라미 태두리*/
-    }
+        .profile-box:hover {
+            transform: scale(1.05);
+            border-color: #CCFF47;
+        }
 
-    #profile_img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    }
+        .profile-box img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
 
-
-    .profile-box p {
-        margin: 5px 0;
-    }
-
-</style>
+        #profile_img {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px;
+        }
+    </style>
+</head>
 <body>
     <header>
          <div id="header">
@@ -96,89 +102,10 @@ $('#header').hide();
                 </ul>
             </nav>
         </div>
-	</header>
+   </header>
     <div class="main-content">
         <div class="profile-container">
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man11.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man02.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman01.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman05.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman05.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man03.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man02.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman02.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man05.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man04.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman01.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man01.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman02.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman03.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/man03.png" alt="프로필 1 이미지">
-                </div>
-            </div>
-            <div class="profile-box">
-                <div id="profile_img">
-                    <img src="/img/woman04.png" alt="프로필 1 이미지">
-                </div>
-            </div>
         </div>
     </div>
 </body>
+</html>

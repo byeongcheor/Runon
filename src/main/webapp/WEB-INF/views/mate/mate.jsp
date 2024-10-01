@@ -18,6 +18,11 @@
     <div id="bannerBox">
         <img src="/img/메이트베너.jpg" id="bannerImg"/>
     </div>
+         <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
+            <input type='hidden' id=usercode value=${uvo.usercode}>
+            <input type='hidden' id=gender value=${uvo.gender}>
+            <input type='hidden' id=birthdate value=${uvo.birthdate}>
+         </c:forEach>
     <div class="layout">
             <!-- 중앙 메인 콘텐츠 -->
             <div class="main-content">
@@ -143,7 +148,8 @@ var cnt  = 0;
 var accept_cnt = 0;
 var update_cnt = 0;
 var match_yn="${vo.match_yn}";
-var usercode="${vo.usercode}";
+var usercode=$('#usercode').val();
+var gender=$('#gender').val();
 
 $(document).ready(function() {
     marathon_code();//내가 결제한 대회리스트 불러오기
@@ -219,6 +225,7 @@ $(document).ready(function() {
                    accept_cnt = result[0].accept_cnt;
                    update_cnt = result[0].update_cnt;
               }
+
                if(cnt==0){
                    match_view_start(match_yn);
                    cnt++;
@@ -270,16 +277,10 @@ $(document).ready(function() {
                 // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
                 window.open('/mate/profileList', 'ProfileList',
                 'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+
     }
 
     function matching() {
-
-            // 매칭 버튼을 누르면 select 박스 비활성화
-            $('.select-box').each(function() {
-                // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
-                $(this).css('pointer-events', 'none');
-            });
-
             var marathonValue = $('#marathonSelect').data('selected-value');
             var ageValue = $('#ageSelect').data('selected-value');
             var genderValue = $('#genderSelect').data('selected-value');
@@ -440,21 +441,25 @@ function grid_draw(length, result) {
     if (remainder !== 0) total_mates += 4 - remainder;
     total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
 
-    // 현재 방에 들어온 인원의 정보를 표시 (result에 있는 사람들)
-
-     // usercode와 result[i].usercode 값 확인
-     //console.log("usercode:", usercode);  // 전역 변수로 설정된 usercode 값 확인
-     //console.log("result[" + i + "].usercode:", result[i].usercode);  // result 내 각 항목의 usercode 값 확인
-     // 값과 데이터 타입이 일치하는지 확인 후 비교
-     //var onClickEvent = (usercode == result[i].usercode) ? 'onclick="profile_update();"' : ''; // ==로 변경하여 값 비교
-
     for (var i = 0; i < result.length; i++) {
+        var on = result[i].usercode==usercode? 'onclick="profile_update();"' : '';
+        var gender = result[i].gender=="Female"? 'woman':'man' ;
+        var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
+        var img = gender+no;
+        //나이 가져오기
+        var today = new Date();
+        var birthDate = new Date(result[i].birthdate);
+        var age = (today.getFullYear() - birthDate.getFullYear())+'';
+        age = age[0]+'0대';
+
+
         var style = result[i].a_s === 'Y' ? "transform: scale(1.05);border-color: #CCFF47;" : ""; // 수락 여부에 따른 스타일
-        list += '<div class="profile-box" onclick="profile_update();" style="' + style + '">';
+        list += '<div class="profile-box" '+ on +' style="' + style + '">';
         list += '<div id="profile_img">';
-        list += '<img src="/img/woman0.png" alt="프로필 1 이미지">';
+        list += '<img src="/img/' + img + '.png" alt="프로필 1 이미지">';
         list += '</div>';
         list += '<span class="rank-name">' + result[i].nickname + '</span>';
+        list += '<span class="age">' + age + '</span>';
         list += '<span class="runkm">' + result[i].tbuf_n + 'Km</span>';
         list += '<span class="crew_name">' + result[i].crew_name + '</span>';
         list += '</div>';
@@ -486,6 +491,12 @@ function grid_draw(length, result) {
     // 프로필 컨테이너에 결과 반영
     $('.profile-container').empty();
     $('.profile-container').append(list);
+
+    // 매칭 버튼을 누르면 select 박스 비활성화
+    $('.select-box').each(function() {
+        // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
+        $(this).css('pointer-events', 'none');
+    });
 
     // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
     $('#matching').hide();

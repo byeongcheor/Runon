@@ -25,12 +25,13 @@ public class MateController {
         try {
             //int user_code = 4;//유저코드
             List<MateVO> ranking = service.ranking();
-            vo.setUsercode(user_code);
+            List<MateVO> userselect = service.userselect(user_code);
             vo.setMatch_yn(service.match_yn(user_code));
-            System.out.println("user_code : "+user_code);
-            System.out.println("match_yn : "+service.match_yn(user_code));
+            System.out.println(userselect);
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
+            model.addAttribute("userselect",userselect);
+
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
