@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.ict.finalproject.dao")
-
 public class FinalProjectApplication {
 
     public static void main(String[] args) {

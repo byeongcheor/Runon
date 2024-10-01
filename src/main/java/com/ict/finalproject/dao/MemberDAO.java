@@ -1,6 +1,5 @@
 package com.ict.finalproject.dao;
 
-import com.ict.finalproject.dto.JoinDTO;
 import com.ict.finalproject.vo.MemberVO;
 
 public interface MemberDAO {
@@ -9,7 +8,7 @@ public interface MemberDAO {
 
     Boolean existsByUsername(String username);
 
-    void saveUser(MemberVO user);
+    void saveUser(MemberVO vo);
 
 
 

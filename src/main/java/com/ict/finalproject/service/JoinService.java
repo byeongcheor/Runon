@@ -1,10 +1,9 @@
 package com.ict.finalproject.service;
 
-import com.ict.finalproject.dto.JoinDTO;
 import com.ict.finalproject.vo.MemberVO;
 
 public interface JoinService {
-   public void joinProcess(JoinDTO joinDTO);
+   public void joinProcess(MemberVO vo);
    // 사용자 이름으로 사용자 정보 찾기
    MemberVO findByUsername(String username);
 

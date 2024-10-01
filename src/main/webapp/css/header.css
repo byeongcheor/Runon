@@ -1,0 +1,55 @@
+*{
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+#header{
+    position:fixed;
+    z-index: 999;
+    width:100%;
+    box-sizing: border-box;
+    background:rgba(18,18,18,0.8);
+    transition:.5s;
+}
+#header nav{
+    top:0; left:0;
+    width:100%;
+    max-width: 1800px;
+    margin:0 auto;
+}
+#header nav .logo{ float:left; padding:0; height:50px; }
+#header nav .logo img{height:50px; vertical-align: center;}
+#header nav ul{ float:right; margin:0;padding:10px 0;}
+#header nav ul li{ float:left; display:block; list-style: none;}
+#header nav ul li a{ padding:0 15px; line-height: 30px; text-decoration: none; color: white; font-size:16px;}
+#header nav ul li:hover a{text-decoration: none; color: #CCFF47; cursor: pointer; font-weight: bold;}
+
+#header nav ul li a, #header nav .logo img{transition:.5s;}
+
+/* 스크롤 내렸을때 CSS .active */
+#header.active{
+    background:#121212;
+    border-radius: 10px;
+    width:98%;
+    margin: 20px;
+}
+#header.active nav ul li:hover a{color: #CCFF47;}
+#header.active nav .logo{transition:.5s; padding: 0;}
+#header.active nav ul{padding:10px 0; transition:.5s;}
+#header.active nav ul li a{
+    color:#fff;
+    font-size:16px;
+}
+#header.active nav ul li{line-height: 30px;}
+#header.active  nav .logo img{height:50px;}
+body{
+    margin:0;
+    padding:0;
+    animation: fadein 4s;
+}
+@keyframes fadein {
+    0% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
