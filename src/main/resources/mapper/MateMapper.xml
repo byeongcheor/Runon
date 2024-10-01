@@ -45,11 +45,9 @@
         (select matching_room_code
         from matching_room_tbl
         where  marathon_no = ${param1}
-        and    age = ${param2}
-        and    gender = '${param3}'
-        and    marathon_count = '${param4}'
+        and    marathon_count = '${param2}'
         and    max_personnel > now_personnel
-        and    max_personnel = ${param5}     limit 1), 0)
+        and    max_personnel = ${param3}     limit 1), 0)
         from dual
         order by rand()
         limit 1;
@@ -60,8 +58,6 @@
         (
             now_personnel
             ,marathon_no
-            ,age
-            ,gender
             ,marathon_count
             ,max_personnel
             ,room_status
@@ -71,10 +67,8 @@
         (
             0
             ,${param1}
-            ,${param2}
-            ,'${param3}'
-            ,'${param4}'
-            ,${param5}
+            ,'${param2}'
+            ,${param3}
             ,'1'
             ,now()
         )

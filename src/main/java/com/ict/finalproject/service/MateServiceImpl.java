@@ -40,13 +40,13 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
-    public int matching_select(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
-    return dao.matching_select(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    public int matching_select(int marathonValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_select(marathonValue,participationCountValue,mateCountValue);
     }
 
     @Override
-    public int matching_insert_room(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
-    return dao.matching_insert_room(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    public int matching_insert_room(int marathonValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_insert_room(marathonValue,participationCountValue,mateCountValue);
     }
 
     @Override

@@ -55,15 +55,15 @@ public class MateController {
     }
     @PostMapping("/matching")
     @ResponseBody
-    public int  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue, Model model) {
+    public int  matching(int marathonValue,String participationCountValue,int mateCountValue, Model model) {
         //participationCountValue 다시 봐야됨
         //int user_code = 4;//유저코드
         int matching_room_code=0;
         try {
-             matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+             matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
             if (matching_room_code == 0) {
-                service.matching_insert_room(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);//방 만들기
-                matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+                service.matching_insert_room(marathonValue, participationCountValue, mateCountValue);//방 만들기
+                matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
             }
             service.applicant_insert(matching_room_code, user_code);//방입장
             service.matching_room_personnel_update_plus(matching_room_code);//현재인원수 증가
