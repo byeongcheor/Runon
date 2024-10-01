@@ -252,20 +252,25 @@ $(document).ready(function() {
               }
            });
     }
-    function profile_update() {
-                // 팝업 창의 너비와 높이 설정
-                var width = 920;
-                var height = 850;
+        function profile_update() {
+                    // 팝업 창의 너비와 높이 설정
+                    var width = 920;
+                    var height = 850;
 
-                // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
-                var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
-                var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+                    // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
+                    var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
+                    var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
-                // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
-                window.open('/mate/profileList', 'ProfileList',
-                'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+                 // 팝업에 gender 값을 쿼리 파라미터로 전달
+                 var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender);
 
-    }
+                    // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
+                    window.open(popupUrl, 'ProfileList',
+                    'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+
+
+
+        }
 
     function matching() {
             var marathonValue = $('#marathonSelect').data('selected-value');
