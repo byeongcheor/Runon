@@ -67,7 +67,7 @@
                         </div>
                         <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
                         <button class="search_match" id="accept" onclick="accept();">&nbsp;수락하기&nbsp;</button>
-                        <button class="search_match" id="accept_n" onclick="accept_n();">&nbsp;수락거절&nbsp;</button>
+                        <button class="search_match" id="accept_n" onclick="accept_n();">&nbsp;수락취소&nbsp;</button>
                         <button class="search_match" id="out" onclick="match_out();">&nbsp;나가기&nbsp;</button>
                     </div>
                 </div>
@@ -372,56 +372,46 @@ var mate_complete_shown = false;
         });
     };
 
-    // '수락하기'
-    $(document).on('click', '#accept', function() {
-        $.ajax({
-            url: '/mate/accept',
-            type: 'post',
-            async: false,
-            data: {
-                matching_room_code: match_yn
-            },
-            success: function(result) {
-                console.log("result-->>>", result);
-                if (result === 0) {  // result가 0이면 수락 처리 성공
-                    // 1.0초 후에 '수락하기' 버튼을 '수락거절'로 변경
-                    setTimeout(function() {
-                        $('#accept_n').show();
-                        $('#accept').hide();
-                    }, 500);
-                }
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
-    });
 
-    // '수락거절'
-    $(document).on('click', '#accept_n', function() {
-        console.log('수락거절 버튼이 눌렸습니다');
+    function accept(){
         $.ajax({
-            url: '/mate/accept_n', // 거절 요청 URL
-            type: 'post',
-            async: false,
-            data: {
-                matching_room_code: match_yn // 필요한 데이터 전달
-            },
-            success: function(response) {
-                console.log("response-->>>", response);
-                if (response === 1) {  // response가 1이면 수락거절 성공
-                    // 1.0초 후에 '수락거절' 버튼을 '수락하기'로 변경
-                    setTimeout(function() {
-                        $('#accept').show();
-                        $('#accept_n').hide();
-                    }, 500);
+                url: '/mate/accept',
+                type: 'post',
+                async: false,
+                data: {
+                    matching_room_code: match_yn
+                },
+                success: function(result) {
+                    match_view(match_yn);
+                    $('#accept').hide();
+                    $('#accept_n').show();
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
                 }
-            },
-            error: function(e) {
-                console.error('Error:', e);
-            }
-        });
-    });
+            });
+    }
+
+    function accept_n(){
+        $.ajax({
+                url: '/mate/accept_n',
+                type: 'post',
+                async: false,
+                data: {
+                    matching_room_code: match_yn
+                },
+                success: function(result) {
+
+                    match_view(match_yn);
+                    $('#accept').show();
+                    $('#accept_n').hide();
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
+    }
+
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
         var list = '';
         $('.profile-container').empty();
@@ -464,8 +454,18 @@ function grid_draw(length, result) {
         var age = (today.getFullYear() - birthDate.getFullYear())+'';
         age = age[0]+'0대';
 
+        var style = '';
+        if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
+            style ="transform: scale(1.05);border-color: #CCFF47;";
+            $('#accept').hide();
+            $('#accept_n').show();
+        }
+        else{
+            style = '';
+            $('#accept').show();
+            $('#accept_n').hide();
+        }
 
-        var style = result[i].a_s === 'Y' ? "transform: scale(1.05);border-color: #CCFF47;" : ""; // 수락 여부에 따른 스타일
         list += '<div class="profile-box" '+ on +' style="' + style + '">';
         list += '<div id="profile_img">';
         list += '<img src="/img/' + img + '.png" alt="프로필 1 이미지">';
