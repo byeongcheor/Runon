@@ -17,6 +17,7 @@
     var gender = getQueryParam('gender');
     // usercode 값 가져오기
     var usercode = getQueryParam('usercode');
+    var match_yn = getQueryParam('match_yn');//룸넘버
 
     // 콘솔에 gender와 usercode 값 출력
     console.log("Gender value received from parent window: ", gender);
@@ -55,14 +56,8 @@
            },
            success:function(result){
                if (result === 0) {  // 성공적인 처리 (result가 0일 때)
-                   console.log('Profile saved successfully.');
-
-                   // 부모 창(mate.jsp) 새로고침
-                   if (window.opener) {
-                       window.opener.location.reload();  // 부모 창 새로고침
-                   }
-
-                   window.close();  // 팝업 창 닫기
+                 window.opener.match_view(match_yn);
+                 window.close();  // 팝업 창 닫기
                } else {
                    console.log('Profile saving failed, result:', result);
                }

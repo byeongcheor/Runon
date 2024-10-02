@@ -142,6 +142,7 @@ var more = 0;
 var cnt  = 0;
 var accept_cnt = 0;
 var update_cnt = 0;
+var profile = 0;
 var match_yn="${vo.match_yn}";
 var usercode=$('#usercode').val();
 var gender=$('#gender').val();
@@ -199,7 +200,6 @@ $(document).ready(function() {
     }, 200);
 });
 
-var mate_complete_shown = false;
 
     function match_view_start(match_yn){
            intervalId = setInterval(function() {
@@ -218,23 +218,16 @@ var mate_complete_shown = false;
           success:function(result){
                var length = result[0].buff_n;
 
-               // 로그로 update_cnt와 accept_cnt 값을 확인
-               console.log("update_cnt: ", result[0].update_cnt);
-               console.log("accept_cnt: ", result[0].accept_cnt);
-
-               if(accept_cnt != result[0].accept_cnt || update_cnt != result[0].update_cnt){
+               if(accept_cnt != result[0].accept_cnt || update_cnt != result[0].update_cnt || profile != result[0].profile){
                    grid_draw(length,result);
                    accept_cnt = result[0].accept_cnt;// Y한사람
                    update_cnt = result[0].update_cnt;// 현재 입장한사람
+                   profile    = result[0].profile;// 바뀐프로필
               }
 
             // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
-            if(!mate_complete_shown && result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
-                mate_complete_shown = true; // 매칭 완료 후 다시 실행되지 않도록 플래그 설정
-                setTimeout(function() {
-                    alert('메이트가 되었습니다. 마이페이지에서 확인해주세요.');
-                    mate_complite(); // 매칭 완료 처리
-                }, 2000);
+            if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
+                    mate_complite();
             }
 
                if(cnt==0){
@@ -249,6 +242,8 @@ var mate_complete_shown = false;
 
     function ranking_more(){
            more +=5;
+           clog(more);
+           if(more>20){$('#more').hide();}
            $.ajax({
               url:'/mate/more',
               type:'post',
@@ -285,8 +280,8 @@ var mate_complete_shown = false;
             var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
             var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
-           // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달
-           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode);
+           // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
+           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn);
 
             // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
             window.open(popupUrl, 'ProfileList',
@@ -326,6 +321,7 @@ var mate_complete_shown = false;
                 async: false,
                 success:function(result){
                     var list = '';
+                    clog(result);
                     for(var i in result){
                         list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
                     }
@@ -366,10 +362,6 @@ var mate_complete_shown = false;
            matching_room_code:match_yn
           },
         success:function(result) {
-            console.log('match_complite result:', result);
-            if(result === 1) {
-                match_out();
-            }
         },
           error:function(e){
           }

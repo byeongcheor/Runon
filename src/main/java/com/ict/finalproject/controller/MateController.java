@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/mate")
 public class MateController {
-    private int user_code = 6;
+    private int user_code = 3;
     @Autowired
     MateService service;
 
@@ -172,6 +172,7 @@ public class MateController {
     public List<MateVO> marathon_code(){
         // int user_code = 4;//유저코드
         List<MateVO> list = service.marathon_code_list(user_code);
+        System.out.println(list);
     return  list;
     }
 }
