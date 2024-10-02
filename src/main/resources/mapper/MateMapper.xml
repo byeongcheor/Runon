@@ -33,6 +33,12 @@
         and    c.cart_code  = b.cart_code
         and    b.marathon_code =a.marathon_code
         and    b.usercode =${param1}
+        and    a.marathon_code not in (select a.marathon_code
+                                       from   marathon_list_tbl a, matching_room_tbl b, applicant_tbl c
+                                       where  a.marathon_code = b.marathon_no
+                                       and    b.matching_room_code = c.matching_room_code
+                                       and    c.usercode = ${param1}
+                                       and    c.is_Completion = 1);
     </select>
 
     <select id="userselect" resultType="com.ict.finalproject.vo.MateVO">
