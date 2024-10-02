@@ -36,7 +36,7 @@
                     <li><a class="memus" href="/mate/mate">MATE</a></li>
                     <li><a class="memus" href="/crew/crewList">CREW</a></li>
                     <li><a class="memus">NOTICE</a></li>
-                    <li><a class="memus" href="/mypage/mypageHome">MY</a></li>
+                    <li><a class="memus" href="/mypage/myHome">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                 </ul>
             </nav>
