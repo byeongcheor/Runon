@@ -10,6 +10,7 @@
         where  a.usercode = b.usercode
         and    a.usercode = c.usercode
         and    c.create_crew_code = d.create_crew_code
+        and    a.is_info_disclosure='Y'
         group by  a.usercode, a.nickname, a.profile_img,d.crew_name
         limit 5;
     </select>
@@ -106,7 +107,7 @@
 
     <select id="match_view" resultType="com.ict.finalproject.vo.MateVO">
         select b.gender,b.nickname,sum(c.score_change) as tbuf_n, e.crew_name, f.max_personnel as buff_n,a.accept_yn as a_s,
-        f.now_personnel as update_cnt,b.usercode,a.profile as b_s,b.birthdate,
+        f.now_personnel as update_cnt,b.usercode,a.profile as b_s,b.birthdate, a.profile,
         (select count(1) from applicant_tbl where accept_yn='Y' and matching_room_code=f.matching_room_code) as accept_cnt
         from   applicant_tbl a, user_tbl b, record_tbl c, crew_member_tbl d, create_crew_tbl e, matching_room_tbl f
         where  a.usercode = b.usercode

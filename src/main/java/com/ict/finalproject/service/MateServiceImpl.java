@@ -73,12 +73,14 @@ public class MateServiceImpl implements MateService {
     public int accept_n( int matching_room_code, int user_code) {
         return dao.accept_n(matching_room_code, user_code);
     }
+
     @Override
     public int profile_click( int profileValue, int usercode) {
         return dao.profile_click(profileValue, usercode);
     }
+
     @Override
-    public int mate_complite( int matching_room_code, int user_code) {return dao.accept_n(matching_room_code, user_code);
+    public int mate_complite( int matching_room_code, int user_code) {return dao.mate_complite(matching_room_code, user_code);
     }
 
     @Override

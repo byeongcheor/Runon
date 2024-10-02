@@ -17,6 +17,7 @@ public interface MateDAO {
     int applicant_insert(int applicant_insert, int user_code);
     int accept(int applicant_insert, int user_code);
     int accept_n(int matching_room_code, int user_code);
+    int mate_complite(int matching_room_code, int user_code);
     int profile_click(int profileValue, int usercode);
     int match_yn(int user_code);
     int match_out(int matching_room_code, int user_code);

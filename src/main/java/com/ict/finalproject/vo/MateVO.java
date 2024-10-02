@@ -49,6 +49,8 @@ public class MateVO {
     private int accept_cnt;
     private int update_cnt;
     private int match_yn;
+    private int profile;
+
 
     private String birthdate;
     private String updated_date;
