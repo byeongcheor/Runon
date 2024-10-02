@@ -12,6 +12,10 @@
 <link rel="stylesheet" href="/css/main.css" type="text/css">
 <link rel="stylesheet" href="/css/mate.css" type="text/css">
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -422,7 +426,7 @@ var mate_complete_shown = false;
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
             list+='<div id="profile_img">';
-            list+='<img src="/img/woman0.png" alt="프로필 1 이미지">';
+            list+='<img src="/img/user.png" "alt="프로필 1 이미지">';
             list+='</div>';
             list+='<span class="rank-name">&nbsp; </span>';
             list+='<span class="runkm">&nbsp;</span>';
@@ -477,11 +481,11 @@ function grid_draw(length, result) {
         list += '</div>';
     }
 
-    // 현재 result에 없는, 선택한 메이트 인원에 대해 woman0.png 표시
+    // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
     for (var i = result.length; i < length; i++) {
         list += '<div class="profile-box" style="">';
         list += '<div id="profile_img">';
-        list += '<img src="/img/woman0.png" alt="프로필 1 이미지">';
+        list += '<img src="/img/user.png" alt="프로필 1 이미지">';
         list += '</div>';
         list += '<span class="rank-name">&nbsp;</span>';
         list += '<span class="runkm">&nbsp;</span>';
