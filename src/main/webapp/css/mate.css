@@ -449,7 +449,7 @@ body {
   position: absolute;
   background-color: #1a1a1a;
   margin: auto;
-  padding: 30px;
+  padding: 35px;
   border-radius: 10px;
   width: 350px;
   text-align: center;
@@ -476,20 +476,47 @@ body {
 
 /* 모달 버튼 스타일 */
 .modal-buttons {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* 버튼을 세로(1열)로 배치 */
+  align-items: center; /* 중앙에 정렬 */
+  gap: 10px; /* 버튼 사이 간격 10px */
 }
 
 .modal-button {
+  position: relative; /* 툴팁을 위한 상대적 위치 */
   border: 2px solid white;
   background-color: #b3ff00;
   color: black;
-  font-size: 16px;
+  font-size: 15px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
+  font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
   padding: 10px 20px;
+  width: 160px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+}
+
+/* 버튼에 마우스를 대면 툴팁 */
+.modal-button::after {
+  content: attr(data-tooltip); /* data-tooltip 속성에서 툴팁 내용 가져옴 */
+  position: absolute;
+  bottom: -40px; /* 툴팁이 버튼 아래에 나타나도록 위치 조정 */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
+}
+
+/* 마우스를 버튼에 대면 툴팁 표시 */
+.modal-button:hover::after {
+  display: block;
 }
 
 .modal-button:hover {

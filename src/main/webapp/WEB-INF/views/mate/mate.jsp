@@ -133,11 +133,10 @@
 <div id="matchCompleteModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>매칭이 완료되었습니다. 다음 단계를 선택하세요.</p>
+    <p>매칭이 완료되었습니다.</p>
     <div class="modal-buttons">
-      <button id="continueMatching" onclick="goToMatePage()" class="modal-button">매칭 계속하기</button>
-      <button id="goToMyPage" class="modal-button">마이페이지로 가기</button>
-    </div>
+  	  <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+      <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
   </div>
 </div>
 
@@ -150,6 +149,7 @@ var more = 0;
 var cnt  = 0;
 var accept_cnt = 0;
 var update_cnt = 0;
+
 var match_yn="${vo.match_yn}";
 var usercode=$('#usercode').val();
 var gender=$('#gender').val();
@@ -216,6 +216,7 @@ $(document).ready(function() {
         }, 2000);
     }
 
+
     function match_view(match_yn, flag){//선택한 인원수대로 매칭 자리만들기
         $.ajax({
           url:'/mate/match_view',
@@ -226,6 +227,7 @@ $(document).ready(function() {
           },
           success:function(result){
                var length = result[0].buff_n;
+
                for(var i in  result)
                {
                    if(accept_cnt != result[i].accept_cnt || update_cnt != result[i].update_cnt||flag=='F'){
@@ -237,7 +239,7 @@ $(document).ready(function() {
 
             // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
             if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
-                     clog('clear');
+
                       clearInterval(intervalId);
                       mate_complite();
                       showMatchCompleteModal();
@@ -284,6 +286,7 @@ $(document).ready(function() {
               }
            });
     }
+
     function profile_update(num) {//num은 칸에서의 내 위치의 번호
             // 팝업 창의 너비와 높이 설정
             var width = 920;
@@ -294,6 +297,7 @@ $(document).ready(function() {
             var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
            // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
+
            var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn)+'&num=' + encodeURIComponent(num);
 
             // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
@@ -335,6 +339,7 @@ $(document).ready(function() {
                 async: false,
                 success:function(result){
                     var list = '';
+
                     for(var i in result){
                         list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
                     }
@@ -453,6 +458,7 @@ function grid_draw(length, result) {
     total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
 
     for (var i = 0; i < result.length; i++) {
+
         var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
         var gender = result[i].gender=="Female"? 'woman':'man' ;
         var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
@@ -477,6 +483,7 @@ function grid_draw(length, result) {
 
         list += '<div class="profile-box" '+ on +' style="' + style + '">';
         list += '<div id="profile_img">';
+
         list += '<img id="img'+i+'" src="/img/' + img + '.png" alt="프로필 1 이미지">';
         list += '</div>';
         list += '<span class="rank-name">' + result[i].nickname + '</span>';
@@ -548,18 +555,14 @@ document.querySelector('#matchCompleteModal .close').onclick = function() {
     document.getElementById('matchCompleteModal').style.display = 'none';
 };
 
-// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫기
+
+// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고
 document.getElementById('continueMatching').onclick = function() {
-    document.getElementById('matchCompleteModal').style.display = 'none';
-    // 추가 매칭 로직을 여기에 추가
+    window.location.href = '/mate/mate';  // 마이페이지로 이동
 };
 
 // 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
 document.getElementById('goToMyPage').onclick = function() {
-    window.location.href = '/mypage'; // 마이페이지로 이동
+    window.location.href = '/mypage/myHome';  // 마이페이지로 이동
 };
-
-    function goToMatePage() {
-        window.location.href = "/mate";  // 이동할 페이지의 URL
-    }
 </script>
