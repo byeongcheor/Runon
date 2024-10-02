@@ -12,11 +12,6 @@
 <link rel="stylesheet" href="/css/main.css" type="text/css">
 <link rel="stylesheet" href="/css/mate.css" type="text/css">
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</head>
 
 <body>
     <div id="bannerBox">
@@ -125,14 +120,27 @@
             </div>
         </div>
     </div>
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>위임할 멤버를 선택하세요</p>
-            <button class="assign-btn">위임하기</button>
-        </div>
+
+<!-- 옵션 선택 안내 모달 -->
+<div id="optionSelectModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>옵션을 선택해주세요</p>
+  </div>
+</div>
+
+<!-- 매칭 완료 후 선택 모달 -->
+<div id="matchCompleteModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>매칭이 완료되었습니다. 다음 단계를 선택하세요.</p>
+    <div class="modal-buttons">
+      <button id="continueMatching" class="modal-button">매칭 계속하기</button>
+      <button id="goToMyPage" class="modal-button">마이페이지로 가기</button>
     </div>
- <!-- <button onclick="openModal()">모달 열기</button> -->
+  </div>
+</div>
+
 </body>
 <script>
 var clog = console.log;
@@ -227,7 +235,10 @@ $(document).ready(function() {
 
             // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
             if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
-                    mate_complite();
+
+                      mate_complite();
+                      showMatchCompleteModal();
+                     return false;
             }
 
                if(cnt==0){
@@ -294,8 +305,9 @@ $(document).ready(function() {
             var participationCountValue = $('#participationCountSelect').data('selected-value');
             var mateCountValue = $('#mateCountSelect').data('selected-value');
             clog(marathonValue);
-            if(marathonValue===undefined||participationCountValue===undefined||mateCountValue===undefined){
-                alert('옵션을 선택해주세요');
+            if(marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
+                // 모달 열기
+                showOptionSelectModal(); // 옵션 선택 모달을 호출
                 return false;
             }
             $.ajax({
@@ -513,25 +525,37 @@ function grid_draw(length, result) {
     $('#out').show();
 }
 
-var modal = document.getElementById("modal");
-var span = document.getElementsByClassName("close")[0];
-
-// 모달 열기 함수
-function openModal() {
-    modal.style.display = "block";
+// 옵션 선택 안내 모달 열기
+function showOptionSelectModal() {
+    var modal = document.getElementById('optionSelectModal');
+    modal.style.display = 'block';
 }
 
-// 모달 닫기 함수
-span.onclick = function() {
-    modal.style.display = "none";
+// 매칭 완료 후 모달 열기
+function showMatchCompleteModal() {
+    var modal = document.getElementById('matchCompleteModal');
+    modal.style.display = 'block';
 }
 
-// 모달 외부 클릭 시 닫기
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+// 옵션 선택 모달의 닫기 버튼 클릭 시 모달 닫기
+document.querySelector('#optionSelectModal .close').onclick = function() {
+    document.getElementById('optionSelectModal').style.display = 'none';
+};
 
+// 매칭 완료 모달의 닫기 버튼 클릭 시 모달 닫기
+document.querySelector('#matchCompleteModal .close').onclick = function() {
+    document.getElementById('matchCompleteModal').style.display = 'none';
+};
+
+// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫기
+document.getElementById('continueMatching').onclick = function() {
+    document.getElementById('matchCompleteModal').style.display = 'none';
+    // 추가 매칭 로직을 여기에 추가
+};
+
+// 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
+document.getElementById('goToMyPage').onclick = function() {
+    window.location.href = '/mypage'; // 마이페이지로 이동
+};
 
 </script>

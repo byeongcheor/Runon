@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/mate")
 public class MateController {
-    private int user_code = 3;
+    private int user_code = 4;
     @Autowired
     MateService service;
 
