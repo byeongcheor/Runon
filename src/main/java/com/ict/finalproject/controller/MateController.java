@@ -172,7 +172,6 @@ public class MateController {
     public List<MateVO> marathon_code(){
         // int user_code = 4;//유저코드
         List<MateVO> list = service.marathon_code_list(user_code);
-        System.out.println(list);
     return  list;
     }
 }
