@@ -47,6 +47,12 @@
         where  usercode =${param1}
     </select>
 
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username ='${param1}'
+    </select>
+
     <select id="matching_select" resultType="int">
         select coalesce(
         (select matching_room_code

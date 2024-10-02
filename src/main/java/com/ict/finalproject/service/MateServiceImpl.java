@@ -94,6 +94,11 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
+    public int usercodeSelect(String user_name) {
+        return dao.usercodeSelect(user_name);
+    }
+
+    @Override
     public int matching_room_personnel_zero_delete() {
         return dao.matching_room_personnel_zero_delete();
     }

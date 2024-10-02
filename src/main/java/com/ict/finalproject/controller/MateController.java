@@ -18,10 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class MateController {
     @Autowired
     MateService service;
-    int user_code =4;
+    String user_name ="user001";
+    int    user_code = 0;
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
+            user_code = service.usercodeSelect(user_name);
+            System.out.println(user_code);
             //int user_code = 4;//유저코드
             List<MateVO> ranking = service.ranking();
             List<MateVO> userselect = service.userselect(user_code);

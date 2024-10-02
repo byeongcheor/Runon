@@ -24,4 +24,6 @@ public interface MateDAO {
     int matching_room_personnel_update_plus(int matching_room_code);
     int matching_room_personnel_update_minus(int matching_room_code);
     int matching_room_personnel_zero_delete();
+    int usercodeSelect(String user_name);
+
 }
