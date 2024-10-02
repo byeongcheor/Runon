@@ -67,6 +67,7 @@
                         </div>
                         <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
                         <button class="search_match" id="accept" onclick="accept();">&nbsp;수락하기&nbsp;</button>
+                        <button class="search_match" id="accept_n" onclick="accept_n();">&nbsp;수락거절&nbsp;</button>
                         <button class="search_match" id="out" onclick="match_out();">&nbsp;나가기&nbsp;</button>
                     </div>
                 </div>
@@ -120,6 +121,14 @@
             </div>
         </div>
     </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>위임할 멤버를 선택하세요</p>
+            <button class="assign-btn">위임하기</button>
+        </div>
+    </div>
+ <!-- <button onclick="openModal()">모달 열기</button> -->
 </body>
 <script>
 var clog = console.log;
@@ -186,6 +195,8 @@ $(document).ready(function() {
     }, 200);
 });
 
+var mate_complete_shown = false;
+
     function match_view_start(match_yn){
            intervalId = setInterval(function() {
             match_view(match_yn);
@@ -202,17 +213,26 @@ $(document).ready(function() {
           },
           success:function(result){
                var length = result[0].buff_n;
+
+               // 로그로 update_cnt와 accept_cnt 값을 확인
+               console.log("update_cnt: ", result[0].update_cnt);
+               console.log("accept_cnt: ", result[0].accept_cnt);
+
                if(accept_cnt != result[0].accept_cnt || update_cnt != result[0].update_cnt){
                    grid_draw(length,result);
-                   accept_cnt = result[0].accept_cnt;
-                   update_cnt = result[0].update_cnt;
+                   accept_cnt = result[0].accept_cnt;// Y한사람
+                   update_cnt = result[0].update_cnt;// 현재 입장한사람
               }
-              if(result[0].update_cnt!==1&&result[0].update_cnt==result[0].accept_cnt){
-                   setTimeout(function() {
-                      alert('메이트가 되었습니다. 마이페이지에서 확인해주세요.');
-                      mate_complite();
-                      },2000);
-              }
+
+            // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
+            if(!mate_complete_shown && result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
+                mate_complete_shown = true; // 매칭 완료 후 다시 실행되지 않도록 플래그 설정
+                setTimeout(function() {
+                    alert('메이트가 되었습니다. 마이페이지에서 확인해주세요.');
+                    mate_complite(); // 매칭 완료 처리
+                }, 2000);
+            }
+
                if(cnt==0){
                    match_view_start(match_yn);
                    cnt++;
@@ -252,25 +272,23 @@ $(document).ready(function() {
               }
            });
     }
-        function profile_update() {
-                    // 팝업 창의 너비와 높이 설정
-                    var width = 920;
-                    var height = 850;
+    function profile_update() {
+            // 팝업 창의 너비와 높이 설정
+            var width = 920;
+            var height = 850;
 
-                    // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
-                    var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
-                    var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+            // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
+            var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
+            var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
-                 // 팝업에 gender 값을 쿼리 파라미터로 전달
-                 var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender);
+           // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달
+           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode);
 
-                    // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
-                    window.open(popupUrl, 'ProfileList',
-                    'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
+            // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
+            window.open(popupUrl, 'ProfileList',
+            'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
 
-
-
-        }
+    }
 
     function matching() {
             var marathonValue = $('#marathonSelect').data('selected-value');
@@ -343,21 +361,19 @@ $(document).ready(function() {
           data:{
            matching_room_code:match_yn
           },
-          success:function(result){
-              window.location.assign("/mate/mate");
-          },
+        success:function(result) {
+            console.log('match_complite result:', result);
+            if(result === 1) {
+                match_out();
+            }
+        },
           error:function(e){
           }
         });
     };
 
-
-$(document).ready(function() {
-    // 초기 수락 버튼에 대한 이벤트 핸들러 등록
+    // '수락하기'
     $(document).on('click', '#accept', function() {
-        // 버튼을 비활성화하여 중복 클릭 방지
-        $('#accept').prop('disabled', true);
-
         $.ajax({
             url: '/mate/accept',
             type: 'post',
@@ -370,28 +386,20 @@ $(document).ready(function() {
                 if (result === 0) {  // result가 0이면 수락 처리 성공
                     // 1.0초 후에 '수락하기' 버튼을 '수락거절'로 변경
                     setTimeout(function() {
-                        $('#accept').text('수락거절');
-                        $('#accept').attr('id', 'accept_n'); // ID 변경
-
-                        // 버튼을 다시 활성화
-                        $('#accept_n').prop('disabled', false);
-                    }, 1000);  // 1.0초 지연
+                        $('#accept_n').show();
+                        $('#accept').hide();
+                    }, 500);
                 }
             },
             error: function(e) {
                 console.error('Error: ', e);
-                $('#accept').prop('disabled', false); // 에러 발생 시 버튼 다시 활성화
             }
         });
     });
 
-    // '수락거절' 버튼에 대한 이벤트 위임 처리
+    // '수락거절'
     $(document).on('click', '#accept_n', function() {
         console.log('수락거절 버튼이 눌렸습니다');
-
-        // 수락거절 버튼을 비활성화하여 중복 클릭 방지
-        $('#accept_n').prop('disabled', true);
-
         $.ajax({
             url: '/mate/accept_n', // 거절 요청 URL
             type: 'post',
@@ -402,29 +410,24 @@ $(document).ready(function() {
             success: function(response) {
                 console.log("response-->>>", response);
                 if (response === 1) {  // response가 1이면 수락거절 성공
-                    // 1초 후에 '수락거절' 버튼을 '수락하기'로 변경
+                    // 1.0초 후에 '수락거절' 버튼을 '수락하기'로 변경
                     setTimeout(function() {
-                        $('#accept_n').text('수락하기');
-                        $('#accept_n').attr('id', 'accept'); // ID 변경
-
-                        // 버튼 다시 활성화
-                        $('#accept').prop('disabled', false);
-                    }, 1000);  // 1.0초 지연
+                        $('#accept').show();
+                        $('#accept_n').hide();
+                    }, 500);
                 }
             },
             error: function(e) {
                 console.error('Error:', e);
-                $('#accept_n').prop('disabled', false); // 에러 발생 시 버튼 다시 활성화
             }
         });
     });
-});
-
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
         var list = '';
         $('.profile-container').empty();
         $('#matching').show();
         $('#accept').hide();
+        $('#accept_n').hide();
         $('#out').hide();
         for (var i=0; i<8; i++) {
             list+='<div class="profile-box">';
@@ -510,10 +513,29 @@ function grid_draw(length, result) {
     // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
     $('#matching').hide();
     $('#accept').show();
+    $('#accept_n').hide();
     $('#out').show();
 }
 
+var modal = document.getElementById("modal");
+var span = document.getElementsByClassName("close")[0];
 
+// 모달 열기 함수
+function openModal() {
+    modal.style.display = "block";
+}
+
+// 모달 닫기 함수
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 
 </script>

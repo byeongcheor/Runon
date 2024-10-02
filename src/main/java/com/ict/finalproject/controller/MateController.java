@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/mate")
 public class MateController {
-    private int user_code = 3;
+    private int user_code = 6;
     @Autowired
     MateService service;
 
@@ -134,6 +134,22 @@ public class MateController {
         //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
         return a;
     }
+
+    @PostMapping("/profile_click")
+    @ResponseBody
+    public int  profile_click(int profileValue ,int usercode) {
+        //int user_code = 4;//유저코드
+        int profile=0;
+        try {
+            service. profile_click(profileValue, usercode);
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
+        return profile;
+    }
+
     @PostMapping("/mate_complite")
     @ResponseBody
     public int  mate_complite(int matching_room_code) {

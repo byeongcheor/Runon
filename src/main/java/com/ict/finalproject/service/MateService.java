@@ -18,6 +18,7 @@ public interface MateService {
     int match_out(int matching_room_code, int user_code);
     int accept(int matching_room_code, int user_code);
     int accept_n(int matching_room_code, int user_code);
+    int profile_click(int profileValue, int usercode);
     int mate_complite(int matching_room_code, int user_code);
     int matching_room_personnel_update_plus(int matching_room_code);
     int matching_room_personnel_update_minus(int matching_room_code);
