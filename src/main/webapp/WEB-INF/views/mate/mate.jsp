@@ -133,10 +133,10 @@
 <div id="matchCompleteModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>매칭이 완료되었습니다. 다음 단계를 선택하세요.</p>
+    <p>매칭이 완료되었습니다.</p>
     <div class="modal-buttons">
-      <button id="continueMatching" class="modal-button">매칭 계속하기</button>
-      <button id="goToMyPage" class="modal-button">마이페이지로 가기</button>
+      <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+      <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>
     </div>
   </div>
 </div>
@@ -156,6 +156,7 @@ var usercode=$('#usercode').val();
 var gender=$('#gender').val();
 
 $(document).ready(function() {
+
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
         if(match_yn>0){
@@ -238,7 +239,7 @@ $(document).ready(function() {
 
                       mate_complite();
                       showMatchCompleteModal();
-                     return false;
+                      return false;
             }
 
                if(cnt==0){
@@ -547,15 +548,14 @@ document.querySelector('#matchCompleteModal .close').onclick = function() {
     document.getElementById('matchCompleteModal').style.display = 'none';
 };
 
-// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫기
+// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고
 document.getElementById('continueMatching').onclick = function() {
-    document.getElementById('matchCompleteModal').style.display = 'none';
-    // 추가 매칭 로직을 여기에 추가
+    window.location.href = '/mate/mate';  // 마이페이지로 이동
 };
 
 // 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
 document.getElementById('goToMyPage').onclick = function() {
-    window.location.href = '/mypage'; // 마이페이지로 이동
+    window.location.href = '/mypage/myHome';  // 마이페이지로 이동
 };
 
 </script>
