@@ -35,7 +35,7 @@
                             </ul>
                         </div>
                         <div class="select-box" id="participationCountSelect">
-                           참가횟수 <span>&nbsp;▼</span>
+                           참가횟수 <span class="menu_select">&nbsp;▼</span>
                            <ul class="dropdown-menu options-list">
                                <li data-value="1">1~5</li>
                                <li data-value="6">6~10</li>
@@ -44,7 +44,7 @@
                            </ul>
                         </div>
                         <div class="select-box" id="mateCountSelect">
-                            메이트인원 <span>&nbsp;▼</span>
+                            메이트인원 <span class="menu_select">&nbsp;▼</span>
                             <ul class="dropdown-menu options-list">
                                
                                 <li data-value="2">2명</li>
@@ -135,7 +135,7 @@
     <span class="close">&times;</span>
     <p>매칭이 완료되었습니다. 다음 단계를 선택하세요.</p>
     <div class="modal-buttons">
-      <button id="continueMatching" class="modal-button">매칭 계속하기</button>
+      <button id="continueMatching" onclick="goToMatePage()" class="modal-button">매칭 계속하기</button>
       <button id="goToMyPage" class="modal-button">마이페이지로 가기</button>
     </div>
   </div>
@@ -150,7 +150,6 @@ var more = 0;
 var cnt  = 0;
 var accept_cnt = 0;
 var update_cnt = 0;
-var profile = 0;
 var match_yn="${vo.match_yn}";
 var usercode=$('#usercode').val();
 var gender=$('#gender').val();
@@ -164,7 +163,7 @@ $(document).ready(function() {
         }
         else start_view();
     }, 200);
-
+    $('.menu_select').text('&nbsp;▼');
     setTimeout(function() {
         // 드롭다운을 토글하는 함수
         function toggleDropdown(box) {
@@ -210,12 +209,14 @@ $(document).ready(function() {
 
 
     function match_view_start(match_yn){
+               clog('setInterval');
+
            intervalId = setInterval(function() {
             match_view(match_yn);
         }, 2000);
     }
 
-    function match_view(match_yn){//선택한 인원수대로 매칭 자리만들기
+    function match_view(match_yn, flag){//선택한 인원수대로 매칭 자리만들기
         $.ajax({
           url:'/mate/match_view',
           type:'post',
@@ -225,20 +226,21 @@ $(document).ready(function() {
           },
           success:function(result){
                var length = result[0].buff_n;
-
-               if(accept_cnt != result[0].accept_cnt || update_cnt != result[0].update_cnt || profile != result[0].profile){
-                   grid_draw(length,result);
-                   accept_cnt = result[0].accept_cnt;// Y한사람
-                   update_cnt = result[0].update_cnt;// 현재 입장한사람
-                   profile    = result[0].profile;// 바뀐프로필
+               for(var i in  result)
+               {
+                   if(accept_cnt != result[i].accept_cnt || update_cnt != result[i].update_cnt||flag=='F'){
+                       grid_draw(length,result);
+                       accept_cnt = result[i].accept_cnt;// Y한사람
+                       update_cnt = result[i].update_cnt;// 현재 입장한사람
+                   }
               }
 
             // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
             if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
-
+                     clog('clear');
+                      clearInterval(intervalId);
                       mate_complite();
                       showMatchCompleteModal();
-                     return false;
             }
 
                if(cnt==0){
@@ -282,7 +284,7 @@ $(document).ready(function() {
               }
            });
     }
-    function profile_update() {
+    function profile_update(num) {//num은 칸에서의 내 위치의 번호
             // 팝업 창의 너비와 높이 설정
             var width = 920;
             var height = 850;
@@ -292,7 +294,7 @@ $(document).ready(function() {
             var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
            // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
-           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn);
+           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn)+'&num=' + encodeURIComponent(num);
 
             // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
             window.open(popupUrl, 'ProfileList',
@@ -333,7 +335,6 @@ $(document).ready(function() {
                 async: false,
                 success:function(result){
                     var list = '';
-                    clog(result);
                     for(var i in result){
                         list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
                     }
@@ -452,7 +453,7 @@ function grid_draw(length, result) {
     total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
 
     for (var i = 0; i < result.length; i++) {
-        var on = result[i].usercode==usercode? 'onclick="profile_update();"' : '';
+        var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
         var gender = result[i].gender=="Female"? 'woman':'man' ;
         var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
         var img = gender+no;
@@ -476,7 +477,7 @@ function grid_draw(length, result) {
 
         list += '<div class="profile-box" '+ on +' style="' + style + '">';
         list += '<div id="profile_img">';
-        list += '<img src="/img/' + img + '.png" alt="프로필 1 이미지">';
+        list += '<img id="img'+i+'" src="/img/' + img + '.png" alt="프로필 1 이미지">';
         list += '</div>';
         list += '<span class="rank-name">' + result[i].nickname + '</span>';
         list += '<span class="age">' + age + '</span>';
@@ -558,4 +559,7 @@ document.getElementById('goToMyPage').onclick = function() {
     window.location.href = '/mypage'; // 마이페이지로 이동
 };
 
+    function goToMatePage() {
+        window.location.href = "/mate";  // 이동할 페이지의 URL
+    }
 </script>

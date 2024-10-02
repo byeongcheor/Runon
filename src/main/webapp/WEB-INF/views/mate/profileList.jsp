@@ -18,6 +18,7 @@
     // usercode 값 가져오기
     var usercode = getQueryParam('usercode');
     var match_yn = getQueryParam('match_yn');//룸넘버
+    var num = getQueryParam('num');//방에서의 내 위치의 번호
 
     // 콘솔에 gender와 usercode 값 출력
     console.log("Gender value received from parent window: ", gender);
@@ -56,8 +57,10 @@
            },
            success:function(result){
                if (result === 0) {  // 성공적인 처리 (result가 0일 때)
-                 window.opener.match_view(match_yn);
-                 window.close();  // 팝업 창 닫기
+
+                    window.opener.$('#img'+num).attr('src', '/img/woman'+profileValue+'.png');
+                    window.opener.match_view(match_yn,'F');
+                    window.close();  // 팝업 창 닫기
                } else {
                    console.log('Profile saving failed, result:', result);
                }
