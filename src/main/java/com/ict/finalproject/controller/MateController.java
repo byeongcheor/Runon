@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class MateController {
     @Autowired
     MateService service;
-
+    int user_code =4;
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {

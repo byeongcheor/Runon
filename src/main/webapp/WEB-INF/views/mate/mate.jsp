@@ -163,7 +163,8 @@ $(document).ready(function() {
         }
         else start_view();
     }, 200);
-    $('.menu_select').text('&nbsp;▼');
+    $('.menu_select').text('');
+    $('.menu_select').text(' \u25BC');
     setTimeout(function() {
         // 드롭다운을 토글하는 함수
         function toggleDropdown(box) {
@@ -205,12 +206,14 @@ $(document).ready(function() {
             });
         });
     }, 200);
+    if(match_yn==0){
+        $('.menu_select').text('');
+        $('.menu_select').text(' \u25BC');
+    }
 });
 
 
     function match_view_start(match_yn){
-               clog('setInterval');
-
            intervalId = setInterval(function() {
             match_view(match_yn);
         }, 2000);
