@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.ict.finalproject.dao")  // Mapper 인터페이스가 위치한 패키지 경로를 지정
+@MapperScan(basePackages = "com.ict.finalproject.dao")
 public class FinalProjectApplication {
 
     public static void main(String[] args) {
