@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                             <div class="recruit">
-                                <button type="button" class="btn btn-outline-dark" id="recruitbtn">가입신청하기</button>
+                                <button type="button" class="btn btn-outline-dark" id="recruitbtn">가입신청</button>
                             </div>
                         </li>
                     </c:forEach>

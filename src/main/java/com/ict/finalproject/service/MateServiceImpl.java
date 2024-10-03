@@ -20,6 +20,11 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
+    public List<MateVO> userselect(int user_code) {
+        return dao.userselect(user_code);
+    }
+
+    @Override
     public List<MateVO> more(int more) {
         return dao.more(more);
     }
@@ -35,13 +40,13 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
-    public int matching_select(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
-    return dao.matching_select(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    public int matching_select(int marathonValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_select(marathonValue,participationCountValue,mateCountValue);
     }
 
     @Override
-    public int matching_insert_room(int marathonValue, String ageValue, String genderValue, String participationCountValue, int mateCountValue) {
-    return dao.matching_insert_room(marathonValue,ageValue,genderValue,participationCountValue,mateCountValue);
+    public int matching_insert_room(int marathonValue, String participationCountValue, int mateCountValue) {
+    return dao.matching_insert_room(marathonValue,participationCountValue,mateCountValue);
     }
 
     @Override
@@ -65,6 +70,20 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
+    public int accept_n( int matching_room_code, int user_code) {
+        return dao.accept_n(matching_room_code, user_code);
+    }
+
+    @Override
+    public int profile_click( int profileValue, int usercode) {
+        return dao.profile_click(profileValue, usercode);
+    }
+
+    @Override
+    public int mate_complite( int matching_room_code, int user_code) {return dao.mate_complite(matching_room_code, user_code);
+    }
+
+    @Override
     public int matching_room_personnel_update_plus( int matching_room_code) {
         return dao.matching_room_personnel_update_plus(matching_room_code);
     }
@@ -72,6 +91,11 @@ public class MateServiceImpl implements MateService {
     @Override
     public int matching_room_personnel_update_minus( int matching_room_code) {
         return dao.matching_room_personnel_update_minus(matching_room_code);
+    }
+
+    @Override
+    public int usercodeSelect(String user_name) {
+        return dao.usercodeSelect(user_name);
     }
 
     @Override

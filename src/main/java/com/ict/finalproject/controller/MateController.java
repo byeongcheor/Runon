@@ -16,21 +16,24 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/mate")
 public class MateController {
-    private int user_code = 2;
     @Autowired
     MateService service;
-
+    String user_name ="user001";
+    int    user_code = 0;
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
+            user_code = service.usercodeSelect(user_name);
+            System.out.println(user_code);
             //int user_code = 4;//유저코드
             List<MateVO> ranking = service.ranking();
-            vo.setUsercode(user_code);
+            List<MateVO> userselect = service.userselect(user_code);
             vo.setMatch_yn(service.match_yn(user_code));
-            System.out.println("user_code : "+user_code);
-            System.out.println("match_yn : "+service.match_yn(user_code));
+            System.out.println(userselect);
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
+            model.addAttribute("userselect",userselect);
+
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -54,15 +57,15 @@ public class MateController {
     }
     @PostMapping("/matching")
     @ResponseBody
-    public int  matching(int marathonValue,String ageValue,String genderValue,String participationCountValue,int mateCountValue, Model model) {
+    public int  matching(int marathonValue,String participationCountValue,int mateCountValue, Model model) {
         //participationCountValue 다시 봐야됨
         //int user_code = 4;//유저코드
         int matching_room_code=0;
         try {
-             matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+             matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
             if (matching_room_code == 0) {
-                service.matching_insert_room(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);//방 만들기
-                matching_room_code = service.matching_select(marathonValue, ageValue, genderValue, participationCountValue, mateCountValue);
+                service.matching_insert_room(marathonValue, participationCountValue, mateCountValue);//방 만들기
+                matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
             }
             service.applicant_insert(matching_room_code, user_code);//방입장
             service.matching_room_personnel_update_plus(matching_room_code);//현재인원수 증가
@@ -118,6 +121,53 @@ public class MateController {
         //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
         return a;
     }
+    // 수락거절
+    @PostMapping("/accept_n")
+    @ResponseBody
+    public int  accept_n(int matching_room_code) {
+        // int user_code = 4;//유저코드
+        int a=1;
+        try {
+            service.accept_n(matching_room_code, user_code);
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
+        return a;
+    }
+
+    @PostMapping("/profile_click")
+    @ResponseBody
+    public int  profile_click(int profileValue ,int usercode) {
+        //int user_code = 4;//유저코드
+        int profile=0;
+        try {
+            service. profile_click(profileValue, usercode);
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
+        return profile;
+    }
+
+    @PostMapping("/mate_complite")
+    @ResponseBody
+    public int  mate_complite(int matching_room_code) {
+        // int user_code = 4;//유저코드
+        int a=1;
+        try {
+            service.mate_complite(matching_room_code, user_code);
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그 출력
+            e.printStackTrace();
+        }
+        //수락하기 하면 2명이상이고 최대인원수가 안차도 모두 수락을 눌렀을 때 완전매칭이 된다.
+        return a;
+    }
+
+
 
     @PostMapping("/marathon_code")
     @ResponseBody
