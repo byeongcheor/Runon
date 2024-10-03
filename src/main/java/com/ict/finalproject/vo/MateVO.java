@@ -43,7 +43,7 @@ public class MateVO {
     private int birthdate;
     private int point_code;
     private int usercode;
-    private int role;
+
     private int ranking;
     private int more=10;
     private int accept_cnt;

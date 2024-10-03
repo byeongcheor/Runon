@@ -1,6 +1,7 @@
 body{
     animation: none;background-color: black;
 }
+
 .loginFrm{
     width: 350px;  margin: 0 auto;
     /*overflow-y:auto;*/

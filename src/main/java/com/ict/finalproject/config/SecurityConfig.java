@@ -72,25 +72,25 @@ public class SecurityConfig {
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         //.anyRequest().authenticated());
                         .anyRequest().permitAll());
-//        http
-//                //.oauth2Login(Customizer.withDefaults());
-//                        .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));
-//        http
-//                .oauth2Login((oauth2) -> oauth2
-//                        // 커스텀 OAuth2 사용자 서비스 설정
-//                        .userInfoEndpoint((userInfoEndpointConfig ->
-//                                userInfoEndpointConfig.userService(coustomOAuth2UserService)))
-//
-//                        // 로그인 성공 후 리다이렉트 경로 설정
-//                        .successHandler((request, response, authentication) -> {
-//                            response.sendRedirect("/");  // 성공 시 /home으로 리다이렉트
-//                        })
-//
-//                        // 로그인 실패 시 처리
-//                        .failureHandler((request, response, exception) -> {
-//                            response.sendRedirect("/login");  // 실패 시 /login?error로 리다이렉트
-//                        })
-//                );
+        http
+                //.oauth2Login(Customizer.withDefaults());
+                        .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        // 커스텀 OAuth2 사용자 서비스 설정
+                        .userInfoEndpoint((userInfoEndpointConfig ->
+                                userInfoEndpointConfig.userService(coustomOAuth2UserService)))
+
+                        // 로그인 성공 후 리다이렉트 경로 설정
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/");  // 성공 시 /home으로 리다이렉트
+                        })
+
+                        // 로그인 실패 시 처리
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("/login");  // 실패 시 /login?error로 리다이렉트
+                        })
+                );
 
 
 

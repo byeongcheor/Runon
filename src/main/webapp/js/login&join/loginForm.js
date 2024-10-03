@@ -27,6 +27,7 @@ function formCheck(event){
             console.log(refreshToken);
             localStorage.setItem("refresh",refreshToken);
             localStorage.setItem("Authorization",token);
+            window.close();
 
         },
         error:function (e){
@@ -38,14 +39,7 @@ function formCheck(event){
 
 }
     function joinPopup(){
-        $.ajax({
-            type: "get",
-           url:"/test",
-            data: {username: "admin"},
-            success:function (r){
-               console.log("성공")
+        window.open('/JoinForm', 'JoinForm', 'width=600, height=850 ,left=1200, top=150');
 
-            }
 
-        });
     }

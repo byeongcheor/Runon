@@ -54,9 +54,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication)throws IOException {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
         String username = customUserDetails.getUsername();
-
+        //System.out.println(username);
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -66,6 +65,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = jwtUtil.createJwt(username, role, 60*60*1000L);
         String refreshToken = jwtUtil.createJwt(username, role, 60*60*1000L*24*30);
+
+        System.out.println("확인"+JWTUtil.setTokengetUsername(token));
         Boolean istrue=service.checkToken(username);
         if (!istrue) {
             service.addToken(refreshToken,username);
