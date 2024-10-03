@@ -2,6 +2,7 @@ package com.ict.finalproject.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +41,6 @@ public class MateVO {
     private int is_updated;
     private int is_deleted;
     private int is_google;
-    private int birthdate;
     private int point_code;
     private int usercode;
     private int role;
@@ -49,12 +49,15 @@ public class MateVO {
     private int accept_cnt;
     private int update_cnt;
     private int match_yn;
+    private int profile;
 
 
+    private String birthdate;
     private String updated_date;
     private String deleted_date;
     private String creation_date;
     private String disabled_date;
     private String activation_date;
+
 
 }
