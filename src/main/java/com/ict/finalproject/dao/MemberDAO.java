@@ -17,8 +17,5 @@ public interface MemberDAO {
 
     int nickCheck(String nickname);
 
-    public List<MemberVO> getUserInfo(int usercode);
-
-
 
 }
