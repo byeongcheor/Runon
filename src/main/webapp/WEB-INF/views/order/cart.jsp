@@ -23,28 +23,30 @@ function updateSelectAll() {
     const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
     const orderButton = document.getElementById('orderButton');
 
-    let anyChecked = false;
-    let allChecked = true;
+    let isAnyChecked = false; // 하나라도 선택된 항목이 있는지 여부
+    let isAllChecked = true; // 모든 항목이 선택되었는지 여부
 
+    // 체크박스 상태 확인
     checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
-            anyChecked = true;
+            isAnyChecked = true; // 선택된 항목이 있으면 true
         } else {
-            allChecked = false;
+            isAllChecked = false; // 선택되지 않은 항목이 있으면 false
         }
     });
 
     // '전체 선택' 체크박스 상태 설정
     const selectAllCheckbox = document.getElementById('selectAll');
-    selectAllCheckbox.checked = allChecked;
+    selectAllCheckbox.checked = isAllChecked;
 
     // 결제 버튼 활성화/비활성화
-    if (anyChecked) {
+    if (isAnyChecked) {
         orderButton.classList.remove('disabled'); // 결제 버튼 활성화
     } else {
         orderButton.classList.add('disabled');  // 결제 버튼 비활성화
     }
 }
+
 
 // 페이지 로드 시 모든 상품을 선택된 상태로 설정
 window.onload = function() {
@@ -90,6 +92,12 @@ async function requestPayment(checkedItems) {
         totalAmount += price;
     });
 
+    // 총 금액이 0일 경우 결제 요청을 하지 않도록 처리
+    if (totalAmount <= 0) {
+        console.error("Total amount is zero, cannot proceed with payment.");
+        return; // 결제 요청을 하지 않음
+    }
+
     // 토스페이먼츠 결제 요청
     const clientKey = "test_ck_ma60RZblrqKzA7jLeex63wzYWBn1";
     const customerKey = "l1lg7ARfyrAiOiFlTQ2Eu";
@@ -121,6 +129,7 @@ async function requestPayment(checkedItems) {
         // 결제 실패 처리 로직 추가
     }
 }
+
 
 
 </script>
