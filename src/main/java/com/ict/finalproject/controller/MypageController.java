@@ -35,12 +35,7 @@ public class MypageController {
 
     @GetMapping("mypage/myHome")
     public String myHome(Model model, HttpServletRequest request){
-        List<MemberVO> memberList = memberservice.getUserInfo(usercode);
-        System.out.println(usercode);
-        System.out.println(memberList);
-        MemberVO mvo=null;
-        model.addAttribute("mvo", mvo);
-        model.addAttribute("memberList", memberList);
+
 
         return "mypage/myHome";
     }

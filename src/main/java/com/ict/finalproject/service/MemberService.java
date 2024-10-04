@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
-    public List<MemberVO> getUserInfo(int usercode);
+
 }

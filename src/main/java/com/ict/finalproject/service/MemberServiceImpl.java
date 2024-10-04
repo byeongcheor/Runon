@@ -13,9 +13,4 @@ public class MemberServiceImpl implements MemberService{
     @Autowired
     private MemberDAO dao;
 
-
-    @Override
-    public List<MemberVO> getUserInfo(int usercode) {
-        return dao.getUserInfo(usercode);
-    }
 }
