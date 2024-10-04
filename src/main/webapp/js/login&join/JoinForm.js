@@ -129,6 +129,10 @@ function formCheck(){
         alert("비밀번호가 다릅니다.");
         return false;
     }
+    if( document.getElementById("gender").value==""){
+        alert("성별을 골라주세요");
+        return false;
+    }
     if(document.getElementById("nickChk").value!="Y"){
         alert("이미 사용인 닉네임이거나 닉네임을 입력해주세요");
         return false;
@@ -148,7 +152,16 @@ function formCheck(){
         alert("이름을 잘못입력하였습니다.");
         return false;
     }
-    alert(username)
+    var birthdate = document.getElementById("birthdate").value;
+
+    var brrthregEx=/^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+    if (!brrthregEx.test(birthdate)){
+        alert("생년월일이 잘못되었습니다.");
+        return false;
+    }
+
+
+
     return true;
 }
 function gendercheck(gender){
