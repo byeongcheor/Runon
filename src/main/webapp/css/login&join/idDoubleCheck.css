@@ -34,6 +34,7 @@ header,footer{display:none;}
 }
 body{
     background-color: black;
+    animation: none;
     height: 100%;
 
 }
