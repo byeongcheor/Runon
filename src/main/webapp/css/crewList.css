@@ -1,0 +1,117 @@
+#crew_body{
+    width: 50%;
+    margin: 0 auto;
+}
+
+#bannerBox{
+    width:100%;
+    height:400px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#crew_nav{
+    height:100px;
+}
+#crew_nav ul, #crew_nav li{
+    float:left;
+    list-style: none;
+}
+#crew_nav li a{
+    text-decoration: none;
+    color: black;
+}
+#crew_nav li{
+    font-size: 18pt;
+    color:grey;
+    margin: 20px;
+}
+#crew_nav li:hover{
+    color: black;
+    font-size: 18pt;
+}
+
+.crew_list{
+    width: 50%;
+    margin: 0 auto;
+}
+.list_item{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no wrap;
+    align-content: normal;
+    justify-content: normal;
+    border-bottom: 0.5px solid lightgrey;
+    padding: 20px;
+}
+.profileBox{
+    width: 60px;
+    height: 60px;
+    border-radius: 200px;
+    margin-right: 40px;
+    padding: 5px;
+}
+.profileImg{
+    width: 100%;
+    height: 100%;
+    border-radius: 200px;
+    object-fit: cover;
+}
+.crew_content{
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+.crew_title{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no wrap;
+    margin-bottom: 10px;
+}
+.crew_info{
+    display: flex;
+    flex-direction: column;
+}
+.crewhit{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.count{
+    margin-left: 5px;
+}
+.crewaddr{
+    margin-bottom: 3px;
+}
+.recruit{
+    margin-top: 40px;
+}
+.page-link{
+    color: black;
+}
+.active>.page-link{
+    background-color: #121212;
+    border-color: #121212;
+    color: white;
+}
+.crew_search{
+    width: 50%;
+    margin: 0 auto;
+}
+.searchForm{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 45px;
+    margin-bottom: 30px;
+}
+.form-select{
+    width: 100px;
+}
+#searchWord{
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}

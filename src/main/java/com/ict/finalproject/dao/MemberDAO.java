@@ -8,8 +8,11 @@ public interface MemberDAO {
 
     Boolean existsByUsername(String username);
 
-    void saveUser(MemberVO vo);
+    int saveUser(MemberVO vo);
 
+    int idDoubleCheck(String username);
+
+    int nickCheck(String nickname);
 
 
 }

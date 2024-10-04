@@ -1,7 +1,5 @@
 package com.ict.finalproject.service;
 
-
-
 import io.jsonwebtoken.Claims;
 
 public interface testService {

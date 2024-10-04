@@ -12,9 +12,9 @@ import java.security.PrivateKey;
 public class MemberVO {
     private int usercode;
     private String username;
+
     private String password;
     private String role;
-    private String email;
     private String name;
     private String addr;
     private String addr_details;
@@ -25,8 +25,6 @@ public class MemberVO {
     private String tel1;
     private String tel2;
     private String tel3;
-    private String is_pacemaker;
-    private String is_mate;
     private String profile_img;
     private String is_info_disclosure;
     private String is_google;
@@ -47,9 +45,9 @@ public class MemberVO {
         return "MemberVO{" +
                 "usercode=" + usercode +
                 ", username='" + username + '\'' +
+
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", addr='" + addr + '\'' +
                 ", addr_details='" + addr_details + '\'' +
@@ -57,8 +55,6 @@ public class MemberVO {
                 ", birthdate='" + birthdate + '\'' +
                 ", gender='" + gender + '\'' +
                 ", tel='" + tel + '\'' +
-                ", is_pacemaker='" + is_pacemaker + '\'' +
-                ", is_mate='" + is_mate + '\'' +
                 ", profile_img='" + profile_img + '\'' +
                 ", is_info_disclosure='" + is_info_disclosure + '\'' +
                 ", is_google='" + is_google + '\'' +
@@ -114,14 +110,6 @@ public class MemberVO {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getName() {
@@ -214,22 +202,6 @@ public class MemberVO {
 
     public void setTel3(String tel3) {
         this.tel3 = tel3;
-    }
-
-    public String getIs_pacemaker() {
-        return is_pacemaker;
-    }
-
-    public void setIs_pacemaker(String is_pacemaker) {
-        this.is_pacemaker = is_pacemaker;
-    }
-
-    public String getIs_mate() {
-        return is_mate;
-    }
-
-    public void setIs_mate(String is_mate) {
-        this.is_mate = is_mate;
     }
 
     public String getProfile_img() {

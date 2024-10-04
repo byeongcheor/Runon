@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MateDAO">
+    <select id="ranking" resultType="com.ict.finalproject.vo.MateVO">
+        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
+        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
+        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
+        where  a.usercode = b.usercode
+        and    a.usercode = c.usercode
+        and    c.create_crew_code = d.create_crew_code
+        and    a.is_info_disclosure='Y'
+        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
+        limit 5;
+    </select>
+
+    <select id="more" resultType="com.ict.finalproject.vo.MateVO">
+        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
+        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
+        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
+        where  a.usercode = b.usercode
+        and    a.usercode = c.usercode
+        and    c.create_crew_code = d.create_crew_code
+        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
+        limit 5 OFFSET ${param1};
+    </select>
+
+    <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MateVO">
+        select a.marathon_code, a.marathon_name
+        from   marathon_list_tbl a, cart_tbl b, order_tbl c, payment_tbl d
+        where  d.order_code = c.order_code
+        and    c.cart_code  = b.cart_code
+        and    b.marathon_code =a.marathon_code
+        and    b.usercode =${param1}
+        and    a.marathon_code not in (select a.marathon_code
+                                       from   marathon_list_tbl a, matching_room_tbl b, applicant_tbl c
+                                       where  a.marathon_code = b.marathon_no
+                                       and    b.matching_room_code = c.matching_room_code
+                                       and    c.usercode = ${param1}
+                                       and    c.is_Completion = 1);
+    </select>
+
+    <select id="userselect" resultType="com.ict.finalproject.vo.MateVO">
+        select *
+        from   user_tbl
+        where  usercode =${param1}
+    </select>
+
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username ='${param1}'
+    </select>
+
+    <select id="matching_select" resultType="int">
+        select coalesce(
+        (select matching_room_code
+        from matching_room_tbl
+        where  marathon_no = ${param1}
+        and    marathon_count = '${param2}'
+        and    max_personnel > now_personnel
+        and    max_personnel = ${param3}     limit 1), 0)
+        from dual
+        order by rand()
+        limit 1;
+    </select>
+
+    <insert id="matching_insert_room">
+        insert into matching_room_tbl
+        (
+            now_personnel
+            ,marathon_no
+            ,marathon_count
+            ,max_personnel
+            ,room_status
+            ,entry_time
+        )
+        values
+        (
+            0
+            ,${param1}
+            ,'${param2}'
+            ,${param3}
+            ,'1'
+            ,now()
+        )
+    </insert>
+
+    <insert id="applicant_insert">
+        insert into applicant_tbl
+        (
+             matching_room_code
+            ,usercode
+            ,is_Completion
+            ,writedate
+            ,profile
+
+        )
+        values
+        (
+             ${param1}
+            ,${param2}
+            ,0
+            ,now()
+            ,'0'
+        )
+    </insert>
+
+    <select id="match_yn" resultType="int">
+        select coalesce(
+            (select matching_room_code
+            from   applicant_tbl
+            where  usercode = ${param1}
+            and    is_Completion = 0     limit 1), 0)
+        from dual
+        limit 1;
+    </select>
+
+    <select id="match_view" resultType="com.ict.finalproject.vo.MateVO">
+        select b.gender,b.nickname,sum(c.score_change) as tbuf_n, e.crew_name, f.max_personnel as buff_n,a.accept_yn as a_s,
+        f.now_personnel as update_cnt,b.usercode,a.profile as b_s,b.birthdate, a.profile,
+        (select count(1) from applicant_tbl where accept_yn='Y' and matching_room_code=f.matching_room_code) as accept_cnt
+        from   applicant_tbl a, user_tbl b, record_tbl c, crew_member_tbl d, create_crew_tbl e, matching_room_tbl f
+        where  a.usercode = b.usercode
+        and    b.usercode = c.usercode
+        and    a.usercode = d.usercode
+        and    d.create_crew_code = e.create_crew_code
+        and    a.matching_room_code = f.matching_room_code
+        and    a.matching_room_code = ${param1}
+        group by  b.gender,b.nickname, e.crew_name, f.max_personnel, a.applicant_code, a.accept_yn, f.now_personnel
+        order by a.applicant_code;
+    </select>
+
+    <delete id="match_out">
+        delete from applicant_tbl
+        where matching_room_code = ${param1}
+        and   usercode           = ${param2}
+    </delete>
+    <update id="matching_room_personnel_update_plus">
+        update matching_room_tbl set now_personnel=now_personnel+1
+        where matching_room_code=${param1}
+    </update>
+
+    <update id="matching_room_personnel_update_minus">
+        update matching_room_tbl set now_personnel=now_personnel-1
+        where matching_room_code=${param1}
+    </update>
+
+    <update id="accept">
+        update applicant_tbl set accept_yn='Y'
+        where  matching_room_code=${param1}
+        and    usercode=${param2}
+    </update>
+    <update id="accept_n">
+        update applicant_tbl set accept_yn='N'
+        where  matching_room_code=${param1}
+        and    usercode=${param2}
+    </update>
+    <update id="profile_click">
+        update applicant_tbl set profile=${param1}
+        where  usercode=${param2}
+    </update>
+    <delete id="matching_room_personnel_zero_delete">
+        delete from matching_room_tbl
+        where now_personnel = 0
+    </delete>
+
+    <update id="mate_complite">
+        update applicant_tbl set is_Completion=1
+        where  matching_room_code=${param1}
+    </update>
+
+</mapper>
