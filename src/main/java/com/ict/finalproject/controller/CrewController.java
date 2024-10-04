@@ -33,4 +33,9 @@ public class CrewController {
         mav.setViewName("crew/crewCreate");
         return mav;
     }
+    //크루관리페이지폼 (크루생성시 매핑코드 끌고와서 매핑 다시하기)
+    @GetMapping("crew/crewManage")
+    public String crewManage(){
+        return "crew/crewManage";
+    }
 }

@@ -31,4 +31,10 @@
         select count(nickname) from user_tbl where nickname= #{param1}
     </select>
 
+    <select id="getUserInfo" resultType="com.ict.finalproject.vo.MemberVO">
+        SELECT *
+        FROM user_tbl
+        WHERE usercode = ${param1}
+    </select>
+
 </mapper>
