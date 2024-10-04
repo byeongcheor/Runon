@@ -521,7 +521,7 @@ function grid_draw(length, result) {
     for (var i = 0; i < result.length; i++) {
 
         var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
-        var gender = result[i].gender=="Female"? 'woman':'man' ;
+        var gender = result[i].gender=="여"? 'woman':'man' ;
         var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
         var img = gender+no;
         //나이 가져오기
@@ -617,7 +617,7 @@ document.querySelector('#matchCompleteModal .close').onclick = function() {
 };
 
 
-// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고
+// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고 이에를 ajax 안에서 열여야되는뎅
 document.getElementById('continueMatching').onclick = function() {
     window.location.href = '/mate/mate';  //
 };
@@ -628,11 +628,25 @@ document.getElementById('goToMyPage').onclick = function() {
 };
 
 // 모달 열기
-window.onload = function() {
+window.onload = function test3() {
+    var token = localStorage.getItem("Authorization");
+    if (token !== "" && token !== null) {
+        $.ajax({
+            url: "/mate/test",
+            type: "post",
+            data: { Authorization: token },
+            success: function (r) {
+                console.log("mate에서 username을 보낸다: " + r);
+            }
+        });
+    }
+
+
     // 체크박스 상태 확인
     if (!localStorage.getItem('hideMateModal7Days') && !localStorage.getItem('neverShowMateModal')) {
         document.getElementById('mateMatchModal').style.display = 'block';
     }
+
 }
 
 // 모달 닫기 버튼
@@ -677,6 +691,11 @@ if (localStorage.getItem('hideMateModal7Days')) {
 // "다시 보지 않기" 체크 로직
 if (localStorage.getItem('neverShowMateModal')) {
     document.getElementById('mateMatchModal').style.display = 'none';
+}
+
+function getQueryParam(param) {
+    var urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
 }
 
 

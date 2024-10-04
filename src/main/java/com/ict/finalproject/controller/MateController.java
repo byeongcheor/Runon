@@ -1,16 +1,14 @@
 package com.ict.finalproject.controller;
 import java.util.List;
 
+import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MateService;
 import com.ict.finalproject.vo.MateVO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -18,8 +16,19 @@ import org.springframework.web.servlet.ModelAndView;
 public class MateController {
     @Autowired
     MateService service;
-    String user_name ="test6";
+    JWTUtil jwtUtil;
+    String user_name ="test5";
     int    user_code = 0;
+
+    @PostMapping("/test")
+    @ResponseBody
+    public String test(@RequestParam("Authorization")String token) {
+        token=token.substring("Bearer ".length());
+        String username=jwtUtil.setTokengetUsername(token);
+        System.out.println("fgfgfgfgfgfgfgfg "+username);
+        return username;
+
+    }
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
@@ -44,7 +53,6 @@ public class MateController {
     @GetMapping("/profileList")
     public ModelAndView profileList() {
         ModelAndView mav = new ModelAndView();
-        // 이 경로는 /WEB-INF/views/mate/profileList.jsp에 매핑됨
         mav.setViewName("mate/profileList");
         return mav;
     }
