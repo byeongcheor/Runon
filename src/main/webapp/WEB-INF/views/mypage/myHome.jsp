@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     window.onload = function(){
          function getLastSixMonths() {
@@ -191,7 +192,7 @@
             <section class="section3">
                 <div class="profile_container">
                     <div class="names">
-                        <h1>김영현</h1>
+                        <h1>김영현님</h1>
                         <p>neoneon0518@naver.com</p>
                     </div>
                     <div class="profileimage">
