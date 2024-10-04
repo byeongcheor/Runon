@@ -48,13 +48,12 @@ public class JoinController {
             int resultint=service.addPoint(username);
             if (resultint==1) {
                int usercode= service.selectUserCode(username);
-                if (usercode==1) {
-                int pointcode=service.addPointCode(usercode);
-                    if (pointcode==1) {
-                        return "login&join/joinOk";
-                    }
+               int pointcode=service.addPointCode(usercode);
 
-                }
+               return "login&join/joinOk";
+
+
+
             }
         }
         return "login&join/joinfalse";
