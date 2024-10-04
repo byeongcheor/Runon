@@ -3,6 +3,7 @@ package com.ict.finalproject.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ict.finalproject.dto.CustomUserDetails;
+
 import com.ict.finalproject.service.LoginService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final LoginService service;
+    private  final LoginService service;
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
 
@@ -54,9 +55,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication)throws IOException {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
         String username = customUserDetails.getUsername();
-
+        //System.out.println(username);
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -66,6 +66,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = jwtUtil.createJwt(username, role, 60*60*1000L);
         String refreshToken = jwtUtil.createJwt(username, role, 60*60*1000L*24*30);
+
+        System.out.println("확인"+JWTUtil.setTokengetUsername(token));
         Boolean istrue=service.checkToken(username);
         if (!istrue) {
             service.addToken(refreshToken,username);

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<link rel="stylesheet" href="/css/loginForm.css" type="text/css">
+<link rel="stylesheet" href="/css/login&join/loginForm.css" type="text/css">
 
-<script src="../js/loginForm.js" type="text/javascript"></script>
+<script src="/js/login&join/loginForm.js" type="text/javascript"></script>
     <div class="loginFrm">
         <h1 class="loginTop"><a href="/"><img src="/img/logo3.png"></a></h1>
         <form onsubmit="return formCheck(event)">

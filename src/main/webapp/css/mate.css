@@ -18,12 +18,14 @@ body {
     }
     /* 전체 레이아웃 */
     .layout {
-        width: 1920px;
-        display: flex;
+        max-width: 1500px;
         justify-content: space-between;
         padding-top: 50px; /* 헤더 아래에 충분한 공간 */
         padding-left: 30px; /* 사이드바와의 간격 */
         box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        margin: 0 auto;
 
     }
 
@@ -33,13 +35,12 @@ body {
         display: flex;
         align-items: center;
         flex-direction: column;
-        margin-left:200px;
     }
 
     /* 프로필 박스 컨테이너 */
     .profile-container {
         margin: 30px 0;
-        width: 75%;
+        width: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 40px;
@@ -89,20 +90,20 @@ body {
     }
 
 /* 셀렉트박스 섹션 */
-    .select-section {
-        display: flex;
-        gap: 5px;  /* 셀렉트 박스 간격을 줄임 */
-        justify-content: center;  /* 가운데 정렬 */
-        align-items: center;
-        margin: 30px 0;
-        margin-bottom:50px;
-    }
+.select-section {
+    display: flex;
+    gap: 5px;  /* 셀렉트 박스 간격을 줄임 */
+    justify-content: center;  /* 가운데 정렬 */
+    align-items: center;
+    margin: 30px 0;
+    margin-bottom:50px;
+}
 .select-box-container {
         margin-top: 10px;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;  /* 간격을 조금 줄임 */
+        gap: 15px;  /* 간격을 조금 줄임 */
     }
 
     .select-box {
@@ -118,7 +119,7 @@ body {
         font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
         font-weight: 500;  /* 헤더 메뉴와 동일한 굵기 */
         cursor: pointer;
-        width: 140px;
+        width: 150px;
         text-align: center;
         transition: transform 0.3s ease, border-color 0.3s ease;
     }
@@ -194,7 +195,7 @@ body {
         border: 2px solid #fff;
         border-radius: 10px;
         background-color: #CCFF47;
-        width: 120px;
+        width: 130px;
         color: black;
         font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
         font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
@@ -214,7 +215,7 @@ body {
         position: sticky;
         top: 100px; /* 헤더 아래로 100px 고정 */
         z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-left:80px;
+        margin-left:100px;
 
 
 
@@ -453,7 +454,7 @@ body {
   border-radius: 10px;
   width: 350px;
   text-align: center;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -474,52 +475,138 @@ body {
   font-weight: bold;
 }
 
-/* 모달 버튼 스타일 */
-.modal-buttons {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column; /* 버튼을 세로(1열)로 배치 */
-  align-items: center; /* 중앙에 정렬 */
-  gap: 10px; /* 버튼 사이 간격 10px */
+    /* 모달 버튼 스타일 */
+    .modal-buttons {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column; /* 버튼을 세로(1열)로 배치 */
+      align-items: center; /* 중앙에 정렬 */
+      gap: 10px; /* 버튼 사이 간격 10px */
+    }
+
+    .modal-button {
+      position: relative; /* 툴팁을 위한 상대적 위치 */
+      border: 2px solid white;
+      background-color: #b3ff00;
+      color: black;
+      font-size: 15px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
+      font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
+      padding: 10px 20px;
+      width: 160px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* 버튼에 마우스를 대면 툴팁 */
+    .modal-button::after {
+      content: attr(data-tooltip); /* data-tooltip 속성에서 툴팁 내용 가져옴 */
+      position: absolute;
+      bottom: -40px; /* 툴팁이 버튼 아래에 나타나도록 위치 조정 */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      white-space: nowrap;
+      display: none;
+      z-index: 10;
+    }
+
+    /* 마우스를 버튼에 대면 툴팁 표시 */
+    .modal-button:hover::after {
+      display: block;
+    }
+
+    .modal-button:hover {
+      background-color: black;
+      color: white;
+    }
+
+.mate-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-.modal-button {
-  position: relative; /* 툴팁을 위한 상대적 위치 */
-  border: 2px solid white;
-  background-color: #b3ff00;
-  color: black;
-  font-size: 15px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
-  font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
-  padding: 10px 20px;
-  width: 160px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+.mate-modal-content {
+    position: relative; /* 닫기 버튼이 모달 내부에 위치하도록 */
+    background-color: #2b2b2b;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    color: white;
+    text-align: left;
+    border-radius: 10px;
+    max-width: 800px;
+    padding: 30px;
 }
 
-/* 버튼에 마우스를 대면 툴팁 */
-.modal-button::after {
-  content: attr(data-tooltip); /* data-tooltip 속성에서 툴팁 내용 가져옴 */
-  position: absolute;
-  bottom: -40px; /* 툴팁이 버튼 아래에 나타나도록 위치 조정 */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 5px;
-  font-size: 13px;
-  white-space: nowrap;
-  display: none;
-  z-index: 10;
+/* 제목을 중간으로 배치 */
+.mate-modal-content h2 {
+    text-align: center;
+    margin-bottom:30px;
 }
 
-/* 마우스를 버튼에 대면 툴팁 표시 */
-.modal-button:hover::after {
-  display: block;
+/* 닫기 버튼이 모달 창 내부에서 상단 우측에 위치하도록 */
+.mate-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #b3ff00;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.modal-button:hover {
-  background-color: black;
-  color: white;
+.mate-close-btn:hover {
+    color: #ff0000;
+}
+
+/* 번호가 들어간 부분을 연두색으로 강조 */
+.highlight-number {
+    color: #8dc63f;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* 모달 푸터의 체크박스와 버튼 정렬 */
+.mate-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+
+.mate-modal-footer label {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.mate-modal-footer input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.mate-modal-footer button {
+    padding: 10px 20px;
+    background-color: #8dc63f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.mate-modal-footer button:hover {
+    background-color: #6ba82d;
 }
