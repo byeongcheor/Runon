@@ -6,136 +6,127 @@
 
 <script>
 
-// '전체 선택' 체크박스 클릭 시 모든 항목 선택/해제
-function toggleSelectAll() {
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
+    // '전체 선택' 체크박스 클릭 시 모든 항목 선택/해제
+    function toggleSelectAll() {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
 
-    checkboxes.forEach((checkbox) => {
-        checkbox.checked = selectAllCheckbox.checked;
-    });
-
-    updateSelectAll();
-}
-
-// 개별 항목 선택 시 상태 업데이트 및 주문 버튼 활성화/비활성화
-function updateSelectAll() {
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
-    const orderButton = document.getElementById('orderButton');
-
-    let isAnyChecked = false; // 하나라도 선택된 항목이 있는지 여부
-    let isAllChecked = true; // 모든 항목이 선택되었는지 여부
-
-    // 체크박스 상태 확인
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            isAnyChecked = true; // 선택된 항목이 있으면 true
-        } else {
-            isAllChecked = false; // 선택되지 않은 항목이 있으면 false
-        }
-    });
-
-    // '전체 선택' 체크박스 상태 설정
-    const selectAllCheckbox = document.getElementById('selectAll');
-    selectAllCheckbox.checked = isAllChecked;
-
-    // 결제 버튼 활성화/비활성화
-    if (isAnyChecked) {
-        orderButton.classList.remove('disabled'); // 결제 버튼 활성화
-    } else {
-        orderButton.classList.add('disabled');  // 결제 버튼 비활성화
-    }
-}
-
-
-// 페이지 로드 시 모든 상품을 선택된 상태로 설정
-window.onload = function() {
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
-
-    // 모든 항목을 기본적으로 선택
-    checkboxes.forEach((checkbox) => {
-        checkbox.checked = true;
-    });
-
-    // '전체 선택' 체크박스도 선택 상태로 설정
-    const selectAllCheckbox = document.getElementById('selectAll');
-    if (selectAllCheckbox) {
-        selectAllCheckbox.checked = true;
-    }
-
-    // 상태 업데이트
-    updateSelectAll();
-
-    // '선택 상품 주문하기' 버튼 클릭 시 동작
-    document.getElementById('orderButton').addEventListener('click', function(event) {
-        const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]:checked');
-
-        if (checkboxes.length === 0) {
-            // 체크된 상품이 없으면 팝업 표시
-            event.preventDefault(); // 기본 동작 중지
-            showPopup();
-        } else {
-            // 체크된 상품이 있으면 결제 진행
-            requestPayment(checkboxes);
-        }
-    });
-};
-
-// 결제 요청 함수 (체크된 상품 배열을 사용하여 결제 처리)
-async function requestPayment(checkedItems) {
-    let totalAmount = 0;
-
-    // 선택된 상품들의 가격을 합산
-    checkedItems.forEach(item => {
-        const priceElement = item.closest('.tipoff').querySelector('.ticketP span');
-        const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''));
-        totalAmount += price;
-    });
-
-    // 총 금액이 0일 경우 결제 요청을 하지 않도록 처리
-    if (totalAmount <= 0) {
-        console.error("Total amount is zero, cannot proceed with payment.");
-        return; // 결제 요청을 하지 않음
-    }
-
-    // 토스페이먼츠 결제 요청
-    const clientKey = "test_ck_ma60RZblrqKzA7jLeex63wzYWBn1";
-    const customerKey = "l1lg7ARfyrAiOiFlTQ2Eu";
-    const tossPayments = TossPayments(clientKey);
-
-    try {
-        await tossPayments.requestPayment({
-            method: "CARD",
-            amount: {
-                currency: "KRW",
-                value: totalAmount,
-            },
-            orderId: "tele4rvgeIO2CBSn7rYII",
-            orderName: "2024 3대 마라톤 - 여의도 나이트런",
-            successUrl: window.location.origin + "/success",
-            failUrl: window.location.origin + "/fail",
-            customerEmail: "goguma123@naver.com",
-            customerName: "고구마",
-            customerMobilePhone: "01012341234",
-            card: {
-                useEscrow: false,
-                flowMode: "DEFAULT",
-                useCardPoint: false,
-                useAppCardOnly: false,
-            },
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
         });
-    } catch (error) {
-        console.error("Payment failed:", error);
-        // 결제 실패 처리 로직 추가
+
+        updateSelectAll();
     }
-}
+
+    // 개별 항목 선택 시 상태 업데이트 및 주문 버튼 활성화
+    function updateSelectAll() {
+        const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
+        const orderButton = document.getElementById('orderButton');
+
+        let isAnyChecked = false; // 하나라도 선택된 항목이 있는지 여부
+        let isAllChecked = true;  // 모든 항목이 선택되었는지 여부
+
+        // 체크박스 상태 확인
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                isAnyChecked = true; // 선택된 항목이 있으면 true
+            } else {
+                isAllChecked = false; // 선택되지 않은 항목이 있으면 false
+            }
+        });
+
+        // '전체 선택' 체크박스 상태 설정
+        const selectAllCheckbox = document.getElementById('selectAll');
+        selectAllCheckbox.checked = isAllChecked;
+
+        // 결제 버튼 항상 활성화
+        orderButton.classList.remove('disabled'); // 결제 버튼 항상 활성화
+    }
+
+    // 페이지 로드 시 모든 상품을 선택된 상태로 설정
+    window.onload = function() {
+        const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
+
+        // 모든 항목을 기본적으로 선택
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = true;
+        });
+
+        // '전체 선택' 체크박스도 선택 상태로 설정
+        const selectAllCheckbox = document.getElementById('selectAll');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = true;
+        }
+
+        // 상태 업데이트
+        updateSelectAll();
+
+        // '선택 상품 주문하기' 버튼 클릭 시 동작
+        document.getElementById('orderButton').addEventListener('click', function () {
+            const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]:checked');
+
+            // 체크된 상품이 있으면 결제 진행
+            if (checkboxes.length > 0) {
+                requestPayment(checkboxes);
+            } else {
+                // 체크된 상품이 없으면 필요한 경우 메시지 표시
+                alert("상품을 선택해 주세요.");
+            }
+        });
+    };
+
+    // 결제 요청 함수 (체크된 상품 배열을 사용하여 결제 처리)
+    async function requestPayment(checkedItems) {
+        let totalAmount = 0;
+
+        // 선택된 상품들의 가격을 합산
+        checkedItems.forEach(item => {
+            const priceElement = item.closest('.tipoff').querySelector('.ticketP span');
+            const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''));
+            totalAmount += price;
+        });
+
+
+
+        // 토스페이먼츠 결제 요청
+        const clientKey = "test_ck_ma60RZblrqKzA7jLeex63wzYWBn1";
+        const customerKey = "l1lg7ARfyrAiOiFlTQ2Eu";
+        const tossPayments = TossPayments(clientKey);
+
+        try {
+            await tossPayments.requestPayment({
+                method: "CARD",
+                amount: {
+                    currency: "KRW",
+                    value: totalAmount,
+                },
+                orderId: "tele4rvgeIO2CBSn7rYII",
+                orderName: "2024 3대 마라톤 - 여의도 나이트런",
+                successUrl: window.location.origin + "/success",
+                failUrl: window.location.origin + "/fail",
+                customerEmail: "goguma123@naver.com",
+                customerName: "고구마",
+                customerMobilePhone: "01012341234",
+                card: {
+                    useEscrow: false,
+                    flowMode: "DEFAULT",
+                    useCardPoint: false,
+                    useAppCardOnly: false,
+                },
+            });
+        } catch (error) {
+            console.error("Payment failed:", error);
+            // 결제 실패 처리 로직 추가
+        }
+    }
+
 
 
 
 </script>
 <script>
    // 상품의 기본 단가를 저장하는 변수 (예시로 25000원 설정)
-   let unitPrice = 25000;
+   let price  = 25000;
 
    // 장바구니에 추가된 상품 수량 변경부분
    let number = 1;
@@ -167,7 +158,7 @@ async function requestPayment(checkedItems) {
        let quantity = parseInt(document.getElementById("number").textContent);
 
        // 상품 총 금액 계산 (단가 * 수량)
-       let totalPrice = unitPrice * quantity;
+       let totalPrice = price  * quantity;
 
        // productTotal 요소에 상품 총 금액 업데이트
        document.getElementById('productTotal').innerText = totalPrice.toLocaleString() + "원";
@@ -369,7 +360,7 @@ async function requestPayment(checkedItems) {
                 <a href="/order/cart"><span>쇼핑 계속하기</span></a>
             </div>
             <div class="checkOrder">
-               <button class="button" id="orderButton" onclick="requestPayment()">상품 주문하기</button>
+               <button class="button" id="orderButton">상품 주문하기</button>
             </div>
 
         </div>
