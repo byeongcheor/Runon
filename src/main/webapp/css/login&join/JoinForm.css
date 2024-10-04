@@ -79,3 +79,7 @@ header,footer{display:none;}
 #nickCheck{
     color: red;
 }
+#genderm,#genderw{
+    background-color: #FFCC66;
+}
+

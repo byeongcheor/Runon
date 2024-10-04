@@ -1,10 +1,17 @@
 var r="";
-
+var username;
 function idCheck(){
+     username=document.getElementById("username").value;
+    const regExpUsername = /^\w{4,12}[@][A-Za-z]{2,8}[.][A-Za-z]{2,3}([.][A-Za-z]{2,3})?$/;
     if(document.getElementById('username').value==""){
         alert("아이디를 입력후 중복검사하세요.");
+        document.getElementById("username").focus();
+        return false;
+    } else if (!regExpUsername.test(username)) {
+        alert( "아이디를 이메일로 입력해주세요");
         return false;
     }
+
     return true;
 }
 function setUserid(){
@@ -60,8 +67,8 @@ function useemail(){
     if ($("#emailcode").val() !="" &&$("#emailcode").val() ==r){
         opener.document.getElementById("chk").value='Y';
         opener.document.getElementById("username").readOnly=true;
-        opener.document.getElementById("username").style.backgroundColor = "#ddd"; // 배경색 설정
-        opener.document.getElementById("username").style.color = "#fff";
+        opener.document.getElementById("username").value= username; // 배경색 설정
+
 
         self.close(); //window.close();
     }else {

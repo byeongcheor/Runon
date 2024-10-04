@@ -12,7 +12,7 @@
     </select>
 
     <insert id="saveUser" parameterType="com.ict.finalproject.vo.MemberVO">
-        INSERT INTO user_tbl(username, password, role,name,nickname,addr,addr_details,zip_code,birthdate,gender,tel,is_info_disclosure,is_google)
+        INSERT INTO user_tbl(username, password, role,name,nickname,addr,addr_details,zip_code,birthdate,gender,tel,is_info_disclosure)
         VALUES(#{username}, #{password}, #{role},#{name},#{nickname},#{addr},#{addr_details},
         <if test="zip_code != null and zip_code != ''">
             #{zip_code}
@@ -21,7 +21,7 @@
             NULL
         </if>
         ,#{birthdate},#{gender},
-        #{tel}, #{is_info_disclosure},#{is_google})
+        #{tel}, #{is_info_disclosure})
     </insert>
     <select id="idDoubleCheck"  resultType="int">
         select count(username) from user_tbl where username =#{param1}

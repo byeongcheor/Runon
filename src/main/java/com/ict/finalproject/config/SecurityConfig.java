@@ -74,7 +74,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll());
         http
                 //.oauth2Login(Customizer.withDefaults());
-                        .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));
+                .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));
         http
                 .oauth2Login((oauth2) -> oauth2
                         // 커스텀 OAuth2 사용자 서비스 설정

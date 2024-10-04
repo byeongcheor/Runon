@@ -3,6 +3,7 @@ package com.ict.finalproject.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ict.finalproject.dto.CustomUserDetails;
+
 import com.ict.finalproject.service.LoginService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final LoginService service;
+    private  final LoginService service;
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
 
