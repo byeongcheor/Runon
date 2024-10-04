@@ -72,8 +72,6 @@ public class MemberVO {
                 '}';
     }
 
-
-
     public String getNickname() {
         return nickname;
     }

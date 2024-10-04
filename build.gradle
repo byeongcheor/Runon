@@ -49,7 +49,6 @@ dependencies {
 
     // JDBC
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.3.3'
-
     //테스트
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'

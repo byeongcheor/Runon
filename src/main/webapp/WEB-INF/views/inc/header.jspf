@@ -70,6 +70,7 @@ function test3() {
                     <li><a class="memus" onclick="test3()">MATE</a></li>
                     <li><a class="memus" href="/crew/crewList">CREW</a></li>
                     <li><a class="memus">NOTICE</a></li>
+                    <li><a class="memus" href="/order/cart">CART</a></li>
                     <li><a class="memus" href="/mypage/myHome">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
