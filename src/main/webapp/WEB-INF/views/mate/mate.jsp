@@ -135,9 +135,59 @@
     <span class="close">&times;</span>
     <p>매칭이 완료되었습니다.</p>
     <div class="modal-buttons">
-  	  <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+       <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
       <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
   </div>
+</div>
+
+<!-- 매칭 이용방법 안내 모달 -->
+<div id="mateMatchModal" class="mate-modal" style="display:none;">
+    <div class="mate-modal-content">
+        <!-- 닫기 버튼을 모달 창 내부에 위치시킵니다 -->
+        <span class="mate-close-btn">&times;</span>
+        <h2>매이트 이용방법 안내</h2>
+        <p>매이트 페이지에 오신 것을 환영합니다! 이 페이지에서는 러너들을 위한 매이트 매칭 서비스를 이용할 수 있습니다. 아래 설명을 참고하여 매칭을 원활하게 진행해 주세요.</p>
+
+        <h3 class="highlight-number">1. 매이트 매칭을 위한 필수 조건</h3>
+        <p>- 참가하는 대회가 있어야 합니다. 본인이 결제한 대회가 없으면 매칭을 진행할 수 없습니다.<br>
+        - "내 대회" 드롭다운 메뉴에서 본인이 참여한 대회를 선택하세요.</p>
+
+        <h3 class="highlight-number">2. 매칭 조건 선택</h3>
+        <p>- 참가 횟수와 매칭할 메이트 인원을 선택하세요. 2명부터 16명까지 선택 가능합니다.</p>
+
+        <h3 class="highlight-number">3. 매칭 시작</h3>
+        <p>- 매칭 조건을 설정한 후 "매칭하기" 버튼을 누르면 랜덤으로 같은 조건을 선택한 사람들과 매칭이 진행됩니다.<br>
+        - 매칭이 진행되면, 선택한 메이트 인원 수만큼 기본 프로필이 표시됩니다.</p>
+
+        <h3 class="highlight-number">4. 매칭 상태 확인 및 채팅</h3>
+        <p>- 프로필 주변에 초록색 테두리가 표시되면, 해당 유저가 매칭을 수락한 상태입니다. 모든 유저가 수락해야 매칭이 완료됩니다.<br>
+        - 매칭된 방에 입장하면 자동으로 채팅이 연결되어 유저들과 실시간 대화가 가능합니다.</p>
+
+        <h3 class="highlight-number">5. 프로필 사진</h3>
+        <p>- 입장한 메이트의 성별은 기본 프로필 사진으로 나타납니다.<br>
+        - 자신의 기본 프로필을 클릭하면 런온에서 제공하는 다른 프로필로 바꿀 수 있습니다.</p>
+
+        <h3 class="highlight-number">6. 매칭 완료 및 확인</h3>
+        <p>- 매칭된 유저의 정보는 마이페이지에서 확인할 수 있습니다.</p>
+
+        <h3 class="highlight-number">7. 나가기</h3>
+        <p>- 매칭원이 마음에 들지 않거나 방을 나가고 싶다면 "수락취소" 또는 "나가기" 버튼을 눌러 매칭 방에서 나올 수 있습니다.</p>
+
+        <!-- RUN ON 로고 -->
+        <div style="text-align: center; margin-top: 20px;">
+            <img src="/img/logo3.png" alt="RUN ON 로고" style="width: 150px; margin: 20px;">
+        </div>
+
+        <div class="mate-modal-footer">
+            <label>
+                <input type="checkbox" id="mateHide7days"> 7일간 다시 보지 않기
+            </label>
+            <label>
+                <input type="checkbox" id="mateNeverShow"> 다시 보지 않기
+            </label>
+            <button id="mateSaveModalPreferences">확인</button>
+        </div>
+    </div>
 </div>
 
 </body>
@@ -153,6 +203,7 @@ var update_cnt = 0;
 var match_yn="${vo.match_yn}";
 var usercode=$('#usercode').val();
 var gender=$('#gender').val();
+
 
 $(document).ready(function() {
     marathon_code();//내가 결제한 대회리스트 불러오기
@@ -366,8 +417,12 @@ $(document).ready(function() {
                matching_room_code:match_yn
               },
               success:function(result){
-                   localStorage.clear(); // 전체 로컬 스토리지 값 초기화 (또는 특정 값을 초기화)
-                   location.reload();  // 페이지 새로고침 추가
+
+                  localStorage.removeItem('marathonSelect');
+                  localStorage.removeItem('participationCountSelect');
+                  localStorage.removeItem('mateCountSelect');
+                  localStorage.clear();// 이거 지워야 이용방법 모달안뜸
+                  location.reload();  // 페이지 새로고침 추가
               },
               error:function(e){
               }
@@ -383,6 +438,9 @@ $(document).ready(function() {
            matching_room_code:match_yn
           },
         success:function(result) {
+          localStorage.removeItem('marathonSelect');
+          localStorage.removeItem('participationCountSelect');
+          localStorage.removeItem('mateCountSelect');
         },
           error:function(e){
           }
@@ -561,11 +619,65 @@ document.querySelector('#matchCompleteModal .close').onclick = function() {
 
 // 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고
 document.getElementById('continueMatching').onclick = function() {
-    window.location.href = '/mate/mate';  // 마이페이지로 이동
+    window.location.href = '/mate/mate';  //
 };
 
 // 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
 document.getElementById('goToMyPage').onclick = function() {
     window.location.href = '/mypage/myHome';  // 마이페이지로 이동
 };
+
+// 모달 열기
+window.onload = function() {
+    // 체크박스 상태 확인
+    if (!localStorage.getItem('hideMateModal7Days') && !localStorage.getItem('neverShowMateModal')) {
+        document.getElementById('mateMatchModal').style.display = 'block';
+    }
+}
+
+// 모달 닫기 버튼
+document.querySelector('.mate-close-btn').onclick = function() {
+    document.getElementById('mateMatchModal').style.display = 'none';
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    var modal = document.getElementById('mateMatchModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// 체크박스 상태 저장
+document.getElementById('mateSaveModalPreferences').onclick = function() {
+    var hide7days = document.getElementById('mateHide7days').checked;
+    var neverShow = document.getElementById('mateNeverShow').checked;
+
+    if (hide7days) {
+        localStorage.setItem('hideMateModal7Days', new Date().getTime());
+    }
+    if (neverShow) {
+        localStorage.setItem('neverShowMateModal', true);
+    }
+
+    document.getElementById('mateMatchModal').style.display = 'none';
+}
+
+// 7일간 다시 보지 않기 로직
+if (localStorage.getItem('hideMateModal7Days')) {
+    var now = new Date().getTime();
+    var hideModalTime = localStorage.getItem('hideMateModal7Days');
+
+    // 7일이 지났으면 로컬스토리지에서 제거
+    if (now - hideModalTime > 7 * 24 * 60 * 60 * 1000) {
+        localStorage.removeItem('hideMateModal7Days');
+    }
+}
+
+// "다시 보지 않기" 체크 로직
+if (localStorage.getItem('neverShowMateModal')) {
+    document.getElementById('mateMatchModal').style.display = 'none';
+}
+
+
 </script>

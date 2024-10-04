@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class MateController {
     @Autowired
     MateService service;
-    String user_name ="user001";
+    String user_name ="test6";
     int    user_code = 0;
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
@@ -53,7 +53,7 @@ public class MateController {
     @ResponseBody
     public List<MateVO> more(int more){
         List<MateVO> list = service.more(more);
-    return list;
+        return list;
     }
     @PostMapping("/matching")
     @ResponseBody
@@ -62,7 +62,7 @@ public class MateController {
         //int user_code = 4;//유저코드
         int matching_room_code=0;
         try {
-             matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
+            matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
             if (matching_room_code == 0) {
                 service.matching_insert_room(marathonValue, participationCountValue, mateCountValue);//방 만들기
                 matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
@@ -174,6 +174,6 @@ public class MateController {
     public List<MateVO> marathon_code(){
         // int user_code = 4;//유저코드
         List<MateVO> list = service.marathon_code_list(user_code);
-    return  list;
+        return  list;
     }
 }
