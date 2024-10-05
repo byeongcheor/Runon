@@ -1,4 +1,6 @@
 package com.ict.finalproject.controller;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.ict.finalproject.jwt.JWTUtil;
@@ -17,24 +19,22 @@ public class MateController {
     @Autowired
     MateService service;
     JWTUtil jwtUtil;
-    String user_name ="test5";
+    String user_name ="";
     int    user_code = 0;
 
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization")String token) {
         token=token.substring("Bearer ".length());
-        String username=jwtUtil.setTokengetUsername(token);
-        System.out.println("fgfgfgfgfgfgfgfg "+username);
-        return username;
-
+        System.out.println("123123123");
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        return user_name;
     }
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
             user_code = service.usercodeSelect(user_name);
-            System.out.println(user_code);
-            //int user_code = 4;//유저코드
             List<MateVO> ranking = service.ranking();
             List<MateVO> userselect = service.userselect(user_code);
             vo.setMatch_yn(service.match_yn(user_code));
@@ -175,13 +175,30 @@ public class MateController {
         return a;
     }
 
-
-
     @PostMapping("/marathon_code")
     @ResponseBody
     public List<MateVO> marathon_code(){
         // int user_code = 4;//유저코드
         List<MateVO> list = service.marathon_code_list(user_code);
         return  list;
+    }
+
+    @PostMapping("/hide7days")
+    @ResponseBody
+    public void hide7days(@RequestParam("Authorization")String token, int num){
+        service.hide7daysAdd(user_code,num);
+    }
+
+    @PostMapping("/neverShow")
+    @ResponseBody
+    public void neverShow(@RequestParam("Authorization")String token, int num){
+        service.neverShow(user_code,num);
+    }
+
+    @PostMapping("/mate_popup_date_select")
+    @ResponseBody
+    public Date  mate_popup_date_select(@RequestParam("Authorization")String token) {
+        Date mate_popup_date= service.mate_popup_date_select(user_code);
+    return mate_popup_date;
     }
 }

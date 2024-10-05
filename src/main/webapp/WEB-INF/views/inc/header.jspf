@@ -44,11 +44,15 @@
     }
 
 
-function test3() {
+function mate() {
+    var Authorization=localStorage.getItem("Authorization");
     $.ajax({
         url: "/mate/test", // 원하는 URL을 지정
         type: "post",
-        data: { /* 필요한 데이터 */ }
+        data: { Authorization:Authorization },
+        success: function (r) {
+          clog('11111 : '+r);
+        }
     });
     window.location.href = '/mate/mate';
 }
@@ -67,7 +71,7 @@ function test3() {
                 </div>
                 <ul>
                     <li><a class="memus">MARATHON</a></li>
-                    <li><a class="memus" onclick="test3()">MATE</a></li>
+                    <li><a class="memus" onclick="mate()">MATE</a></li>
                     <li><a class="memus" href="/crew/crewList">CREW</a></li>
                     <li><a class="memus">NOTICE</a></li>
                     <li><a class="memus" href="/order/cart">CART</a></li>
