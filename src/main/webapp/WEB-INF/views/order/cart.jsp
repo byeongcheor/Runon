@@ -265,16 +265,11 @@
             document.getElementById('totalAmount').innerText = totalAmount.toLocaleString() + "원";
 
 
-
-
-
         });
 
-        console.log("Proceeding to payment..."); // 결제 진행 로그
-        console.log("Total amount for payment:", totalAmount); // 총 금액 로그
-
-
         try {
+            console.log("Proceeding to payment..."); // 결제 진행 로그
+            console.log("Total amount for payment:", totalAmount); // 총 금액 로그
             await payment.requestPayment({
                 method: "CARD",
                 amount: {
