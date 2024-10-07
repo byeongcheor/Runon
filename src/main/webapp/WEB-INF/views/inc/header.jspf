@@ -42,6 +42,20 @@
         //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
         console.log("전역변수로 설정확인"+responseData);
     }
+
+
+function mate() {
+    var Authorization=localStorage.getItem("Authorization");
+    $.ajax({
+        url: "/mate/test", // 원하는 URL을 지정
+        type: "post",
+        data: { Authorization:Authorization },
+        success: function (r) {
+          clog('11111 : '+r);
+        }
+    });
+    window.location.href = '/mate/mate';
+}
     function test2(username){
         //이렇게 실행하면 한번에 사용가능
         console.log("다른방법확인"+username);
@@ -57,15 +71,17 @@
                 </div>
                 <ul>
                     <li><a class="memus">MARATHON</a></li>
-                    <li><a class="memus" href="/mate/mate">MATE</a></li>
+                    <li><a class="memus" onclick="mate()">MATE</a></li>
                     <li><a class="memus" href="/crew/crewList">CREW</a></li>
                     <li><a class="memus">NOTICE</a></li>
                     <li><a class="memus" href="/order/cart">CART</a></li>
                     <li><a class="memus" href="/mypage/myHome">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
+                    <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
 
                 </ul>
             </nav>
         </div>
+        <div></div>
 	</header>

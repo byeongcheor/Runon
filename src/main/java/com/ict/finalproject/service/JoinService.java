@@ -18,4 +18,10 @@ public interface JoinService {
 
    //닉네임 중복검사
    int nickCheck(String nickname);
+   //포인트테이블 아이디추가
+   int addPoint(String username);
+   //유저코드찾기
+   int selectUserCode(String username);
+   //유저 테이블 포인트코드추가
+   int addPointCode(int usercode);
 }

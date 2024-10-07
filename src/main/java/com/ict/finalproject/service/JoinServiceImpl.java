@@ -62,4 +62,20 @@ public class JoinServiceImpl implements JoinService {
 
         return memberDAO.nickCheck(nickname);
     }
+
+    @Override
+    public int addPoint(String username) {
+
+        return memberDAO.addPoint(username);
+    }
+
+    @Override
+    public int selectUserCode(String username) {
+        return memberDAO.selectUserCode(username);
+    }
+
+    @Override
+    public int addPointCode(int usercode) {
+        return memberDAO.addPointCode(usercode);
+    }
 }
