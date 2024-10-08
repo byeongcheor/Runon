@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/*.jsp").permitAll()
+                        .requestMatchers("/mate").authenticated()
 //                        .requestMatchers("링크명").authenticated()
                         .anyRequest().permitAll());
 

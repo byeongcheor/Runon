@@ -228,7 +228,7 @@ li{
     min-width: 360px;
 }
 #userrecord{
-
+    border: 1px solid black;
     overflow: auto;
     height: 57%;
 }

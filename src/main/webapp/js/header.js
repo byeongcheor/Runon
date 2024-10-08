@@ -1,12 +1,8 @@
 var username1
 var usercode1
 var ToKen
-window.onload=function(){
 
-}
 $(window).on('scroll',function(){
-
-
     if($(window).scrollTop()){
         $('#header').addClass('active');
     }else{
@@ -17,7 +13,7 @@ function openLoginPopup() {
     window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }
 $(document).ready(function() {
-    ToKen=localStorage.getItem("Authorization");
+ ToKen=localStorage.getItem("Authorization");
     if (ToKen!=null &&ToKen!="" ){
         ToKen=ToKen.substring(7);}
     $.ajax({
@@ -27,6 +23,7 @@ $(document).ready(function() {
             ToKen:ToKen
         },
         success:function(r){
+           // alert("Test");
             // 유저정보 담기
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
@@ -34,10 +31,6 @@ $(document).ready(function() {
         }
 
     });
-
-
-
-
     // a 태그 클릭 이벤트 핸들러
     $('.memus').click(function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
@@ -81,3 +74,4 @@ $(document).ready(function() {
         }
     });
 });
+
