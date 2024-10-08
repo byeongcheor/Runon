@@ -8,7 +8,7 @@
     </select>
     <select id="selectAllUser" resultType="com.ict.finalproject.vo.MemberVO">
         select *from user_tbl where role = "ROLE_USER"
-        order by `usercode` desc LIMIT  #{onePageRecord} offset #{offset}
+        order by `usercode`  LIMIT  #{onePageRecord} offset #{offset}
     </select>
     <select id="selectMembers"  resultType="com.ict.finalproject.vo.MemberVO">
         select *from user_tbl where role = "ROLE_USER"
@@ -20,6 +20,8 @@
     </select>
     <select id="selectOneUser" resultType="com.ict.finalproject.vo.MemberVO">
         select * from user_tbl where usercode= #{param1}
-
+    </select>
+    <select id="getRecord" resultType="com.ict.finalproject.vo.RecordVO">
+        select * from record_tbl where usercode = #{param1}
     </select>
 </mapper>

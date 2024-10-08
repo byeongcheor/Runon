@@ -2,6 +2,7 @@ package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.MemberVO;
 import com.ict.finalproject.vo.PagingVO;
+import com.ict.finalproject.vo.RecordVO;
 import com.ict.finalproject.vo.ReportVO;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface AdminPagesDAO {
     public List<ReportVO> getUserReport(int usercode);
     //한유저의 인적사항
     public MemberVO selectOneUser(int usercode);
+    //유저의 전적가져오기
+    public List<RecordVO> getRecord(int usercode);
 
 }

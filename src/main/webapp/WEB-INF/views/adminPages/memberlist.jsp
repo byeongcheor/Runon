@@ -75,12 +75,7 @@ asdfasdf
             <div id="myRunning">
                 <div>점수변동</div>
                 <div id="userrecord">
-                    <h1>총점수:128km</h1>
-                <ul>
-                    <li> 점수변동 +32km 현재점수:32Km 변동일:2024-10-08</li>
-
-                </ul>
-
+                <h1>lodding</h1>
                 </div>
             </div>
             <div id="crewhistory">

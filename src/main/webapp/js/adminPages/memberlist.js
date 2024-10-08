@@ -89,7 +89,6 @@ function download(data){
     XLSX.writeFile(wb, "data.xlsx");  // Excel
 }
 function userdetail(usercode){
-    alert(usercode);
     document.getElementById("userdetailbackground").style.display="block";
     $.ajax({
         url:"/adminPages/userdetail",
@@ -99,7 +98,7 @@ function userdetail(usercode){
         success:function(r){
             var rlist=r.rlist;
             var users=r.mvo;
-
+            var recordlist=r.recordlist;
             var usertag=`
             <div id="userprofile">
                 <img src="../../profileImg/`+users.profile_img+`"/>
@@ -128,8 +127,22 @@ function userdetail(usercode){
                 </div>
             </div>`;
             document.getElementById("usermain").innerHTML=usertag;
+            var totalscore=0;
+            recordlist.forEach(function(recordlist){
+                totalscore += recordlist.score_change;
+            });
+            var recordtag="<h1>총점수:"+totalscore+"km</h1><ul>";
 
-            console.log(rlist);
+
+            if (recordlist==null || recordlist==""){
+                recordtag +="<h2 style='text-align: center'>아직 기록이 없습니다.</h2>"
+            }else{
+                recordlist.forEach(function(recordlist){
+                    recordtag += "<li> 점수변동 "+recordlist.score_change+"km 현재점수:"+recordlist.now_score+"km 변동일:"+recordlist.changedate.substring(0,10)+"</li>"
+                });
+            }
+            recordtag += "</ul>";
+            document.getElementById("userrecord").innerHTML=recordtag;
 
         },error:function(e){
             console.log("에러발생"+e);

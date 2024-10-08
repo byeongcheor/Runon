@@ -1,6 +1,8 @@
 #memlistbody{
 
-    width: 100%;
+
+    width: 80%;
+    min-width: 950px;
 }
 #memlistbody>div{
   }
@@ -149,7 +151,7 @@ li{
     height: 100%;
     left: 0;
     top: 0;
-    /*display: none;*/
+    display: none;
 }
 #userdetail{
     width: 80%;

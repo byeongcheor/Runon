@@ -4,6 +4,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.AdminPagesService;
 import com.ict.finalproject.vo.MemberVO;
 import com.ict.finalproject.vo.PagingVO;
+import com.ict.finalproject.vo.RecordVO;
 import com.ict.finalproject.vo.ReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,10 +83,15 @@ public class AdminController {
         System.out.println(usercode);
         //유저 인적사항
         Map<String,Object> map=new HashMap<String,Object>();
+        //유저전적
+        List<RecordVO>recordlist=service.getRecord(usercode);
+        System.out.println(recordlist);
+        //크루전적
         MemberVO mvo=service.selectOneUser(usercode);
         //신고당한횟수확인이랑 해당 신고리스트로 이동
         List<ReportVO> rlist = service.getUserReport(usercode);
         map.put("mvo", mvo);
+        map.put("recordlist", recordlist);
         map.put("rlist", rlist);
         return map;
     }
