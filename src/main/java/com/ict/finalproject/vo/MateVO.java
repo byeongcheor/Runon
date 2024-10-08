@@ -2,7 +2,6 @@ package com.ict.finalproject.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -58,6 +57,7 @@ public class MateVO {
     private String creation_date;
     private String disabled_date;
     private String activation_date;
+    private String mate_popup_date;
 
 
 }

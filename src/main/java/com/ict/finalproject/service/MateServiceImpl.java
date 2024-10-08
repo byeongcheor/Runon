@@ -5,6 +5,7 @@ import com.ict.finalproject.vo.MateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -96,6 +97,21 @@ public class MateServiceImpl implements MateService {
     @Override
     public int usercodeSelect(String user_name) {
         return dao.usercodeSelect(user_name);
+    }
+
+    @Override
+    public int hide7daysAdd(int user_code,int num) {
+        return dao.hide7daysAdd(user_code,num);
+    }
+
+    @Override
+    public int neverShow(int user_code,int num) {
+        return dao.neverShow(user_code,num);
+    }
+
+    @Override
+    public Date mate_popup_date_select(int user_code) {
+        return dao.mate_popup_date_select(user_code);
     }
 
     @Override

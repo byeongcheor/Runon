@@ -192,8 +192,27 @@
     </delete>
 
     <update id="mate_complite">
-        update applicant_tbl set is_Completion=1
+        update applicant_tbl
+        set
+        is_Completion=1,
+        completiondate = now()
         where  matching_room_code=${param1}
     </update>
+
+    <update id="hide7daysAdd">
+        update user_tbl set mate_popup_date = DATE_ADD(now(), INTERVAL ${param2} DAY)
+        where  usercode=${param1}
+    </update>
+
+    <update id="neverShow">
+        update user_tbl set mate_popup_date = DATE_ADD(now(), INTERVAL ${param2} DAY)
+        where  usercode=${param1}
+    </update>
+    <select id="mate_popup_date_select" resultType="java.util.Date">
+        select mate_popup_date
+        from   user_tbl
+        where  usercode=${param1}
+    </select>
+
 
 </mapper>

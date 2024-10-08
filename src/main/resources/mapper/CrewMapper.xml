@@ -3,27 +3,72 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.CrewDAO">
-    <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CreateCrew">
-        select crew_name, max_num, addr, addr_gu, content, logo
-        from create_crew_tbl
-        where 1=1
-        <choose>
-            <when test="searchKey == 'crew_name' and searchWord != ''">
-                and crew_name like concat('%', #{searchWord}, '%')
-            </when>
-            <otherwise>
-                <!-- No search key, no filter applied -->
-            </otherwise>
-        </choose>
-        <!-- 일정 필터 -->
-        <if test="addr != null and addr != '' and addr != '전체'">
-            and addr like concat('%', #{addr}, '%')
-        </if>
-        order by create_crew_code desc
-        limit #{onePageRecord} offset #{offset}
+
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username = '${param1}'
     </select>
+
     <select id="totalRecord" resultType="int">
-        select count(create_crew_code)
-        from create_crew_tbl
+        select count(b.create_crew_code)
+        from  create_crew_tbl a, crew_write b
+        where a.create_crew_code = b.create_crew_code
     </select>
+
+    <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
+        select a.create_crew_code,a.crew_name,
+               (select count(crew_write_code)from crew_write where create_crew_code=a.create_crew_code)as a_n
+        from   create_crew_tbl a
+        where  a.usercode = ${param1}
+    </select>
+
+    <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
+        select a.crew_name, a.logo, b.addr, b.gender, b.hits, b.age, b.content, b.num
+        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code) as a_n
+        from  create_crew_tbl a, crew_write b
+        where a.create_crew_code = b.create_crew_code
+        group by a.crew_name, a.logo, b.addr, b.gender, b.hits, b.age, b.content, b.num, b.writedate ,a.create_crew_code
+        order by b.writedate desc
+        limit 10 offset #{offset}
+    </select>
+
+    <select id="search_crewList" resultType="com.ict.finalproject.vo.CrewVO">
+        select a.crew_name, a.logo, b.addr, b.gender, b.hits, b.age, b.content, b.num
+        ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code) as a_n
+        from create_crew_tbl a, crew_write b
+        where a.create_crew_code = b.create_crew_code
+        and b.gender like ifnull(concat('%', '${param3}', '%'), '%')
+        and b.age like ifnull(concat('%', '${param4}', '%'), '%')
+        and b.addr like ifnull(concat('%', '${param5}', '%'), '%')
+        and instr(concat(b.addr, '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull('${param6}', '')) > 0
+        group by a.crew_name, a.logo, b.addr, b.gender, b.hits, b.age, b.content, b.num, b.writedate, a.create_crew_code
+        order by ${param2} desc
+        limit 10 offset ${param1};
+    </select>
+    <insert id="crew_insert">
+        insert into create_crew_tbl
+        (
+        crew_name
+        ,logo
+        ,addr
+        ,addr_gu
+        ,gender
+        ,content
+        ,age
+        ,usercode
+        )
+        values
+        (
+        '${param1}'
+        ,'${param2}'
+        ,'${param3}'
+        ,'${param4}'
+        ,'${param5}'
+        ,'${param6}'
+        ,'${param7}'
+        ,${param8}
+        );
+
+    </insert>
 </mapper>
