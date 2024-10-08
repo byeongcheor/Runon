@@ -24,4 +24,6 @@ public interface JoinService {
    int selectUserCode(String username);
    //유저 테이블 포인트코드추가
    int addPointCode(int usercode);
+
+   MemberVO getUsers(String username);
 }

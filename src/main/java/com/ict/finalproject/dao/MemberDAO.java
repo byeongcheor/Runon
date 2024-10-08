@@ -23,5 +23,7 @@ public interface MemberDAO {
 
     int addPointCode(int usercode);
 
+    MemberVO getUsers(String username);
+
 
 }

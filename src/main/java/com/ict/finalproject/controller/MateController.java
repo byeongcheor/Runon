@@ -1,5 +1,4 @@
 package com.ict.finalproject.controller;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,11 +23,16 @@ public class MateController {
 
     @PostMapping("/test")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
+    public String test(@RequestParam("Authorization") String token) {
         token=token.substring("Bearer ".length());
         System.out.println("123123123");
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
+        try {
+            user_name = jwtUtil.setTokengetUsername(token);
+            System.out.println("Username from Token: " + user_name);
+        } catch (Exception e) {
+            System.out.println("Error parsing token: " + e.getMessage());
+            e.printStackTrace(); // 전체 스택 트레이스 확인
+        }
         return user_name;
     }
     @GetMapping("/mate")
