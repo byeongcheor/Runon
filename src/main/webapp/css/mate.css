@@ -610,3 +610,9 @@ body {
 .mate-modal-footer button:hover {
     background-color: #6ba82d;
 }
+
+/*!* 채팅창 숨기기 *!*/
+/*.chatbox {*/
+/*    display: none;*/
+/*}*/
+

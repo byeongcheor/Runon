@@ -19,4 +19,6 @@ public class OrderVO {
     private int price;
     private int cart_code;
     private int reservation_code;
+    private int discount_amount;
+
 }

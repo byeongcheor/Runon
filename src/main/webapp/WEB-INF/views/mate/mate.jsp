@@ -11,6 +11,12 @@
 <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
 <link rel="stylesheet" href="/css/main.css" type="text/css">
 <link rel="stylesheet" href="/css/mate.css" type="text/css">
+<script src="js/matechatting.js" type="text/javascript"></script>
+<!--WebSocket 라이브러리 추가 -->
+<!--https://cdnjs.com/libraries/sockjs-client -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- https://cdnjs.com/libraries/stomp.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 
 <body>
@@ -535,18 +541,20 @@ function grid_draw(length, result) {
         clog('age : '+age);
         age = age<10? '잼민이' : age[0]+'0대';
 
+        // 방 활성화 상태에 따라 스타일 및 클릭 이벤트 처리
         var style = '';
         if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
             style ="transform: scale(1.05);border-color: #CCFF47;";
+            on = 'onclick="openChatRoom(' + i + ');"'; // 채팅방을 여는 이벤트 추가
             $('#accept').hide();
             $('#accept_n').show();
         }
         else{
-            style = '';
+            style = '';// 비활성화된 경우 클릭 이벤트 없음
             $('#accept').show();
             $('#accept_n').hide();
         }
-
+        // 프로필 박스 생성
         list += '<div class="profile-box" '+ on +' style="' + style + '">';
         list += '<div id="profile_img">';
 
@@ -734,5 +742,31 @@ function hide7days(){
                 }
             });
     }
+
+function openChatRoom(index) {
+    // 방이 활성화된 상태에서만 열 수 있도록 로직 추가
+    var resultItem = result[index]; // 선택된 방 정보
+    if (resultItem.a_s === 'Y') {
+        console.log("방 번호 " + index + "의 채팅창 열림");
+
+        // 채팅창 열기 처리 (히든 처리 해제 등)
+        const chatbox = document.querySelector('.chatbox');
+        chatbox.classList.remove('hidden');
+
+        // 추가적으로 채팅방에 입장한 사람들 목록 가져오기
+        // 여기에 usercode 확인 로직을 추가하여 방 입장 제한을 처리할 수 있음
+        if (resultItem.usercode === usercode) {
+            // 방에 들어갈 수 있는 권한이 있는 경우 채팅창 표시
+            chatbox.style.display = 'block';
+        } else {
+            // 권한이 없는 경우
+            alert('해당 방에 입장할 권한이 없습니다.');
+        }
+    } else {
+        alert("이 방은 아직 활성화되지 않았습니다.");
+    }
+}
+
+
 
 </script>
