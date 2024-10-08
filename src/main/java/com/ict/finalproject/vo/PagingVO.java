@@ -12,6 +12,8 @@ public class PagingVO {
     private String searchWord;
     private String addr;
 
+
+
     public String getSearchKey() {
         return searchKey;
     }

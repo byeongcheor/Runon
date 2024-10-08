@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.AdminPagesDAO">
+    <select id="getTotalRecord" resultType="int">
+        select count("usercode") from user_tbl
+    </select>
+    <select id="selectAllUser" resultType="com.ict.finalproject.vo.MemberVO">
+        select *from user_tbl where role = "ROLE_USER"
+        order by `usercode` desc LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="selectMembers"  resultType="com.ict.finalproject.vo.MemberVO">
+        select *from user_tbl where role = "ROLE_USER"
+        order by `usercode`
+    </select>
+
+    <select id="getUserReport" resultType="com.ict.finalproject.vo.ReportVO">
+        select * from report_tbl where offender_code= #{param1}
+    </select>
+    <select id="selectOneUser" resultType="com.ict.finalproject.vo.MemberVO">
+        select * from user_tbl where usercode= #{param1}
+
+    </select>
+</mapper>

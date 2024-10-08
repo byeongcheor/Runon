@@ -3,6 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+
     window.onload = function(){
          function getLastSixMonths() {
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -33,6 +34,7 @@
             };
             new Chart(document.getElementById("line_chart"),config);
     }
+
 
 </script>
 <style>
@@ -269,7 +271,7 @@
                 <div class="section_menu">
                     <ul class="menu_list">
                         <li>
-                            <a href="">
+                            <a class="memus" href="">
                                 <div class="list_container">
                                     <p class="icons">❓</p>
                                     <p class="list_title">내 QnA</p>
@@ -277,7 +279,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a class="memus" href="">
                                 <div class="list_container">
                                     <p class="icons">💳</p>
                                     <p class="list_title">결제수단추가</p>
@@ -285,7 +287,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a class="memus" href="">
                                 <div class="list_container">
                                     <p class="icons">⚙️</p>
                                     <p class="list_title">회원정보 수정</p>
@@ -293,7 +295,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a class="memus" href="">
                                 <div class="list_container">
                                     <p class="icons">😥</p>
                                     <p class="list_title" style="color: tomato;">회원탈퇴</p>

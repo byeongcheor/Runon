@@ -2,6 +2,8 @@ package com.ict.finalproject.service;
 
 import com.ict.finalproject.vo.MemberVO;
 
+import java.util.List;
+
 public interface JoinService {
    public int joinProcess(MemberVO vo);
    // 사용자 이름으로 사용자 정보 찾기
@@ -24,4 +26,5 @@ public interface JoinService {
    int selectUserCode(String username);
    //유저 테이블 포인트코드추가
    int addPointCode(int usercode);
+   MemberVO getUsers(String username);
 }

@@ -16,14 +16,6 @@
 <!--헤더 스크롤-->
 <script>
 
-    $(window).on('scroll',function(){
-            if($(window).scrollTop()){
-                $('#header').addClass('active');
-            }else{
-                $('#header').removeClass('active');
-            }
-
-        });
     var responseData;
     function test(){
         var token=localStorage.getItem("Authorization");

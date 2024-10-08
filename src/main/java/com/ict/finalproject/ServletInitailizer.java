@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class ServletInitailizer extends SpringBootServletInitializer {
@@ -27,10 +28,15 @@ public class ServletInitailizer extends SpringBootServletInitializer {
                 jspPropertyGroup.addUrlPattern("*.jspf");
                 jspPropertyGroup.setPageEncoding("UTF-8");
                 jspPropertyGroup.setScriptingInvalid("true");
-                jspPropertyGroup.addIncludePrelude("/WEB-INF/views/inc/header.jspf");
-                jspPropertyGroup.addIncludeCoda("/WEB-INF/views/inc/footer.jspf");
                 jspPropertyGroup.setTrimWhitespace("true");
                 jspPropertyGroup.setDefaultContentType("text/html");
+
+
+
+                    jspPropertyGroup.addIncludePrelude("/WEB-INF/views/inc/header.jspf");
+                    jspPropertyGroup.addIncludeCoda("/WEB-INF/views/inc/footer.jspf");
+
+
 
                 JspPropertyGroupDescriptorImpl jspPropertyGroupDescriptor = new JspPropertyGroupDescriptorImpl(jspPropertyGroup);
                 context.setJspConfigDescriptor(new JspConfigDescriptorImpl(Collections.singletonList(jspPropertyGroupDescriptor),
