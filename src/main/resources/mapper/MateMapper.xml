@@ -4,25 +4,33 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.MateDAO">
     <select id="ranking" resultType="com.ict.finalproject.vo.MateVO">
-        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
-        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
-        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
-        where  a.usercode = b.usercode
-        and    a.usercode = c.usercode
-        and    c.create_crew_code = d.create_crew_code
-        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
-        limit 5;
+        SELECT RANK() OVER (ORDER BY SUM(b.score_change) DESC) AS ranking,
+        a.nickname,
+        a.profile_img,
+        SUM(b.score_change) AS point_code,
+        COALESCE(d.crew_name, 'No Crew') AS crew_name
+        FROM user_tbl a
+        JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        WHERE a.is_info_disclosure = 'Y'
+        GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name
+        ORDER BY ranking
+        LIMIT 5;
     </select>
 
     <select id="more" resultType="com.ict.finalproject.vo.MateVO">
-        select RANK() OVER (ORDER BY  sum(b.score_change) DESC) as ranking,
-        a.nickname, a.profile_img, sum(b.score_change) as point_code,d.crew_name
-        from   user_tbl a, record_tbl b, crew_member_tbl c, create_crew_tbl d
-        where  a.usercode = b.usercode
-        and    a.usercode = c.usercode
-        and    c.create_crew_code = d.create_crew_code
-        group by  a.usercode, a.nickname, a.profile_img,d.crew_name
-        limit 5 OFFSET ${param1};
+        SELECT RANK() OVER (ORDER BY SUM(b.score_change) DESC) AS ranking,
+        a.nickname,
+        a.profile_img,
+        SUM(b.score_change) AS point_code,
+        COALESCE(d.crew_name, 'No Crew') AS crew_name
+        FROM user_tbl a
+        LEFT JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name
+        LIMIT 5 OFFSET ${param1};
     </select>
 
     <select id="marathon_code_list" resultType="com.ict.finalproject.vo.MateVO">
@@ -32,6 +40,24 @@
         and    c.cart_code  = b.cart_code
         and    b.marathon_code =a.marathon_code
         and    b.usercode =${param1}
+        and    a.marathon_code not in (select a.marathon_code
+                                       from   marathon_list_tbl a, matching_room_tbl b, applicant_tbl c
+                                       where  a.marathon_code = b.marathon_no
+                                       and    b.matching_room_code = c.matching_room_code
+                                       and    c.usercode = ${param1}
+                                       and    c.is_Completion = 1);
+    </select>
+
+    <select id="userselect" resultType="com.ict.finalproject.vo.MateVO">
+        select *
+        from   user_tbl
+        where  usercode =${param1}
+    </select>
+
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username ='${param1}'
     </select>
 
     <select id="matching_select" resultType="int">
@@ -39,11 +65,9 @@
         (select matching_room_code
         from matching_room_tbl
         where  marathon_no = ${param1}
-        and    age = ${param2}
-        and    gender = '${param3}'
-        and    marathon_count = '${param4}'
+        and    marathon_count = '${param2}'
         and    max_personnel > now_personnel
-        and    max_personnel = ${param5}     limit 1), 0)
+        and    max_personnel = ${param3}     limit 1), 0)
         from dual
         order by rand()
         limit 1;
@@ -54,8 +78,6 @@
         (
             now_personnel
             ,marathon_no
-            ,age
-            ,gender
             ,marathon_count
             ,max_personnel
             ,room_status
@@ -65,10 +87,8 @@
         (
             0
             ,${param1}
-            ,${param2}
-            ,'${param3}'
-            ,'${param4}'
-            ,${param5}
+            ,'${param2}'
+            ,${param3}
             ,'1'
             ,now()
         )
@@ -105,17 +125,36 @@
     </select>
 
     <select id="match_view" resultType="com.ict.finalproject.vo.MateVO">
-        select b.gender,b.nickname,sum(c.score_change) as tbuf_n, e.crew_name, f.max_personnel as buff_n,a.accept_yn as a_s, f.now_personnel as update_cnt,
-        (select count(1) from applicant_tbl where accept_yn='Y' and matching_room_code=f.matching_room_code) as accept_cnt
-        from   applicant_tbl a, user_tbl b, record_tbl c, crew_member_tbl d, create_crew_tbl e, matching_room_tbl f
-        where  a.usercode = b.usercode
-        and    b.usercode = c.usercode
-        and    a.usercode = d.usercode
-        and    d.create_crew_code = e.create_crew_code
-        and    a.matching_room_code = f.matching_room_code
-        and    a.matching_room_code = ${param1}
-        group by  b.gender,b.nickname, e.crew_name, f.max_personnel, a.applicant_code, a.accept_yn, f.now_personnel
-        order by a.applicant_code;
+        SELECT b.gender,
+        b.nickname,
+        SUM(c.score_change) AS tbuf_n,
+        COALESCE(e.crew_name, 'No Crew') AS crew_name,
+        f.max_personnel AS buff_n,
+        a.accept_yn AS a_s,
+        f.now_personnel AS update_cnt,
+        b.usercode,
+        a.profile AS b_s,
+        b.birthdate,
+        a.profile,
+        (SELECT COUNT(1)
+        FROM applicant_tbl
+        WHERE accept_yn = 'Y'
+        AND matching_room_code = f.matching_room_code) AS accept_cnt
+        FROM applicant_tbl a
+        JOIN user_tbl b ON a.usercode = b.usercode
+        LEFT JOIN record_tbl c ON b.usercode = c.usercode
+        LEFT JOIN crew_member_tbl d ON a.usercode = d.usercode
+        LEFT JOIN create_crew_tbl e ON d.create_crew_code = e.create_crew_code
+        LEFT JOIN matching_room_tbl f ON a.matching_room_code = f.matching_room_code
+        WHERE a.matching_room_code = ${param1}
+        GROUP BY b.gender,
+        b.nickname,
+        e.crew_name,
+        f.max_personnel,
+        a.applicant_code,
+        a.accept_yn,
+        f.now_personnel
+        ORDER BY a.applicant_code;
     </select>
 
     <delete id="match_out">
@@ -138,9 +177,23 @@
         where  matching_room_code=${param1}
         and    usercode=${param2}
     </update>
+    <update id="accept_n">
+        update applicant_tbl set accept_yn='N'
+        where  matching_room_code=${param1}
+        and    usercode=${param2}
+    </update>
+    <update id="profile_click">
+        update applicant_tbl set profile=${param1}
+        where  usercode=${param2}
+    </update>
     <delete id="matching_room_personnel_zero_delete">
         delete from matching_room_tbl
         where now_personnel = 0
     </delete>
+
+    <update id="mate_complite">
+        update applicant_tbl set is_Completion=1
+        where  matching_room_code=${param1}
+    </update>
 
 </mapper>

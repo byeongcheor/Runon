@@ -1,0 +1,44 @@
+header,footer{display:none;}
+.idCheck1 input[type="submit"],.idCheck1 input[type="button"]{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 5px;  border-radius: 10px;
+}
+
+.idCheck2 input[type="text"]{
+    padding: 3px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+.idCheck2 input[type="text"]:focus{
+    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+
+.idCheck2 input[type="submit"]{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 5px;  border-radius: 10px;
+
+}
+.idCheck2{
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 수평 가운데 정렬 */
+
+}
+.idCheck1{
+    text-align: center;
+    margin-top: 10%;
+    color: white;
+    height: 100%;
+
+}
+body{
+    background-color: black;
+    animation: none;
+    height: 100%;
+
+}
+#hiddenbox,#hiddenbox2{
+    display: none;
+}
+
