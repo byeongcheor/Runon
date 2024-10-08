@@ -1,0 +1,236 @@
+#memlistbody{
+
+
+    width: 80%;
+    min-width: 950px;
+}
+#memlistbody>div{
+  }
+#memlistbody #menutitle{
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 5px;
+
+}
+#memlistbody>div:first-child{
+
+    border-bottom: 1px solid black;
+
+}
+#memlistbody #maintop{
+    margin-left: 30px;
+    margin-top: 100px;
+}
+#subtitle{
+    margin-bottom: 20px;
+    font-size:0.9em;
+}
+#mainmid{
+    background-color: #F0F0F0;
+    width: 100%;
+    height: auto;
+}
+#mainmid>div{
+    display: flex;
+    margin: auto 0;
+}
+#mainmid>div>input{
+    margin:auto 0;
+}
+.clickbox{
+    margin-top: 8px;
+    height: 25px;
+    border: 1px solid black;
+    margin-right: 10px;
+
+    width: 70px;
+
+
+
+}
+#mainmid>div{
+    margin-left: 30px;
+    line-height: 40px;
+}
+#mainmid>div>form{
+    display: flex;
+    width: 100%;
+}
+#searchbutton{
+
+    height: 25px;
+    border: none;
+    background-color: white;
+    padding: 0;
+    width: 30px;
+    cursor:pointer;
+}
+#searchbutton .fa-2x{
+    font-size: 1.5em;
+}
+#searchbar{
+    display: flex;
+    margin-left: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+
+
+}
+#searchbar>select{
+    height: 25px;
+    margin: auto 0;
+
+}
+#searchbar>div>input{
+    width: 300px;
+    height: 23px;
+    border: none;
+}
+#searchbar>div{
+    display: flex;
+    height: 25px;
+    margin: auto 0;
+    border: 1px solid black;
+
+}
+#searchbar>div>input:focus{
+    outline: none;
+}
+.AdminFavMain{
+    margin-left: 20px;
+}
+
+.AdminFavMain>#userList{
+    background-color: white;
+    height: auto;
+    margin-left: 30px;
+}
+#memlistbottom{
+    background-color:#F0F0F0;
+    margin: 0;
+    padding: 0;
+    min-width: 1200px;
+}
+li{
+    list-style: none;
+}
+#userList>li>div{
+    width: 100%;
+    display: flex;
+    line-height: 40px;
+    border-top: 1px solid   #E2E2E2;
+
+}
+#userList .username{
+    width: 20%;
+}
+#userList .name {
+    width: 10%;
+}
+#userList .nickname{
+    width: 15%;
+}
+
+#userList .is_google,#userList .is_info_disclosure, #userList .buttonline{
+    width: 8%;
+}
+#userList .tel ,#userList .birthdate,#userList .creation_date{
+    width: 10%;
+}
+.usertitle3{
+    background-color: #F6F7F8;
+}
+
+.usertitle3:hover{
+    background-color: #EBECEC;
+}
+#userdetailbackground{
+    background-color: rgba(128, 128, 128, 0.8);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: none;
+}
+#userdetail{
+    width: 80%;
+    height: 90%;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 50px;
+
+
+
+}
+
+.fa-3x{
+    font-size: 3em;
+
+}
+#userdetail>#closedetail{
+    text-align: right;
+}
+#userprofile{
+    text-align: center;
+    flex: 2;
+    margin: auto 0;
+    margin-left: 30px;
+}
+#userstatus{
+    flex: 7;
+}
+#userprofile>img{
+    width: 150px;
+    height: 150px;
+    border-radius: 120px;
+
+}
+#usermain{
+
+    display: flex;
+    width: 100%;
+}
+#usermain .onelow{
+    display: flex;
+    width: 100%;
+}
+#usermain .onelow div{
+    border: 1px solid black;
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+}
+#usercontent{
+    display: flex;
+
+    height: 93.9%;
+
+}
+#pay{
+    flex: 3.3;
+}
+#pay>div:first-child,#myRunning>div:first-child,#crewhistory>div:first-child{
+    text-align: center;
+}
+
+#myRunning{
+    flex: 3.3;
+}
+#crewhistory{
+    flex: 3.3;
+}
+#userrecord>h1{
+    text-align: center;
+}
+#userrecord li{
+    text-align: center;
+    min-width: 360px;
+}
+#userrecord{
+    border: 1px solid black;
+    overflow: auto;
+    height: 57%;
+}

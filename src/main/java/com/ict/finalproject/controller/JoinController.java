@@ -45,9 +45,16 @@ public class JoinController {
 
         if (success==1) {
             String username=vo.getUsername();
-            service.addPoint(username);
+            int resultint=service.addPoint(username);
+            if (resultint==1) {
+               int usercode= service.selectUserCode(username);
+               int pointcode=service.addPointCode(usercode);
 
-            return "login&join/joinOk";
+               return "login&join/joinOk";
+
+
+
+            }
         }
         return "login&join/joinfalse";
 

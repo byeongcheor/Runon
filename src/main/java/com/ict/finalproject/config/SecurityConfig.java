@@ -64,14 +64,20 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/css/**","/crewProfile/**","/js/**","/img/**","/WEB-INF/views/inc/**","/axiosApi").permitAll()
-                        .requestMatchers("/login","/favicon.ico", "/","/reissue", "/join", "/home","/WEB-INF/views/home.jsp","/login&join/loginForm","/WEB-INF/views/login&join/loginForm.jsp").permitAll()
-                        //.requestMatchers("/").hasRole("USER")
+                        .requestMatchers("/css/**", "/js/**","/img/**").permitAll()
+                        .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp").permitAll()
+                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/*.jsp").permitAll()
+                        .requestMatchers("/mate").authenticated()
+//                        .requestMatchers("링크명").authenticated()
+                        .anyRequest().permitAll());
+
+                        //.requestMatchers("/").hasRole("USER")
+
                         //.requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp","/login&join/loginForm","/WEB-INF/views/login&join/loginForm.jsp").authenticated()
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         //.anyRequest().authenticated());
-                        .anyRequest().permitAll());
+
         http
                 //.oauth2Login(Customizer.withDefaults());
                 .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));

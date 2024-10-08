@@ -35,7 +35,7 @@
                 success:function (r){
                     responseData=r;
                     console.log("ajax확인"+r);
-                    //test2(r);
+                    //test2(r)
                 }
             });
         }
@@ -59,9 +59,38 @@
         //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
     }
     function test2(r){
+
+
+function mate() {
+    var Authorization=localStorage.getItem("Authorization");
+    $.ajax({
+        url: "/mate/test", // 원하는 URL을 지정
+        type: "post",
+        data: { Authorization:Authorization },
+        success: function (r) {
+          console.log('mate : '+r);
+          window.location.href = '/mate/mate';
+        }
+    });
+
+}
+function crew() {
+    var Authorization=localStorage.getItem("Authorization");
+    $.ajax({
+        url: "/crew/test", // 원하는 URL을 지정
+        type: "post",
+        data: { Authorization:Authorization },
+        success: function (r) {
+          console.log('crew : '+r);
+            window.location.href = '/crew/crewList';
+        }
+    });
+
+}
+
+    function test2(username){
         //이렇게 실행하면 한번에 사용가능
-        console.log("다른방법확인"+r);
-        window.location.href(r);
+        console.log("다른방법확인"+username);
     }
 </script>
 </head>
@@ -80,6 +109,7 @@
                     <li><a onclick="mypage()">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
+                    <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
 
                 </ul>
             </nav>

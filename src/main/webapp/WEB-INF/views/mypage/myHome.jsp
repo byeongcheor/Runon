@@ -7,6 +7,7 @@
 <script src="/js/login&join/JoinForm.js" type="text/javascript"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+
 <style>
 
     .modal {
@@ -778,5 +779,4 @@
             </form>
         </div>
     </div>
-
 </div>

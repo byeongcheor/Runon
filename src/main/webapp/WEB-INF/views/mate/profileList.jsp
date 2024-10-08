@@ -26,7 +26,7 @@
 
     function profile_draw(gender) {
         var list = '';
-        var imgGender = (gender === 'Female') ? 'woman' : 'man';  // 성별에 따른 값 설정
+        var imgGender = (gender === '여') ? 'woman' : 'man';  // 성별에 따른 값 설정
         for (var i = 0; i < 16; i++) {  // 15개의 프로필 박스 생성
             list += '<div class="profile-box">';
             list += '<div class="profile_img" onclick="profile_click(this);" >';  // class로 변경하고 this 전달
