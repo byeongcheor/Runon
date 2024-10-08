@@ -35,16 +35,33 @@
                 success:function (r){
                     responseData=r;
                     console.log("ajax확인"+r);
-                    //test2(r)
+                    //test2(r);
                 }
             });
         }
         //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
         console.log("전역변수로 설정확인"+responseData);
     }
-    function test2(username){
+
+    function mypage(){
+        console.log("111");
+            $.ajax({
+                url:"/mypage/myHome",
+                async:false,
+                success:function (r){
+                    console.log("22222");
+                    console.log(r);
+                    window.location.href="/mypage/myHome";
+                    console.log("333333");
+                    //test2(r);
+                }
+            });
+        //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
+    }
+    function test2(r){
         //이렇게 실행하면 한번에 사용가능
-        console.log("다른방법확인"+username);
+        console.log("다른방법확인"+r);
+        window.location.href(r);
     }
 </script>
 </head>
@@ -56,11 +73,11 @@
                     <a href="/"><img src="/img/logo3.png" id="logoimage"/></a>
                 </div>
                 <ul>
-                    <li><a class="memus">MARATHON</a></li>
-                    <li><a class="memus" href="/mate/mate">MATE</a></li>
-                    <li><a class="memus" href="/crew/crewList">CREW</a></li>
-                    <li><a class="memus">NOTICE</a></li>
-                    <li><a class="memus" href="/mypage/myHome">MY</a></li>
+                    <li><a class="menus">MARATHON</a></li>
+                    <li><a class="menus" href="/mate/mate">MATE</a></li>
+                    <li><a class="menus" href="/crew/crewList">CREW</a></li>
+                    <li><a class="menus">NOTICE</a></li>
+                    <li><a onclick="mypage()">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
 

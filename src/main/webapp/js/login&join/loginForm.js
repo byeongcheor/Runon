@@ -27,7 +27,10 @@ function formCheck(event){
             console.log(refreshToken);
             localStorage.setItem("refresh",refreshToken);
             localStorage.setItem("Authorization",token);
+            opener.window.location.reload();
+
             window.close();
+
 
         },
         error:function (e){

@@ -18,4 +18,9 @@ public interface JoinService {
 
    //닉네임 중복검사
    int nickCheck(String nickname);
+
+   int addPoint(String username);
+
+   //모든페이지에서 아이디 유저코드값받기
+   MemberVO getUsers(String username);
 }

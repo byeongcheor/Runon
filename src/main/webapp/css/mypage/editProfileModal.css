@@ -1,0 +1,94 @@
+body{
+    animation: none;
+}
+
+.joinN ,.joinT{
+    color: white;
+}
+.joinMain>* {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.joinFrm h1 {
+    text-align: center;
+    margin: 20px 0 20px;
+}
+.joinI input[type="text"]{
+    width: 250px; padding: 8px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+.joinI input[type="password"]{
+    width: 250px; padding: 8px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+.joinT select{
+    padding: 8px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+#name{
+    width: 55%;
+}
+.joinT input{
+    padding: 8px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+.joinT :focus{
+    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.joinZ input{
+    padding: 8px; margin-bottom: 10px; border-radius: 10px;
+    border: 2px solid #ddd;
+}
+.joinZ :focus{
+    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.joinI input[type="text"]:focus{
+    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.joinI input[type="password"]:focus{
+    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.joinI input[type="button"]{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 7px;  border-radius: 10px;
+}
+.joinZ input[type="button"]{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 7px; border-radius: 10px;
+}
+.joinS input[type="submit"]{
+    width: 380px;
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 9px;  border-radius: 10px;
+    margin-top:10px;
+}
+#savebtn{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 9px;  border-radius: 10px;
+    left: 20%;
+    width: 80px;
+}
+#deleteBtn{
+    color: #fff; background: #FFA500;
+    border-style: none;
+    padding: 9px;  border-radius: 10px;
+    left: 20%;
+    width: 80px;
+}
+.btnBox{
+    text-align: center;
+}
+#nickCheck{
+    color: red;
+}
+#genderm,#genderw{
+    background-color: #FFCC66;
+}

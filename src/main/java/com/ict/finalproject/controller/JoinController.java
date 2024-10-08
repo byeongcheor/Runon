@@ -44,6 +44,9 @@ public class JoinController {
         int success=service.joinProcess(vo);
 
         if (success==1) {
+            String username=vo.getUsername();
+            service.addPoint(username);
+
             return "login&join/joinOk";
         }
         return "login&join/joinfalse";

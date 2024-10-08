@@ -24,9 +24,6 @@ public class JoinServiceImpl implements JoinService {
             System.out.println("User already exists!");
             return  0;  // 이미 사용자가 있으면 저장하지 않음
         }
-
-
-
         // 비밀번호 암호화
         String encodedPassword = bCryptPasswordEncoder.encode(vo.getPassword());
         vo.setPassword(encodedPassword);  // 암호화된 비밀번호 저장
@@ -61,5 +58,15 @@ public class JoinServiceImpl implements JoinService {
     public int nickCheck(String nickname) {
 
         return memberDAO.nickCheck(nickname);
+    }
+
+    @Override
+    public int addPoint(String username) {
+        return memberDAO.addPoint(username);
+    }
+
+    @Override
+    public MemberVO getUsers(String username) {
+        return memberDAO.getUsers(username);
     }
 }

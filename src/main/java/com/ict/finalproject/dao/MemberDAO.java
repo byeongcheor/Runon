@@ -17,5 +17,7 @@ public interface MemberDAO {
 
     int nickCheck(String nickname);
 
+    int addPoint(String username);
+    MemberVO getUsers(String username);
 
 }

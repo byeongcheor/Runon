@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MypageDAO">
+    <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">
+        SELECT u.*, p.mypoint
+        FROM user_tbl u
+        LEFT JOIN point_tbl p ON u.usercode = p.usercode
+        WHERE username=#{username}
+    </select>
+    <update id="updateProfile">
+        update user_tbl set profile_img = #{param2} where username = #{param1}
+    </update>
+    <select id="getProfileImg" resultType="String">
+        select profile_img
+        from user_tbl
+        where username=#{param1}
+    </select>
+    <update id="editProfile" parameterType="com.ict.finalproject.vo.MemberVO">
+        update user_tbl
+        set password=#{password}, nickname=#{nickname}, addr=#{addr},
+        addr_details=#{addr_details}, zip_code=#{zip_code}, tel=#{tel}, is_info_disclosure=#{is_info_disclosure}
+        where username=#{username}
+    </update>
+    <update id="deactiveProfile">
+        update user_tbl
+        set is_deleted = 1, deleted_date = now()
+        where username = #{param1}
+    </update>
+    <select id="selectMarathonForm" parameterType="String" resultType="com.ict.finalproject.vo.MarathonFormVO">
+        SELECT m.marathon_form_code, m.usercode, m.is_deleted
+        FROM marathon_form_tbl m
+        JOIN user_tbl u ON m.usercode = u.usercode
+        WHERE u.username = #{username} AND m.is_deleted = 0
+    </select>
+    <select id="selectUsercode" parameterType="com.ict.finalproject.vo.MemberVO">
+        select usercode
+        from user_tbl
+        where username=#{username}
+    </select>
+    <insert id="createMarathonForm" parameterType="com.ict.finalproject.vo.MarathonFormVO">
+        INSERT INTO marathon_form_tbl (name, tel, addr, addr_details, gender, birth_date, size, terms_agreement, privacy_consent, media_consent, usercode)
+        VALUES (#{name}, #{tel}, #{addr}, #{addr_details}, #{gender}, #{birth_date}, #{size}, #{terms_agreement}, #{privacy_consent}, #{media_consent}, #{usercode})
+    </insert>
+
+    <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
+        select *
+        from certificate_tbl
+        where username = #{param1}
+    </select>
+</mapper>
