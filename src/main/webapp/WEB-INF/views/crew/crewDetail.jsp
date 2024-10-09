@@ -312,7 +312,9 @@ var usercode;
                 $('#team_info').text(result[0].a_s);
                 $('#gender').text(result[0].gender);
                 $('#age').text(result[0].age);
-                $('#content_img').attr('src', '/crew_upload/'+result[0].b_s);
+                if(result[0].b_s!=''){
+                    $('#content_img').attr('src', '/crew_upload/'+result[0].b_s);
+                }
                 $('#content').text(result[0].content);
                 $('#hits').text('조회수 '+result[0].hits);
                 $('#crew_request').text('신청자수 '+result[0].a_n);

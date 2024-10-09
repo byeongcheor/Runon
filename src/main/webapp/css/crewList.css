@@ -49,8 +49,8 @@
     padding: 20px;
 }
 .profileBox{
-    width: 60px;
-    height: 60px;
+    width: 63px;
+    height: 63px;
     border-radius: 200px;
     margin-right: 40px;
     padding: 5px;
@@ -65,12 +65,18 @@
     display: flex;
     flex-direction: column;
     width: 75%;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #727f88;
+    margin-bottom: 5px;
 }
 .crew_title{
     display: flex;
     flex-direction: row;
     flex-wrap: no wrap;
     margin-bottom: 10px;
+    font-size: 15px;
 }
 .crew_info{
     display: flex;
@@ -115,6 +121,7 @@
 #searchWord{
     border-radius: 5px;
     border: 1px solid #ced4da;
+    width:200px;
 }
   .search-left {
         display: flex;
