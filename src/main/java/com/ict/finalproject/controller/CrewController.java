@@ -68,7 +68,7 @@ public class CrewController {
         List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr_gu, searchWord);
         return list;
     }
-    @Value("${file.upload-dir}")
+    @Value("${file.upload-dir_crew}")
     private String uploadDir;
 
     @PostMapping("/crew_add")

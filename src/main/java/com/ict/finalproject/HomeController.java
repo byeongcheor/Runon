@@ -1,6 +1,10 @@
 package com.ict.finalproject;
 
 
+import com.ict.finalproject.jwt.JWTUtil;
+import com.ict.finalproject.service.JoinService;
+import com.ict.finalproject.vo.MemberVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
