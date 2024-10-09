@@ -26,8 +26,7 @@
             <ul>
                 <li><a href="/crew/crewList">크루모집</a></li>
                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="/crew/crewManage">나의크루</a></li>
-                <li><a href="/crew/crewDetail">모집디테일 만들자</a></li>
+                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal">나의 크루</a></li>
             </ul>
         </div>
     </div>
@@ -80,7 +79,7 @@
                 <input type="text" name="searchWord" id="searchWord" />
                 <button type="submit" class="btn btn-outline-secondary" onClick="crew_list_select()">Search</button>
             </div>
-            <button class="add-btn" data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            <button class="add-btn" onClick="crew_page()"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
         </div>
     </div>
 
@@ -199,7 +198,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="city" class="form-label">도시</label>
-                                <select class="form-control text-center" name="city" id="city" onchange="select_box_change3();">
+                                <select class="form-control text-center" name="city" id="city" onchange="select_box_change3('1');">
                                     <option value="" selected>지역</option> <!-- 기본으로 선택 -->
                                     <option value="" selected>전체</option>
                                     <option value="서울">서울</option>
@@ -290,7 +289,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="crewInfoModalLabel">크루의 정보를 확인하세요</h5>
+                    <h5 class="modal-title" id="crewInfoModalLabel2"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -298,45 +297,56 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="city" class="form-label">도시</label>
-                            <select class="form-control text-center" id="city" name="city">
-                                <option value="지역선택">지역선택</option>
+                            <select class="form-control text-center" id="city2" name="city" onchange="select_box_change3('2');">
+                                <option value="" selected>지역</option> <!-- 기본으로 선택 -->
+                                <option value="" selected>전체</option>
                                 <option value="서울">서울</option>
+                                <option value="경기">경기</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>
+                                <option value="인천">인천</option>
+                                <option value="광주">광주</option>
+                                <option value="대전">대전</option>
+                                <option value="울산">울산</option>
+                                <option value="세종">세종</option>
+                                <option value="강원">강원</option>
+                                <option value="충북">충북</option>
+                                <option value="충남">충남</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남</option>
+                                <option value="경북">경북</option>
+                                <option value="경남">경남</option>
+                                <option value="제주">제주</option>
                             </select>
                         </div>
                         <div class="col">
                             <label for="region" class="form-label">지역</label>
-                            <select class="form-control text-center" id="region" name="region">
-                                <option value="상세지역">상세지역</option>
-                                <option value="강남">강남</option>
-                                <option value="서초">서초</option>
-                                <option value="종로">종로</option>
+                            <select class="form-control text-center" id="region2" name="region">
                             </select>
                         </div>
                     </div>
                     <h5 class="form-label">주요 나이대</h5>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="age10" name="age[]" value="10대" />
+                        <input type="checkbox" id="age10_2" name="age[]2" value="10대" />
                         <label for="age10">10대</label>
-                        <input type="checkbox" id="age20" name="age[]" value="20대" />
+                        <input type="checkbox" id="age20_2" name="age[]2" value="20대" />
                         <label for="age20">20대</label>
-                        <input type="checkbox" id="age30" name="age[]" value="30대" />
+                        <input type="checkbox" id="age30_2" name="age[]2" value="30대" />
                         <label for="age30">30대</label>
-                        <input type="checkbox" id="age40" name="age[]" value="40대" />
+                        <input type="checkbox" id="age40_2" name="age[]2" value="40대" />
                         <label for="age40">40대</label>
-                        <input type="checkbox" id="age50" name="age[]" value="50대" />
+                        <input type="checkbox" id="age50_2" name="age[]2" value="50대" />
                         <label for="age50">50대</label>
-                        <input type="checkbox" id="age60" name="age[]" value="60대 이상" />
+                        <input type="checkbox" id="age60_2" name="age[]2" value="60대 이상" />
                         <label for="age60">60대 이상</label>
                     </div>
                     <h5 class="form-label">성별</h5>
                     <div class="radio-group">
-                        <input type="radio" id="male" name="gender" value="남자" />
+                        <input type="radio" id="male2" name="gender2" value="남자" />
                         <label for="male">남자</label>
-                        <input type="radio" id="female" name="gender" value="여자" />
+                        <input type="radio" id="female2" name="gender2" value="여자" />
                         <label for="female">여자</label>
-                        <input type="radio" id="both" name="gender" value="성별무관" />
+                        <input type="radio" id="both2" name="gender2" value="성별무관" />
                         <label for="both">성별무관</label>
                     </div>
                     <button type="button" class="custom-btn" id="nextBtn">다음</button>
@@ -422,6 +432,36 @@
                 </div>
             </div>
         </div>
+    </div>
+<!-- 내크루 모달 -->
+    <div class="modal fade" id="myCrewModal" tabindex="-1" aria-labelledby="myCrewModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered custom-modal-width">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="myCrewModalLabel">내 팀</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- 팀 리스트 -->
+            <ul class="team-list">
+              <!-- 팀 아이템 예시 -->
+              <li class="team-item">
+                <a class="team-link">
+                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <div class="team-name">선풍기</div>
+                </a>
+              </li>
+              <li class="team-item">
+                <a class="team-link">
+                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <div class="team-name">영현영선</div>
+                </a>
+              </li>
+              <!-- 다른 팀 아이템도 같은 구조로 추가 -->
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
 <script>
@@ -516,13 +556,13 @@
 
 
 
-    function select_box_change3() {
+    function select_box_change3(flag) {
 
-        $('#region').html(''); // 기존 내용을 초기화
+        $('select[name="region"]').html(''); // 기존 내용을 초기화
         var list = '<option value="">상세지역</option>'; // 기본 선택 옵션
-
-        var selectedCity = $('#city').val();
-
+        clog('1');
+        var selectedCity = flag=='1'?$('#city').val():$('#city2').val();
+        clog(selectedCity);
         // 각 지역에 맞는 상세 지역 리스트 추가
         if (selectedCity === '서울') {
             seoulDistricts.forEach(function(region) {
@@ -594,7 +634,7 @@
             });
         }
 
-        $('#region').append(list); // 추가된 옵션을 반영
+        $('select[name="region"]').append(list); // 추가된 옵션을 반영
     }
 
     function select_box_change2() {
@@ -692,7 +732,6 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
-        crew_page();
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {
@@ -721,6 +760,7 @@
                 orderby       : $('#orderby').val(),
                 gender        : $('#gender').val(),
                 age           : $('#age').val(),
+                addr          : $('#addr').val(),
                 addr_gu       : $('#addr_gu').val(),
                 searchWord    : $('#searchWord').val()
             },
@@ -831,41 +871,62 @@
         $('#locationModal').modal('show');
     }
 
-    function submitCrewInfo() {
-        var form = $('#crewCreateForm')[0];
-        var formData = new FormData(form);
+function submitCrewInfo() {
+       var form = $('#crewCreateForm')[0];
+       var formData = new FormData(form);
 
-        // 이미지 파일이 있는지 확인
-        var teamImageFile = $('#teamEmblem').val();
+       // 이미지 파일이 있는지 확인
+       var teamImageFile = $('#teamEmblem').val();
 
-        // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
-        if (!teamImageFile) {
-            // 기본 이미지 경로를 추가
-            formData.append('teamEmblem', 'man1.png');
-        } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
-            alert('이미지파일만 업로드가 가능합니다.');
-            return false;
-        }
+       // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
+       if (!teamImageFile) {
+           // 기본 이미지 경로를 추가
+           formData.append('teamEmblem', 'man1.png');
+       } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
+           alert('이미지파일만 업로드가 가능합니다.');
+           return false;
+       }
 
-        $.ajax({
-            url: '/crew/crew_add',
-            type: 'POST',
-            headers: {
-                Authorization: localStorage.getItem('Authorization')
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('크루가 성공적으로 생성되었습니다!');
-                $('#locationModal').modal('hide');
-            },
-            error: function(error) {
-                console.log(error);
-                alert('크루 생성 중 오류가 발생했습니다.');
-            }
-        });
-    }
+       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+       var city = $('#city').val();
+       var ageChecked = $('input[name="age[]"]:checked').length > 0;
+       var genderChecked = $('input[name="gender"]:checked').length > 0;
+
+       if (!city) {
+           alert('활동하는 지역을 선택해주세요.');
+           return false;
+       }
+
+       if (!ageChecked) {
+           alert('주요 나이대를 선택해주세요.');
+           return false;
+       }
+
+       if (!genderChecked) {
+           alert('성별을 선택해주세요.');
+           return false;
+       }
+
+       // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+       $.ajax({
+           url: '/crew/crew_add',
+           type: 'POST',
+           headers: {
+               Authorization: localStorage.getItem('Authorization')
+           },
+           data: formData,
+           processData: false,
+           contentType: false,
+           success: function(response) {
+               alert('크루가 성공적으로 생성되었습니다!');
+               $('#locationModal').modal('hide');
+           },
+           error: function(error) {
+               console.log(error);
+               alert('크루 생성 중 오류가 발생했습니다.');
+           }
+       });
+   }
     function resetForm() {
         document.getElementById('crewCreateForm').reset();
         deletePreview(); // 지우기 함수 호출
@@ -879,13 +940,6 @@
     }
 
     $(document).ready(function() {
-        // 첫 번째 모달을 열 때마다 폼을 리셋
-        $('#createNewTeamBtn').on('click', function() {
-            resetForm(); // 폼 리셋
-            $('#createNewTeamModal').modal('hide');
-            $('#crewCreateModal').modal('show');
-        });
-
         // 크루 생성 모달을 열 때도 폼을 리셋
         $('#crewCreateModal').on('shown.bs.modal', function () {
             resetForm();
@@ -896,12 +950,6 @@
         $('#createNewTeamModal').on('shown.bs.modal', function () {
             console.log('첫 번째 모달이 열렸습니다.');
         });
-
-        $('#createNewTeamBtn').on('click', function() {
-            $('#createNewTeamModal').modal('hide');
-            $('#crewCreateModal').modal('show');
-        });
-
         $('#nextBtn').on('click', function() {
             $('#crewInfoModal').modal('hide');
             $('#thirdModal').modal('show');
@@ -955,6 +1003,7 @@
     });
     function crew_page() {
         var list = '';
+        $('#crew_page').html('');
         $.ajax({
             url: '/crew/crew_page',
             type: 'POST',
@@ -971,7 +1020,7 @@
                         list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
                     }
                 }
-                list += '<button type="button" class="option-btn" id="createNewTeamBtn">새로운 팀 만들기</button>';
+                list += '<button type="button" class="option-btn" onClick="crew_add();"id="createNewTeamBtn">새로운 팀 만들기</button>';
                 $('#crew_page').append(list);
             },
             error: function(error) {
@@ -982,14 +1031,48 @@
     function crew_page_write(create_crew_code){
         $('#createNewTeamModal').modal('hide');
         $('#crewInfoModal').modal('show');
+        var crew_code = create_crew_code|0;
+        clog(crew_code)
+        $.ajax({
+            url:'/crew/crew_page_write_detail',
+            type:'post',
+            async: false,
+            headers: {
+              Authorization: localStorage.getItem('Authorization')
+            },
+            data: {
+              create_crew_code:crew_code
+            },
+            success:function(result){
+               $('#city2').val(result[0].addr);
+               select_box_change3('2');
+               $('#region2').val(result[0].addr_gu);
+               var age_arr = result[0].age.split(',');
+               $('input[type="checkbox"][name="age[]2"]').prop('checked', false);//체크박스 초기화
+               for(var i in age_arr){
+                   $('input[name="age[]2"][value="'+age_arr[i]+'"]').prop('checked', true);
+               }
+               $('input[type="radio"][name="gender2"][value="'+result[0].gender+'"]').prop('checked', true);
+               $('#crewInfoModalLabel2').text(result[0].crew_name+'의 정보를 확인하세요')
+               $('#city2').prop('disabled', true);
+               $('#region2').prop('disabled', true);
 
+            },
+            error:function(e){
+
+            }
+        });
 
     }
 
     function crew_page_detail(create_crew_code) {
         $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code='+ create_crew_code;
-
+    }
+    function crew_add(){
+        resetForm(); // 폼 리셋
+        $('#createNewTeamModal').modal('hide');
+        $('#crewCreateModal').modal('show');
     }
 
 </script>

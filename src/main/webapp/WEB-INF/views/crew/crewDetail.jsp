@@ -14,82 +14,74 @@
 <link rel="stylesheet" href="/css/crewDetail.css" type="text/css">
 
 <div>
-     <div id="bannerBox">
-        <img src="/img/러닝고화질.jpg" id="bannerImg"/>
-     </div>
-     <div id="crew_body">
-        <div id="crew_nav">
-            <ul>
-                <li><a href="/crew/crewList">크루모집</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="/crew/crewManage">나의크루</a></li>
-                <li><a href="/crew/crewDetail">모집디테일 만들자</a></li>
-            </ul>
+<div id="bannerBox">
+    <img src="/img/러닝고화질.jpg" id="bannerImg"/>
+</div>
+<div class="content_body">
+     <div class="content_left">
+         <section class="section3">
+             <div class="profile_container">
+                 <div class="team-header">
+                     <a class="team-link">
+                         <div class="team-emblem">
+                             <div class="emblem-wrapper">
+                                 <div class="emblem-background">
+                                     <img src="/img/man1.png" class="emblem-image">
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="team-content">
+                             <div><span class="team-name">dd</span></div>
+                             <span class="team-info">여자 · 축구 · 10대 · 비기너3</span>
+                         </div>
+                     </a>
+                 </div>
+             </div>
+         </section>
+        <div class="team-body">
+            <div class="feature-list">
+                <div class="feature-item">
+                    <img src="/img/man1.png" class="icon-star">
+                    <span class="feature-text">여자만</span>
+                </div>
+                <div class="feature-item">
+                    <img src="/img/man1.png" class="icon-star">
+                    <span class="feature-text">20대~30대</span>
+                </div>
+                <div class="feature-item">
+                    <img src="/img/man1.png" class="icon-star">
+                    <span class="feature-text">스타터</span>
+                </div>
+                <div class="feature-item">
+                    <img src="/img/man1.png" class="icon-star">
+                    <span class="feature-text">0원/월</span>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <div class="top-buttons">
+                <button class="action-button">수정하기</button>
+                <button class="action-button">모집중단하기</button>
+            </div>
+            <div class="bottom-button">
+                <button class="action-button wide">가입신청하기</button>
+            </div>
         </div>
      </div>
-     <div class="content_body">
-             <div class="content_left">
-                 <section class="section3">
-                     <div class="profile_container">
-                         <div class="team-header">
-                             <a class="team-link">
-                                 <div class="team-emblem">
-                                     <div class="emblem-wrapper">
-                                         <div class="emblem-background">
-                                             <img src="/img/man1.png" class="emblem-image">
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <div class="team-content">
-                                     <div><span class="team-name">dd</span></div>
-                                     <span class="team-info">여자 · 축구 · 10대 · 비기너3</span>
-                                 </div>
-                             </a>
-                         </div>
-                     </div>
-                 </section>
-             </div>
-             <div class="content_right">
-                 <section class="section1">
-                     <div class="section_nav">
-                         <ul>
-                             <li>멤버</li>
-                             <li>공지</li>
-                             <li>크루관리<li>
-                         </ul>
-                     </div>
-                     //여기에 비동기
-                 </section>
-                 <section class="section2">
-                     <div class="section_title">크루정보</div>
-                     <div class="info_body">
-                         <div class="crew_infos">
-                             <span class="crew_imogi">📍</span>
-                             <span class="crew_addr">활동지역</span>
-                             <span class="crew_addr2">서울시 성동구</span>
-                         </div>
-                         <div class="crew_infos">
-                             <span class="crew_imogi">🏃‍</span>
-                             <span class="crew_addr">️멤버수</span>
-                             <span class="crew_addr2">4명</span>
-                         </div>
-                         <div class="crew_infos">
-                             <span class="crew_imogi">🔍‍</span>
-                             <span class="crew_addr">평균나이</span>
-                             <span class="crew_addr2">27.2세</span>
-                         </div>
-                         <div class="crew_infos">
-                             <span class="crew_imogi">✨</span>
-                             <span class="crew_addr">크루생성일</span>
-                             <span class="crew_addr2">2024-10-04</span>
-                         </div>
-                     </div>
-                 </section>
-             </div>
-         </div>
-
+    <div class="content_right">
+        <section class="section1">
+            <div class="image-text-container">
+                <div class="image-wrapper">
+                    <img src="/img/러닝고화질.jpg" alt="Sample Image" class="responsive-image">
+                </div>
+                <div class="text-wrapper">
+                    <p>여기에 텍스트를 넣으세요. 원하는 설명이나 내용을 작성할 수 있습니다.</p>
+                </div>
+                <div class="extra-info">조회 8 · 신청 0<span style="float: right;">업데이트 39분 전</span></div>
+            </div>
+        </section>
+    </div>
 </div>
-
 <script>
     $(document).ready(function() {
         var createCrewCode = "${create_crew_code}";

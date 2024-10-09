@@ -41,10 +41,11 @@
         and b.gender like ifnull(concat('%', '${param3}', '%'), '%')
         and b.age like ifnull(concat('%', '${param4}', '%'), '%')
         and b.addr like ifnull(concat('%', '${param5}', '%'), '%')
-        and instr(concat(b.addr, '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull('${param6}', '')) > 0
+        and b.addr like ifnull(concat('%', '${param6}', '%'), '%')
+        and instr(concat(b.addr, '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull('${param7}', '')) > 0
         group by a.crew_name, a.logo, b.addr, b.gender, b.hits, b.age, b.content, b.num, b.writedate, a.create_crew_code
         order by ${param2} desc
-        limit 10 offset ${param1};
+        limit 10 offset ${param1}
     </select>
     <insert id="crew_insert">
         insert into create_crew_tbl
@@ -69,6 +70,11 @@
         ,'${param7}'
         ,${param8}
         );
-
     </insert>
+    <select id="crew_page_write_detail" resultType="com.ict.finalproject.vo.CrewVO">
+        select addr,addr_gu,age,gender,crew_name
+        from   create_crew_tbl a
+        where  create_crew_code = ${param1};
+    </select>
+
 </mapper>

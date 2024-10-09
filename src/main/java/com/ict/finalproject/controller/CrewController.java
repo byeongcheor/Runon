@@ -63,12 +63,12 @@ public class CrewController {
     @ResponseBody
     public List<CrewVO> search_crewList(
             @RequestParam("Authorization")String token,
-            int page, String orderby, String gender , String age, String addr_gu, String searchWord, Model model) {
+            int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord, Model model) {
         token=token.substring("Bearer ".length());
-        List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr_gu, searchWord);
+        List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);
         return list;
     }
-    @Value("${file.upload-dir}")
+    @Value("${file.upload-dir_crew}")
     private String uploadDir;
 
     @PostMapping("/crew_add")
@@ -126,5 +126,21 @@ public class CrewController {
         model.addAttribute("create_crew_code", create_crew_code);
         return "crew/crewDetail";
     }
+
+    @PostMapping("/crew_page_write_detail")
+    @ResponseBody
+    public List<CrewVO> crew_page_write_detail(@RequestHeader(value = "Authorization", required = false) String token, @RequestParam(value = "create_crew_code", defaultValue = "0") int createCrewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_page_write_detail = null;
+        try {
+             crew_page_write_detail = service.crew_page_write_detail(createCrewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_page_write_detail;
+    }
+
 
 }
