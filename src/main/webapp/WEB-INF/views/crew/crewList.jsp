@@ -732,6 +732,7 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
+        crew_page();
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {
@@ -1059,7 +1060,6 @@ function submitCrewInfo() {
 
             },
             error:function(e){
-
             }
         });
 
