@@ -357,8 +357,8 @@ var usercode;
             success: function(result) {
                 $('#crew_request_delete').show();
                 $('#crew_request_btn').hide();
-                if(result>0) alert('가입신청이 완료되었습니다.')
-                else alert('이미 가입신청 되어있습니다.');
+                if(result>0) alert('이미 가입신청 되어있습니다.')
+                else alert('가입신청이 완료되었습니다.');
             },
             error: function(e) {
                 console.error('Error: ', e);
