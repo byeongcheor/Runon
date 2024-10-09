@@ -38,6 +38,24 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_write_detail_select(int user_code, int crewCode)
+    {
+        return dao.crew_write_detail_select(user_code, crewCode);
+    }
+
+    @Override
+    public int crew_join_select(int user_code, int crewCode)
+    {
+        return dao.crew_join_select(user_code, crewCode);
+    }
+
+    @Override
+    public int crew_join_delete(int user_code, int crewCode)
+    {
+        return dao.crew_join_delete(user_code, crewCode);
+    }
+
+    @Override
     public int totalRecord(PagingVO pVO)
     {
         return dao.totalRecord(pVO);
@@ -49,8 +67,28 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int crew_write_hit_update(int writeCrewCode) {
+        return dao.crew_write_hit_update(writeCrewCode);
+    }
+
+    @Override
+    public int crew_join_write(int user_code, int crewCode, String join_content) {
+        return dao.crew_join_write(user_code,crewCode,join_content);
+    }
+
+    @Override
+    public int crew_name_check(String crew_name_check) {
+        return dao.crew_name_check(crew_name_check);
+    }
+
+    @Override
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content,String age, int user_code) {
         return dao.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);
+    }
+
+    @Override
+    public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
+        return dao.crew_write_add(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
 
 
