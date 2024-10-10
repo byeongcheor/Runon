@@ -38,14 +38,11 @@ public class CrewController {
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization")String token) {
-        if (token!=null&& !token.isEmpty()) {
-            token = token.substring("Bearer ".length());
-            user_name = jwtUtil.setTokengetUsername(token);
-            user_code = service.usercodeSelect(user_name);
-            System.out.println(user_code);
-            return user_name;
-        }
-        return null;
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        System.out.println(user_code);
+        return user_name;
     }
     @GetMapping("/crewList")
     public String crewList(CrewVO cvo, PagingVO pvo, Model model){
@@ -134,7 +131,7 @@ public class CrewController {
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_page_write_detail = null;
         try {
-             crew_page_write_detail = service.crew_page_write_detail(createCrewCode);
+            crew_page_write_detail = service.crew_page_write_detail(createCrewCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,7 +171,7 @@ public class CrewController {
         }
         return a; // 성공적으로 생성된 경우 1 반환
     }
-////////////////////////////////////////////////////디테일/////////////////////////////////////////////
+    ////////////////////////////////////////////////////디테일/////////////////////////////////////////////
     //크루모집디테일
     @GetMapping("/crewDetail")
     public String crewDetail(int create_crew_code,int crew_write_code,  Model model){
