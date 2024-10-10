@@ -56,6 +56,16 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public void deleteMarathonForm(int usercode) {
+        dao.deleteMarathonForm(usercode);
+    }
+
+    @Override
+    public int updateMarathonForm(MarathonFormVO marathonVO) {
+        return dao.updateMarathonForm(marathonVO);
+    }
+
+    @Override
     public List<CertificateVO> selectCertificateAll(String username) {
         return dao.selectCertificateAll(username);
     }
