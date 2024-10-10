@@ -58,7 +58,7 @@
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
         ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code) as a_n
         from create_crew_tbl a, crew_write b
-        where b.is_delete = 0;
+        where b.is_delete = 0
         and a.create_crew_code = b.create_crew_code
         and b.gender like ifnull(concat('%', '${param3}', '%'), '%')
         and b.age like ifnull(concat('%', '${param4}', '%'), '%')

@@ -59,7 +59,7 @@
                 <div class="button-container">
                     <div class="top-buttons">
                         <button class="action-button" id='update_btn' data-bs-toggle="modal" data-bs-target="#crewInfoModal" onclick="crew_page_update(${create_crew_code});">수정하기</button>
-                        <button class="action-button" id='delete_btn' onclick="crew_write_delete()">모집중단하기</button>
+                        <button class="action-button" id='delete_btn' onclick="crew_write_delete()">모집 중단하기</button>
                     </div>
                     <div class="bottom-button">
                         <button class="action-button wide" id="crew_request_btn" onClick="user_check();">가입 신청하기</button>

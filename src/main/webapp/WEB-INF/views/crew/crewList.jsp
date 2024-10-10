@@ -448,13 +448,13 @@
               <!-- 팀 아이템 예시 -->
               <li class="team-item">
                 <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <img src="/img/man1.png" class="teamemblem" alt="팀 이미지">
                   <div class="team-name">선풍기</div>
                 </a>
               </li>
               <li class="team-item">
                 <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <img src="/img/man1.png" class="teamemblem" alt="팀 이미지">
                   <div class="team-name">영현영선</div>
                 </a>
               </li>
@@ -1058,18 +1058,23 @@ function submitCrewInfo() {
     }
 
 function crew_write_add() {
+
        var form = $('#crew_write_add')[0];
        var formData = new FormData(form);
         clog(form);
-       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
-       var genderChecked = $('input[name="gender3"]:checked').length > 0;
+        var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+        var genderChecked = $('input[name="gender3"]:checked').length > 0;
+        var teamIntro = $('#teamIntro3').val().trim();
        if (!ageChecked) {
            alert('주요 나이대를 선택해주세요.');
            return false;
        }
        if (!genderChecked) {
            alert('성별을 선택해주세요.');
+           return false;
+       }
+       if (teamIntro === "") {
+           alert('크루 소개글을 작성해주세요.');
            return false;
        }
        // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
