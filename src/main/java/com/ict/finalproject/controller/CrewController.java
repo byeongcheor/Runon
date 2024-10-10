@@ -215,6 +215,7 @@ public class CrewController {
         return a;
 
     }
+
     @PostMapping("/join_delete")
     @ResponseBody
     public int join_delete(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int crewCode,String join_content) {
@@ -249,7 +250,22 @@ public class CrewController {
         return a;
 
     }
-
+    @PostMapping("/crew_write_delete")
+    @ResponseBody
+    public int crew_write_delete(@RequestParam("Authorization")String token,@RequestParam("crew_write_code") int crew_write_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        //가입신청 중복 확인하기
+        int a=0;
+        try {
+            service.crew_write_delete(user_code,crew_write_code);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
 
 
 

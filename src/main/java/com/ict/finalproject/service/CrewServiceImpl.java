@@ -56,6 +56,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int crew_write_delete(int user_code, int crewWriteCode)
+    {
+        return dao.crew_write_delete(user_code, crewWriteCode);
+    }
+
+    @Override
     public int crew_join_delete(int user_code, int crewCode)
     {
         return dao.crew_join_delete(user_code, crewCode);

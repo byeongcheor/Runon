@@ -20,6 +20,7 @@ public interface CrewService {
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
     public int join_before_select(int user_code, int crewWriteCode);
+    public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
 
 }
