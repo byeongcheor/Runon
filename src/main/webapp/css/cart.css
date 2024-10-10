@@ -213,13 +213,17 @@
     border-radius: 6px;
     background-color: #CCFF47;
     margin: 14px 0px 20px;
+
 }
-.cartBottom span {
+#deleteSelectedItems{
     margin: 0px auto;
     font-size: 15px;
     font-weight: bold;
     text-align: center;
     color: black;
+    border: none;
+    background-color: #CCFF47;
+    outline: none; /* 포커스 시 외곽선 제거 (선택 사항) */
 }
 .paymentC{
 
@@ -393,7 +397,7 @@
 }
 
 .coupon-text {
-display: inline-block;
+    display: inline-block;
     margin-right: 10px; /* input과의 간격 설정 */
     font-size: 1.2em;
     color: #777;
@@ -406,6 +410,7 @@ display: inline-block;
     align-items: center;
     border-top: 1px solid #eee;
     padding-top: 10px;
+
 }
 
 /* 총 금액 */
@@ -413,10 +418,12 @@ display: inline-block;
    font-size: 1.2em;
    font-weight: bold;
    margin-bottom: 10px;
+    display: flex;             /* 내부 요소를 수평으로 배치 */
+    align-items: center;       /* 세로 중앙 정렬 */
 }
 
 /* 적용하기 버튼 */
-.apply-button {
+.apply-button, .max-apply-button{
     background-color: #CCFF47;
     color: black;
     padding: 10px 20px;
@@ -429,6 +436,10 @@ display: inline-block;
 .user-points{
     font-weight:bold;
     font-size:1.3em;
+}
+.maButton{
+    display: flex;             /* 버튼 그룹을 수평으로 배치 */
+    gap: 10px;                /* 버튼 사이 간격 설정 */
 }
 
 

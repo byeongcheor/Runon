@@ -39,6 +39,8 @@ public class MemberVO {
     private String activation_date;
     private int point_code;
     private String nickname;
+    private String disabled_start_date;
+    private String mate_popup_date;
 
     @Override
     public String toString() {
@@ -55,6 +57,9 @@ public class MemberVO {
                 ", birthdate='" + birthdate + '\'' +
                 ", gender='" + gender + '\'' +
                 ", tel='" + tel + '\'' +
+                ", tel1='" + tel1 + '\'' +
+                ", tel2='" + tel2 + '\'' +
+                ", tel3='" + tel3 + '\'' +
                 ", profile_img='" + profile_img + '\'' +
                 ", is_info_disclosure='" + is_info_disclosure + '\'' +
                 ", is_google='" + is_google + '\'' +
@@ -67,9 +72,19 @@ public class MemberVO {
                 ", disabled_date='" + disabled_date + '\'' +
                 ", is_active='" + is_active + '\'' +
                 ", activation_date='" + activation_date + '\'' +
-                ", point_code=" + point_code +
+                ", point_code=" + point_code +'\'' +
+                ", disabled_start_date=" + disabled_start_date +'\'' +
                 ", nickname='" + nickname + '\'' +
+                ", mate_popup_date='" + mate_popup_date + '\'' +
                 '}';
+    }
+
+    public String getMate_popup_date() {
+        return mate_popup_date;
+    }
+
+    public void setMate_popup_date(String mate_popup_date) {
+        this.mate_popup_date = mate_popup_date;
     }
 
     public String getNickname() {
@@ -306,5 +321,13 @@ public class MemberVO {
 
     public void setPoint_code(int point_code) {
         this.point_code = point_code;
+    }
+
+    public String getDisabled_start_date() {
+        return disabled_start_date;
+    }
+
+    public void setDisabled_start_date(String disabled_start_date) {
+        this.disabled_start_date = disabled_start_date;
     }
 }

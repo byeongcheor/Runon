@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.PointDAO">
+
+    <select id="getUserPointsByUsername" parameterType="String" resultType="com.ict.finalproject.vo.PointVO">
+        SELECT mypoint
+        FROM Point_tbl
+        WHERE usercode = (
+        SELECT usercode
+        FROM user_tbl
+        WHERE username = #{username}
+        )
+    </select>
+
+    <update id="applyPointsByUsername" parameterType="map">
+        UPDATE Point_tbl
+        SET mypoint = mypoint - #{pointsToUse}
+        WHERE usercode = (
+        SELECT usercode
+        FROM user_tbl
+        WHERE username = #{username}
+        )
+    </update>
+
+    <insert id="insertPointChangeHistory" parameterType="com.ict.finalproject.vo.PointChangeVO">
+        INSERT INTO point_change_tbl (usercode, point_change, point_change_date)
+        VALUES (
+        (SELECT usercode FROM user_tbl WHERE username = #{username}),
+        #{point_change},
+        #{point_change_date}
+        )
+    </insert>
+
+
+</mapper>

@@ -43,4 +43,10 @@
     <select id="getUsers" resultType="com.ict.finalproject.vo.MemberVO">
         select username,usercode from user_tbl where username=#{param1}
     </select>
+    <select id="disableCheck" resultType="com.ict.finalproject.vo.MemberVO">
+        select password,is_disabled,disabled_date ,disabled_start_date from user_tbl where username=#{param1}
+    </select>
+    <update id="enableUser">
+        update user_tbl set is_disabled=0 ,disabled_date=null where username=#{param1}
+    </update>
 </mapper>

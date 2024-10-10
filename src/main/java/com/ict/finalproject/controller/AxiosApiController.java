@@ -29,11 +29,12 @@ public class AxiosApiController {
             String rToken=refreshToken.replaceAll("Bearer ","");
             System.out.println("ㅗafㅑ" + rToken);
             AxiosApiVO vo=service.getTokenVO(rToken);
+                if (vo!=null){
             String delete_date= vo.getDeleted_date();
             DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime deletedDate=LocalDateTime.parse(delete_date,formatter);
             LocalDateTime now=LocalDateTime.now();
-            if(now.isBefore(deletedDate)){
+                if(now.isBefore(deletedDate)){
 
                 int usercode=vo.getUsercode();
                 MemberVO mvo =service.getUserVO(usercode);
@@ -41,11 +42,13 @@ public class AxiosApiController {
                 System.out.println("내번호"+token);
                 return token;
 
+            }
             }else {
 
                 System.out.println(vo);
                 return null;
-            }
+            }System.out.println(vo);
+        return null;
         }
 
 

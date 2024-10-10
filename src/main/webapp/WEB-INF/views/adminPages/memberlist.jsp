@@ -4,7 +4,8 @@
 <script src="/js/adminPages/memberlist.js" type="text/javascript"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <%@ include file="../inc/sidebar.jspf" %>
 
 <div id="memlistbody">
@@ -18,35 +19,35 @@
         <div>
             <form>
                 <div id="checkboxlist" style="min-width:170px; max-width: 249px;">
-                    <button type="button" class="clickbox">체크표시</button>
-                    <button type="button" class="clickbox">일괄체크</button>
-                    <button type="button" class="clickbox">강제탈퇴</button>
+                    <button type="button" class="clickbox" onclick="blockhidden()">체크표시</button>
+                    <button type="button" class="clickbox" onclick="checkAll()">일괄체크</button>
+                    <button type="button" class="clickbox" onclick="selectExcel()">선택엑셀</button>
                 </div>
                 <div id="searchbar">
-                    <select class="form-select">
-                        <option>
+                    <select class="form-select" id="searchvalue" name="searchvalue">
+                        <option value="username">
                             아이디
                         </option>
-                        <option>
+                        <option value="name">
                             이름
                         </option>
-                        <option>
+                        <option value="tel">
                             핸드폰번호
                         </option>
-                        <option>
-                            소셜로그인여부
+                        <option value="is_disabled">
+                            정지여부
                         </option>
                     </select>
                     <div>
-                        <input type="text"/>
-                        <button type="button" id="searchbutton" class="btn btn-m search">
+                        <input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)" />
+                        <div type="button" id="searchbutton" class="btn btn-m search" onclick="searchbutton()">
                             <i class="fa-solid fa-magnifying-glass fa-2x"></i>
-                        </button>
+                        </div>
                     </div>
                 </div>
 
             </form>
-            <div><input type="button" value="Excel" onclick="excelDownload()"/></div>
+            <div style="margin: auto 0"><input type="button" value="전체유저정보받기" onclick="excelDownload()"/></div>
         </div>
     </div>
     <div id="memlistbottom">
@@ -67,21 +68,16 @@
 
         <div id="usercontent">
             <div id="pay">
-                <div>결제내역</div>
-                <div>
-asdfasdf
+                <div>참여대회&결제내역</div>
+                <div id="userpay">
+                    <h1>lodding</h1>
+
                 </div>
             </div>
             <div id="myRunning">
                 <div>점수변동</div>
                 <div id="userrecord">
                 <h1>lodding</h1>
-                </div>
-            </div>
-            <div id="crewhistory">
-                <div>히스토리</div>
-                <div>
-
                 </div>
             </div>
         </div>
