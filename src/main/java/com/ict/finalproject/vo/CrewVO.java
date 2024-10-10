@@ -33,6 +33,7 @@ public class CrewVO {
     private int max_num;
     private int num;
     private int create_crew_code;
+    private int crew_write_code;
     private int hits;
     private int total_record;
     private int usercode;

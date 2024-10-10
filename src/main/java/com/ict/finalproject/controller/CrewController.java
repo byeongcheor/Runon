@@ -103,10 +103,9 @@ public class CrewController {
             String age = String.join(",", arr_age);
             service.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);
         } catch (Exception e) {
-            a=0;
+            a = 0;
             e.printStackTrace();
         }
-        System.out.println("성고고고공!!!>"+a);
         return a; // 성공적으로 생성된 경우 1 반환
     }
     @PostMapping("/crew_page")
@@ -230,5 +229,27 @@ public class CrewController {
         }
         return a;
     }
+
+    @PostMapping("/user_check")
+    @ResponseBody
+    public int Joinuser_check(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        //가입신청 중복 확인하기
+        int a=0;
+        try {
+            a = service.join_before_select(user_code,crewCode);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("가입조건 1or0-->>"+a);
+        return a;
+
+    }
+
+
+
 
 }

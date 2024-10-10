@@ -131,6 +131,29 @@
         where  create_crew_code = ${param2}
         and    usercode = ${param1}
     </select>
+    <select id="join_before_select" resultType="int">
+        select count(1)
+        FROM user_tbl u
+        JOIN crew_write cw ON
+        (cw.gender = '성별무관' OR
+        (cw.gender = '남자' AND u.gender = '남') OR
+        (cw.gender = '여자' AND u.gender = '여'))
+        WHERE cw.crew_write_code = ${param2}
+        AND (
+        (cw.age LIKE '%10대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 10 AND 19)
+        OR
+        (cw.age LIKE '%20대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 20 AND 29)
+        OR
+        (cw.age LIKE '%30대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 30 AND 39)
+        OR
+        (cw.age LIKE '%40대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 40 AND 49)
+        OR
+        (cw.age LIKE '%50대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 50 AND 59)
+        OR
+        (cw.age LIKE '%60대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) >= 60)
+        )
+        and u.usercode = ${param1};
+    </select>
     <insert id="crew_join_write">
 
         insert into crew_request_tbl
