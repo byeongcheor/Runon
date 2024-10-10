@@ -3,6 +3,7 @@ package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.MateVO;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MateDAO {
@@ -25,5 +26,9 @@ public interface MateDAO {
     int matching_room_personnel_update_minus(int matching_room_code);
     int matching_room_personnel_zero_delete();
     int usercodeSelect(String user_name);
+    int hide7daysAdd(int user_code,int num);
+    int neverShow(int user_code,int num);
+    Date mate_popup_date_select(int user_code);
+
 
 }

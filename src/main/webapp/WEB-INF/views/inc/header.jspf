@@ -44,14 +44,31 @@
     }
 
 
-function test3() {
+function mate() {
+    var Authorization=localStorage.getItem("Authorization");
     $.ajax({
         url: "/mate/test", // 원하는 URL을 지정
         type: "post",
-        data: { /* 필요한 데이터 */ }
+        data: { Authorization:Authorization },
+        success: function (r) {
+          console.log('mate : '+r);
+        }
     });
     window.location.href = '/mate/mate';
 }
+function crew() {
+    var Authorization=localStorage.getItem("Authorization");
+    $.ajax({
+        url: "/crew/test", // 원하는 URL을 지정
+        type: "post",
+        data: { Authorization:Authorization },
+        success: function (r) {
+          console.log('crew : '+r);
+        }
+    });
+    window.location.href = '/crew/crewList';
+}
+
     function test2(username){
         //이렇게 실행하면 한번에 사용가능
         console.log("다른방법확인"+username);
@@ -67,15 +84,17 @@ function test3() {
                 </div>
                 <ul>
                     <li><a class="memus">MARATHON</a></li>
-                    <li><a class="memus" onclick="test3()">MATE</a></li>
-                    <li><a class="memus" href="/crew/crewList">CREW</a></li>
+                    <li><a class="memus" onclick="mate()">MATE</a></li>
+                    <li><a class="memus" onclick="crew()">CREW</a></li>
                     <li><a class="memus">NOTICE</a></li>
                     <li><a class="memus" href="/order/cart">CART</a></li>
                     <li><a class="memus" href="/mypage/myHome">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
+                    <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
 
                 </ul>
             </nav>
         </div>
-	</header>
+        <div></div>
+   </header>

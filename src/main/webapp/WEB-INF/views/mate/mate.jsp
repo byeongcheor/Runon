@@ -21,6 +21,7 @@
             <input type='hidden' id=usercode value=${uvo.usercode}>
             <input type='hidden' id=gender value=${uvo.gender}>
             <input type='hidden' id=birthdate value=${uvo.birthdate}>
+            <input type='hidden' id=mate_popup_date value=${uvo.mate_popup_date}>
          </c:forEach>
     <div class="layout">
             <!-- 중앙 메인 콘텐츠 -->
@@ -180,10 +181,10 @@
 
         <div class="mate-modal-footer">
             <label>
-                <input type="checkbox" id="mateHide7days"> 7일간 다시 보지 않기
+                <input type="checkbox" id="mateHide7days" onclick="hide7days()"> 7일간 다시 보지 않기
             </label>
             <label>
-                <input type="checkbox" id="mateNeverShow"> 다시 보지 않기
+                <input type="checkbox" id="mateNeverShow" onclick="neverShow()"> 다시 보지 않기
             </label>
             <button id="mateSaveModalPreferences">확인</button>
         </div>
@@ -199,13 +200,15 @@ var more = 0;
 var cnt  = 0;
 var accept_cnt = 0;
 var update_cnt = 0;
-
+var day7_check='N';
 var match_yn="${vo.match_yn}";
 var usercode=$('#usercode').val();
 var gender=$('#gender').val();
+var token = localStorage.getItem("Authorization");
 
 
 $(document).ready(function() {
+    document.getElementById('mateMatchModal').style.display = 'none';
     marathon_code();//내가 결제한 대회리스트 불러오기
     setTimeout(function() {
         if(match_yn>0){
@@ -213,6 +216,7 @@ $(document).ready(function() {
             match_view_start(match_yn);
         }
         else start_view();
+        popup_yn();//팝업 여부
     }, 200);
     $('.menu_select').text('');
     $('.menu_select').text(' \u25BC');
@@ -234,7 +238,6 @@ $(document).ready(function() {
             $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
             localStorage.setItem(box.attr('id'), selectedValue); // select-box의 ID를 키로 사용하여 값 저장
         }
-
 
     $('.select-box').each(function() {
             var box = $(this);
@@ -527,8 +530,10 @@ function grid_draw(length, result) {
         //나이 가져오기
         var today = new Date();
         var birthDate = new Date(result[i].birthdate);
+        clog('birthDate : '+birthDate);
         var age = (today.getFullYear() - birthDate.getFullYear())+'';
-        age = age[0]+'0대';
+        clog('age : '+age);
+        age = age<10? '잼민이' : age[0]+'0대';
 
         var style = '';
         if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
@@ -629,31 +634,27 @@ document.getElementById('goToMyPage').onclick = function() {
 
 // 모달 열기
 window.onload = function test3() {
-    var token = localStorage.getItem("Authorization");
+    var Authorization = localStorage.getItem("Authorization");
     if (token !== "" && token !== null) {
         $.ajax({
             url: "/mate/test",
             type: "post",
-            data: { Authorization: token },
+            data: { Authorization: Authorization },
             success: function (r) {
                 console.log("mate에서 username을 보낸다: " + r);
             }
         });
     }
-
-
-    // 체크박스 상태 확인
-    if (!localStorage.getItem('hideMateModal7Days') && !localStorage.getItem('neverShowMateModal')) {
-        document.getElementById('mateMatchModal').style.display = 'block';
-    }
-
 }
 
 // 모달 닫기 버튼
 document.querySelector('.mate-close-btn').onclick = function() {
     document.getElementById('mateMatchModal').style.display = 'none';
 }
-
+// 모달 닫기 버튼
+document.querySelector('#mateSaveModalPreferences').onclick = function() {
+    document.getElementById('mateMatchModal').style.display = 'none';
+}
 // 모달 외부 클릭 시 닫기
 window.onclick = function(event) {
     var modal = document.getElementById('mateMatchModal');
@@ -662,41 +663,76 @@ window.onclick = function(event) {
     }
 }
 
-// 체크박스 상태 저장
-document.getElementById('mateSaveModalPreferences').onclick = function() {
-    var hide7days = document.getElementById('mateHide7days').checked;
-    var neverShow = document.getElementById('mateNeverShow').checked;
-
-    if (hide7days) {
-        localStorage.setItem('hideMateModal7Days', new Date().getTime());
+function hide7days(){
+    var num = $('#mateHide7days').is(':checked')?7:-7;
+    $.ajax({
+            url: '/mate/hide7days',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: token,
+                num: num
+            },
+            success: function(result) {
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
-    if (neverShow) {
-        localStorage.setItem('neverShowMateModal', true);
+
+
+    function neverShow(){
+        var num = $('#mateNeverShow').is(':checked')?99999:0;
+        clog(num);
+        $.ajax({
+                url: '/mate/neverShow',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization: token,
+                    num: num
+                },
+                success: function(result) {
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
+        }
+    function popup_yn(){
+        var today = new Date();
+        mate_popup_date_select();
+        var futureDate = new Date($('#mate_popup_date').val());
+        var todayString = today.toISOString().split('T')[0];
+        var futureDateString = futureDate.toISOString().split('T')[0];
+
+        if (todayString > futureDateString) {
+            document.getElementById('mateMatchModal').style.display = 'block';
+        }
+        else if (todayString === futureDateString) {
+            document.getElementById('mateMatchModal').style.display = 'block';
+        }
+        else {
+            document.getElementById('mateMatchModal').style.display = 'none';
+        }
     }
 
-    document.getElementById('mateMatchModal').style.display = 'none';
-}
-
-// 7일간 다시 보지 않기 로직
-if (localStorage.getItem('hideMateModal7Days')) {
-    var now = new Date().getTime();
-    var hideModalTime = localStorage.getItem('hideMateModal7Days');
-
-    // 7일이 지났으면 로컬스토리지에서 제거
-    if (now - hideModalTime > 7 * 24 * 60 * 60 * 1000) {
-        localStorage.removeItem('hideMateModal7Days');
+    function mate_popup_date_select(){
+        $.ajax({
+                url: '/mate/mate_popup_date_select',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization: token,
+                },
+                success: function(result) {
+                    $('#mate_popup_date').val(result);
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
     }
-}
-
-// "다시 보지 않기" 체크 로직
-if (localStorage.getItem('neverShowMateModal')) {
-    document.getElementById('mateMatchModal').style.display = 'none';
-}
-
-function getQueryParam(param) {
-    var urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
-
 
 </script>
