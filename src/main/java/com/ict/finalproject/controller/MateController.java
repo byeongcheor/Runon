@@ -24,6 +24,8 @@ public class MateController {
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization") String token) {
+        System.out.println("테스트"+token);
+        if (token!=null&&!token.isEmpty()){
         token=token.substring("Bearer ".length());
         System.out.println("123123123");
         try {
@@ -33,7 +35,8 @@ public class MateController {
             System.out.println("Error parsing token: " + e.getMessage());
             e.printStackTrace(); // 전체 스택 트레이스 확인
         }
-        return user_name;
+        return user_name;}
+        return null;
     }
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//

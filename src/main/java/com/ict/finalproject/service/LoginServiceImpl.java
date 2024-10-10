@@ -1,6 +1,7 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.LoginDAO;
+import com.ict.finalproject.vo.MemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +24,6 @@ public class LoginServiceImpl implements LoginService {
     public void updateToken(String refreshToken, String username) {
         dao.updateToken(refreshToken,username);
     }
+
+
 }

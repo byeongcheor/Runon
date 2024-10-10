@@ -32,6 +32,7 @@
 }
 #mainmid>div{
     display: flex;
+
     margin: auto 0;
 }
 #mainmid>div>input{
@@ -48,17 +49,21 @@
 
 
 }
+#checkboxlist{
+    margin: auto 0;
+}
 #mainmid>div{
     margin-left: 30px;
-    line-height: 40px;
+
 }
 #mainmid>div>form{
     display: flex;
     width: 100%;
+    height: 60px;
 }
 #searchbutton{
 
-    height: 25px;
+    height: 28px;
     border: none;
     background-color: white;
     padding: 0;
@@ -77,18 +82,18 @@
 
 }
 #searchbar>select{
-    height: 25px;
+    height: 34px;
     margin: auto 0;
 
 }
 #searchbar>div>input{
     width: 300px;
-    height: 23px;
+    height: 28px;
     border: none;
 }
 #searchbar>div{
     display: flex;
-    height: 25px;
+    height: 30px;
     margin: auto 0;
     border: 1px solid black;
 
@@ -152,7 +157,8 @@ li{
     left: 0;
     top: 0;
     display: none;
-}
+    z-index:999;
+} 
 #userdetail{
     width: 80%;
     height: 90%;
@@ -210,27 +216,51 @@ li{
 
 }
 #pay{
-    flex: 3.3;
+   width:65%;
 }
 #pay>div:first-child,#myRunning>div:first-child,#crewhistory>div:first-child{
     text-align: center;
 }
 
 #myRunning{
-    flex: 3.3;
+   width:35%;
 }
 #crewhistory{
-    flex: 3.3;
+    width: 33.3%;
 }
-#userrecord>h1{
+#userrecord>h1,#userpay>h1{
     text-align: center;
 }
 #userrecord li{
     text-align: center;
     min-width: 360px;
 }
+#userrecord ul,#pay ul{
+    margin:0;padding: 0;
+}
 #userrecord{
     border: 1px solid black;
     overflow: auto;
+    overflow-x: hidden;
     height: 57%;
+}
+
+/* 화면 너비가 515.41px 이하일 때 적용 */
+@media (max-width: 1600px) {
+    .purchase-date {
+        display: none;
+    }
+}
+#userpay{
+    height: 57%;
+    overflow-y: auto;
+    border: 1px solid black;
+    margin-right: 5px;
+}
+.paycontent{
+    height: 50px;
+    line-height: 50px;
+}
+.paycontent:hover{
+    background-color: #ddd;
 }

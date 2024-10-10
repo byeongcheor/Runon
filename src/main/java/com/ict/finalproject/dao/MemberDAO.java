@@ -25,5 +25,9 @@ public interface MemberDAO {
 
     MemberVO getUsers(String username);
 
+    //정지여부확인
+    public MemberVO disableCheck(String username);
+    //정지 시간을 확인후 풀렸으면 업데이트
+    public int enableUser(String username);
 
 }

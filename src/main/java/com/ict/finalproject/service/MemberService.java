@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
+    public MemberVO disableCheck(String username);
+    public int enableUser(String username);
 
 }

@@ -24,4 +24,82 @@
     <select id="getRecord" resultType="com.ict.finalproject.vo.RecordVO">
         select * from record_tbl where usercode = #{param1}
     </select>
+    <select id="selectInPay" resultType="com.ict.finalproject.vo.AdminPaymentVO">
+        select o.order_code,p.completed_date,m.marathon_name,o.price,o.quantity,o.real_amount
+        from payment_tbl p
+        join order_tbl o on p.order_code = o.order_code
+        join marathon_list_tbl m on o.marathon_code = m.marathon_code
+        where o.usercode=#{param1}
+        and p.is_completed=1
+        order by o.order_code desc
+    </select>
+
+    <insert id="insert">
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code, point_change_code)
+        select u.usercode,
+        u.username,
+        u.password,
+        u.nickname,
+        u.addr,
+        u.addr_details,
+        u.zip_code,
+        u.birthdate,
+        u.gender,
+        u.tel,
+        u.profile_img,
+        u.is_info_disclosure,
+        u.role,
+        u.is_google,
+        u.creation_date,
+        p.mypoint,
+        p.point_code,
+        p.point_change_code
+        from user_tbl u
+        left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
+    </insert>
+    <delete id="deluser">
+        delete from user_tbl where usercode=#{param1}
+    </delete>
+    <delete id="delpoint">
+        delete from point_tbl where usercode=#{param1}
+    </delete>
+    <update id="setDisableUserTime">
+        update user_tbl
+        set is_disabled = 1,
+        disabled_start_date=now(),
+        disabled_date =
+        <choose>
+            <when test="disableday == 999">
+                now() + INTERVAL 300 YEAR
+            </when>
+            <otherwise>
+                NOW() + INTERVAL #{disableday} DAY
+            </otherwise>
+        </choose>
+        where usercode = #{usercode}
+    </update>
+    <update id="setEnableUser">
+        update user_tbl set is_disabled=0,
+        disabled_date=null where usercode=#{param1}
+    </update>
+    <select id="getTotalRecordWithSearch" resultType="int">
+        select count(usercode)
+        from user_tbl
+        where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+    </select>
+
+    <select id="selectUserWithSearch" resultType="com.ict.finalproject.vo.MemberVO">
+        select *
+        from user_tbl
+        where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+        order by `usercode`
+        limit #{offset}, #{onePageRecord}
+    </select>
+    <select id="selectedMembers" resultType="com.ict.finalproject.vo.MemberVO">
+        select *from user_tbl
+        where usercode in <foreach item="usercodes" collection="list" open="(" separator="," close=")">
+        #{usercodes}
+    </foreach>
+    </select>
+
 </mapper>

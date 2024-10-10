@@ -1,5 +1,7 @@
 
-let clickCount = 0;
+if (typeof clickCount==='undefined'){
+    let clickCount=0;
+}
 function report(){
     const submenus = document.querySelectorAll('.submenu');
     clickCount++;

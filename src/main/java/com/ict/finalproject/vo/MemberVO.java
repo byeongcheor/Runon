@@ -12,7 +12,6 @@ import java.security.PrivateKey;
 public class MemberVO {
     private int usercode;
     private String username;
-
     private String password;
     private String role;
     private String name;
@@ -39,6 +38,7 @@ public class MemberVO {
     private String activation_date;
     private int point_code;
     private String nickname;
+    private String disabled_start_date;
 
     @Override
     public String toString() {
@@ -67,7 +67,8 @@ public class MemberVO {
                 ", disabled_date='" + disabled_date + '\'' +
                 ", is_active='" + is_active + '\'' +
                 ", activation_date='" + activation_date + '\'' +
-                ", point_code=" + point_code +
+                ", point_code=" + point_code +'\'' +
+                ", disabled_start_date=" + disabled_start_date +'\'' +
                 ", nickname='" + nickname + '\'' +
                 '}';
     }
@@ -306,5 +307,13 @@ public class MemberVO {
 
     public void setPoint_code(int point_code) {
         this.point_code = point_code;
+    }
+
+    public String getDisabled_start_date() {
+        return disabled_start_date;
+    }
+
+    public void setDisabled_start_date(String disabled_start_date) {
+        this.disabled_start_date = disabled_start_date;
     }
 }
