@@ -46,15 +46,14 @@ $(document).ready(function() {
         event.preventDefault(); // 링크의 기본 동작 방지
         if (clickInProgress) return;
         clickInProgress = true;
-        alert($(this).attr("href"));
         if($(this).attr("href")!=null){
-            alert("넘어가기전");
+
         $.ajax({
             url: $(this).attr('href'),
             type: 'GET',
             success: function (response) {
                 // 정상적으로 권한이 확인되면 페이지 이동
-                alert("링크넘어가기!");
+
                 console.log(response);
                 window.location.href = $(event.currentTarget).attr('href');
             },
