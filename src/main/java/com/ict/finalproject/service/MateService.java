@@ -29,4 +29,5 @@ public interface MateService {
     int neverShow(int user_code,int num);
     Date mate_popup_date_select(int user_code);
 
+
 }

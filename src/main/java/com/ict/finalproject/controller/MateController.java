@@ -21,6 +21,7 @@ public class MateController {
     String user_name ="";
     int    user_code = 0;
 
+
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization") String token) {
@@ -49,6 +50,7 @@ public class MateController {
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);
+
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력

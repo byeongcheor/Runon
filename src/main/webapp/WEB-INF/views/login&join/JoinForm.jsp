@@ -77,7 +77,6 @@
             <div class="joinS">
                 <input type="submit" value="회원가입" />
             </div>
-
         </div>
     </form>
 </div>

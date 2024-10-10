@@ -22,4 +22,5 @@ public class MemberServiceImpl implements MemberService{
         return dao.enableUser(username);
     }
 
+
 }

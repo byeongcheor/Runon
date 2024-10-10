@@ -159,6 +159,9 @@ function formCheck(){
         alert("생년월일이 잘못되었습니다.");
         return false;
     }
+
+
+
     return true;
 }
 function gendercheck(gender){
