@@ -62,7 +62,7 @@
                         <button class="action-button" id='delete_btn' onclick="confirmStopRecruit(${create_crew_code})">모집중단하기</button>
                     </div>
                     <div class="bottom-button">
-                        <button class="action-button wide" data-bs-toggle="modal" data-bs-target="#joinModal" id="crew_request_btn">가입 신청하기</button>
+                        <button class="action-button wide" id="crew_request_btn" onClick="user_check();">가입 신청하기</button>
                         <button class="action-button wide" data-bs-dismiss="modal" id="crew_request_delete" onClick="crew_join_delete();">가입 취소하기</button>
                     </div>
                 </div>
@@ -248,8 +248,12 @@
 var clog = console.log;
 var Authorization = localStorage.getItem("Authorization");
 var writeCrewCode = ${create_crew_code};
+//var crewWriteCode = ${crew_write_code};
+
+
 var usercode;
     $(document).ready(function() {
+
         crew_detail_select();
         addr_select_draw('city');//select 박스 그리기
         $('#city').on('change', function() {
@@ -376,4 +380,37 @@ error: function(e) {
             }
         }*/
 
+////////////////////////////////////////////////////////////////////////////
+
+function user_check() {
+    // Bootstrap Modal 객체 생성
+    const myModal = new bootstrap.Modal(document.getElementById('joinModal'), {
+        keyboard: false
+    });
+
+    // AJAX 요청
+    $.ajax({
+        url: '/crew/user_check',
+        type: 'POST',
+        async: false,
+        data: {
+              Authorization : Authorization,
+              writeCrewCode : writeCrewCode
+        },
+        success: function(response) {
+            if (response != 1) {
+                alert('모집조건에 맞지 않습니다.');
+            } else {
+                alert('조건 맞음');
+                myModal.show(); // 조건이 맞으면 모달을 표시
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            alert('가입 신청 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+////////////////////////////////////////////////////////////
 </script>
