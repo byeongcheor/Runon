@@ -8,14 +8,39 @@
     </select>
 
     <select id="existsByUsername" parameterType="String" resultType="Boolean">
-        SELECT EXISTS(SELECT 1 FROM usertbl WHERE username = #{username})
+        SELECT EXISTS(SELECT 1 FROM user_tbl WHERE username = #{username})
     </select>
 
     <insert id="saveUser" parameterType="com.ict.finalproject.vo.MemberVO">
-        INSERT INTO user_tbl(username, password, role,name,nickname,email,addr,addr_details,zip_code,birthdate,gender,tel,is_pacemaker,
-        is_mate,profile_img, is_info_disclosure,is_google)
-        VALUES(#{username}, #{password}, #{role},#{name},#{nickname},#{email},#{addr},#{addr_details},#{zip_code},#{birthdate},#{gender},
-        #{tel},#{is_pacemaker} ,#{is_mate},#{profile_img}, #{is_info_disclosure},#{is_google})
+        INSERT INTO user_tbl(username, password, role,name,nickname,addr,addr_details,zip_code,birthdate,gender,tel,is_info_disclosure)
+        VALUES(#{username}, #{password}, #{role},#{name},#{nickname},#{addr},#{addr_details},
+        <if test="zip_code != null and zip_code != ''">
+            #{zip_code}
+        </if>
+        <if test="zip_code == null or zip_code == ''">
+            NULL
+        </if>
+        ,#{birthdate},#{gender},
+        #{tel}, #{is_info_disclosure})
     </insert>
+    <select id="idDoubleCheck"  resultType="int">
+        select count(username) from user_tbl where username =#{param1}
 
+    </select>
+    <select id="nickCheck" resultType="int">
+        select count(nickname) from user_tbl where nickname= #{param1}
+    </select>
+    <insert id="addPoint">
+        insert into point_tbl (usercode) value((select usercode from user_tbl where username=#{param1}))
+    </insert>
+    <select id="selectUserCode" resultType="int">
+        select usercode from user_tbl where username=#{param1}
+    </select>
+    <update id="addPointCode">
+        update user_tbl set point_code=(select point_code from point_tbl where usercode =#{param1}) where usercode=#{param1}
+    </update>
+
+    <select id="getUsers" resultType="com.ict.finalproject.vo.MemberVO">
+        select username,usercode from user_tbl where username=#{param1}
+    </select>
 </mapper>

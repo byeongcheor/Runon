@@ -17,11 +17,12 @@ public class JoinServiceImpl implements JoinService {
     }
 
     @Override
-    public void joinProcess(MemberVO vo) {
+    public int joinProcess(MemberVO vo) {
         // 사용자 이름이 존재하는지 확인
+
         if (memberDAO.existsByUsername(vo.getUsername())) {
             System.out.println("User already exists!");
-            return;  // 이미 사용자가 있으면 저장하지 않음
+            return  0;  // 이미 사용자가 있으면 저장하지 않음
         }
 
 
@@ -33,7 +34,7 @@ public class JoinServiceImpl implements JoinService {
         vo.setRole("ROLE_USER");
 
         // DAO를 통해 데이터베이스에 저장
-        memberDAO.saveUser(vo);
+       return memberDAO.saveUser(vo);
     }
 
     @Override
@@ -49,5 +50,37 @@ public class JoinServiceImpl implements JoinService {
     @Override
     public void saveUser(MemberVO user) {
         memberDAO.saveUser(user);
+    }
+
+    @Override
+    public int idDoubleCheck(String username) {
+        return memberDAO.idDoubleCheck(username);
+    }
+
+    @Override
+    public int nickCheck(String nickname) {
+
+        return memberDAO.nickCheck(nickname);
+    }
+
+    @Override
+    public int addPoint(String username) {
+
+        return memberDAO.addPoint(username);
+    }
+
+    @Override
+    public int selectUserCode(String username) {
+        return memberDAO.selectUserCode(username);
+    }
+
+    @Override
+    public int addPointCode(int usercode) {
+        return memberDAO.addPointCode(usercode);
+    }
+
+    @Override
+    public MemberVO getUsers(String username) {
+        return memberDAO.getUsers(username);
     }
 }

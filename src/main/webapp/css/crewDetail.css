@@ -1,0 +1,329 @@
+#bannerBox{
+    width:100%;
+    height:400px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+body{
+    background-color: #F8FAFB;
+}
+#bannerBox{
+    width:100%;
+    height:200px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content_body{
+    display: flex;
+    flex-direction: row;
+    max-width: 1050px;
+    margin: 0 auto;
+    hight:100%;
+}
+.content_left{
+    position: relative;
+    width: 50%;
+    margin-right: 20px;
+    background-color: white;
+    margin-top: 20px;
+     border-radius: 10px; /* 테두리를 둥글게 설정 */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+}
+.content_right {
+   margin:20px 0;
+   width: 100%;
+   height: 100%; /* 높이를 내용에 맞춰 자동 조정 */
+   padding: 20px;
+   overflow: hidden; /* 내용이 넘치지 않도록 설정 */
+   background-color: white; /* 배경색을 흰색으로 설정 */
+   border-radius: 10px; /* 테두리를 둥글게 설정 */
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+}
+
+.section1 {
+    background-color: white;
+    min-height: 400px; /* 최소 높이 설정, 내용에 따라 확장 가능 */
+    background-color: white;
+    overflow: hidden; /* 내용이 넘치지 않도록 설정 */
+}
+
+.profile_container{
+    margin-top:20px;
+    margin-left:30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.team-header {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.team-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.team-emblem {
+   margin-right:100px;
+}
+
+.emblem-wrapper {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #c4cdd4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.emblem-background {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.emblem-image {
+    width: 100%;
+    height: auto;
+}
+
+/* 정원형 이미지 및 100% 크기 조정 */
+.icon-star {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    object-fit: cover; /* 이미지를 영역에 맞게 채우기 */
+}
+
+.team-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.team-name {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000;
+}
+
+.team-info {
+    font-size: 15px;
+    color: #6c757d;
+}
+
+/* 멤버 모집 조건 박스 스타일 */
+.recruitment-box {
+    margin: 30px 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recruitment-box h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.feature-list {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%/* 원하는 너비에 맞게 설정, 여기서 조정 가능 */
+}
+
+.feature-item {
+    flex: 0 0 50%;
+    align-items: center;
+    padding: 5px;
+}
+
+.feature-text {
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 위아래 버튼 간 간격 */
+    margin-left: 30px;
+    margin-top: 40px;
+    width:100%;
+    justify-content: center;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 20px; /* 두 개의 버튼 사이 간격 */
+    width:80%;
+}
+
+.action-button {
+    background-color: #ccff00; /* 버튼 배경색 (네온 옐로우) */
+    width:80%;
+    border: none;
+    color: black;
+    padding: 15px 20px;
+    font-size: 15px;
+    border-radius: 5px; /* 버튼 모서리를 둥글게 */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #b3e600; /* 호버 시 색상 변경 */
+}
+
+.modal-lg {
+    max-width: 500px; /* 너비를 800px로 설정 */
+    margin: auto; /* 중앙 정렬 */
+}
+
+modal-title {
+    width: 100%;
+    text-align: left;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 28px;
+    color: #282b33;
+}
+
+.modal-content {
+    height: 65vh; /* 높이를 화면의 80%로 설정 */
+    border-radius: 10px; /* 테두리 둥글게 설정 */
+}
+.modal-body {
+    padding: 10px;
+    background-color: white;
+    height:400px;
+    text-align: left;
+}
+.modal-header {
+    border-bottom: none; /* 헤더의 하단 경계선 제거 */
+    margin-left:5px;
+}
+
+.modal-footer {
+    border-top: none; /* 푸터의 상단 경계선 제거 */
+    padding-top: 10px;
+}
+/* 설명 박스 스타일 */
+.info-box {
+    background-color: #eaf6ff; /* 파란색 배경 */
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.info-box strong {
+    font-size: 15px;
+}
+
+.info-box ul {
+    padding-left: 20px; /* 리스트 앞 간격 */
+    margin-top: 10px;
+}
+
+.info-box ul li {
+    color: #007bff; /* 리스트 항목을 파란색으로 */
+}
+
+/* 모달 내 버튼 스타일 */
+.modal-action-button {
+    background-color: #ccff00; /* 네온 옐로우 */
+    width: 100%;
+    border: none;
+    color: black;
+    padding: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+/* 텍스트 입력 필드 스타일 (textarea) */
+.custom-textarea {
+    width: 100%;         /* 너비를 100%로 설정 */
+    height: 220px;       /* 적당한 높이 설정 */
+    border: 1px solid #ddd; /* 얇은 테두리 */
+    background-color: #f8f9fa; /* 배경색 */
+    padding: 10px;
+    font-size: 16px;
+    resize: none;        /* 크기 조절 비활성화 */
+    outline: none;       /* 포커스 시 외곽선 제거 */
+    border-radius: 5px;  /* 모서리 둥글게 */
+}
+
+
+.custom-textarea::placeholder {
+    color: #888;         /* 플레이스홀더 색상 */
+}
+
+.modal-action-button:hover {
+    background-color: #b3e600; /* 호버 시 색상 변경 */
+}
+
+.image-text-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 부모 요소의 전체 너비 */
+    padding:10px;/* 높이를 내용에 맞게 자동 조절 */
+
+}
+
+.text-wrapper {
+    width: 100%; /* 전체 너비로 설정 */
+    background-color: #fff; /* 배경색 */
+    color: #333;
+    font-size: 16px;
+    line-height: 26px;
+    min-height: 400px;
+    overflow: hidden;
+    font-family: inherit !important;
+    white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
+}
+.image-wrapper {
+    width: 100%;
+    height: auto; /* 높이를 자동으로 설정하여 이미지가 겹치지 않도록 */
+    margin-bottom: 20px;
+    padding: 0;
+}
+.responsive-image {
+    width: 400px;
+    height: auto; /* 이미지의 높이도 내용에 맞게 조정되도록 설정 */
+    object-fit: cover; /* 이미지가 div에 맞게 조정되도록 설정 */
+}
+
+.modal--bottom .btn {
+    width: 100%; /* 버튼을 전체 너비로 설정 */
+}
+
+
+
+
+.extra-info {
+    font-size: 14px;
+    line-height: 120%;
+    color: #727f88;
+    margin-top:20px;
+}

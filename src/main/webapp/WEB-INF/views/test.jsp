@@ -3,6 +3,10 @@
 
 <div>
     db확인용 아이디:${userid}
+<<<<<<< HEAD
     <div>test</div>
 1111
+=======
+
+>>>>>>> origin/test
 </div>
