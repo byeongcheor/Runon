@@ -51,7 +51,39 @@
 
 </style>
 <script>
-
+    //QnA 이동
+    function openQnA(){
+        username = username1
+        usercode = usercode1
+        $.ajax({
+            url: "/mypage/openmyQnA",
+            type: "post",
+            data: {username:username,
+                    usercode: usercode},
+            success: function(r){
+                location.href="/mypage/myQnA";
+            },error: function(e){
+                alert("이동실패..");
+                console.log(e);
+            }
+        })
+    }
+    //나의 메이트 이동
+    function openMymate(){
+        username=username1
+        $.ajax({
+            url: "/mypage/openMymate",
+            type: "Post",
+            data: {username:username},
+            success: function(r) {
+                location.href = "/mypage/myMate";
+            },
+            error: function(e) {
+                console.log(e);
+                alert("으으");
+            }
+        });
+    }
     //내 기록인증하기로 이동
     function openCertificate(){
         username=username1
@@ -61,7 +93,7 @@
                 data: {username:username},
                 success: function(r) {
                     alert("성공");
-                    location.href = "/mypage/certificateList?username="+username;
+                    location.href = "/mypage/certificateList";
                 },
                 error: function(e) {
                     console.log(e);
@@ -82,7 +114,7 @@
         }
     }
     //마라톤신청서수정모달닫기
-    function closeMarathonFormModal(){
+    function closeEditMarathonFormModal(){
         var modal = document.getElementById("editMarathonFormModal");
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
@@ -112,14 +144,23 @@
 
     //마라톤신청서 존재여부
     function checkMarathonForm(){
-        var username=document.getElementById("username").value;
+
         $.ajax({
             url: "/mypage/marathonFormCheck",
-            data: {username:username},
+            data: {usercode:usercode1},
             success: function(r){
                 if(r.exists){
+                    var data22=r.data;
                     alert("기존에 작성한 신청서가 있습니다.")
-                    openEditMarathonFormModal(r.data);
+                    console.log(r.data);
+                    var modal = document.getElementById("editMarathonFormModal");
+                    if(modal){
+                        document.getElementById("rname").value = r.data.name;
+                        document.getElementById("rtel").value = r.data.name;
+                        document.getElementById("rname").value = r.data.name;
+                        modal.style.display = "block";
+                    }
+
                 }else{
                     alert("신청서를 작성해주세요.")
                     openMarathonFormModal();
@@ -130,17 +171,19 @@
         })
     }
     //마라톤 수정/삭제 모달열기
-    function openEditMarathonFormModal(data){
-        var modal = document.getElementById("editMarathonFormModal");
-        if(modal){
-            document.getElementById("name").value = data.name;
-
-            modal.style.display = "modal";
-        }
-    }
+    // function openEditMarathonFormModal(data){
+    //     console.log("11"+data);
+    //     var modal = document.getElementById("editMarathonFormModal");
+    //     if(modal){
+    //         document.getElementById("name").value = data.name;
+    //
+    //         modal.style.display = "modal";
+    //     }
+    // }
     //마라톤 신청서 작성폼 전송
     function submitMarathonForm(){
         const formData = {
+
             name: document.getElementById("name").value,
             tel: document.getElementById("tel").value,
             addr: document.getElementById("addr").value,
@@ -152,14 +195,25 @@
             privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
             media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
         };
+        console.log(formData);
         var token = localStorage.getItem("Authorization");
         if(token != "" && token != null) {
             $.ajax({
                 url: "/mypage/createMarathonForm",
                 type: "post",
-                contentType: "application/json",  // JSON 형식으로 전송
-                data: JSON.stringify(formData),
-                headers: {Authorization: token},
+
+                data: {usercode:usercode1,
+                    name: document.getElementById("name").value,
+                    tel: document.getElementById("tel").value,
+                    addr: document.getElementById("addr").value,
+                    addr_details: document.getElementById("addr_details").value,
+                    gender: document.getElementById("gender").value,
+                    birth_date: document.getElementById("birth_date").value,
+                    size: document.getElementById("size").value,
+                    terms_agreement: document.getElementById("terms_agreement").checked ? 1 : 0,  // boolean을 int로 변환
+                    privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
+                    media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
+                    },
                 success: function (r) {
                     alert("마라톤신청서 작성이 완료되었습니다.");
                     closeMarathonFormModal();
@@ -167,6 +221,7 @@
                 }, error: function (e) {
                     console.log(e);
                     alert("마라톤신청서 작성이 실패했습니다.");
+                    return false;
 
                 }
             })
@@ -393,7 +448,6 @@
     }
     //페이지 로드시 사용자 정보(왼쪽)를 불러옴
     $(document).ready(function() {
-
         var token = localStorage.getItem("Authorization");
         if(token != "" && token != null){
             $.ajax({
@@ -473,7 +527,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="/mypage/myMate">
+                                                <a onclick="openMymate()">
                                                     <div class="list_container">
                                                         <p class="icons">🤼‍♂️</p>
                                                         <p class="list_title">나의 메이트</p>
@@ -488,7 +542,7 @@
                                     <div class="section_menu">
                                         <ul class="menu_list">
                                             <li>
-                                                <a class="menus" href="">
+                                                <a onclick="openQnA()">
                                                     <div class="list_container">
                                                         <p class="icons">❓</p>
                                                         <p class="list_title">내 QnA</p>
@@ -527,9 +581,7 @@
                     `
                     document.getElementById("contentAll").innerHTML=tag;
 
-                    setTimeout(function(){
-                        alert(username1);
-                    }, 1500);
+
                 }
             })
         }
@@ -570,7 +622,7 @@
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeMarathonFormModal()">&times;</span>
             <h2 style="text-align: center">마라톤신청서 작성</h2>
-            <form method="POST" onsubmit="submitMarathonForm()">
+            <form method="POST" action="" onsubmit="return submitMarathonForm()" >
                 <div>
                     <label for="name">이름:</label>
                     <input type="text" id="name" name="name" maxlength="30" required />
@@ -624,50 +676,50 @@
     <div id="editMarathonFormModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeEditMarathonFormModal()">&times;</span>
-            <h2 style="text-align: center">마라톤신청서 작성</h2>
-            <form onsubmit="submiteditMarathonForm()" method="POST">
+            <h2 style="text-align: center">마라톤신청서 수정</h2>
+            <form onsubmit="return submiteditMarathonForm()" method="POST">
                 <div>
                     <label for="name">이름:</label>
-                    <input type="text" id="name" name="name" maxlength="30" required />
+                    <input type="text" id="rname" name="name" maxlength="30" required />
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input type="tel" id="tel" name="tel" maxlength="15" required />
+                    <input type="tel" id="rtel" name="tel" maxlength="15" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
-                    <input type="text" id="addr" name="addr" maxlength="100" required />
+                    <input type="text" id="raddr" name="addr" maxlength="100" required />
                 </div>
                 <div>
                     <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                    <input type="text" id="raddr_details" name="addr_details" maxlength="300" required />
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="gender" name="gender" required>
+                    <select id="rgender" name="gender" required>
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
                 </div>
                 <div>
                     <label for="birth_date">생년월일:</label>
-                    <input type="date" id="birth_date" name="birth_date" required />
+                    <input type="date" id="rbirth_date" name="birth_date" required />
                 </div>
                 <div>
                     <label for="size">사이즈:</label>
-                    <input type="text" id="size" name="size" maxlength="30" required />
+                    <input type="text" id="rsize" name="size" maxlength="30" required />
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
-                    <input type="checkbox" id="terms_agreement" name="terms_agreement" required />
+                    <input type="checkbox" id="rterms_agreement" name="terms_agreement" required />
                 </div>
                 <div>
                     <label for="privacy_consent">개인정보 수집 동의:</label>
-                    <input type="checkbox" id="privacy_consent" name="privacy_consent" required />
+                    <input type="checkbox" id="rprivacy_consent" name="privacy_consent" required />
                 </div>
                 <div>
                     <label for="media_consent">미디어 사용 동의:</label>
-                    <input type="checkbox" id="media_consent" name="media_consent" />
+                    <input type="checkbox" id="rmedia_consent" name="media_consent" />
                 </div>
                 <div>
                     <button type="submit">수정하기</button>

@@ -4,6 +4,7 @@ import com.ict.finalproject.dao.MypageDAO;
 import com.ict.finalproject.vo.CertificateVO;
 import com.ict.finalproject.vo.MarathonFormVO;
 import com.ict.finalproject.vo.MemberVO;
+import com.ict.finalproject.vo.QnAVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +46,8 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public MarathonFormVO selectMarathonForm(String username) {
-        return dao.selectMarathonForm(username);
+    public MarathonFormVO selectMarathonForm(int usercode) {
+        return dao.selectMarathonForm(usercode);
     }
 
     @Override
@@ -57,6 +58,51 @@ public class MypageServiceImpl implements MypageService{
     @Override
     public List<CertificateVO> selectCertificateAll(String username) {
         return dao.selectCertificateAll(username);
+    }
+
+    @Override
+    public void updateCertificate(CertificateVO certificate) {
+        dao.updateCertificate(certificate);
+    }
+
+    @Override
+    public int deleteCertificate(int certificate_code) {
+        return dao.deleteCertificate(certificate_code);
+    }
+
+    @Override
+    public CertificateVO selectCertificate(int certificate_code) {
+        return dao.selectCertificate(certificate_code);
+    }
+
+    @Override
+    public List<MemberVO> selectMemberAll(int usercode) {
+        return dao.selectMemberAll(usercode);
+    }
+
+    @Override
+    public List<QnAVO> selectQnAAll(int usercode) {
+        return dao.selectQnAAll(usercode);
+    }
+
+    @Override
+    public void updateQnA(QnAVO qna) {
+        dao.updateQnA(qna);
+    }
+
+    @Override
+    public QnAVO selectQnA(int qna_code) {
+        return dao.selectQnA(qna_code);
+    }
+
+    @Override
+    public int deleteQnA(int qna_code) {
+        return dao.deleteQnA(qna_code);
+    }
+
+    @Override
+    public void updateQnAStatus(int qna_status, int qna_code) {
+        dao.updateQnAStatus(qna_status, qna_code);
     }
 
 

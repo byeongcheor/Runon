@@ -43,21 +43,7 @@
         console.log("전역변수로 설정확인"+responseData);
     }
 
-    function mypage(){
-        console.log("111");
-            $.ajax({
-                url:"/mypage/myHome",
-                async:false,
-                success:function (r){
-                    console.log("22222");
-                    console.log(r);
-                    window.location.href="/mypage/myHome";
-                    console.log("333333");
-                    //test2(r);
-                }
-            });
-        //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
-    }
+
     function test2(r){
 
 
@@ -110,7 +96,6 @@ function crew() {
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
                     <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
-
                 </ul>
             </nav>
         </div>
