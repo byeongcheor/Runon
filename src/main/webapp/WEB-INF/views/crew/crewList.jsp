@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<script src="${pageContext.request.contextPath}/js/crew.js" type="text/javascript"></script>
 
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -26,12 +27,10 @@
             <ul>
                 <li><a href="/crew/crewList">크루모집</a></li>
                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="/crew/crewManage">나의크루</a></li>
-                <li><a href="/crew/crewDetail">모집디테일 만들자</a></li>
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal">나의 크루</a></li>
             </ul>
         </div>
     </div>
-
     <div class="crew_search">
         <div class="searchForm">
             <div class="search-left">
@@ -80,15 +79,15 @@
                 <input type="text" name="searchWord" id="searchWord" />
                 <button type="submit" class="btn btn-outline-secondary" onClick="crew_list_select()">Search</button>
             </div>
-            <button class="add-btn" data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            <button class="add-btn" onClick="crew_page()"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
         </div>
     </div>
 
-    <div class="crew_list" id="crew_list">
+    <div class="crew_list" id="crew_list" >
         <div class="list_wrapper">
             <ul id="crew_list">
                 <c:forEach var="cvo" items="${list}">
-                    <li class="list_item">
+                    <li class="list_item" onClick="crew_page_detail(${cvo.create_crew_code})">
                         <div class="crew_profileimage">
                             <div class="profileBox">
                                 <img src="/crew_upload/${cvo.logo}" class="profileImg">
@@ -96,19 +95,19 @@
                         </div>
                         <div class="crew_content">
                             <div class="crew_title">
-                                <span class="crewname"><b>${cvo.crew_name}</b></span>
+                                <span class="crewname"style=" font-weight: bold; font-size:16px;"><b>${cvo.crew_name}</b></span>
                                 <span class="count">🏃‍♀️${cvo.num}<span>
                                 <span class="count">멤버모집<span>
                             </div>
-                            <div>
+                            <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">
                                 <span class="crewaddr">${cvo.addr}</span>&nbsp;&nbsp;&nbsp;
                                 <span class="crewIntro">${cvo.content}</span>
                             </div>
-                            <div>
+                            <div style="margin-top:3px;>
                                 <span class="crewhit">${cvo.gender}</span>&nbsp;&nbsp;&nbsp;
                                 <span class="crewhit">${cvo.age}</span>
                             </div>
-                            <div>
+                            <div style="margin-top:12px;">
                                 <span class="crewhit">조회수 ${cvo.hits}</span>&nbsp;&nbsp;&nbsp;
                                 <span class="crewhit">신청 ${cvo.a_n}</span>
                             </div>
@@ -118,7 +117,6 @@
             </ul>
         </div>
     </div>
-
     <!-- 페이징 -->
     <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
         <!-- 이전페이지 -->
@@ -199,7 +197,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="city" class="form-label">도시</label>
-                                <select class="form-control text-center" name="city" id="city" onchange="select_box_change3();">
+                                <select class="form-control text-center" name="city" id="city" onchange="select_box_change3('1');">
                                     <option value="" selected>지역</option> <!-- 기본으로 선택 -->
                                     <option value="" selected>전체</option>
                                     <option value="서울">서울</option>
@@ -290,7 +288,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="crewInfoModalLabel">크루의 정보를 확인하세요</h5>
+                    <h5 class="modal-title" id="crewInfoModalLabel2"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -298,45 +296,56 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="city" class="form-label">도시</label>
-                            <select class="form-control text-center" id="city" name="city">
-                                <option value="지역선택">지역선택</option>
+                            <select class="form-control text-center" id="city2" name="city" onchange="select_box_change3('2');">
+                                <option value="" selected>지역</option> <!-- 기본으로 선택 -->
+                                <option value="" selected>전체</option>
                                 <option value="서울">서울</option>
+                                <option value="경기">경기</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>
+                                <option value="인천">인천</option>
+                                <option value="광주">광주</option>
+                                <option value="대전">대전</option>
+                                <option value="울산">울산</option>
+                                <option value="세종">세종</option>
+                                <option value="강원">강원</option>
+                                <option value="충북">충북</option>
+                                <option value="충남">충남</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남</option>
+                                <option value="경북">경북</option>
+                                <option value="경남">경남</option>
+                                <option value="제주">제주</option>
                             </select>
                         </div>
                         <div class="col">
                             <label for="region" class="form-label">지역</label>
-                            <select class="form-control text-center" id="region" name="region">
-                                <option value="상세지역">상세지역</option>
-                                <option value="강남">강남</option>
-                                <option value="서초">서초</option>
-                                <option value="종로">종로</option>
+                            <select class="form-control text-center" id="region2" name="region">
                             </select>
                         </div>
                     </div>
                     <h5 class="form-label">주요 나이대</h5>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="age10" name="age[]" value="10대" />
+                        <input type="checkbox" id="age10_2" name="age[]2" value="10대" />
                         <label for="age10">10대</label>
-                        <input type="checkbox" id="age20" name="age[]" value="20대" />
+                        <input type="checkbox" id="age20_2" name="age[]2" value="20대" />
                         <label for="age20">20대</label>
-                        <input type="checkbox" id="age30" name="age[]" value="30대" />
+                        <input type="checkbox" id="age30_2" name="age[]2" value="30대" />
                         <label for="age30">30대</label>
-                        <input type="checkbox" id="age40" name="age[]" value="40대" />
+                        <input type="checkbox" id="age40_2" name="age[]2" value="40대" />
                         <label for="age40">40대</label>
-                        <input type="checkbox" id="age50" name="age[]" value="50대" />
+                        <input type="checkbox" id="age50_2" name="age[]2" value="50대" />
                         <label for="age50">50대</label>
-                        <input type="checkbox" id="age60" name="age[]" value="60대 이상" />
+                        <input type="checkbox" id="age60_2" name="age[]2" value="60대 이상" />
                         <label for="age60">60대 이상</label>
                     </div>
                     <h5 class="form-label">성별</h5>
                     <div class="radio-group">
-                        <input type="radio" id="male" name="gender" value="남자" />
+                        <input type="radio" id="male2" name="gender2" value="남자" />
                         <label for="male">남자</label>
-                        <input type="radio" id="female" name="gender" value="여자" />
+                        <input type="radio" id="female2" name="gender2" value="여자" />
                         <label for="female">여자</label>
-                        <input type="radio" id="both" name="gender" value="성별무관" />
+                        <input type="radio" id="both2" name="gender2" value="성별무관" />
                         <label for="both">성별무관</label>
                     </div>
                     <button type="button" class="custom-btn" id="nextBtn">다음</button>
@@ -346,82 +355,114 @@
     </div>
 
     <!-- 3번째 모달 -->
-    <div class="modal fade" id="thirdModal" tabindex="-1" aria-labelledby="thirdModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="thirdModalLabel">어떤 사람을 영입할까요?</h5>
-                    <button type="button" class="btn-close" onclick="confirmClose('thirdModal')"data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5 class="form-label">성별</h5>
-                    <div class="radio-group">
-                        <input type="radio" id="male" name="gender" value="남자" />
-                        <label for="male">남자</label>
-                        <input type="radio" id="female" name="gender" value="여자" />
-                        <label for="female">여자</label>
-                        <input type="radio" id="both" name="gender" value="" />
-                        <label for="both">성별무관</label>
+    <form id="crew_write_add" enctype="multipart/form-data">
+        <input type=hidden id='third_crew_code' name='third_crew_code'>
+        <div class="modal fade" id="thirdModal" tabindex="-1" aria-labelledby="thirdModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="thirdModalLabel">어떤 사람을 영입할까요?</h5>
+                        <button type="button" class="btn-close" onclick="confirmClose('thirdModal')"data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <h5 class="form-label">성별</h5>
+                        <div class="radio-group">
+                            <input type="radio" id="male3" name="gender3" value="남자" />
+                            <label for="male3">남자</label>
+                            <input type="radio" id="female3" name="gender3" value="여자" />
+                            <label for="female3">여자</label>
+                            <input type="radio" id="both3" name="gender3" value="성별무관" />
+                            <label for="both3">성별무관</label>
+                        </div>
 
-                    <h5 class="form-label">나이 (중복 가능)</h5>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="age10" name="age[]" value="10대" />
-                        <label for="age10">10대</label>
-                        <input type="checkbox" id="age20" name="age[]" value="20대" />
-                        <label for="age20">20대</label>
-                        <input type="checkbox" id="age30" name="age[]" value="30대" />
-                        <label for="age30">30대</label>
-                        <input type="checkbox" id="age40" name="age[]" value="40대" />
-                        <label for="age40">40대</label>
-                        <input type="checkbox" id="age50" name="age[]" value="50대" />
-                        <label for="age50">50대</label>
-                        <input type="checkbox" id="age60" name="age[]" value="60대 이상" />
-                        <label for="age60">60대 이상</label>
-                    </div>
+                        <h5 class="form-label">나이 (중복 가능)</h5>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="age10_3" name="age[]3" value="10대" />
+                            <label for="age10_3">10대</label>
+                            <input type="checkbox" id="age20_3" name="age[]3" value="20대" />
+                            <label for="age20_3">20대</label>
+                            <input type="checkbox" id="age30_3" name="age[]3" value="30대" />
+                            <label for="age30_3">30대</label>
+                            <input type="checkbox" id="age40_3" name="age[]3" value="40대" />
+                            <label for="age40_3">40대</label>
+                            <input type="checkbox" id="age50_3" name="age[]3" value="50대" />
+                            <label for="age50_3">50대</label>
+                            <input type="checkbox" id="age60_3" name="age[]3" value="60대 이상" />
+                            <label for="age60_3">60대 이상</label>
+                        </div>
 
-                    <div class="btn-group mt-3">
-                        <button type="button" class="common-btn" id="prevBtnInThirdModal">뒤로</button>
-                        <button type="button" class="common-btn" id="nextBtnInThirdModal">다음</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 네 번째 모달 -->
-    <div class="modal fade" id="uploadTeamPhotoModal" tabindex="-1" aria-labelledby="uploadTeamPhotoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadTeamPhotoModalLabel">멤버 모집</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="confirmClose('uploadTeamPhotoModal')"aria-label="닫기"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="teamPhotoInput" class="form-label upload-box" id="photoUploadLabel" style="display:block; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
-                            팀 단체 사진 추가하기
-                            <input type="file" class="form-control" id="teamPhotoInput" accept="image/*" onchange="previewTeamPhoto(event)" style="display: none;">
-                        </label>
-                    </div>
-
-                    <div id="photoPreviewSection" style="display: none; position: relative;">
-                        <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 100%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
-                        <button type="button" class="btn delete-btn" id="deletePhotoBtn" onclick="deletePhoto()" style="position: absolute; top: 10px; left: 10px; z-index: 2; background-color: rgba(255, 255, 255, 0.7); border: none;">지우기</button>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="form-label">크루 소개</label>
-                        <textarea id="teamIntro" class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 200px;"></textarea>
-                    </div>
-
-                    <div class="btn-group mt-3">
-                        <button type="button" class="common-btn" id="prevBtnInCreateModal">뒤로</button>
-                        <button type="button" class="common-btn" id="submitCreateCrewBtn">등록하기</button>
+                        <div class="btn-group mt-3">
+                            <button type="button" class="common-btn" id="prevBtnInThirdModal">뒤로</button>
+                            <button type="button" class="common-btn" id="nextBtnInThirdModal">다음</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 네 번째 모달 -->
+        <div class="modal fade" id="uploadTeamPhotoModal" tabindex="-1" aria-labelledby="uploadTeamPhotoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadTeamPhotoModalLabel">멤버 모집</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="confirmClose('uploadTeamPhotoModal')"aria-label="닫기"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="teamPhotoInput" class="form-label upload-box" id="photoUploadLabel" style="display:block; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
+                                팀 단체 사진 추가하기
+                                <input type="file" class="form-control" id="teamPhotoInput" name="teamPhotoInput" accept="image/*" onchange="previewTeamPhoto(event)" style="display: none;">
+                            </label>
+                        </div>
+
+                        <div id="photoPreviewSection" style="display: none; position: relative;">
+                            <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 100%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
+                            <button type="button" class="btn delete-btn" id="deletePhotoBtn" onclick="deletePhoto()" style="position: absolute; top: 10px; left: 10px; z-index: 2; background-color: rgba(255, 255, 255, 0.7); border: none;">지우기</button>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label">크루 소개</label>
+                            <textarea id="teamIntro3" name='teamIntro3' class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 200px;"></textarea>
+                        </div>
+
+                        <div class="btn-group mt-3">
+                            <button type="button" class="common-btn" id="prevBtnInCreateModal">뒤로</button>
+                            <button type="button" class="common-btn" id="submitCreateCrewBtn" onClick='crew_write_add()'>등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+<!-- 내크루 모달 -->
+    <div class="modal fade" id="myCrewModal" tabindex="-1" aria-labelledby="myCrewModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered custom-modal-width">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="myCrewModalLabel">내 팀</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- 팀 리스트 -->
+            <ul class="team-list">
+              <!-- 팀 아이템 예시 -->
+              <li class="team-item">
+                <a class="team-link">
+                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <div class="team-name">선풍기</div>
+                </a>
+              </li>
+              <li class="team-item">
+                <a class="team-link">
+                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
+                  <div class="team-name">영현영선</div>
+                </a>
+              </li>
+              <!-- 다른 팀 아이템도 같은 구조로 추가 -->
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
 <script>
@@ -516,13 +557,11 @@
 
 
 
-    function select_box_change3() {
+    function select_box_change3(flag) {
 
-        $('#region').html(''); // 기존 내용을 초기화
+        $('select[name="region"]').html(''); // 기존 내용을 초기화
         var list = '<option value="">상세지역</option>'; // 기본 선택 옵션
-
-        var selectedCity = $('#city').val();
-
+        var selectedCity = flag=='1'?$('#city').val():$('#city2').val();
         // 각 지역에 맞는 상세 지역 리스트 추가
         if (selectedCity === '서울') {
             seoulDistricts.forEach(function(region) {
@@ -594,7 +633,7 @@
             });
         }
 
-        $('#region').append(list); // 추가된 옵션을 반영
+        $('select[name="region"]').append(list); // 추가된 옵션을 반영
     }
 
     function select_box_change2() {
@@ -721,12 +760,15 @@
                 orderby       : $('#orderby').val(),
                 gender        : $('#gender').val(),
                 age           : $('#age').val(),
+                addr          : $('#addr').val(),
                 addr_gu       : $('#addr_gu').val(),
                 searchWord    : $('#searchWord').val()
             },
             success: function(result) {
                 for(var i in result){
-                    list += '<li class="list_item">';
+  list += '<div class="list_wrapper">';
+                    list += ' <ul id="crew_list">';
+                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + ')">';
                     list += '   <div class="crew_profileimage">';
                     list += '       <div class="profileBox">';
                     list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
@@ -734,24 +776,26 @@
                     list += '   </div>';
                     list += '   <div class="crew_content">';
                     list += '       <div class="crew_title">';
-                    list += '           <span class="crewname"><b>'+result[i].crew_name+'</b></span>';
+                    list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>'+result[i].crew_name+'</b></span>';
                     list += '           <span class="count">🏃‍♀️'+result[i].num+'<span>';
                     list += '           <span class="count">멤버모집<span>';
                     list += '       </div>';
-                    list += '       <div>';
+                    list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
                     list += '          <span class="crewaddr">'+result[i].addr+'</span>&nbsp;&nbsp;&nbsp';
                     list += '          <span class="crewIntro">'+result[i].content+'</span>';
                     list += '       </div>';
-                    list += '       <div>';
+                    list += '       <div style="margin-top:3px; >';
                     list += '          <span class="crewhit">'+result[i].gender+'</span>&nbsp;&nbsp;&nbsp';
                     list += '          <span class="crewhit">'+result[i].age+'</span>';
                     list += '       </div>';
-                    list += '       <div>';
+                    list += '       <div style="margin-top:12px;">';
                     list += '           <span class="crewhit">조회수'+result[i].hits+'</span>&nbsp;&nbsp;&nbsp';
                     list += '         <span class="crewhit">신청'+ result[i].a_n+'</span>';
                     list += '       </div>';
-                    list += '   </div>';
-                    list += '</li>';
+                    list += '     </div>';
+                    list += '   </li>';
+                    list += '  </ul>';
+                    list += '</div>';
                 }
 
                 $('#crew_list').html('');
@@ -831,41 +875,66 @@
         $('#locationModal').modal('show');
     }
 
-    function submitCrewInfo() {
-        var form = $('#crewCreateForm')[0];
-        var formData = new FormData(form);
+function submitCrewInfo() {
+    var form = $('#crewCreateForm')[0];
+    var formData = new FormData(form);
 
-        // 이미지 파일이 있는지 확인
-        var teamImageFile = $('#teamEmblem').val();
+    // 이미지 파일이 있는지 확인
+    var teamImageFile = $('#teamEmblem').val();
 
-        // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
-        if (!teamImageFile) {
-            // 기본 이미지 경로를 추가
-            formData.append('teamEmblem', 'man1.png');
-        } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
-            alert('이미지파일만 업로드가 가능합니다.');
-            return false;
-        }
-
-        $.ajax({
-            url: '/crew/crew_add',
-            type: 'POST',
-            headers: {
-                Authorization: localStorage.getItem('Authorization')
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('크루가 성공적으로 생성되었습니다!');
-                $('#locationModal').modal('hide');
-            },
-            error: function(error) {
-                console.log(error);
-                alert('크루 생성 중 오류가 발생했습니다.');
-            }
-        });
+    // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
+    if (!teamImageFile) {
+        // 기본 이미지 경로를 추가
+        formData.append('teamEmblem', 'man1.png');
+    } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
+        alert('이미지파일만 업로드가 가능합니다.');
+        return false;
     }
+
+    // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+    var city = $('#city').val();
+    var ageChecked = $('input[name="age[]"]:checked').length > 0;
+    var genderChecked = $('input[name="gender"]:checked').length > 0;
+
+    if (!city) {
+        alert('활동하는 지역을 선택해주세요.');
+        return false;
+    }
+
+    if (!ageChecked) {
+        alert('주요 나이대를 선택해주세요.');
+        return false;
+    }
+
+    if (!genderChecked) {
+        alert('성별을 선택해주세요.');
+        return false;
+    }
+
+    // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+    $.ajax({
+        url: '/crew/crew_add',
+        type: 'POST',
+        headers: {
+            Authorization: localStorage.getItem('Authorization')
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+         if(response==1) alert('이미 존재하는 크루명입니다.');
+         else {
+            alert('크루가 성공적으로 생성되었습니다!');
+            $('#locationModal').modal('hide');
+         }
+        },
+        error: function(error) {
+            console.log(error);
+            alert('크루 생성 중 오류가 발생했습니다.');
+        }
+    });
+}
+
     function resetForm() {
         document.getElementById('crewCreateForm').reset();
         deletePreview(); // 지우기 함수 호출
@@ -873,22 +942,19 @@
         document.getElementById('region').value = "";
         document.querySelectorAll('input[name="age[]"]:checked').forEach(checkbox => checkbox.checked = false);
         document.querySelectorAll('input[name="gender"]:checked').forEach(radio => radio.checked = false);
+        document.querySelectorAll('input[name="age[]2"]:checked').forEach(checkbox => checkbox.checked = false);
+        document.querySelectorAll('input[name="gender2"]:checked').forEach(radio => radio.checked = false);
+        document.querySelectorAll('input[name="age[]3"]:checked').forEach(checkbox => checkbox.checked = false);
+        document.querySelectorAll('input[name="gender3"]:checked').forEach(radio => radio.checked = false);
         document.getElementById('teamIntro').value = '';
         document.getElementById('teamImage').src = '';
         document.getElementById('teamNameDisplay').textContent = '크루 이름';
     }
 
     $(document).ready(function() {
-        // 첫 번째 모달을 열 때마다 폼을 리셋
-        $('#createNewTeamBtn').on('click', function() {
-            resetForm(); // 폼 리셋
-            $('#createNewTeamModal').modal('hide');
-            $('#crewCreateModal').modal('show');
-        });
-
         // 크루 생성 모달을 열 때도 폼을 리셋
         $('#crewCreateModal').on('shown.bs.modal', function () {
-            resetForm();
+           // resetForm();
         });
     });
 
@@ -896,12 +962,6 @@
         $('#createNewTeamModal').on('shown.bs.modal', function () {
             console.log('첫 번째 모달이 열렸습니다.');
         });
-
-        $('#createNewTeamBtn').on('click', function() {
-            $('#createNewTeamModal').modal('hide');
-            $('#crewCreateModal').modal('show');
-        });
-
         $('#nextBtn').on('click', function() {
             $('#crewInfoModal').modal('hide');
             $('#thirdModal').modal('show');
@@ -922,39 +982,10 @@
             $('#thirdModal').modal('show');
         });
 
-        var crewInfoData = {
-            "1": { "city": "부산", "region": "강남", "ages": ["10대", "20대"], "gender": "여자" },
-            "2": { "city": "서울", "region": "서초", "ages": ["30대"], "gender": "남자" },
-            "3": { "city": "대구", "region": "종로", "ages": ["40대", "50대"], "gender": "성별무관" },
-            "4": { "city": "부산", "region": "강남", "ages": ["10대"], "gender": "여자" }
-        };
-
-        $('button.option-btn').on('click', function() {
-            var crewId = $(this).attr('id').split('_')[1];
-            var crewInfo = crewInfoData[crewId];
-            $('#city').val(crewInfo.city);
-            $('#region').val(crewInfo.region);
-
-            $('input[name="age[]"]').each(function() {
-                if (crewInfo.ages.includes($(this).val())) {
-                    $(this).prop('checked', true);
-                } else {
-                    $(this).prop('checked', false);
-                }
-            });
-
-            $('input[name="gender"]').each(function() {
-                if ($(this).val() === crewInfo.gender) {
-                    $(this).prop('checked', true);
-                }
-            });
-
-            $('#createNewTeamModal').modal('hide');
-            $('#crewInfoModal').modal('show');
-        });
     });
     function crew_page() {
         var list = '';
+        $('#crew_page').html('');
         $.ajax({
             url: '/crew/crew_page',
             type: 'POST',
@@ -971,7 +1002,7 @@
                         list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
                     }
                 }
-                list += '<button type="button" class="option-btn" id="createNewTeamBtn">새로운 팀 만들기</button>';
+                list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
                 $('#crew_page').append(list);
             },
             error: function(error) {
@@ -980,16 +1011,88 @@
         });
     }
     function crew_page_write(create_crew_code){
+        resetForm();
+        $('#third_crew_code').val(create_crew_code);
         $('#createNewTeamModal').modal('hide');
         $('#crewInfoModal').modal('show');
+        var crew_code = create_crew_code|0;
+        $.ajax({
+            url:'/crew/crew_page_write_detail',
+            type:'post',
+            async: false,
+            headers: {
+              Authorization: localStorage.getItem('Authorization')
+            },
+            data: {
+              create_crew_code:crew_code
+            },
+            success:function(result){
+               $('#city2').val(result[0].addr);
+               select_box_change3('2');
+               $('#region2').val(result[0].addr_gu);
+               var age_arr = result[0].age.split(',');
+               $('input[type="checkbox"][name="age[]2"]').prop('checked', false);//체크박스 초기화
+               for(var i in age_arr){
+                   $('input[name="age[]2"][value="'+age_arr[i]+'"]').prop('checked', true);
+               }
+               $('input[type="radio"][name="gender2"][value="'+result[0].gender+'"]').prop('checked', true);
+               $('#crewInfoModalLabel2').text(result[0].crew_name+'의 정보를 확인하세요')
+               $('#city2').prop('disabled', true);
+               $('#region2').prop('disabled', true);
 
+            },
+            error:function(e){
+            }
+        });
 
     }
 
     function crew_page_detail(create_crew_code) {
         $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code='+ create_crew_code;
-
+    }
+    function crew_add_popup(){
+        resetForm(); // 폼 리셋
+        $('#createNewTeamModal').modal('hide');
+        $('#crewCreateModal').modal('show');
     }
 
+function crew_write_add() {
+       var form = $('#crew_write_add')[0];
+       var formData = new FormData(form);
+        clog(form);
+       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+       var genderChecked = $('input[name="gender3"]:checked').length > 0;
+       if (!ageChecked) {
+           alert('주요 나이대를 선택해주세요.');
+           return false;
+       }
+       if (!genderChecked) {
+           alert('성별을 선택해주세요.');
+           return false;
+       }
+       // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+       $.ajax({
+           url: '/crew/crew_write_add',
+           type: 'POST',
+           headers: {
+               Authorization: localStorage.getItem('Authorization')
+           },
+           data: formData,
+           processData: false,
+           contentType: false,
+           success: function(response) {
+               alert('크루 모집이 성공적으로 생성되었습니다!');
+               $('#uploadTeamPhotoModal').modal('hide');
+               crew_list_select(0)
+           },
+           error: function(error) {
+               console.log(error);
+               alert('크루 모집 중 오류가 발생했습니다.');
+           }
+       });
+   }
+
 </script>
+

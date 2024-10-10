@@ -1,6 +1,26 @@
-var username1
-var usercode1
-var ToKen
+var username1;
+var usercode1;
+var ToKen;
+window.onload=function(){
+    ToKen=localStorage.getItem("Authorization");
+    if (ToKen!=null &&ToKen!="" ){
+        ToKen=ToKen.substring(7);}
+    $.ajax({
+        url:"/setToKengetUsers",
+        type:"POST",
+        data:{
+            ToKen:ToKen
+        },
+        success:function(r){
+           // alert("Test");
+            usercode1=r.mvo.usercode;
+            username1=r.mvo.username;
+
+        }
+
+    });
+
+}
 
 $(window).on('scroll',function(){
     if($(window).scrollTop()){
@@ -13,26 +33,10 @@ function openLoginPopup() {
     window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }
 $(document).ready(function() {
- ToKen=localStorage.getItem("Authorization");
-    if (ToKen!=null &&ToKen!="" ){
-        ToKen=ToKen.substring(7);}
-    $.ajax({
-        url:"/setToKengetUsers",
-        type:"POST",
-        data:{
-            ToKen:ToKen
-        },
-        success:function(r){
-           // alert("Test");
-            // 유저정보 담기
-            usercode1=r.mvo.usercode;
-            username1=r.mvo.username;
 
-        }
 
-    });
     // a 태그 클릭 이벤트 핸들러
-    $('.memus').click(function (event) {
+    $('#menu').click(function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
         alert($(this).attr("href"));
         if($(this).attr("href")!=null){
@@ -47,13 +51,13 @@ $(document).ready(function() {
                 window.location.href = $(event.currentTarget).attr('href');
             },error:function (e){
                 console.error(e);
+
             }
 
         });
         }// 테스트용으로 클릭 확인
     });
-
-    $(document).on('click', '.menus', function (event) {
+    /*$(document).on('click', '.menus', function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
         alert($(this).attr("href"));
         if ($(this).attr("href") != null) {
@@ -72,6 +76,6 @@ $(document).ready(function() {
                 }
             });
         }
-    });
-});
+    });*/
 
+});
