@@ -87,7 +87,7 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         try {
             a=service.crew_name_check(crew_name);
-            if(a==1) return 0;
+            if(a==1) return 1;
             user_name=jwtUtil.setTokengetUsername(token);
             user_code = service.usercodeSelect(user_name);
             UUID uuid = UUID.randomUUID();
@@ -106,6 +106,7 @@ public class CrewController {
             a=0;
             e.printStackTrace();
         }
+        System.out.println("성고고고공!!!>"+a);
         return a; // 성공적으로 생성된 경우 1 반환
     }
     @PostMapping("/crew_page")

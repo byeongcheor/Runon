@@ -42,7 +42,7 @@ body{
 .content_right {
    margin:20px 0;
    width: 100%;
-   height: auto; /* 높이를 내용에 맞춰 자동 조정 */
+   height: 100%; /* 높이를 내용에 맞춰 자동 조정 */
    padding: 20px;
    overflow: hidden; /* 내용이 넘치지 않도록 설정 */
    background-color: white; /* 배경색을 흰색으로 설정 */
@@ -52,8 +52,7 @@ body{
 
 .section1 {
     background-color: white;
-    min-height: 650px; /* 최소 높이 설정, 내용에 따라 확장 가능 */
-    margin-bottom: 10px;
+    min-height: 400px; /* 최소 높이 설정, 내용에 따라 확장 가능 */
     background-color: white;
     overflow: hidden; /* 내용이 넘치지 않도록 설정 */
 }
@@ -68,7 +67,6 @@ body{
 
 .team-header {
     display: flex;
-    align-items: center;
     margin-bottom: 10px;
 }
 
@@ -79,7 +77,7 @@ body{
 }
 
 .team-emblem {
-    margin-right: 10px;
+   margin-right:100px;
 }
 
 .emblem-wrapper {
@@ -209,17 +207,18 @@ modal-title {
 }
 
 .modal-content {
-    height: 60vh; /* 높이를 화면의 80%로 설정 */
+    height: 65vh; /* 높이를 화면의 80%로 설정 */
     border-radius: 10px; /* 테두리 둥글게 설정 */
 }
 .modal-body {
-    padding: 20px;
+    padding: 10px;
     background-color: white;
     height:400px;
     text-align: left;
 }
 .modal-header {
-    border-bottom: none; /* 헤더의 하단 경계선 제거 */ㄴㄴ
+    border-bottom: none; /* 헤더의 하단 경계선 제거 */
+    margin-left:5px;
 }
 
 .modal-footer {
@@ -287,16 +286,30 @@ modal-title {
     display: flex;
     flex-direction: column;
     width: 100%; /* 부모 요소의 전체 너비 */
-    height: auto; /* 높이를 내용에 맞게 자동 조절 */
+    padding:10px;/* 높이를 내용에 맞게 자동 조절 */
+
 }
 
+.text-wrapper {
+    width: 100%; /* 전체 너비로 설정 */
+    background-color: #fff; /* 배경색 */
+    color: #333;
+    font-size: 16px;
+    line-height: 26px;
+    min-height: 400px;
+    overflow: hidden;
+    font-family: inherit !important;
+    white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
+}
 .image-wrapper {
     width: 100%;
     height: auto; /* 높이를 자동으로 설정하여 이미지가 겹치지 않도록 */
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding: 0;
 }
 .responsive-image {
-    width: 100%;
+    width: 400px;
     height: auto; /* 이미지의 높이도 내용에 맞게 조정되도록 설정 */
     object-fit: cover; /* 이미지가 div에 맞게 조정되도록 설정 */
 }
@@ -308,22 +321,9 @@ modal-title {
 
 
 
-
-.text-wrapper {
-    width: 100%; /* 전체 너비로 설정 */
-    padding: 20px;
-    background-color: #fff; /* 배경색 */
-    color: #333;
-    font-size: 16px;
-    line-height: 26px;
-    min-height: 120px;
-    margin: 20px 0; /* 위아래 여백 추가 */
-    overflow: auto; /* 텍스트가 길어지면 자동으로 높이 조정 */;
-}
-
 .extra-info {
     font-size: 14px;
     line-height: 120%;
     color: #727f88;
-    margin: 20px;
+    margin-top:20px;
 }

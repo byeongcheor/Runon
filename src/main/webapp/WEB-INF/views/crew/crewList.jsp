@@ -31,7 +31,6 @@
             </ul>
         </div>
     </div>
-
     <div class="crew_search">
         <div class="searchForm">
             <div class="search-left">
@@ -118,7 +117,6 @@
             </ul>
         </div>
     </div>
-
     <!-- 페이징 -->
     <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
         <!-- 이전페이지 -->
@@ -877,65 +875,66 @@
         $('#locationModal').modal('show');
     }
 
-    function submitCrewInfo() {
-       var form = $('#crewCreateForm')[0];
-       var formData = new FormData(form);
+function submitCrewInfo() {
+    var form = $('#crewCreateForm')[0];
+    var formData = new FormData(form);
 
-       // 이미지 파일이 있는지 확인
-       var teamImageFile = $('#teamEmblem').val();
+    // 이미지 파일이 있는지 확인
+    var teamImageFile = $('#teamEmblem').val();
 
-       // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
-       if (!teamImageFile) {
-           // 기본 이미지 경로를 추가
-           formData.append('teamEmblem', 'man1.png');
-       } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
-           alert('이미지파일만 업로드가 가능합니다.');
-           return false;
-       }
+    // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
+    if (!teamImageFile) {
+        // 기본 이미지 경로를 추가
+        formData.append('teamEmblem', 'man1.png');
+    } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
+        alert('이미지파일만 업로드가 가능합니다.');
+        return false;
+    }
 
-       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-       var city = $('#city').val();
-       var ageChecked = $('input[name="age[]"]:checked').length > 0;
-       var genderChecked = $('input[name="gender"]:checked').length > 0;
+    // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+    var city = $('#city').val();
+    var ageChecked = $('input[name="age[]"]:checked').length > 0;
+    var genderChecked = $('input[name="gender"]:checked').length > 0;
 
-       if (!city) {
-           alert('활동하는 지역을 선택해주세요.');
-           return false;
-       }
+    if (!city) {
+        alert('활동하는 지역을 선택해주세요.');
+        return false;
+    }
 
-       if (!ageChecked) {
-           alert('주요 나이대를 선택해주세요.');
-           return false;
-       }
+    if (!ageChecked) {
+        alert('주요 나이대를 선택해주세요.');
+        return false;
+    }
 
-       if (!genderChecked) {
-           alert('성별을 선택해주세요.');
-           return false;
-       }
+    if (!genderChecked) {
+        alert('성별을 선택해주세요.');
+        return false;
+    }
 
-       // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
-       $.ajax({
-           url: '/crew/crew_add',
-           type: 'POST',
-           headers: {
-               Authorization: localStorage.getItem('Authorization')
-           },
-           data: formData,
-           processData: false,
-           contentType: false,
-           success: function(response) {
-            if(response>0) alert('이미 존재하는 크루명입니다.');
-            else {
-               alert('크루가 성공적으로 생성되었습니다!');
-               $('#locationModal').modal('hide');
-            }
-           },
-           error: function(error) {
-               console.log(error);
-               alert('크루 생성 중 오류가 발생했습니다.');
-           }
-       });
-   }
+    // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+    $.ajax({
+        url: '/crew/crew_add',
+        type: 'POST',
+        headers: {
+            Authorization: localStorage.getItem('Authorization')
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+         if(response==1) alert('이미 존재하는 크루명입니다.');
+         else {
+            alert('크루가 성공적으로 생성되었습니다!');
+            $('#locationModal').modal('hide');
+         }
+        },
+        error: function(error) {
+            console.log(error);
+            alert('크루 생성 중 오류가 발생했습니다.');
+        }
+    });
+}
+
     function resetForm() {
         document.getElementById('crewCreateForm').reset();
         deletePreview(); // 지우기 함수 호출
@@ -955,7 +954,7 @@
     $(document).ready(function() {
         // 크루 생성 모달을 열 때도 폼을 리셋
         $('#crewCreateModal').on('shown.bs.modal', function () {
-            resetForm();
+           // resetForm();
         });
     });
 

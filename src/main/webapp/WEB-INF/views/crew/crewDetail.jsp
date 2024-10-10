@@ -64,7 +64,6 @@
                     <div class="bottom-button">
                         <button class="action-button wide" data-bs-toggle="modal" data-bs-target="#joinModal" id="crew_request_btn">가입 신청하기</button>
                         <button class="action-button wide" data-bs-dismiss="modal" id="crew_request_delete" onClick="crew_join_delete();">가입 취소하기</button>
-
                     </div>
                 </div>
             </div>
@@ -74,50 +73,11 @@
                         <div class="image-wrapper">
                             <img id= 'content_img'
                                 src="/img/러닝고화질.jpg"
-                                alt="Sample Image"
                                 class="responsive-image"
                             />
                         </div>
-                        <div class="text-wrapper">
-                        <span id='content'>
-                              안녕하십니까, 분당풋살팀입니다.
-                               현재 29명으로 구성된 팀이 운영되고 있으며 주 2회 자체 경기를 진행하고 있습니다.
-                               경우에 따라 매칭도 진행하고 있습니다.
-
-                               평일은 고정적인 요일은 없으며 참여 인원이 가장 많은 날을 투표를 통해 결정하고 있습니다.
-
-                               평일 진행 시간은 20:00~22:00이며 장소는 다이나믹실내풋살장 or 분당과 최대한 가까운 실내구장 에서 진행하고 있습니다.
-
-                               토요일은 고정적으로 오전 08:00 ~ 10:00 판교다산실외풋살장에서 진행하고 있습니다.
-
-                               저희 팀은 몸싸움을 하지 않고, 다치지 않게 경기를 진행하고 있습니다.
-                               또한 한 달에 몇 번 이상 참여해야 하는 규칙도 없습니다.
-                               다만 참여 인원 조사를 위한 카톡방에서의 투표에는 참여해 주셔야 합니다.
-
-                               풋살팀에 가입을 희망하시는 분은 010-6776-0197로 성함과 나이를 함께 보내주시면 카카오톡 단체 채팅방에 초대해 드리도록 하겠습니다.
-                               플랩으로 가입 신청하셔도 됩니다.
-
-                               풋살을 좋아하시는 분들은 언제든 연락 주시기 바랍니다.
-                             안녕하십니까, 분당풋살팀입니다.
-                              현재 29명으로 구성된 팀이 운영되고 있으며 주 2회 자체 경기를 진행하고 있습니다.
-                              경우에 따라 매칭도 진행하고 있습니다.
-
-                              평일은 고정적인 요일은 없으며 참여 인원이 가장 많은 날을 투표를 통해 결정하고 있습니다.
-
-                              평일 진행 시간은 20:00~22:00이며 장소는 다이나믹실내풋살장 or 분당과 최대한 가까운 실내구장 에서 진행하고 있습니다.
-
-                              토요일은 고정적으로 오전 08:00 ~ 10:00 판교다산실외풋살장에서 진행하고 있습니다.
-
-                              저희 팀은 몸싸움을 하지 않고, 다치지 않게 경기를 진행하고 있습니다.
-                              또한 한 달에 몇 번 이상 참여해야 하는 규칙도 없습니다.
-                              다만 참여 인원 조사를 위한 카톡방에서의 투표에는 참여해 주셔야 합니다.
-
-                              풋살팀에 가입을 희망하시는 분은 010-6776-0197로 성함과 나이를 함께 보내주시면 카카오톡 단체 채팅방에 초대해 드리도록 하겠습니다.
-                              플랩으로 가입 신청하셔도 됩니다.
-
-                              풋살을 좋아하시는 분들은 언제든 연락 주시기 바랍니다.
-                            </span>
-                        </div>
+                        <pre class="text-wrapper" id='content'>
+                        </pre>
                         <div class="extra-info">
                             <span id='hits'>조회 8</span> · <span id='crew_request'>신청 0</span>
                             <span style="float: right;" id='write_date'>업데이트 39분 전</span>
@@ -312,34 +272,39 @@ var usercode;
                 $('#team_info').text(result[0].a_s);
                 $('#gender').text(result[0].gender);
                 $('#age').text(result[0].age);
-                if(result[0].b_s!=''){
-                    $('#content_img').attr('src', '/crew_upload/'+result[0].b_s);
+
+                // 이미지가 있는 경우
+                if (result[0].b_s && result[0].b_s !== 'null') {
+                    $('#content_img').attr('src', '/crew_upload/' + result[0].b_s);
+                    $('.image-wrapper').show(); // 이미지가 있으면 보여줌
+                } else {
+                    $('.image-wrapper').hide(); // 이미지가 없으면 숨김
                 }
+
                 $('#content').text(result[0].content);
-                $('#hits').text('조회수 '+result[0].hits);
-                $('#crew_request').text('신청자수 '+result[0].a_n);
-                $('#write_date').text('업데이트 날짜'+result[0].writedate);
+                $('#hits').text('조회수 ' + result[0].hits);
+                $('#crew_request').text('신청자수 ' + result[0].a_n);
+                $('#write_date').text('업데이트    ' + result[0].writedate);
+
                 usercode = result[0].b_n;
-                if(result[0].usercode == usercode){
+                if (result[0].usercode == usercode) {
                     $('#crew_request_btn').hide();
                     $('#crew_request_delete').hide();
-                }
-                else{
+                } else {
                     $('#update_btn').hide();
                     $('#delete_btn').hide();
-                    if(result[0].c_n>0){
+                    if (result[0].c_n > 0) {
                         $('#crew_request_delete').show();
                         $('#crew_request_btn').hide();
-                    }
-                    else{
+                    } else {
                         $('#crew_request_delete').hide();
                         $('#crew_request_btn').show();
                     }
                 }
             },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
+error: function(e) {
+    console.error('Error: ', e);
+}
         });
     }
 
@@ -358,7 +323,7 @@ var usercode;
                 $('#crew_request_delete').show();
                 $('#crew_request_btn').hide();
                 if(result>0) alert('가입신청이 완료되었습니다.')
-                else alert('이미 가입신청 되어있습니다.');
+                //else alert('이미 가입신청 되어있습니다.');
             },
             error: function(e) {
                 console.error('Error: ', e);

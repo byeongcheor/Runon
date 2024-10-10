@@ -148,3 +148,7 @@
      max-height: 200px; /* 필요에 따라 최대 높이 설정 */
      overflow-y: auto; /* 스크롤 가능하도록 */
  }
+
+ .list_item {
+     cursor: pointer; /* 마우스를 올렸을 때 손 모양으로 변경 */
+ }
