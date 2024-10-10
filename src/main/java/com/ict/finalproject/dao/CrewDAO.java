@@ -19,7 +19,7 @@ public interface CrewDAO {
     public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content);
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
-    public int join_before_select(int user_code, int crewCode);
+    public int join_before_select(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
 
 

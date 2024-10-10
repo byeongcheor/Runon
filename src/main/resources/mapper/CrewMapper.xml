@@ -30,19 +30,19 @@
     </select>
 
     <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code,a.crew_name,
-               (select count(crew_write_code)from crew_write where create_crew_code=a.create_crew_code)as a_n
-        from   create_crew_tbl a
+        select a.create_crew_code,a.crew_name,b.crew_write_code as a_n
+        from   create_crew_tbl a, crew_write b
         where  a.usercode = ${param1}
+        and    a.create_crew_code=b.create_crew_code
     </select>
 
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content
+        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
         ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code) as a_n
         from  create_crew_tbl a, crew_write b
         where a.create_crew_code = b.create_crew_code
-        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code
+        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code,b.crew_write_code
         order by b.writedate desc
         limit 10 offset #{offset}
     </select>

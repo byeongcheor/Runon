@@ -247,13 +247,11 @@
 <script>
 var clog = console.log;
 var Authorization = localStorage.getItem("Authorization");
-var writeCrewCode = ${create_crew_code};
-//var crewWriteCode = ${crew_write_code};
-
-
+const urlParams = new URLSearchParams(window.location.search);
+const create_crew_code = urlParams.get('create_crew_code');
+const crew_write_code = urlParams.get('crew_write_code');
 var usercode;
     $(document).ready(function() {
-
         crew_detail_select();
         addr_select_draw('city');//select 박스 그리기
         $('#city').on('change', function() {
@@ -268,7 +266,7 @@ var usercode;
             async: false,
             data: {
                 Authorization : Authorization,
-                writeCrewCode : writeCrewCode
+                create_crew_code : create_crew_code
             },
             success: function(result) {
                 $('#crew_img').attr('src', '/crew_upload/'+result[0].logo);
@@ -320,7 +318,7 @@ error: function(e) {
             async: false,
             data: {
                 Authorization : Authorization,
-                writeCrewCode : writeCrewCode,
+                create_crew_code : create_crew_code,
                 join_content       : $('#join_content').val()
             },
             success: function(result) {
@@ -342,7 +340,7 @@ error: function(e) {
             async: false,
             data: {
                 Authorization : Authorization,
-                writeCrewCode : writeCrewCode
+                create_crew_code : create_crew_code
             },
             success: function(result) {
                 $('#crew_request_delete').hide();
@@ -387,7 +385,6 @@ function user_check() {
     const myModal = new bootstrap.Modal(document.getElementById('joinModal'), {
         keyboard: false
     });
-
     // AJAX 요청
     $.ajax({
         url: '/crew/user_check',
@@ -395,7 +392,7 @@ function user_check() {
         async: false,
         data: {
               Authorization : Authorization,
-              writeCrewCode : writeCrewCode
+              crew_write_code : crew_write_code
         },
         success: function(response) {
             if (response != 1) {

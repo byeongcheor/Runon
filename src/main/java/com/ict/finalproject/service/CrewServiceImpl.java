@@ -50,9 +50,9 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int join_before_select(int user_code, int crewCode)
+    public int join_before_select(int user_code, int crewWriteCode)
     {
-        return dao.join_before_select(user_code, crewCode);
+        return dao.join_before_select(user_code, crewWriteCode);
     }
 
     @Override

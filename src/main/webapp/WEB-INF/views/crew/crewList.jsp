@@ -87,7 +87,7 @@
         <div class="list_wrapper">
             <ul id="crew_list">
                 <c:forEach var="cvo" items="${list}">
-                    <li class="list_item" onClick="crew_page_detail(${cvo.create_crew_code})">
+                    <li class="list_item" onClick="crew_page_detail(${cvo.create_crew_code},${cvo.crew_write_code})">
                         <div class="crew_profileimage">
                             <div class="profileBox">
                                 <img src="/crew_upload/${cvo.logo}" class="profileImg">
@@ -768,7 +768,7 @@
                 for(var i in result){
   list += '<div class="list_wrapper">';
                     list += ' <ul id="crew_list">';
-                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + ')">';
+                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + '&crewWriteCode=' + result[i].crewWriteCode +')">';
                     list += '   <div class="crew_profileimage">';
                     list += '       <div class="profileBox">';
                     list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
@@ -998,8 +998,8 @@ function submitCrewInfo() {
                 for (var i in response) {
                     if (response[i].a_n == 0) {
                         list += '<button type="button" class="option-btn" onClick="crew_page_write(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 멤버 모집 시작하기</button>';
-                    } else if (response[i].a_n == 1) {
-                        list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
+                    } else if (response[i].a_n > 0) {
+                        list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].a_n + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
                     }
                 }
                 list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
@@ -1047,9 +1047,9 @@ function submitCrewInfo() {
 
     }
 
-    function crew_page_detail(create_crew_code) {
+    function crew_page_detail(create_crew_code, crew_write_code) {
         $('#createNewTeamModal').modal('hide');
-        window.location.href = '/crew/crewDetail?create_crew_code='+ create_crew_code;
+        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
     }
     function crew_add_popup(){
         resetForm(); // 폼 리셋

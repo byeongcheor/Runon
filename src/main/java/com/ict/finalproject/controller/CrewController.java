@@ -177,14 +177,15 @@ public class CrewController {
 ////////////////////////////////////////////////////디테일/////////////////////////////////////////////
     //크루모집디테일
     @GetMapping("/crewDetail")
-    public String crewDetail(int create_crew_code, Model model){
+    public String crewDetail(int create_crew_code,int crew_write_code,  Model model){
         model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("crew_write_code", crew_write_code);
         return "crew/crewDetail";
     }
 
     @PostMapping("/detail")
     @ResponseBody
-    public List<CrewVO> crew_write_detail_select(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode) {
+    public List<CrewVO> crew_write_detail_select(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int crewCode) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
@@ -200,7 +201,7 @@ public class CrewController {
 
     @PostMapping("/join_write")
     @ResponseBody
-    public int join_write(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode,String join_content) {
+    public int join_write(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int crewCode,String join_content) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
@@ -219,7 +220,7 @@ public class CrewController {
     }
     @PostMapping("/join_delete")
     @ResponseBody
-    public int join_delete(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode,String join_content) {
+    public int join_delete(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int crewCode,String join_content) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
@@ -235,14 +236,14 @@ public class CrewController {
 
     @PostMapping("/user_check")
     @ResponseBody
-    public int Joinuser_check(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode) {
+    public int Joinuser_check(@RequestParam("Authorization")String token,@RequestParam("crew_write_code") int crew_write_code) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         //가입신청 중복 확인하기
         int a=0;
         try {
-            a = service.join_before_select(user_code,crewCode);
+            a = service.join_before_select(user_code,crew_write_code);
 
         } catch (Exception e) {
             e.printStackTrace();
