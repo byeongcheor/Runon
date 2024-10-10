@@ -150,14 +150,21 @@
             data: {usercode:usercode1},
             success: function(r){
                 if(r.exists){
-                    var data22=r.data;
+                    var datas=r.data;
                     alert("기존에 작성한 신청서가 있습니다.")
                     console.log(r.data);
                     var modal = document.getElementById("editMarathonFormModal");
                     if(modal){
-                        document.getElementById("rname").value = r.data.name;
-                        document.getElementById("rtel").value = r.data.name;
-                        document.getElementById("rname").value = r.data.name;
+                        document.getElementById("rname").value = datas.name;
+                        document.getElementById("rtel").value = datas.tel;
+                        document.getElementById("raddr").value = datas.addr;
+                        document.getElementById("raddr_details").value = datas.addr_details;
+                        document.getElementById("rgender").value = datas.gender;
+                        document.getElementById("rbirth_date").value = datas.birth_date;
+                        document.getElementById("rsize").value = datas.size;
+                        document.getElementById("rterms_agreement").value = datas.terms_agreement;
+                        document.getElementById("rprivacy_consent").value = datas.privacy_consent;
+                        document.getElementById("rmedia_consent").value = datas.media_consent;
                         modal.style.display = "block";
                     }
 
@@ -170,16 +177,7 @@
             }
         })
     }
-    //마라톤 수정/삭제 모달열기
-    // function openEditMarathonFormModal(data){
-    //     console.log("11"+data);
-    //     var modal = document.getElementById("editMarathonFormModal");
-    //     if(modal){
-    //         document.getElementById("name").value = data.name;
-    //
-    //         modal.style.display = "modal";
-    //     }
-    // }
+
     //마라톤 신청서 작성폼 전송
     function submitMarathonForm(){
         const formData = {
@@ -229,21 +227,27 @@
         return false;
     }
     //마라톤 신청서 수정폼전송
-    function submitEditMarathonForm(){
-        var formData = {
-            name: document.getElementById("name").value,
-            tel: document.getElementById("tel").value,
-            addr: document.getElementById("addr").value,
-            addr_details: document.getElementById("addr_details").value,
-            gender: document.getElementById("gender").value,
-            birth_date: document.getElementById("birth_date").value,
-            size: document.getElementById("size").value,
-            Authorization: token
-        };
+    function submiteditMarathonForm(){
+        var name = document.getElementById('rname').value;
+        var tel= document.getElementById("rtel").value;
+        var addr= document.getElementById("raddr").value;
+        var addr_details= document.getElementById("raddr_details").value;
+        var gender= document.getElementById("rgender").value;
+        var birth_date= document.getElementById("rbirth_date").value;
+        var size= document.getElementById("rsize").value;
         $.ajax({
             url: "/mypage/updateMarathonForm",
             type: "post",
-            data: formData,
+            data: {
+                usercode: usercode1,
+                name: name,
+                tel: tel,
+                addr: addr,
+                addr_details: addr_details,
+                gender: gender,
+                birth_date: birth_date,
+                size: size
+            },
             success: function(r){
                 alert("신청서가 수정되었습니다.");
                 location.reload();
@@ -251,14 +255,32 @@
                 alert("신청서 수정에 실패했습니다.");
                 console.log(e);
             }
-        })
+        });
+        return false;
     }
 
     //마라톤신청서삭제
     function deleteMarathonForm(){
+        var name = document.getElementById('rname').value;
+        var tel= document.getElementById("rtel").value;
+        var addr= document.getElementById("raddr").value;
+        var addr_details= document.getElementById("raddr_details").value;
+        var gender= document.getElementById("rgender").value;
+        var birth_date= document.getElementById("rbirth_date").value;
+        var size= document.getElementById("rsize").value;
         $.ajax({
             url: "/mypage/deleteMarathonForm",
             type: "post",
+            data:{
+                usercode: usercode1,
+                name: name,
+                tel: tel,
+                addr: addr,
+                addr_details: addr_details,
+                gender: gender,
+                birth_date: birth_date,
+                size: size
+            },
             success: function(r){
                 alert("신청서가 삭제되었습니다.");
                 location.reload();
@@ -267,7 +289,6 @@
                 console.log(e);
             }
         })
-
     }
     // 회원탈퇴모달 닫기
     function closeDeleteProfileModal() {
@@ -677,7 +698,7 @@
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeEditMarathonFormModal()">&times;</span>
             <h2 style="text-align: center">마라톤신청서 수정</h2>
-            <form onsubmit="return submiteditMarathonForm()" method="POST">
+            <form action="/" onsubmit="return submiteditMarathonForm()" method="POST">
                 <div>
                     <label for="name">이름:</label>
                     <input type="text" id="rname" name="name" maxlength="30" required />

@@ -18,6 +18,9 @@ public interface MypageService {
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성
     public void createMarathonForm(MarathonFormVO marathonVO);
+    public void deleteMarathonForm(int usercode);
+    public int updateMarathonForm(MarathonFormVO marathonVO);
+
     public List<CertificateVO> selectCertificateAll(String username);
     public void updateCertificate(CertificateVO certificate);
     public int deleteCertificate(int certificate_code);
