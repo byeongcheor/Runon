@@ -63,12 +63,12 @@ public class CrewController {
     @ResponseBody
     public List<CrewVO> search_crewList(
             @RequestParam("Authorization")String token,
-            int page, String orderby, String gender , String age, String addr_gu, String searchWord, Model model) {
+            int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord, Model model) {
         token=token.substring("Bearer ".length());
-        List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr_gu, searchWord);
+        List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);
         return list;
     }
-    @Value("${file.upload-dir}")
+    @Value("${file.upload-dir_crew}")
     private String uploadDir;
 
     @PostMapping("/crew_add")
@@ -86,6 +86,8 @@ public class CrewController {
         String fileName = "man1.png";
         token=token.substring("Bearer ".length());
         try {
+            a=service.crew_name_check(crew_name);
+            if(a==1) return 1;
             user_name=jwtUtil.setTokengetUsername(token);
             user_code = service.usercodeSelect(user_name);
             UUID uuid = UUID.randomUUID();
@@ -104,6 +106,7 @@ public class CrewController {
             a=0;
             e.printStackTrace();
         }
+        System.out.println("성고고고공!!!>"+a);
         return a; // 성공적으로 생성된 경우 1 반환
     }
     @PostMapping("/crew_page")
@@ -120,11 +123,112 @@ public class CrewController {
         }
         return crew_page;
     }
+
+    @PostMapping("/crew_page_write_detail")
+    @ResponseBody
+    public List<CrewVO> crew_page_write_detail(@RequestHeader(value = "Authorization", required = false) String token, @RequestParam(value = "create_crew_code", defaultValue = "0") int createCrewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_page_write_detail = null;
+        try {
+             crew_page_write_detail = service.crew_page_write_detail(createCrewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_page_write_detail;
+    }
+
+    @PostMapping("/crew_write_add")
+    @ResponseBody
+    public int crew_page_write_detail(
+            @RequestHeader(value = "Authorization", required = false) String token, // Authorization 헤더 받기
+            @RequestParam("third_crew_code") int third_crew_code,
+            @RequestParam("teamPhotoInput") MultipartFile[] teamPhotoInput,
+            @RequestParam("age[]3") String[] arr_age,
+            @RequestParam("gender3") String gender,
+            @RequestParam("teamIntro3") String content) {
+        int a=0;
+        String fileName = "";
+        token=token.substring("Bearer ".length());
+        try {
+            user_name=jwtUtil.setTokengetUsername(token);
+            user_code = service.usercodeSelect(user_name);
+            UUID uuid = UUID.randomUUID();
+            // 파일 업로드가 있는지 확인
+            if (teamPhotoInput != null && teamPhotoInput.length > 0 && !teamPhotoInput[0].isEmpty()) {
+                for (MultipartFile file : teamPhotoInput) {
+                    fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                    fileName = uuid.toString() + "_" + fileName;
+                    Path path = Paths.get(uploadDir + File.separator + fileName);
+                    Files.copy(file.getInputStream(), path);
+                }
+            }
+            String age = String.join(",", arr_age);
+            service.crew_write_add(third_crew_code, user_code, fileName, age, gender, content);
+        } catch (Exception e) {
+            a=0;
+            e.printStackTrace();
+        }
+        return a; // 성공적으로 생성된 경우 1 반환
+    }
+////////////////////////////////////////////////////디테일/////////////////////////////////////////////
     //크루모집디테일
     @GetMapping("/crewDetail")
     public String crewDetail(int create_crew_code, Model model){
         model.addAttribute("create_crew_code", create_crew_code);
         return "crew/crewDetail";
+    }
+
+    @PostMapping("/detail")
+    @ResponseBody
+    public List<CrewVO> crew_write_detail_select(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_write_detail = null;
+        try {
+            service.crew_write_hit_update(crewCode);
+            crew_write_detail=service.crew_write_detail_select(user_code,crewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_write_detail;
+    }
+
+    @PostMapping("/join_write")
+    @ResponseBody
+    public int join_write(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode,String join_content) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        //가입신청 중복 확인하기
+        int a=0;
+        try {
+            int b = service.crew_join_select(user_code,crewCode);
+            if (b>0) return 0;
+            service.crew_join_write(user_code,crewCode,join_content);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+
+    }
+    @PostMapping("/join_delete")
+    @ResponseBody
+    public int join_delete(@RequestParam("Authorization")String token,@RequestParam("writeCrewCode") int crewCode,String join_content) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        //가입신청 중복 확인하기
+        int a=0;
+        try {
+            service.crew_join_delete(user_code,crewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
     }
 
 }

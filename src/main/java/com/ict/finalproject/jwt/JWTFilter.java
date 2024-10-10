@@ -27,7 +27,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("수신확인" + request.getParameter("username"));
+
+
+        //System.out.println("수신확인" + request.getParameter("username"));
+
+
         //request에서 Authorization 헤더를 찾음
         String authorization= request.getHeader("Authorization");
 
@@ -50,7 +54,7 @@ public class JWTFilter extends OncePerRequestFilter {
             // 토큰 소멸 시간 검증
             if (jwtUtil.isExpired(token)) {
 
-                    filterChain.doFilter(request, response);
+                filterChain.doFilter(request, response);
 
                 return; // 메서드 종료
             }

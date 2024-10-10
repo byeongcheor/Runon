@@ -39,13 +39,13 @@ public class MemberVO {
     private String activation_date;
     private int point_code;
     private String nickname;
+    private String mate_popup_date;
 
     @Override
     public String toString() {
         return "MemberVO{" +
                 "usercode=" + usercode +
                 ", username='" + username + '\'' +
-
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 ", name='" + name + '\'' +
@@ -55,6 +55,9 @@ public class MemberVO {
                 ", birthdate='" + birthdate + '\'' +
                 ", gender='" + gender + '\'' +
                 ", tel='" + tel + '\'' +
+                ", tel1='" + tel1 + '\'' +
+                ", tel2='" + tel2 + '\'' +
+                ", tel3='" + tel3 + '\'' +
                 ", profile_img='" + profile_img + '\'' +
                 ", is_info_disclosure='" + is_info_disclosure + '\'' +
                 ", is_google='" + is_google + '\'' +
@@ -69,7 +72,16 @@ public class MemberVO {
                 ", activation_date='" + activation_date + '\'' +
                 ", point_code=" + point_code +
                 ", nickname='" + nickname + '\'' +
+                ", mate_popup_date='" + mate_popup_date + '\'' +
                 '}';
+    }
+
+    public String getMate_popup_date() {
+        return mate_popup_date;
+    }
+
+    public void setMate_popup_date(String mate_popup_date) {
+        this.mate_popup_date = mate_popup_date;
     }
 
     public String getNickname() {
