@@ -416,13 +416,13 @@
                         </div>
 
                         <div id="photoPreviewSection" style="display: none; position: relative;">
-                            <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 100%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
+                            <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 80%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
                             <button type="button" class="btn delete-btn" id="deletePhotoBtn" onclick="deletePhoto()" style="position: absolute; top: 10px; left: 10px; z-index: 2; background-color: rgba(255, 255, 255, 0.7); border: none;">지우기</button>
                         </div>
 
                         <div class="mt-3">
                             <label class="form-label">크루 소개</label>
-                            <textarea id="teamIntro3" name='teamIntro3' class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 200px;"></textarea>
+                            <textarea id="teamIntro3" name='teamIntro3' class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 300px;"></textarea>
                         </div>
 
                         <div class="btn-group mt-3">
