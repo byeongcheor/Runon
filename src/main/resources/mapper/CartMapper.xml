@@ -3,11 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.CartDAO">
-    <!-- 사용자의 장바구니 아이템 조회 -->
-    <select id="getCartItemsByUsername" parameterType="String" resultType="com.ict.finalproject.vo.CartVO">
-        SELECT * FROM cart_tbl WHERE usercode IN (
-        SELECT usercode FROM user_tbl WHERE username = #{username}
-        )
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username ='${param1}'
     </select>
-
+    <select id="getCartItemsByUserCode" resultType="com.ict.finalproject.vo.CartVO">
+        SELECT *
+        FROM cart_tbl
+        WHERE usercode = #{param1}
+    </select>
+    <select id="userselect" resultType="com.ict.finalproject.vo.CartVO">
+        select *
+        from   user_tbl
+        where  usercode =${param1}
+    </select>
 </mapper>

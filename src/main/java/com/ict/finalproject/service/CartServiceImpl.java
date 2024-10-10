@@ -14,7 +14,17 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public List<CartVO> getCartItemsByUsername(String username) {
-        return dao.getCartItemsByUsername(username);
+    public int usercodeSelect(String user_name) {
+        return dao.usercodeSelect(user_name);
+    }
+
+    @Override
+    public List<CartVO> getCartItemsByUserCode(int usercode) {
+        return dao.getCartItemsByUserCode(usercode);
+    }
+
+    @Override
+    public List<CartVO> userselect(int usercode) {
+        return dao.userselect(usercode);
     }
 }

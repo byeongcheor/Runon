@@ -28,6 +28,7 @@
             <input type='hidden' id=gender value=${uvo.gender}>
             <input type='hidden' id=birthdate value=${uvo.birthdate}>
             <input type='hidden' id=mate_popup_date value=${uvo.mate_popup_date}>
+            <input type='hidden' id=nickname value=${uvo.nickname}>
          </c:forEach>
     <div class="layout">
             <!-- 중앙 메인 콘텐츠 -->
@@ -103,28 +104,19 @@
             </div>
             </div>
             <!-- 오른쪽 채팅창 -->
-            <div class="chatbox">
-                <div class="chat-messages">
-                    <div class="chat-message">
-                        <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
-                        <div class="message-info">
-                            <span class="nickname">아카네</span>
-                            <p>안녕하세요</p>
-                        </div>
+                <div id="chatbox">
+
+                    <!-- 대화내용 -->
+                    <div id="taMsg">
+                        <!-- 여기에 메시지들이 표시됩니다 -->
                     </div>
-                    <div class="chat-message">
-                        <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
-                        <div class="message-info">
-                            <span class="nickname">쿠하</span>
-                            <p>러닝 메이트 구합니다.</p>
-                        </div>
+                    <!-- 메시지입력 -->
+
+                    <div class="chat-input">
+                        <input type="text" id="inputMsg" placeholder="채팅을 입력해 주세요">
+                        <button id="sendBtn">전송</button>
                     </div>
                 </div>
-                <div class="chat-input">
-                    <input type="text" placeholder="채팅을 입력해 주세요">
-                    <button>전송</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -199,82 +191,86 @@
 
 </body>
 <script>
-var clog = console.log;
-var now_personnel, new_personnel, intervalId;
-   //매칭룸코드
-var more = 0;
-var cnt  = 0;
-var accept_cnt = 0;
-var update_cnt = 0;
-var day7_check='N';
-var match_yn="${vo.match_yn}";
-var usercode=$('#usercode').val();
-var gender=$('#gender').val();
-var token = localStorage.getItem("Authorization");
+    var clog = console.log;
+    var now_personnel, new_personnel, intervalId;
+    //매칭룸코드
+    var more = 0;
+    var cnt  = 0;
+    var accept_cnt = 0;
+    var update_cnt = 0;
+    var day7_check='N';
+    var match_yn="${vo.match_yn}";
+    var usercode=$('#usercode').val();
+    var gender=$('#gender').val();
+    var token = localStorage.getItem("Authorization");
+    var nickname=$('#nickname').val();
+    let socket; // socket 객체
+    let stompClient; // stomp를 이용하여 서버와 메시지를 주고 받는다.
 
 
-$(document).ready(function() {
-    document.getElementById('mateMatchModal').style.display = 'none';
-    marathon_code();//내가 결제한 대회리스트 불러오기
-    setTimeout(function() {
-        if(match_yn>0){
-            match_view(match_yn);
-            match_view_start(match_yn);
-        }
-        else start_view();
-        popup_yn();//팝업 여부
-    }, 200);
-    $('.menu_select').text('');
-    $('.menu_select').text(' \u25BC');
-    setTimeout(function() {
-        // 드롭다운을 토글하는 함수
-        function toggleDropdown(box) {
-            $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
-            $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
-        }
 
-    // 옵션을 선택하는 함수
-    function selectOption(li, box) {
-        var selectedText = $(li).text(); // li의 텍스트를 가져옴
-        $(box).find('span:first').text(': '+selectedText); // 선택된 텍스트로 span 업데이트
-        $(box).removeClass('active'); // 드롭다운 닫기
-            // 선택된 li에 따라 다른 동작을 수행
-            var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
-            $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
-            $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
-            localStorage.setItem(box.attr('id'), selectedValue); // select-box의 ID를 키로 사용하여 값 저장
-        }
-
-    $('.select-box').each(function() {
-            var box = $(this);
-            var storedValue = localStorage.getItem(box.attr('id')); // 로컬 스토리지에서 값 불러오기
-            if (storedValue) {
-                var selectedOption = box.find("li[data-value='" + storedValue + "']");
-                var selectedText = selectedOption.text();
-                box.find('span:first').text(': ' + selectedText); // 선택된 텍스트로 span 업데이트
-                box.data('selected-value', storedValue); // 선택된 값 설정
+    $(document).ready(function() {
+        document.getElementById('mateMatchModal').style.display = 'none';
+        marathon_code();//내가 결제한 대회리스트 불러오기
+        setTimeout(function() {
+            if(match_yn>0){
+                match_view(match_yn);
+                match_view_start(match_yn);
             }
-
-            // 드롭다운 메뉴 클릭 시 값 선택 처리
-            box.find('.dropdown-menu li').on('click', function() {
-                selectOption(this, box); // li 선택 시 텍스트를 업데이트
-            });
-
-            // 드롭다운 토글
-            box.on('click', function() {
-                toggleDropdown(this);
-            });
-        });
-    }, 200);
-    if(match_yn==0){
+            else start_view();
+            popup_yn();//팝업 여부
+        }, 200);
         $('.menu_select').text('');
         $('.menu_select').text(' \u25BC');
-    }
-});
+        setTimeout(function() {
+            // 드롭다운을 토글하는 함수
+            function toggleDropdown(box) {
+                $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
+                $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+            }
+
+            // 옵션을 선택하는 함수
+            function selectOption(li, box) {
+                var selectedText = $(li).text(); // li의 텍스트를 가져옴
+                $(box).find('span:first').text(': '+selectedText); // 선택된 텍스트로 span 업데이트
+                $(box).removeClass('active'); // 드롭다운 닫기
+                // 선택된 li에 따라 다른 동작을 수행
+                var selectedValue = $(li).data('value'); // data-value 속성 값 가져오기
+                $(box).data('selected-value', selectedValue); // 선택된 값을 box의 data 속성에 저장
+                $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
+                localStorage.setItem(box.attr('id'), selectedValue); // select-box의 ID를 키로 사용하여 값 저장
+            }
+
+            $('.select-box').each(function() {
+                var box = $(this);
+                var storedValue = localStorage.getItem(box.attr('id')); // 로컬 스토리지에서 값 불러오기
+                if (storedValue) {
+                    var selectedOption = box.find("li[data-value='" + storedValue + "']");
+                    var selectedText = selectedOption.text();
+                    box.find('span:first').text(': ' + selectedText); // 선택된 텍스트로 span 업데이트
+                    box.data('selected-value', storedValue); // 선택된 값 설정
+                }
+
+                // 드롭다운 메뉴 클릭 시 값 선택 처리
+                box.find('.dropdown-menu li').on('click', function() {
+                    selectOption(this, box); // li 선택 시 텍스트를 업데이트
+                });
+
+                // 드롭다운 토글
+                box.on('click', function() {
+                    toggleDropdown(this);
+                });
+            });
+        }, 200);
+        if(match_yn==0){
+            $('.menu_select').text('');
+            $('.menu_select').text(' \u25BC');
+        }
+    });
 
 
     function match_view_start(match_yn){
-           intervalId = setInterval(function() {
+        intervalId = setInterval(function() {
             match_view(match_yn);
         }, 2000);
     }
@@ -282,53 +278,53 @@ $(document).ready(function() {
 
     function match_view(match_yn, flag){//선택한 인원수대로 매칭 자리만들기
         $.ajax({
-          url:'/mate/match_view',
-          type:'post',
-          async: false,
-          data:{
-           matching_room_code:match_yn //matching_room_code
-          },
-          success:function(result){
-               var length = result[0].buff_n;
+            url:'/mate/match_view',
+            type:'post',
+            async: false,
+            data:{
+                matching_room_code:match_yn //matching_room_code
+            },
+            success:function(result){
+                var length = result[0].buff_n;
 
-               for(var i in  result)
-               {
-                   if(accept_cnt != result[i].accept_cnt || update_cnt != result[i].update_cnt||flag=='F'){
-                       grid_draw(length,result);
-                       accept_cnt = result[i].accept_cnt;// Y한사람
-                       update_cnt = result[i].update_cnt;// 현재 입장한사람
-                   }
-              }
+                for(var i in  result)
+                {
+                    if(accept_cnt != result[i].accept_cnt || update_cnt != result[i].update_cnt||flag=='F'){
+                        grid_draw(length,result);
+                        accept_cnt = result[i].accept_cnt;// Y한사람
+                        update_cnt = result[i].update_cnt;// 현재 입장한사람
+                    }
+                }
 
-            // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
-            if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
+                // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
+                if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
 
-                      clearInterval(intervalId);
-                      mate_complite();
-                      showMatchCompleteModal();
+                    clearInterval(intervalId);
+                    mate_complite();
+                    showMatchCompleteModal();
+                }
+
+                if(cnt==0){
+                    match_view_start(match_yn);
+                    cnt++;
+                }
+            },
+            error:function(e){
             }
-
-               if(cnt==0){
-                   match_view_start(match_yn);
-                   cnt++;
-               }
-          },
-          error:function(e){
-          }
-       });
+        });
     }
 
     function ranking_more(){
-           more +=5;
-           clog(more);
-           if(more>20){$('#more').hide();}
-           $.ajax({
-              url:'/mate/more',
-              type:'post',
-              async: false,
-              data:{
-                 more:more
-              },success:function(result){
+        more +=5;
+        clog(more);
+        if(more>20){$('#more').hide();}
+        $.ajax({
+            url:'/mate/more',
+            type:'post',
+            async: false,
+            data:{
+                more:more
+            },success:function(result){
                 var list='';
                 for (var i in result) {
                     list+='<li>';
@@ -343,157 +339,157 @@ $(document).ready(function() {
                     list+='</li>';
                 }
                 $('.rank-list').append(list);
-              },
-              error:function(e){
+            },
+            error:function(e){
 
-              }
-           });
+            }
+        });
     }
 
     function profile_update(num) {//num은 칸에서의 내 위치의 번호
-            // 팝업 창의 너비와 높이 설정
-            var width = 920;
-            var height = 850;
+        // 팝업 창의 너비와 높이 설정
+        var width = 920;
+        var height = 850;
 
-            // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
-            var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
-            var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+        // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
+        var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
+        var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
 
-           // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
+        // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
 
-           var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn)+'&num=' + encodeURIComponent(num);
+        var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn)+'&num=' + encodeURIComponent(num);
 
-            // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
-            window.open(popupUrl, 'ProfileList',
+        // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
+        window.open(popupUrl, 'ProfileList',
             'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
 
     }
 
     function matching() {
-            var marathonValue = $('#marathonSelect').data('selected-value');
-            var participationCountValue = $('#participationCountSelect').data('selected-value');
-            var mateCountValue = $('#mateCountSelect').data('selected-value');
-            clog(marathonValue);
-            if(marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
-                // 모달 열기
-                showOptionSelectModal(); // 옵션 선택 모달을 호출
-                return false;
-            }
-            $.ajax({
-                  url:'/mate/matching',
-                  type:'post',
-                  async: false,
-                  data:{
-                      marathonValue:marathonValue,
-                      participationCountValue:participationCountValue,
-                      mateCountValue:mateCountValue
-                   },success:function(result){
-                      match_yn=result;
-                      match_view(result);
-                   },
-                     error:function(e){
-              }
-            });
+        var marathonValue = $('#marathonSelect').data('selected-value');
+        var participationCountValue = $('#participationCountSelect').data('selected-value');
+        var mateCountValue = $('#mateCountSelect').data('selected-value');
+        clog(marathonValue);
+        if(marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
+            // 모달 열기
+            showOptionSelectModal(); // 옵션 선택 모달을 호출
+            return false;
         }
+        $.ajax({
+            url:'/mate/matching',
+            type:'post',
+            async: false,
+            data:{
+                marathonValue:marathonValue,
+                participationCountValue:participationCountValue,
+                mateCountValue:mateCountValue
+            },success:function(result){
+                match_yn=result;
+                match_view(result);
+            },
+            error:function(e){
+            }
+        });
+    }
     function marathon_code(){
-          $.ajax({
-                url:'/mate/marathon_code',
-                type:'post',
-                async: false,
-                success:function(result){
-                    var list = '';
+        $.ajax({
+            url:'/mate/marathon_code',
+            type:'post',
+            async: false,
+            success:function(result){
+                var list = '';
 
-                    for(var i in result){
-                        list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
-                    }
-                    // 옵션 리스트에 항목 추가
-                    $('#marathonSelect .dropdown-menu').empty(); // 기존 옵션 삭제
-                    $('#marathonSelect .dropdown-menu').append(list); // 새 옵션 추가
-                },
-                error:function(e){
-                    console.error('Error fetching marathon code:', e);
+                for(var i in result){
+                    list += '<li class="marathon_code" data-value="' + result[i].marathon_code + '">' + result[i].marathon_name + '</li>';
                 }
-          });
+                // 옵션 리스트에 항목 추가
+                $('#marathonSelect .dropdown-menu').empty(); // 기존 옵션 삭제
+                $('#marathonSelect .dropdown-menu').append(list); // 새 옵션 추가
+            },
+            error:function(e){
+                console.error('Error fetching marathon code:', e);
+            }
+        });
     }
 
 
     function match_out(){
-            $.ajax({
-              url:'/mate/match_out',
-              type:'post',
-              async: false,
-              data:{
-               matching_room_code:match_yn
-              },
-              success:function(result){
+        $.ajax({
+            url:'/mate/match_out',
+            type:'post',
+            async: false,
+            data:{
+                matching_room_code:match_yn
+            },
+            success:function(result){
 
-                  localStorage.removeItem('marathonSelect');
-                  localStorage.removeItem('participationCountSelect');
-                  localStorage.removeItem('mateCountSelect');
-                  localStorage.clear();// 이거 지워야 이용방법 모달안뜸
-                  location.reload();  // 페이지 새로고침 추가
-              },
-              error:function(e){
-              }
-           });
+                localStorage.removeItem('marathonSelect');
+                localStorage.removeItem('participationCountSelect');
+                localStorage.removeItem('mateCountSelect');
+                localStorage.clear();// 이거 지워야 이용방법 모달안뜸
+                location.reload();  // 페이지 새로고침 추가
+            },
+            error:function(e){
+            }
+        });
     }
 
     function mate_complite(){
         $.ajax({
-          url:'/mate/mate_complite',
-          type:'post',
-          async: false,
-          data:{
-           matching_room_code:match_yn
-          },
-        success:function(result) {
-          localStorage.removeItem('marathonSelect');
-          localStorage.removeItem('participationCountSelect');
-          localStorage.removeItem('mateCountSelect');
-        },
-          error:function(e){
-          }
+            url:'/mate/mate_complite',
+            type:'post',
+            async: false,
+            data:{
+                matching_room_code:match_yn
+            },
+            success:function(result) {
+                localStorage.removeItem('marathonSelect');
+                localStorage.removeItem('participationCountSelect');
+                localStorage.removeItem('mateCountSelect');
+            },
+            error:function(e){
+            }
         });
     };
 
 
     function accept(){
         $.ajax({
-                url: '/mate/accept',
-                type: 'post',
-                async: false,
-                data: {
-                    matching_room_code: match_yn
-                },
-                success: function(result) {
-                    match_view(match_yn);
-                    $('#accept').hide();
-                    $('#accept_n').show();
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+            url: '/mate/accept',
+            type: 'post',
+            async: false,
+            data: {
+                matching_room_code: match_yn
+            },
+            success: function(result) {
+                match_view(match_yn);
+                $('#accept').hide();
+                $('#accept_n').show();
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
 
     function accept_n(){
         $.ajax({
-                url: '/mate/accept_n',
-                type: 'post',
-                async: false,
-                data: {
-                    matching_room_code: match_yn
-                },
-                success: function(result) {
+            url: '/mate/accept_n',
+            type: 'post',
+            async: false,
+            data: {
+                matching_room_code: match_yn
+            },
+            success: function(result) {
 
-                    match_view(match_yn);
-                    $('#accept').show();
-                    $('#accept_n').hide();
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+                match_view(match_yn);
+                $('#accept').show();
+                $('#accept_n').hide();
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
 
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
@@ -515,165 +511,163 @@ $(document).ready(function() {
         }
         $('.profile-container').append(list);
     }
-;
-function grid_draw(length, result) {
-    var list = '';
+    ;
+    function grid_draw(length, result) {
+        var list = '';
 
-    // 선택한 메이트 인원 + 4의 배수로 맞춘 방 개수 계산
-    var total_mates = length;
-    var remainder = total_mates % 4;
+        // 선택한 메이트 인원 + 4의 배수로 맞춘 방 개수 계산
+        var total_mates = length;
+        var remainder = total_mates % 4;
 
-    // 선택한 메이트 인원 + 4의 배수로 맞추기
-    if (remainder !== 0) total_mates += 4 - remainder;
-    total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
+        // 선택한 메이트 인원 + 4의 배수로 맞추기
+        if (remainder !== 0) total_mates += 4 - remainder;
+        total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
 
-    for (var i = 0; i < result.length; i++) {
+        for (var i = 0; i < result.length; i++) {
 
-        var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
-        var gender = result[i].gender=="여"? 'woman':'man' ;
-        var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
-        var img = gender+no;
-        //나이 가져오기
-        var today = new Date();
-        var birthDate = new Date(result[i].birthdate);
-        clog('birthDate : '+birthDate);
-        var age = (today.getFullYear() - birthDate.getFullYear())+'';
-        clog('age : '+age);
-        age = age<10? '잼민이' : age[0]+'0대';
+            var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
+            var gender = result[i].gender=="여"? 'woman':'man' ;
+            var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
+            var img = gender+no;
+            //나이 가져오기
+            var today = new Date();
+            var birthDate = new Date(result[i].birthdate);
+            clog('birthDate : '+birthDate);
+            var age = (today.getFullYear() - birthDate.getFullYear())+'';
+            clog('age : '+age);
+            age = age<10? '잼민이' : age[0]+'0대';
 
-        // 방 활성화 상태에 따라 스타일 및 클릭 이벤트 처리
-        var style = '';
-        if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
-            style ="transform: scale(1.05);border-color: #CCFF47;";
-            on = 'onclick="openChatRoom(' + i + ');"'; // 채팅방을 여는 이벤트 추가
-            $('#accept').hide();
-            $('#accept_n').show();
-        }
-        else{
-            style = '';// 비활성화된 경우 클릭 이벤트 없음
-            $('#accept').show();
-            $('#accept_n').hide();
-        }
-        // 프로필 박스 생성
-        list += '<div class="profile-box" '+ on +' style="' + style + '">';
-        list += '<div id="profile_img">';
-
-        list += '<img id="img'+i+'" src="/img/' + img + '.png" alt="프로필 1 이미지">';
-        list += '</div>';
-        list += '<span class="rank-name">' + result[i].nickname + '</span>';
-        list += '<span class="age">' + age + '</span>';
-        list += '<span class="runkm">' + result[i].tbuf_n + 'Km</span>';
-        list += '<span class="crew_name">' + result[i].crew_name + '</span>';
-        list += '</div>';
-    }
-
-    // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
-    for (var i = result.length; i < length; i++) {
-        list += '<div class="profile-box" style="">';
-        list += '<div id="profile_img">';
-        list += '<img src="/img/user.png" alt="프로필 1 이미지">';
-        list += '</div>';
-        list += '<span class="rank-name">&nbsp;</span>';
-        list += '<span class="runkm">&nbsp;</span>';
-        list += '<span class="crew_name">&nbsp;</span>';
-        list += '</div>';
-    }
-
-    // 나머지 비활성화된 방은 이미지 없이 처리
-    for (var i = length; i < total_mates; i++) {
-        list += '<div class="profile-box" style="pointer-events: none;">';
-        list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
-        list += '</div>';
-        list += '<span class="rank-name">&nbsp;</span>';
-        list += '<span class="runkm">&nbsp;</span>';
-        list += '<span class="crew_name">&nbsp;</span>';
-        list += '</div>';
-    }
-
-    // 프로필 컨테이너에 결과 반영
-    $('.profile-container').empty();
-    $('.profile-container').append(list);
-
-    // 매칭 버튼을 누르면 select 박스 비활성화
-    $('.select-box').each(function() {
-        // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
-        $(this).css('pointer-events', 'none');
-    });
-
-    // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
-    $('#matching').hide();
-    $('#accept').show();
-    $('#accept_n').hide();
-    $('#out').show();
-}
-
-// 옵션 선택 안내 모달 열기
-function showOptionSelectModal() {
-    var modal = document.getElementById('optionSelectModal');
-    modal.style.display = 'block';
-}
-
-// 매칭 완료 후 모달 열기
-function showMatchCompleteModal() {
-    var modal = document.getElementById('matchCompleteModal');
-    modal.style.display = 'block';
-}
-
-// 옵션 선택 모달의 닫기 버튼 클릭 시 모달 닫기
-document.querySelector('#optionSelectModal .close').onclick = function() {
-    document.getElementById('optionSelectModal').style.display = 'none';
-};
-
-// 매칭 완료 모달의 닫기 버튼 클릭 시 모달 닫기
-document.querySelector('#matchCompleteModal .close').onclick = function() {
-    document.getElementById('matchCompleteModal').style.display = 'none';
-};
-
-
-// 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고 이에를 ajax 안에서 열여야되는뎅
-document.getElementById('continueMatching').onclick = function() {
-    window.location.href = '/mate/mate';  //
-};
-
-// 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
-document.getElementById('goToMyPage').onclick = function() {
-    window.location.href = '/mypage/myHome';  // 마이페이지로 이동
-};
-
-// 모달 열기
-window.onload = function test3() {
-    var Authorization = localStorage.getItem("Authorization");
-    if (token !== "" && token !== null) {
-        $.ajax({
-            url: "/mate/test",
-            type: "post",
-            data: { Authorization: Authorization },
-            success: function (r) {
-                console.log("mate에서 username을 보낸다: " + r);
+            var style = '';
+            if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
+                style ="transform: scale(1.05);border-color: #CCFF47;";
+                $('#accept').hide();
+                $('#accept_n').show();
             }
+            else{
+                style = '';
+                $('#accept').show();
+                $('#accept_n').hide();
+            }
+
+            list += '<div class="profile-box" '+ on +' style="' + style + '">';
+            list += '<div id="profile_img">';
+
+            list += '<img id="img'+i+'" src="/img/' + img + '.png" alt="프로필 1 이미지">';
+            list += '</div>';
+            list += '<span class="rank-name">' + result[i].nickname + '</span>';
+            list += '<span class="age">' + age + '</span>';
+            list += '<span class="runkm">' + result[i].tbuf_n + 'Km</span>';
+            list += '<span class="crew_name">' + result[i].crew_name + '</span>';
+            list += '</div>';
+        }
+
+        // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
+        for (var i = result.length; i < length; i++) {
+            list += '<div class="profile-box" style="">';
+            list += '<div id="profile_img">';
+            list += '<img src="/img/user.png" alt="프로필 1 이미지">';
+            list += '</div>';
+            list += '<span class="rank-name">&nbsp;</span>';
+            list += '<span class="runkm">&nbsp;</span>';
+            list += '<span class="crew_name">&nbsp;</span>';
+            list += '</div>';
+        }
+
+        // 나머지 비활성화된 방은 이미지 없이 처리
+        for (var i = length; i < total_mates; i++) {
+            list += '<div class="profile-box" style="pointer-events: none;">';
+            list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
+            list += '</div>';
+            list += '<span class="rank-name">&nbsp;</span>';
+            list += '<span class="runkm">&nbsp;</span>';
+            list += '<span class="crew_name">&nbsp;</span>';
+            list += '</div>';
+        }
+
+        // 프로필 컨테이너에 결과 반영
+        $('.profile-container').empty();
+        $('.profile-container').append(list);
+
+        // 매칭 버튼을 누르면 select 박스 비활성화
+        $('.select-box').each(function() {
+            // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
+            $(this).css('pointer-events', 'none');
         });
-    }
-}
 
-// 모달 닫기 버튼
-document.querySelector('.mate-close-btn').onclick = function() {
-    document.getElementById('mateMatchModal').style.display = 'none';
-}
-// 모달 닫기 버튼
-document.querySelector('#mateSaveModalPreferences').onclick = function() {
-    document.getElementById('mateMatchModal').style.display = 'none';
-}
-// 모달 외부 클릭 시 닫기
-window.onclick = function(event) {
-    var modal = document.getElementById('mateMatchModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
+        // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
+        $('#matching').hide();
+        $('#accept').show();
+        $('#accept_n').hide();
+        $('#out').show();
     }
-}
 
-function hide7days(){
-    var num = $('#mateHide7days').is(':checked')?7:-7;
-    $.ajax({
+    // 옵션 선택 안내 모달 열기
+    function showOptionSelectModal() {
+        var modal = document.getElementById('optionSelectModal');
+        modal.style.display = 'block';
+    }
+
+    // 매칭 완료 후 모달 열기
+    function showMatchCompleteModal() {
+        var modal = document.getElementById('matchCompleteModal');
+        modal.style.display = 'block';
+    }
+
+    // 옵션 선택 모달의 닫기 버튼 클릭 시 모달 닫기
+    document.querySelector('#optionSelectModal .close').onclick = function() {
+        document.getElementById('optionSelectModal').style.display = 'none';
+    };
+
+    // 매칭 완료 모달의 닫기 버튼 클릭 시 모달 닫기
+    document.querySelector('#matchCompleteModal .close').onclick = function() {
+        document.getElementById('matchCompleteModal').style.display = 'none';
+    };
+
+
+    // 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고 이에를 ajax 안에서 열여야되는뎅
+    document.getElementById('continueMatching').onclick = function() {
+        window.location.href = '/mate/mate';  //
+    };
+
+    // 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
+    document.getElementById('goToMyPage').onclick = function() {
+        window.location.href = '/mypage/myHome';  // 마이페이지로 이동
+    };
+
+    // 모달 열기
+    window.onload = function test3() {
+        var Authorization = localStorage.getItem("Authorization");
+        if (token !== "" && token !== null) {
+            $.ajax({
+                url: "/mate/test",
+                type: "post",
+                data: { Authorization: Authorization },
+                success: function (r) {
+                    console.log("mate에서 username을 보낸다: " + r);
+                }
+            });
+        }
+    }
+
+    // 모달 닫기 버튼
+    document.querySelector('.mate-close-btn').onclick = function() {
+        document.getElementById('mateMatchModal').style.display = 'none';
+    }
+    // 모달 닫기 버튼
+    document.querySelector('#mateSaveModalPreferences').onclick = function() {
+        document.getElementById('mateMatchModal').style.display = 'none';
+    }
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        var modal = document.getElementById('mateMatchModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    function hide7days(){
+        var num = $('#mateHide7days').is(':checked')?7:-7;
+        $.ajax({
             url: '/mate/hide7days',
             type: 'post',
             async: false,
@@ -694,20 +688,20 @@ function hide7days(){
         var num = $('#mateNeverShow').is(':checked')?99999:0;
         clog(num);
         $.ajax({
-                url: '/mate/neverShow',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization: token,
-                    num: num
-                },
-                success: function(result) {
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
-        }
+            url: '/mate/neverShow',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: token,
+                num: num
+            },
+            success: function(result) {
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }
     function popup_yn(){
         var today = new Date();
         mate_popup_date_select();
@@ -728,44 +722,154 @@ function hide7days(){
 
     function mate_popup_date_select(){
         $.ajax({
-                url: '/mate/mate_popup_date_select',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization: token,
-                },
-                success: function(result) {
-                    $('#mate_popup_date').val(result);
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
+            url: '/mate/mate_popup_date_select',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: token,
+            },
+            success: function(result) {
+                $('#mate_popup_date').val(result);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+    $(document).ready(function() {
+        // nickname 값을 가져와서 로그로 확인
+        var nickname = $('#nickname').val(); // hidden 필드에서 값 가져오기
+        console.log("로그인한 사용자의 닉네임: " + nickname);
+
+
+        // 자동으로 채팅 서버 연결하기
+        chatConnection();
+
+        // 서버로 메시지 보내기 (Enter 키)
+        $("#inputMsg").keyup(function(event){
+            if (event.keyCode === 13) {
+                sendMessageFromInput();
+            }
+        });
+
+        // 서버로 메시지 보내기 (전송 버튼)
+        $("#sendBtn").click(function() {
+            sendMessageFromInput();
+        });
+
+        // 연결 끊기 처리
+        $("#disconnectBtn").click(function() {
+            sendMessage(usercode, nickname, 'all', nickname + "님이 퇴장하였습니다.");
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            socket = null;
+            stompClient = null;
+            disabledChat();
+        });
+    });
+
+    // 채팅 서버와 연결하는 함수
+    function chatConnection() {
+        socket = new SockJS("/chat");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('WebSocket 연결 성공:', frame);
+            setConnected();
+
+            // 서버로 메시지 전송 (닉네임 접속 알림)
+            sendMessage(usercode, nickname, 'all', nickname + "님이 접속하였습니다.");
+
+            // 서버에서 받은 메시지를 구독하고 처리
+            stompClient.subscribe("/topic/messages", function(receiveMsg) {
+                console.log('receiveMsg->',receiveMsg);
+                var jsonMsg = JSON.parse(receiveMsg.body);
+                console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
+                showCatMessage(jsonMsg);
             });
+        });
     }
 
-function openChatRoom(index) {
-    // 방이 활성화된 상태에서만 열 수 있도록 로직 추가
-    var resultItem = result[index]; // 선택된 방 정보
-    if (resultItem.a_s === 'Y') {
-        console.log("방 번호 " + index + "의 채팅창 열림");
+    // 메시지를 입력창에서 가져와 서버로 전송하는 함수
+    function sendMessageFromInput() {
+        var inputMsg = $("#inputMsg").val(); // 입력한 메시지
+        if (inputMsg === "") return false; // 빈 메시지 전송 방지
 
-        // 채팅창 열기 처리 (히든 처리 해제 등)
-        const chatbox = document.querySelector('.chatbox');
-        chatbox.classList.remove('hidden');
+        sendMessage(usercode, nickname, 'all', inputMsg); // 로그인한 회원의 닉네임으로 메시지 전송
+        $("#inputMsg").val(''); // 입력창 초기화
+    }
 
-        // 추가적으로 채팅방에 입장한 사람들 목록 가져오기
-        // 여기에 usercode 확인 로직을 추가하여 방 입장 제한을 처리할 수 있음
-        if (resultItem.usercode === usercode) {
-            // 방에 들어갈 수 있는 권한이 있는 경우 채팅창 표시
-            chatbox.style.display = 'block';
+    // 서버로 메시지 전송 함수
+    function sendMessage(usercode, nickname, recipient, content, add_date) {
+        let messageData = {
+            usercode: usercode, // 전역 변수 usercode 사용
+            nickname: nickname, // 전역 변수 nickname 사용
+            recipient: recipient,   // 수신자 정보
+            content: content,    // 메시지 내용
+            add_date: add_date
+        };
+        stompClient.debug = null;
+        stompClient.send("/message/chat", {}, JSON.stringify(messageData));
+    }
+
+
+    // 서버에서 받은 메시지를 화면에 표시하는 함수
+    function showCatMessage(data) {
+        console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
+        // 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
+        var tag = '';
+        // 내가 보낸 메시지인 경우 (오른쪽에 표시)
+        if (data.usercode == usercode) {
+            tag += `
+        <div class="chat-message">
+            <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
+            <div class="message-info">
+                <span class="nickname">${data.nickname}</span>
+                <p>${data.content}</p>
+                <div class="timestamp">${data.add_date}</div>
+            </div>
+        </div>`;
         } else {
-            // 권한이 없는 경우
-            alert('해당 방에 입장할 권한이 없습니다.');
+            // 다른 사람이 보낸 메시지인 경우(왼쪽에 표시)
+            tag += `
+        <div class="chat-message-left">
+            <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
+            <div class="message-info">
+                <span class="nickname">${data.nickname}</span>
+                <p>${data.content}</p>
+                <div class="timestamp-left">${data.add_date}</div>
+            </div>
+        </div>`;
         }
-    } else {
-        alert("이 방은 아직 활성화되지 않았습니다.");
+        // 메시지를 채팅창에 추가
+        $("#taMsg").append(tag);
+
+        // 스크롤을 최신 메시지로 자동 이동
+        document.getElementById("taMsg").scrollTop = document.getElementById("taMsg").scrollHeight;
     }
-}
+
+    // 채팅 창 비활성화 함수
+    function disabledChat() {
+        $("#nickname").val("");
+        $("#status").html("연결 후 채팅하세요.");
+        $("#inputMsg").val("");
+        $("#taMsg").html("");
+        $("#chatbox").css("display", "none");
+    }
+
+    // 서버와 채팅 서버 연결 상태 처리 함수
+    function setConnected() {
+        // $("#connected").prop('disabled', true); // 채팅 연결하기 비활성화
+        // $("#nickname").prop('disabled', true); // 닉네임 입력 비활성화
+        $("#status").html(nickname + "님이 접속하였습니다."); // 연결 상태 알림
+        $("#chatbox").css("display", "flex"); // 채팅 박스 표시
+    }
+
+
 
 
 

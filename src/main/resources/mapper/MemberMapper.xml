@@ -39,4 +39,8 @@
     <update id="addPointCode">
         update user_tbl set point_code=(select point_code from point_tbl where usercode =#{param1}) where usercode=#{param1}
     </update>
+
+    <select id="getUsers" resultType="com.ict.finalproject.vo.MemberVO">
+        select username,usercode from user_tbl where username=#{param1}
+    </select>
 </mapper>

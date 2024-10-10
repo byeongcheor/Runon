@@ -4,6 +4,9 @@
 
 <script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
+    var usercode=$('#usercode').val();
+    var token = localStorage.getItem("Authorization");
+
 
     // 장바구니에 추가된 상품 수량 변경부분
     let number = 1;
@@ -16,10 +19,13 @@
     // 사용자 포인트(예시)
     let userPoints = 1000;
 
+
+
     // 선택된 상품 삭제 함수
     function deleteSelectedItems() {
         const checkedItems = document.querySelectorAll('input[name="itemCheckbox"]:checked');
-
+        alert(usercode1);
+        alert(username1);
         if (checkedItems.length === 0) {
             alert("삭제할 상품을 선택해 주세요.");
             return; // 선택된 상품이 없으면 종료
@@ -273,6 +279,20 @@
                 alert("선택한 상품이 없습니다."); // 체크된 상품이 없으면 메시지 표시
             }
         });
+        $.ajax({
+           url:"/order/cart",
+            type:"POST",
+            data: {
+               usercode: usercode1,
+            },
+            success: function(r) {
+                cart = r.ordercart;
+                cart.forEach(function (cart) {
+                    tag = "<div>list.subject</div>"
+                });
+                document.getElementById('orderButton').innerHTML = tag;
+            }
+        });
     };
 
     // 토스페이먼츠 결제 요청
@@ -312,8 +332,6 @@
         });
 
 
-
-
         try {
 
             console.log("Total amount for payment:", totalAmount); // 총 금액 로그
@@ -349,9 +367,12 @@
 
 
 <div class="cartFrm">
-    <div class="cartName">
+    <div class="cartName" id="cartItemsContainer">
         <h1>장바구니🛒</h1>
     </div>
+    <c:forEach var="cvo" items="${userselect}">
+        <input type='hidden' id=usercode value=${cvo.usercode}>
+    </c:forEach>
     <div class="cartMain">
         <div class="cartM">
             <div>
@@ -365,14 +386,14 @@
         </div>
 
         <div class="ticket_cart">
-            <c:forEach var="cartItem" items="${cartItems}">
+            <c:forEach var="item" items="${cartItems}">
                 <div class="tipoff">
-                    <input type="hidden" id="productId" name="productId" value="${cartItem.productId}"> <!-- 제품 ID -->
+                    <input type="hidden" id="productId" name="productId" value="${item.productId}"> <!-- 제품 ID -->
                     <div class="checkB">
                         <input type="checkbox" name="itemCheckbox" id="itemCheckbox" onclick="updateSelectAll()">
                     </div>
                     <div class="ticket">
-                        <img src="${cartItem.poster_img}" alt="마라톤 포스터" class="marathonP"> <!-- 상품 이미지 -->
+                        <img src="${item.poster_img}" alt="마라톤 포스터" class="marathonP"> <!-- 상품 이미지 -->
                         <div class="marathonT">
                             <span>${cartItem.marathon_name}</span> <!-- 마라톤 이름 -->
                             <span>${cartItem.total_distance} / 티셔츠(L)</span> <!-- 추가 정보 -->
@@ -381,7 +402,7 @@
                     <div class="marathonC">
                         <div class="counter-container">
                             <button onclick="decrease()">-</button>
-                            <span id="number">${cartItem.quantity}</span> <!-- 수량 -->
+                            <span id="number">${item.quantity}</span> <!-- 수량 -->
                             <button onclick="increase()">+</button>
                         </div>
                         <div class="pointS">
@@ -413,7 +434,7 @@
                     </div>
 
                         <div class="ticketP">
-                            <span>${cartItem.price}원</span> <!-- 상품 가격 -->
+                            <span>${item.price}원</span> <!-- 상품 가격 -->
                         </div>
                         <div class="checkD" id="item1">
                             <button class="delete-button" onclick="removeItem('item1')">

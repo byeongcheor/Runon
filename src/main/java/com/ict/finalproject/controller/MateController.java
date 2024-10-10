@@ -1,5 +1,4 @@
 package com.ict.finalproject.controller;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -22,13 +21,19 @@ public class MateController {
     String user_name ="";
     int    user_code = 0;
 
+
     @PostMapping("/test")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
+    public String test(@RequestParam("Authorization") String token) {
         token=token.substring("Bearer ".length());
         System.out.println("123123123");
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
+        try {
+            user_name = jwtUtil.setTokengetUsername(token);
+            System.out.println("Username from Token: " + user_name);
+        } catch (Exception e) {
+            System.out.println("Error parsing token: " + e.getMessage());
+            e.printStackTrace(); // 전체 스택 트레이스 확인
+        }
         return user_name;
     }
     @GetMapping("/mate")
@@ -42,6 +47,7 @@ public class MateController {
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);
+
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력

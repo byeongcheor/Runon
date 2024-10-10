@@ -78,4 +78,9 @@ public class JoinServiceImpl implements JoinService {
     public int addPointCode(int usercode) {
         return memberDAO.addPointCode(usercode);
     }
+
+    @Override
+    public MemberVO getUsers(String username) {
+        return memberDAO.getUsers(username);
+    }
 }

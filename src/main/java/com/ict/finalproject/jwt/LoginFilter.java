@@ -44,7 +44,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = obtainUsername(request);
         String password = obtainPassword(request);
 
-        System.out.println(username);
+        //System.out.println(username);
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
@@ -64,22 +64,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
 
-        String token = jwtUtil.createJwt(username, role, 60*60*1000L);
+        String token = jwtUtil.createJwt(username, role, 60*60*24*30*1000L);
         String refreshToken = jwtUtil.createJwt(username, role, 60*60*1000L*24*30);
 
-        System.out.println("확인"+JWTUtil.setTokengetUsername(token));
+        //System.out.println("확인"+JWTUtil.setTokengetUsername(token));
         Boolean istrue=service.checkToken(username);
         if (!istrue) {
             service.addToken(refreshToken,username);
-            System.out.println("추가히기");
+            //System.out.println("추가히기");
         }else {
             service.updateToken(refreshToken,username);
-            System.out.println("업데이트하기");
+            //System.out.println("업데이트하기");
         }
 
         response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("refreshToken", "Bearer "+refreshToken);
-        System.out.println("헤더에 값넣은후");
+        //System.out.println("헤더에 값넣은후");
 
 
 

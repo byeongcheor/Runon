@@ -1,10 +1,12 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.vo.CartVO;
+import com.ict.finalproject.vo.MateVO;
 
 import java.util.List;
 
 public interface CartService {
-    List<CartVO> getCartItemsByUsername(String username); // 사용자 이름으로 장바구니 아이템 조회
-
+    int usercodeSelect(String user_name);
+    List<CartVO> getCartItemsByUserCode(int usercode);
+    public List<CartVO> userselect(int usercode);
 }
