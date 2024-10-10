@@ -61,6 +61,18 @@
    function test2(r) {
       // test2 기능 추가할 부분
    }
+   function cart() {
+       var Authorization = localStorage.getItem("Authorization");
+       $.ajax({
+           url: "/cart/test", // 원하는 URL을 지정
+           type: "post",
+           data: { Authorization: Authorization },
+           success: function(r) {
+               console.log('cart : ' + r);
+               window.location.href = '/order/cart';
+           }
+       });
+   }
 
    function mate() {
       var Authorization = localStorage.getItem("Authorization");
@@ -105,7 +117,7 @@
                     <li><a class="menus" href="/mate/mate">MATE</a></li>
                     <li><a class="menus" href="/crew/crewList">CREW</a></li>
                     <li><a class="menus">NOTICE</a></li>
-                    <li><a class="memus" href="/order/cart">CART</a></li>
+                    <li><a class="menus" href="/order/cart">CART</a></li>
                     <li><a onclick="mypage()">MY</a></li>
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>

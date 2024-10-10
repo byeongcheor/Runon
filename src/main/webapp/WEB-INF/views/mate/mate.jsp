@@ -789,7 +789,7 @@
                 console.log('receiveMsg->',receiveMsg);
                 var jsonMsg = JSON.parse(receiveMsg.body);
                 console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
-                showCatMessage(jsonMsg);
+                showCatMessage(jsonMsg,nickname);
             });
         });
     }
@@ -818,7 +818,7 @@
 
 
     // 서버에서 받은 메시지를 화면에 표시하는 함수
-    function showCatMessage(data) {
+    function showCatMessage(data,nickname) {
         console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
         // 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
         var tag = '';
@@ -828,9 +828,9 @@
         <div class="chat-message">
             <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
-                <span class="nickname">${data.nickname}</span>
-                <p>${data.content}</p>
-                <div class="timestamp">${data.add_date}</div>
+                <span class="nickname">`+nickname+`</span>
+                <p>`+data.content+`</p>
+                <div class="timestamp">`+data.add_date+`</div>
             </div>
         </div>`;
         } else {
