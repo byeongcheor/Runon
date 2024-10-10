@@ -716,6 +716,7 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
+
         crew_page(1);
     });
     // 모달 닫기 확인
@@ -981,7 +982,6 @@ function submitCrewInfo() {
             processData: false,
             contentType: false,
             success: function(response) {
-                clog(response.length);
                 if(flag==1){
                     for (var i in response) {
                         if (response[i].a_n == 0) {
@@ -1056,18 +1056,23 @@ function submitCrewInfo() {
     }
 
 function crew_write_add() {
+
        var form = $('#crew_write_add')[0];
        var formData = new FormData(form);
         clog(form);
-       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
-       var genderChecked = $('input[name="gender3"]:checked').length > 0;
+        var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+        var genderChecked = $('input[name="gender3"]:checked').length > 0;
+        var teamIntro = $('#teamIntro3').val().trim();
        if (!ageChecked) {
            alert('주요 나이대를 선택해주세요.');
            return false;
        }
        if (!genderChecked) {
            alert('성별을 선택해주세요.');
+           return false;
+       }
+       if (teamIntro === "") {
+           alert('크루 소개글을 작성해주세요.');
            return false;
        }
        // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
@@ -1083,6 +1088,7 @@ function crew_write_add() {
            success: function(response) {
                alert('크루 모집이 성공적으로 생성되었습니다!');
                $('#uploadTeamPhotoModal').modal('hide');
+
                crew_list_select(0);
            },
            error: function(error) {
