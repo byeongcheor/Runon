@@ -78,19 +78,3 @@ $(document).ready(function() {
     });*/
 
 });
-
-function mypage(){
-    console.log("111");
-    $.ajax({
-        url:"/mypage/myHome",
-        async:false,
-        success:function (r){
-            console.log("22222");
-            console.log(r);
-            window.location.href="/mypage/myHome";
-            console.log("333333");
-            //test2(r);
-        }
-    });
-    //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
-}

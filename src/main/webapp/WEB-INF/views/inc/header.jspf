@@ -16,36 +16,52 @@
 <!--헤더 스크롤-->
 <script>
 
-    $(window).on('scroll',function(){
-            if($(window).scrollTop()){
-                $('#header').addClass('active');
-            }else{
-                $('#header').removeClass('active');
+   $(window).on('scroll', function() {
+      if ($(window).scrollTop()) {
+         $('#header').addClass('active');
+      } else {
+         $('#header').removeClass('active');
+      }
+   });
+
+   var responseData;
+   function test() {
+      var token = localStorage.getItem("Authorization");
+      if (token != "" && token != null) {
+         $.ajax({
+            url: "/test",
+            type: "post",
+            data: { Authorization: token },
+            success: function(r) {
+               responseData = r;
+               console.log("ajax확인" + r);
+               //test2(r)
             }
+         });
+      }
+      // 전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
+      console.log("전역변수로 설정확인" + responseData);
+   }
 
-        });
-    var responseData;
-    function test(){
-        var token=localStorage.getItem("Authorization");
-        if (token !=""&& token!=null){
-            $.ajax({
-                url:"/test",
-                type:"post",
-                data:{Authorization:token},
-                success:function (r){
-                    responseData=r;
-                    console.log("ajax확인"+r);
-                    //test2(r)
-                }
-            });
-        }
-        //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
-        console.log("전역변수로 설정확인"+responseData);
-    }
+   function mypage() {
+      console.log("111");
+      $.ajax({
+         url: "/mypage/myHome",
+         async: false,
+         success: function(r) {
+            console.log("22222");
+            console.log(r);
+            window.location.href = "/mypage/myHome";
+            console.log("333333");
+            //test2(r);
+         }
+      });
+      // 전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
+   }
 
-
-    function test2(r){
-
+   function test2(r) {
+      // test2 기능 추가할 부분
+   }
 
 function mate() {
     var Authorization=localStorage.getItem("Authorization");
@@ -96,6 +112,7 @@ function crew() {
                     <li><a onclick="openLoginPopup()">login</a></li>
                     <li><a onclick="test()">test</a></li>
                     <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
+
                 </ul>
             </nav>
         </div>
