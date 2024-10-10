@@ -38,11 +38,14 @@ public class CrewController {
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization")String token) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
-        System.out.println(user_code);
-        return user_name;
+        if (token!=null&& !token.isEmpty()) {
+            token = token.substring("Bearer ".length());
+            user_name = jwtUtil.setTokengetUsername(token);
+            user_code = service.usercodeSelect(user_name);
+            System.out.println(user_code);
+            return user_name;
+        }
+        return null;
     }
     @GetMapping("/crewList")
     public String crewList(CrewVO cvo, PagingVO pvo, Model model){

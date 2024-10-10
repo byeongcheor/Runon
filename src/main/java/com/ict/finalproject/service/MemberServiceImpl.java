@@ -12,6 +12,15 @@ import java.util.Map;
 public class MemberServiceImpl implements MemberService{
     @Autowired
     private MemberDAO dao;
+    @Override
+    public MemberVO disableCheck(String username) {
+        return dao.disableCheck(username);
+    }
+
+    @Override
+    public int enableUser(String username) {
+        return dao.enableUser(username);
+    }
 
 
 }
