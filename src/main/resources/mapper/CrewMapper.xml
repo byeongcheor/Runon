@@ -32,6 +32,7 @@
     <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
         select  a.create_crew_code,
                 a.crew_name,
+                a.logo,
                 ifnull((select crew_write_code
                 from    crew_write
                 where   create_crew_code = a.create_crew_code
@@ -58,7 +59,7 @@
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
         ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code) as a_n
         from create_crew_tbl a, crew_write b
-        where b.is_delete = 0;
+        where b.is_delete = 0
         and a.create_crew_code = b.create_crew_code
         and b.gender like ifnull(concat('%', '${param3}', '%'), '%')
         and b.age like ifnull(concat('%', '${param4}', '%'), '%')
@@ -131,6 +132,7 @@
         from   create_crew_tbl a, crew_write b
         where  a.create_crew_code = b.create_crew_code
         and    a.create_crew_code=${param2}
+        and    b.is_delete = 0
     </select>
     <select id="crew_join_select" resultType="int">
         select count(1)
@@ -190,4 +192,12 @@
         where crew_write_code = ${param2}
     </update>
 
+    <update id="crew_write_update">
+        update crew_write
+        set    teamPhoto = '${param3}'
+        ,age       = '${param4}'
+        ,gender	= '${param5}'
+        ,content   = '${param6}'
+        where crew_write_code = ${param1}
+    </update>
 </mapper>

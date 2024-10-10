@@ -17,6 +17,7 @@ public interface CrewService {
     public int crew_name_check(String crew_name_check);
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content, String age, int user_code);
     public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content);
+    public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content);
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
     public int join_before_select(int user_code, int crewWriteCode);

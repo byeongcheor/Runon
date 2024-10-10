@@ -103,5 +103,10 @@ public class CrewServiceImpl implements CrewService{
         return dao.crew_write_add(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
 
+    @Override
+    public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
+        return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
+    }
+
 
 }

@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="/crew/crewList">크루모집</a></li>
                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal">나의 크루</a></li>
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
             </ul>
         </div>
     </div>
@@ -79,7 +79,7 @@
                 <input type="text" name="searchWord" id="searchWord" />
                 <button type="submit" class="btn btn-outline-secondary" onClick="crew_list_select()">Search</button>
             </div>
-            <button class="add-btn" onClick="crew_page()"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            <button class="add-btn" onClick="crew_page(1)"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
         </div>
     </div>
 
@@ -443,22 +443,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- 팀 리스트 -->
-            <ul class="team-list">
-              <!-- 팀 아이템 예시 -->
-              <li class="team-item">
-                <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
-                  <div class="team-name">선풍기</div>
-                </a>
-              </li>
-              <li class="team-item">
-                <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
-                  <div class="team-name">영현영선</div>
-                </a>
-              </li>
-              <!-- 다른 팀 아이템도 같은 구조로 추가 -->
+            <ul class="team-list" id='team_list'>
             </ul>
           </div>
         </div>
@@ -731,7 +716,7 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
-        crew_page();
+        crew_page(1);
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {
@@ -983,9 +968,10 @@ function submitCrewInfo() {
         });
 
     });
-    function crew_page() {
+    function crew_page(flag) {
         var list = '';
         $('#crew_page').html('');
+        $('#team_list').html('');
         $.ajax({
             url: '/crew/crew_page',
             type: 'POST',
@@ -995,15 +981,27 @@ function submitCrewInfo() {
             processData: false,
             contentType: false,
             success: function(response) {
-                for (var i in response) {
-                    if (response[i].a_n == 0) {
-                        list += '<button type="button" class="option-btn" onClick="crew_page_write(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 멤버 모집 시작하기</button>';
-                    } else if (response[i].a_n > 0) {
-                        list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].a_n + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
+                clog(response.length);
+                if(flag==1){
+                    for (var i in response) {
+                        if (response[i].a_n == 0) {
+                            list += '<button type="button" class="option-btn" onClick="crew_page_write(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 멤버 모집 시작하기</button>';
+                        } else if (response[i].a_n > 0) {
+                            list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].a_n + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
+                        }
                     }
+                    list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
+                    $('#crew_page').append(list);
                 }
-                list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
-                $('#crew_page').append(list);
+                if(flag==2){
+                    for (var i in response) {
+                         list += '<li class="team-item">'
+                         list += '<img src="/crew_upload/'+response[i].logo+'" class="profileImg">';
+                         list += '<div class="option-btn" onClick="go_my_crew(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
+                         list +='</li>';
+                    }
+                    $('#team_list').append(list);
+                }
             },
             error: function(error) {
                 console.log(error);
@@ -1085,7 +1083,7 @@ function crew_write_add() {
            success: function(response) {
                alert('크루 모집이 성공적으로 생성되었습니다!');
                $('#uploadTeamPhotoModal').modal('hide');
-               crew_list_select(0)
+               crew_list_select(0);
            },
            error: function(error) {
                console.log(error);

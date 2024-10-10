@@ -58,7 +58,7 @@
 
                 <div class="button-container">
                     <div class="top-buttons">
-                        <button class="action-button" id='update_btn' data-bs-toggle="modal" data-bs-target="#crewInfoModal" onclick="crew_page_update(${create_crew_code});">수정하기</button>
+                        <button class="action-button" id='update_btn' data-bs-toggle="modal" data-bs-target="#crewInfoModal" onclick="crew_write_page_update_detail();">수정하기</button>
                         <button class="action-button" id='delete_btn' onclick="crew_write_delete()">모집중단하기</button>
                     </div>
                     <div class="bottom-button">
@@ -125,12 +125,12 @@
                       <div class="row mb-3">
                           <div class="col">
                               <label for="city" class="form-label">도시</label>
-                              <select class="form-control text-center" id="city" name="city" onchange="select_box_change3('2');">
+                              <select class="form-control text-center" id="city2" name="city">
                               </select>
                           </div>
                           <div class="col">
                               <label for="region" class="form-label">지역</label>
-                              <select class="form-control text-center" id="region" name="region">
+                              <select class="form-control text-center" id="region2" name="region">
                               </select>
                           </div>
                       </div>
@@ -163,10 +163,8 @@
               </div>
           </div>
       </div>
-
+      <form id="crew_write_update" enctype="multipart/form-data">
       <!-- 2번째 모달 -->
-      <form id="crew_write_add" enctype="multipart/form-data">
-          <input type=hidden id='third_crew_code' name='third_crew_code'>
           <div class="modal fade" id="thirdModal" tabindex="-1" aria-labelledby="thirdModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
               <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
@@ -209,7 +207,8 @@
                   </div>
               </div>
           </div>
-          <!-- 3번째 모달 -->
+      <!-- 3번째 모달 -->
+          <input type=hidden id='crew_write_code' name='crew_write_code'>
           <div class="modal fade" id="uploadTeamPhotoModal" tabindex="-1" aria-labelledby="uploadTeamPhotoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
               <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
@@ -237,7 +236,7 @@
 
                           <div class="btn-group mt-3">
                               <button type="button" class="common-btn" id="prevBtnInCreateModal">뒤로</button>
-                              <button type="button" class="common-btn" id="submitCreateCrewBtn" onClick='crew_write_add()'>등록하기</button>
+                              <button type="button" class="common-btn" id="submitCreateCrewBtn" onClick='crew_write_update()'>등록하기</button>
                           </div>
                       </div>
                   </div>
@@ -251,13 +250,36 @@ const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const crew_write_code = urlParams.get('crew_write_code');
 var usercode;
+$('#nextBtn').on('click', function() {
+    $('#crewInfoModal').modal('hide');
+    $('#thirdModal').modal('show');
+});
+$('#nextBtnInThirdModal').on('click', function() {
+    $('#thirdModal').modal('hide');
+    $('#uploadTeamPhotoModal').modal('show');
+});
     $(document).ready(function() {
         crew_detail_select();
-        addr_select_draw('city');//select 박스 그리기
-        $('#city').on('change', function() {
-            addr_gu_select_draw('region', $(this).val())
-        });
+        $('#crew_write_code').val(crew_write_code);
     });
+
+    function previewTeamPhoto(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('teamPhotoPreview');
+            output.src = reader.result;
+            document.getElementById('photoPreviewSection').style.display = 'block';
+            document.getElementById('photoUploadLabel').style.display = 'none';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function deletePhoto() {
+        document.getElementById('teamPhotoInput').value = '';
+        document.getElementById('photoPreviewSection').style.display = 'none';
+        document.getElementById('teamPhotoPreview').src = '';
+        document.getElementById('photoUploadLabel').style.display = 'block';
+    }
 
     function crew_detail_select(){
         $.ajax({
@@ -269,6 +291,7 @@ var usercode;
                 create_crew_code : create_crew_code
             },
             success: function(result) {
+            clog(result);
                 $('#crew_img').attr('src', '/crew_upload/'+result[0].logo);
                 $('#team_name').text(result[0].crew_name);
                 $('#team_info').text(result[0].a_s);
@@ -352,62 +375,32 @@ error: function(e) {
             }
         });
     }
-    /*
-        function confirmStopRecruit(crew_code) {
-            // 알림창을 띄워 사용자에게 확인 받기
-            if (confirm("모집을 중단하시겠습니까?")) {
-                // 사용자가 확인을 누르면 AJAX 요청 실행
-                $.ajax({
-                    url: '/crew/stopRecruit',  // 서버에 요청할 URL 설정 (서버에서 처리할 경로)
-                    type: 'POST',
-                    headers: {
-                        Authorization: localStorage.getItem('Authorization')  // 인증 헤더가 필요하다면 추가
-                    },
-                    data: { crew_code: crew_code },  // 비동기 방식으로 보낼 데이터 (crew_code)
-                    success: function(response) {
-                        // 서버로부터 성공 응답을 받으면
-                        alert("모집이 중단되었습니다.");
-                        window.location.reload();  // 페이지 새로고침하여 UI 업데이트
-                    },
-                    error: function(error) {
-                        // 에러 처리
-                        console.log(error);
-                        alert("모집 중단 중 오류가 발생했습니다.");
-                    }
-                });
-            }
-        }*/
 
-////////////////////////////////////////////////////////////////////////////
-
-function user_check() {
-    // Bootstrap Modal 객체 생성
-    const myModal = new bootstrap.Modal(document.getElementById('joinModal'), {
-        keyboard: false
-    });
-    // AJAX 요청
-    $.ajax({
-        url: '/crew/user_check',
-        type: 'POST',
-        async: false,
-        data: {
-              Authorization : Authorization,
-              crew_write_code : crew_write_code
-        },
-        success: function(response) {
-            if (response != 1) {
-                alert('모집조건에 맞지 않습니다.');
-            } else {
-                alert('조건 맞음');
-                myModal.show(); // 조건이 맞으면 모달을 표시
+    function user_check() {
+        const myModal = new bootstrap.Modal(document.getElementById('joinModal'), {
+            keyboard: false
+        });
+        $.ajax({
+            url: '/crew/user_check',
+            type: 'POST',
+            async: false,
+            data: {
+                  Authorization : Authorization,
+                  crew_write_code : crew_write_code
+            },
+            success: function(response) {
+                if (response != 1) {
+                    alert('모집조건에 맞지 않습니다.');
+                } else {
+                    myModal.show(); // 조건이 맞으면 모달을 표시
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert('가입 신청 중 오류가 발생했습니다.');
             }
-        },
-        error: function(error) {
-            console.log(error);
-            alert('가입 신청 중 오류가 발생했습니다.');
-        }
-    });
-}
+        });
+    }
 
     function crew_write_delete(){
         $.ajax({
@@ -428,6 +421,73 @@ function user_check() {
             }
         });
     }
+    function crew_write_page_update_detail(){
 
-////////////////////////////////////////////////////////////
+        $.ajax({
+            url: '/crew/crew_write_page_update_detail',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization : Authorization,
+                create_crew_code : create_crew_code
+            },
+            success: function(result) {
+               addr_select_draw('city2');//select 박스 그리기
+               $('#city2').val(result[0].addr);
+               addr_gu_select_draw('region2', result[0].addr,result[0].addr_gu)
+               var age_arr = result[0].age.split(',');
+               $('input[type="checkbox"][name="age[]2"]').prop('checked', false);//체크박스 초기화
+               for(var i in age_arr){
+                   $('input[name="age[]2"][value="'+age_arr[i]+'"]').prop('checked', true);
+               }
+               $('input[type="radio"][name="gender2"][value="'+result[0].gender+'"]').prop('checked', true);
+               $('#crewInfoModalLabel2').text(result[0].crew_name+'의 정보를 확인하세요')
+               $('#city2').prop('disabled', true);
+               $('#region2').prop('disabled', true);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }
+    function crew_write_update() {
+       var form = $('#crew_write_update')[0];
+       var formData = new FormData(form);
+       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+       var genderChecked = $('input[name="gender3"]:checked').length > 0;
+       if (!ageChecked) {
+           alert('주요 나이대를 선택해주세요.');
+           return false;
+       }
+       if (!genderChecked) {
+           alert('성별을 선택해주세요.');
+           return false;
+       }
+       if($('#teamIntro3').val()==''){
+           alert('모집내용을 입력해주세요.');
+           return false;
+       };
+       $.ajax({
+           url: '/crew/crew_write_update',
+           type: 'POST',
+           headers: {
+               Authorization: localStorage.getItem('Authorization')
+           },
+           data: formData,
+           processData: false,
+           contentType: false,
+           success: function(response) {
+               alert('크루 모집 수정되었습니다!');
+               $('#uploadTeamPhotoModal').modal('hide');
+               setTimeout(function() {crew_detail_select()}, 100);
+           },
+           error: function(error) {
+               console.log(error);
+               alert('크루 모집 수정 중 오류가 발생했습니다.');
+           }
+       });
+    }
+
+
+
 </script>

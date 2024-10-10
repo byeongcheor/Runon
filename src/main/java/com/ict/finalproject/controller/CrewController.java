@@ -266,7 +266,52 @@ public class CrewController {
         }
         return a;
     }
+    @PostMapping("/crew_write_page_update_detail")
+    @ResponseBody
+    public List<CrewVO> crew_write_page_update_detail(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int create_crew_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_page_write_detail = null;
+        try {
+            crew_page_write_detail = service.crew_page_write_detail(create_crew_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_page_write_detail;
+    }
 
-
-
+    @PostMapping("/crew_write_update")
+    @ResponseBody
+    public int crew_write_update(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestParam("crew_write_code") int crew_write_code,
+            @RequestParam("teamPhotoInput") MultipartFile[] teamPhotoInput,
+            @RequestParam("age[]3") String[] arr_age,
+            @RequestParam("gender3") String gender,
+            @RequestParam("teamIntro3") String content) {
+        int a=0;
+        String fileName = "";
+        token=token.substring("Bearer ".length());
+        try {
+            user_name=jwtUtil.setTokengetUsername(token);
+            user_code = service.usercodeSelect(user_name);
+            UUID uuid = UUID.randomUUID();
+            // 파일 업로드가 있는지 확인
+            if (teamPhotoInput != null && teamPhotoInput.length > 0 && !teamPhotoInput[0].isEmpty()) {
+                for (MultipartFile file : teamPhotoInput) {
+                    fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                    fileName = uuid.toString() + "_" + fileName;
+                    Path path = Paths.get(uploadDir + File.separator + fileName);
+                    Files.copy(file.getInputStream(), path);
+                }
+            }
+            String age = String.join(",", arr_age);
+            service.crew_write_update(crew_write_code, user_code, fileName, age, gender, content);
+        } catch (Exception e) {
+            a=0;
+            e.printStackTrace();
+        }
+        return a; // 성공적으로 생성된 경우 1 반환
+    }
 }
