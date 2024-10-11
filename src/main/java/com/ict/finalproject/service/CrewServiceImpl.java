@@ -32,6 +32,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_write_detail_check(int crew_write_code)
+    {
+        return dao.crew_write_detail_check(crew_write_code);
+    }
+
+    @Override
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord)
     {
         return dao.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);

@@ -94,12 +94,6 @@
             ,${param8}
         );
     </insert>
-    <select id="crew_page_write_detail" resultType="com.ict.finalproject.vo.CrewVO">
-        select addr,addr_gu,age,gender,crew_name
-        from   create_crew_tbl a
-        where  create_crew_code = ${param1};
-    </select>
-
     <insert id="crew_write_add">
         insert into crew_write
         (
@@ -126,7 +120,7 @@
     </insert>
 
     <select id="crew_write_detail_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.logo, a.crew_name, a.usercode, concat(a.gender,'·',a.age) as a_s, b.teamPhoto as b_s, b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d') AS writedate
+        select a.logo, a.crew_name, a.usercode, concat(a.gender,' · ',a.age) as a_s, b.teamPhoto as b_s, b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d %H:%i') AS writedate
         ,(select count(1)from crew_request_tbl where create_crew_code=a.create_crew_code)as a_n, ${param1} as b_n
         ,(select count(1)from crew_request_tbl where create_crew_code=a.create_crew_code and usercode=${param1})as c_n
         from   create_crew_tbl a, crew_write b
@@ -191,13 +185,23 @@
         delete_date = now()
         where crew_write_code = ${param2}
     </update>
-
+    <select id="crew_page_write_detail" resultType="com.ict.finalproject.vo.CrewVO">
+        select addr,addr_gu,age,gender,crew_name
+        from   create_crew_tbl a
+        where  create_crew_code = ${param1};
+    </select>
+    <select id="crew_write_detail_check" resultType="com.ict.finalproject.vo.CrewVO">
+        select teamPhoto,age,gender,content
+        from   crew_write a
+        where  crew_write_code = ${param1};
+    </select>
     <update id="crew_write_update">
         update crew_write
         set    teamPhoto = '${param3}'
-        ,age       = '${param4}'
-        ,gender	= '${param5}'
-        ,content   = '${param6}'
+        ,age = '${param4}'
+        ,gender = '${param5}'
+        ,content = '${param6}'
+        ,writedate = now()
         where crew_write_code = ${param1}
     </update>
 </mapper>

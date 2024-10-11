@@ -66,6 +66,7 @@ body{
 
 .team-header {
     display: flex;
+    margin-left:3px;
 }
 
 .team-link {
@@ -128,11 +129,12 @@ body{
 .team-info {
     font-size: 15px;
     color: #6c757d;
+    width:200px;
 }
 
 /* 멤버 모집 조건 박스 스타일 */
 .recruitment-box {
-    margin: 20px 20px;
+    margin: 10px 20px;
     padding: 33px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -209,13 +211,14 @@ modal-title {
 }
 
 .modal-content {
-    height: 65vh; /* 높이를 화면의 80%로 설정 */
+    min-height: 65vh; /* 최소 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
     border-radius: 10px; /* 테두리 둥글게 설정 */
 }
 .modal-body {
     padding: 10px;
     background-color: white;
-    height:400px;
+    min-height:400px;
     text-align: left;
 }
 .modal-header {
@@ -298,7 +301,7 @@ modal-title {
     color: #333;
     font-size: 16px;
     line-height: 26px;
-    min-height: 250px;
+    min-height: 300px;
     overflow: hidden;
     font-family: inherit !important;
     white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */

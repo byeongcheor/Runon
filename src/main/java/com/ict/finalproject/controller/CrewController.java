@@ -59,6 +59,13 @@ public class CrewController {
         return "crew/crewManage";
     }
 
+    // 크루가입신청 확인 페이지
+    @GetMapping("/crewWait")
+    public String crewWait(){
+        return "crew/crewWait";
+    }
+
+
     @PostMapping("/search_crewList")
     @ResponseBody
     public List<CrewVO> search_crewList(
@@ -266,6 +273,8 @@ public class CrewController {
         }
         return a;
     }
+
+    //수정시 작성된 크루정보띄우기
     @PostMapping("/crew_write_page_update_detail")
     @ResponseBody
     public List<CrewVO> crew_write_page_update_detail(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int create_crew_code) {
@@ -281,6 +290,23 @@ public class CrewController {
         return crew_page_write_detail;
     }
 
+    //수정시 작성된글 띄우기
+    @PostMapping("/crew_write_detail_check")
+    @ResponseBody
+    public List<CrewVO> crew_write_detail_check(@RequestParam("Authorization")String token,@RequestParam("crew_write_code") int crew_write_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_write_detail_check = null;
+        try {
+            crew_write_detail_check = service.crew_write_detail_check(crew_write_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println("crew_write_detail_check-->>"+crew_write_detail_check);
+        return crew_write_detail_check;
+    }
+    //수정글 업데이트
     @PostMapping("/crew_write_update")
     @ResponseBody
     public int crew_write_update(

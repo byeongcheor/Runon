@@ -21,6 +21,7 @@ public class CrewVO {
     private String c_s;
     private String d_s;
     private String e_s;
+    private String teamPhoto;
 
     private int a_n;
     private int b_n;
