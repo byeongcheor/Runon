@@ -4,9 +4,6 @@
 
 <script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
-    var usercode=$('#usercode').val();
-    var token = localStorage.getItem("Authorization");
-
 
     // 장바구니에 추가된 상품 수량 변경부분
     let number = 1;
@@ -17,15 +14,12 @@
     let appliedPoints = 0; // 적용된 포인트 (할인으로 적용됨)
 
     // 사용자 포인트(예시)
-    let userPoints = 1000;
-
-
+    let userPoints = "0";
 
     // 선택된 상품 삭제 함수
     function deleteSelectedItems() {
         const checkedItems = document.querySelectorAll('input[name="itemCheckbox"]:checked');
-        alert(usercode1);
-        alert(username1);
+
         if (checkedItems.length === 0) {
             alert("삭제할 상품을 선택해 주세요.");
             return; // 선택된 상품이 없으면 종료
@@ -155,11 +149,15 @@
     // 포인트 최대 적용 함수
     function applyMaxPoints() {
         // 사용자 포인트 가져오기
-        const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, '')); // 사용자 포인트 가져오기
+        const userPoints = getUserPoints(); // 사용자 포인트 가져오기
         document.getElementById('discountInput').value = userPoints; // 입력 필드에 사용자 포인트 설정
 
         // 포인트 적용 후 총 금액 업데이트
         applyCoupon(); // 최대 포인트를 적용한 후 총 금액 업데이트
+    }
+    // 사용자 포인트 가져오기
+    function getUserPoints() {
+        return parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, '')) || 0; // 사용자 포인트 가져오기
     }
 
     // 포인트 적용하기
@@ -168,7 +166,7 @@
         let points = parseInt(document.getElementById('discountInput').value) || 0;
 
         // 입력한 포인트가 사용자 포인트를 초과하지 않는지 확인
-        const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, ''));
+        const userPoints = getUserPoints();
         if (points > userPoints) {
             alert("사용할 수 있는 포인트가 부족합니다. 최대 " + userPoints + " 원까지만 사용 가능합니다.");
             document.getElementById('discountInput').value = userPoints; // 최대 포인트로 설정
@@ -178,7 +176,7 @@
         // 총 상품 금액보다 포인트가 클 경우 포인트를 상품 금액까지만 적용
         let totalPrice = parseInt(document.getElementById("productTotal").innerText.replace(/[^0-9]/g, ''));
         if (points > totalPrice) {
-            points = totalPrice;
+            points = totalPrice; // 포인트를 상품 금액으로 제한
         }
 
         // 포인트 적용 후, 모달 닫기
@@ -191,7 +189,7 @@
     }
 
     // 총 금액과 할인 금액을 반영한 최종 금액 업데이트
-    function updateTotalAmountWithDiscount() {
+    function updateTotalAmountWithDiscount(appliedPoints) {
         // productTotal에서 총 상품 금액을 가져옵니다.
         const productTotalText = document.getElementById("productTotal").innerText;
         let productTotal = parseInt(productTotalText.replace(/[^0-9]/g, ''));
@@ -279,20 +277,6 @@
                 alert("선택한 상품이 없습니다."); // 체크된 상품이 없으면 메시지 표시
             }
         });
-        $.ajax({
-           url:"/order/cart",
-            type:"POST",
-            data: {
-               usercode: usercode1,
-            },
-            success: function(r) {
-                cart = r.ordercart;
-                cart.forEach(function (cart) {
-                    tag = "<div>list.subject</div>"
-                });
-                document.getElementById('orderButton').innerHTML = tag;
-            }
-        });
     };
 
     // 토스페이먼츠 결제 요청
@@ -330,6 +314,8 @@
 
 
         });
+
+
 
 
         try {
@@ -418,7 +404,7 @@
                             <div class="modal-body">
                                 <p class="user-points">내 포인트: <span id="userPoints">${userPoints.mypoint}</span> 원</p> <!-- 회원 포인트 표시 -->
                                 <p class="coupon-text">사용할 포인트를 입력하세요:</p>
-                                <input type="number" id="discountInput" placeholder="0" min="0" max="${userPoints.mypoint}">
+                                <input type="number" id="discountInput" placeholder="0" min="0">
                             </div>
                             <div class="modal-footer">
                                 <div class="total-amount">
@@ -470,4 +456,3 @@
         </div>
     </div>
 </div>
-

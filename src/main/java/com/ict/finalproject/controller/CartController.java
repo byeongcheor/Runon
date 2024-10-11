@@ -54,8 +54,8 @@ public class CartController {
             model.addAttribute("cartItems", cartItems); // 장바구니 항목을 모델에 추가
 
             // 회원의 포인트 정보 가져오기
-           // PointVO pointInfo = pointService.getPointByUsercode(usercode);
-           // model.addAttribute("userPoints", pointInfo); // 포인트 정보를 모델에 추가
+            PointVO pointInfo = pointService.getPointByUsercode(usercode);
+            model.addAttribute("userPoints", pointInfo); // 포인트 정보를 모델에 추가
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
@@ -66,7 +66,7 @@ public class CartController {
 
 
     //주문내역
-    @GetMapping("order/ordersheet")
+    @GetMapping("ordersheet")
     public String ordersheet(){
 
         return "order/ordersheet";

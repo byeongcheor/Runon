@@ -6,10 +6,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.service.MypageService;
 
-import com.ict.finalproject.vo.CertificateVO;
-import com.ict.finalproject.vo.MarathonFormVO;
-import com.ict.finalproject.vo.MemberVO;
-import com.ict.finalproject.vo.PagingVO;
+import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.Value;
@@ -27,10 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @Slf4j
@@ -139,9 +133,10 @@ public class MypageController {
     @GetMapping("mypage/marathonFormCheck")
     @ResponseBody
     public Map<String, Object> marathonFormCheck(
-            @RequestParam("username") String username
+            @RequestParam("usercode") int usercode
     ){
-        MarathonFormVO marathonVO = service.selectMarathonForm(username);
+        MarathonFormVO marathonVO = service.selectMarathonForm(usercode);
+        System.out.println("qwer"+marathonVO);
         Map<String, Object> result = new HashMap<>();
         if (marathonVO != null) {
             result.put("exists", true); // 신청서가 존재하면 true
@@ -152,47 +147,39 @@ public class MypageController {
 
         return result;
     }
-    /*//마라톤신청서작성(DB)
+    //마라톤신청서작성(DB)
     @PostMapping("/mypage/createMarathonForm")
     @ResponseBody
     public String createMarathonForm(
-            @RequestHeader("Authorization") String token,
-            @RequestBody MarathonFormVO marathonVO){
-        token=token.substring("Bearer ".length());
+            MarathonFormVO marathonVO){
+        System.out.println("sadf"+marathonVO);
         service.createMarathonForm(marathonVO);
         return "200";
-    }*/
-    /*@PostMapping("/mypage/createMarathonForm")
+    }
+    //나의메이트이동
+    @PostMapping("/mypage/openMymate")
     @ResponseBody
-    public Map<String, String> createMarathonForm(
-            @RequestHeader("Authorization") String token,
-            @ModelAttribute MarathonFormVO marathonVO) {
-        Map<String, String> response = new HashMap<>();
+    public String openMymate(@RequestParam("username")String username){
+        return null;
+    }
+    @GetMapping("/mypage/myMate")
+    public String myMate1(){
 
-        try {
-            // JWT에서 토큰을 추출
-            token = token.substring("Bearer ".length());
-            String username = jwtUtil.setTokengetUsername(token);
+        return "mypage/myMate";
+    }
+    @PostMapping("/mypage/mymateList")
+    @ResponseBody
+    public Map<String, Object> mymateList(
+            @RequestParam("usercode") int usercode
+    ){
+        System.out.println("메이트유저온다"+usercode);
+        List<MemberVO> membervo = service.selectMemberAll(usercode);
+        System.out.println(membervo);
+        Map<String, Object> result = new HashMap<>();
+        result.put("member", membervo);
 
-            // username으로 usercode 조회
-            int usercode = service.selectUsercode(username);
-            marathonVO.setUsercode(usercode);
-
-            // 마라톤 신청서 저장
-            service.createMarathonForm(marathonVO);
-            response.put("message", "신청서 작성이 완료되었습니다.");
-        } catch (IllegalArgumentException e) {
-            // JWT 토큰에서 사용자 이름 추출 실패 또는 유효하지 않은 경우
-            e.printStackTrace();
-            response.put("message", "유효하지 않은 토큰입니다.");
-        } catch (Exception e) {
-            // 기타 예외 처리
-            e.printStackTrace();
-            response.put("message", "신청서 작성 중 오류가 발생했습니다.");
-        }
-
-        return response;
-    }*/
+        return result;
+    }
     //내기록인증하기 이동
     @PostMapping("/mypage/certificate")
     @ResponseBody
@@ -203,12 +190,143 @@ public class MypageController {
         return null;
     }
     @GetMapping("/mypage/certificateList")
-    public ModelAndView certificateList(@RequestParam("username")String username) {
-        log.info("username:"+username);
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("list", service.selectCertificateAll(username));
-        mav.setViewName("mypage/certificateList");
-        return mav;
+    public String certificateList1() {
+
+        return "mypage/certificateList";
+    }
+    //기록인증하기리스트페이지
+    @PostMapping("/mypage/certificateList")
+    @ResponseBody
+    public Map<String, Object> certificateList(@RequestParam("username")String username,@RequestParam("usercode")int usercode) {
+        List<CertificateVO> list = service.selectCertificateAll(username);
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        return result;
+    }
+    //기록인증하기
+    @PostMapping("/mypage/uploadCertificate")
+    @ResponseBody
+    public CertificateVO uploadCertificate(
+            @RequestParam("content") String content,
+            @RequestParam("proof_photo") MultipartFile file,
+            @RequestParam("username") String username,
+            HttpServletRequest request
+    ){
+        CertificateVO cvo = new CertificateVO();
+        try{
+            String saveDir = request.getServletContext().getRealPath("/resources/uploadCertificate/");
+             File dir = new File(saveDir);
+             if(!dir.exists()){
+                 dir.mkdirs();
+             }
+             if(!file.isEmpty()){
+                 String originalFilename = file.getOriginalFilename();
+                 String miliFilename = System.currentTimeMillis()+originalFilename;
+                 String savePath = saveDir+miliFilename;
+                 file.transferTo(new File(savePath));
+                 System.out.println("확인1");
+                 cvo.setContent(content);
+                 cvo.setProof_photo(miliFilename);
+                 cvo.setUsername(username);
+                 cvo.setUpdated_date(String.valueOf(new Date()));
+                 System.out.println("확인2");
+                 service.updateCertificate(cvo);
+                 System.out.println("저장확인1");
+             }
+            System.out.println("저장확인후1");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("오면안되는곳1");
+        }
+        System.out.println("마지막확인1");
+        return cvo;
+    }
+    //인증서삭제
+    @PostMapping("/mypage/deleteCertificate")
+    @ResponseBody
+    public String deleteCertificate(@RequestParam("certificate_code")int certificate_code,
+                                    HttpServletRequest request) {
+        try {
+            CertificateVO cvo = service.selectCertificate(certificate_code);
+
+            String saveDir = request.getServletContext().getRealPath("/resources/uploadCertificate/");
+            String filePath = saveDir + "/" + cvo.getProof_photo();
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+            service.deleteCertificate(certificate_code);
+
+            return "success";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "fail";
+        }
+    }
+    //내QnA이동
+    @PostMapping("/mypage/openmyQnA")
+    @ResponseBody
+    public String myQnA(@RequestParam("username")String username,
+                        @RequestParam("usercode")int usercode){
+        return null;
+    }
+    @GetMapping("/mypage/myQnA")
+    public String myQnA1(){
+
+        return "mypage/myQnA";
+    }
+    //QnA리스트
+    @PostMapping("/mypage/myQnAList")
+    @ResponseBody
+    public Map<String, Object> myQnAList(@RequestParam("username")String username,
+                                      @RequestParam("usercode")int usercode){
+        List<QnAVO> list = service.selectQnAAll(usercode);
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        return result;
+    }
+    //QnA작성
+    @PostMapping("/mypage/submitQnA")
+    @ResponseBody
+    public QnAVO submitQnA(@RequestParam("usercode")int usercode,
+                           @RequestParam("subject")String subject,
+                           @RequestParam("content")String content){
+
+        QnAVO qvo = new QnAVO();
+        System.out.println("여기까지안오나봐");
+        System.out.println("성공"+qvo);
+        qvo.setQna_subject(subject);
+        qvo.setQna_content(content);
+        qvo.setUsercode(usercode);
+
+        service.updateQnA(qvo);
+
+        return qvo;
+    }
+    //QnA삭제
+    @PostMapping("/mypage/deleteQnA")
+    @ResponseBody
+    public String deleteQnA(@RequestParam("usercode")int usercode,
+                            @RequestParam("qna_code")int qna_code){
+        QnAVO qvo = service.selectQnA(qna_code);
+        service.deleteQnA(qna_code);
+
+        return "success";
+    }
+    //QnA조회
+    @PostMapping("/mypage/viewQnA")
+    @ResponseBody
+    public QnAVO viewQnA(@RequestParam("usercode") int usercode,
+                         @RequestParam("qna_code")int qna_code){
+        QnAVO qvo = service.selectQnA(qna_code);
+        if(qvo.getAnswer_content()==null){
+            qvo.setAnswer_content("답변대기상태 입니다.");
+        }else{
+            qvo.setAnswer_content(qvo.getAnswer_content());
+            service.updateQnAStatus(1, qna_code);
+        }
+        return qvo;
     }
     //회원정보수정(DB)
     @PostMapping("/mypage/editProfile")

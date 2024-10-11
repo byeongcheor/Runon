@@ -43,10 +43,12 @@ public class ChatController {
 
         // 메시지에 서버에서 받은 시간을 추가
         String add_date = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+            vo.setAdd_date(add_date);
+            System.out.println("Generated add_date: " + add_date); // 로그 추가
 
-        vo.setMessage_code(messageCodeCounter++); // 현재 값을 설정하고 증가시킴
+
         // 메시지를 모든 클라이언트에게 반환
-        return new MessageVO(vo.getUsercode(), vo.getRecipient(), vo.getContent(), add_date);
+        return new MessageVO(vo.getUsercode(), vo.getNickname(), vo.getRecipient(), vo.getContent(), add_date);
     } catch (Exception e) {
         System.err.println("Error while sending message: " + e.getMessage());
         // 예외 처리 로직 추가 가능

@@ -780,7 +780,7 @@
         stompClient.connect({}, function(frame) {
             console.log('WebSocket 연결 성공:', frame);
             setConnected();
-
+            console.log(usercode, nickname);
             // 서버로 메시지 전송 (닉네임 접속 알림)
             sendMessage(usercode, nickname, 'all', nickname + "님이 접속하였습니다.");
 
@@ -789,13 +789,14 @@
                 console.log('receiveMsg->',receiveMsg);
                 var jsonMsg = JSON.parse(receiveMsg.body);
                 console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
-                showCatMessage(jsonMsg,nickname);
+                showCatMessage(jsonMsg);
             });
         });
     }
 
     // 메시지를 입력창에서 가져와 서버로 전송하는 함수
     function sendMessageFromInput() {
+
         var inputMsg = $("#inputMsg").val(); // 입력한 메시지
         if (inputMsg === "") return false; // 빈 메시지 전송 방지
 
@@ -818,7 +819,7 @@
 
 
     // 서버에서 받은 메시지를 화면에 표시하는 함수
-    function showCatMessage(data,nickname) {
+    function showCatMessage(data) {
         console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
         // 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
         var tag = '';
@@ -828,7 +829,7 @@
         <div class="chat-message">
             <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
-                <span class="nickname">`+nickname+`</span>
+                <span class="nickname">`+data.nickname+`</span>
                 <p>`+data.content+`</p>
                 <div class="timestamp">`+data.add_date+`</div>
             </div>
@@ -839,9 +840,9 @@
         <div class="chat-message-left">
             <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
-                <span class="nickname">${data.nickname}</span>
-                <p>${data.content}</p>
-                <div class="timestamp-left">${data.add_date}</div>
+                <span class="nickname">`+data.nickname+`</span>
+                <p>`+data.content+`</p>
+                <div class="timestamp-left">`+data.add_date+`</div>
             </div>
         </div>`;
         }

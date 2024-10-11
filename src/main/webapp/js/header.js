@@ -12,7 +12,6 @@ window.onload=function(){
             ToKen:ToKen
         },
         success:function(r){
-           // alert("Test");
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
 

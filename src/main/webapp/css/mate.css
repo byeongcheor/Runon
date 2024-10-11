@@ -336,6 +336,11 @@ body {
 
 
 /* 오른쪽 채팅창 */
+#taMsg {
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+
+}
+
 #chatbox {
     height: 600px;
     width: 450px;
@@ -350,10 +355,12 @@ body {
     position: sticky;
     top: 100px; /* 해더 아래로 100px 고정 */
     z-index: 10;
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+
 }
 #chatbox::-webkit-scrollbar {
     width: 6px;
-    margin-bottom: 10px; /* 하단에 10px 간격 추가 */
+
 }
 #chatbox::-webkit-scrollbar-thumb {
     background-color: #fcf6f6; /* 스크롤바 색상 */
