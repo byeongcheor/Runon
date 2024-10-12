@@ -14,6 +14,7 @@ public interface CrewDAO {
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int totalRecord(PagingVO pVO);
     public int usercodeSelect(String user_name);
+    public int crew_code_select(int user_code);
     public int crew_write_hit_update(int writeCrewCode);
     public int crew_name_check(String crew_name_check);
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content, String age, int user_code);
@@ -24,6 +25,8 @@ public interface CrewDAO {
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
+    public int crew_member_insert(int user_code, int crewCode, int crew_position);
+
 
 
 }
