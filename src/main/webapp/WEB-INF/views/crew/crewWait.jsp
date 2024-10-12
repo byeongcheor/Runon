@@ -145,6 +145,5 @@ var create_crew_code;
         });
     }
     function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
-    }
+        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;    }
 </script>

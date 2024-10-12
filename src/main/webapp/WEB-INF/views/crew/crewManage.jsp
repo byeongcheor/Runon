@@ -128,7 +128,6 @@ var position;
         });
     }
     function crew_manage_select(element){
-         $('#crew_manage_list').html('');
          var id = element.id===undefined?'member': element.id;
          $('[name="crew_select"]').css('color', 'gray');
          $('#'+id).css('color', 'black');
@@ -172,8 +171,10 @@ var position;
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
+            if(user_code!=response[i].usercode && response[i].b_n>0){
                 list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
-            }            list += '   </div> ';
+            }
+            list += '   </div> ';
             list += '  </div> ';
             list += '</div> ';
             list += '</li> ';
@@ -182,19 +183,23 @@ var position;
 
         $('#crew_manage_list').append(list);
     }
+    function openCustomModal(position) {
+      clog(position);
+      if(position>1){
+        $('#manage').hide();
+        $('#out').hide();
+      }
+      document.getElementById('customModal').style.display = 'block';
+    }
 
     function openCustomModal(position) {
       clog(position);
       if(position>1){
         $('#manage').hide();
         $('#out').hide();
-     document.getElementById('customModal').style.display = 'block';
+      }      document.getElementById('customModal').style.display = 'block';
     }
 
-    function closeCustomModal() {
-      document.getElementById('customModal').style.display = 'none';
-    }
-create_crew_code
     function go_request_wait(){
         window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code;
 
@@ -203,5 +208,4 @@ create_crew_code
     function go_mypage(usercode){
         window.location.href = '/mypage/myHome?usercode=' + usercode;
     }
-
 </script>
