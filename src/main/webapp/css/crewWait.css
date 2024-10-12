@@ -11,67 +11,90 @@
 body{
     background-color: #F8FAFB;
 }
-#bannerBox{
-    width:100%;
-    height:200px;
-    margin: 0 auto;
-}
-#bannerImg{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.content_body{
+.content-body {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 20px;
+}
+.content-full {
+    width: 100%;
     max-width: 1050px;
-    margin: 0 auto;
-    hight:100%;
-}
-.content_full{
-    position: relative;
-    width: 100%;
-    height:800px;
-    margin-right: 20px;
+    height: 800px;
     background-color: white;
-    margin-top: 20px;
-     border-radius: 10px; /* 테두리를 둥글게 설정 */
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 40px;
 }
-.join_container{
-    margin-top:31px;
-    margin-left:30px;
+.join-container {
+    display: flex;
+    flex-direction: column;
+}
+.menu-container {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin: 0 auto; /* 중앙으로 보내기 위한 마진 설정 */
+    max-width: 300px; /* 중앙정렬을 더 명확하게 하기 위한 너비 설정 */
+}
+.menu-title-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.menu-desc p {
+    margin: 5px 0; /* 문단 사이의 간격을 줄임 */
+}
+.team-container {
+    margin-top: 30px;
+}
+.team-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.team-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+.team-link {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    flex-grow: 1;
+    padding:30px;
+    margin-left:30px;
 }
-
-.team-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+.team-emblem {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
 }
-
-.team-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+.team-content {
+    display: flex;
+    flex-direction: column;
 }
-
-.team-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
+.cancel-notice {
+    font-size: 14px;
+    color: rgb(255, 77, 55);
+    margin-left: 10px;
 }
-
-.teamemblem {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
+.team-name-box {
+    font-size: 16px;
+    font-weight: bold;
 }
+.join-check-button{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    margin-right:80px;
 
+}
