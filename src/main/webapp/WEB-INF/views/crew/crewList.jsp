@@ -1059,8 +1059,8 @@ function submitCrewInfo() {
     }
     function go_my_crew(create_crew_code,user_code) {
         $('#myCrewModal').modal('hide');
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code;;
-    }
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code;
+;    }
 
     function join_wait() {
         $('#myCrewModal').modal('hide');

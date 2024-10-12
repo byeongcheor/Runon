@@ -84,10 +84,9 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option">친구 신청</button>
-      <button class="custom-modal-option">운영진으로 추가</button>
-      <button class="custom-modal-option">연락처 복사</button>
-      <button class="custom-modal-danger">강제 퇴장</button>
+      <button class="custom-modal-option" id=manage>운영진으로 추가</button>
+      <button class="custom-modal-option" id=report>신고하기</button>
+      <button class="custom-modal-danger" id=out>강제 퇴장</button>
     </div>
   </div>
 </div>
@@ -113,6 +112,7 @@ var position;
                 create_crew_code : create_crew_code
             },
             success: function(response) {
+
                 $('#crew_img').attr('src', '/crew_upload/'+response[0].logo);
                 $('#crew_name').text(response[0].crew_name);
                 $('#addr').text(response[0].addr);
@@ -141,7 +141,6 @@ var position;
             id               : id
         },
         success: function(response) {
-            clog(response[0]);
             if (id=='member')crew_manage_select_member(response);
         },
         error: function(e) {
@@ -153,19 +152,25 @@ var position;
     function crew_manage_select_member(response){
         $('#crew_manage_list').html('');
         var list ='';
+
         for(var i in response){
+            var a = response[i].a_n>1?"":"운영진";
             list += '<li class="member-item"> ';
             list += '<div class="item-flex"> ';
             list += '   <img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img"> ';
             list += '   <div class="profile-info"> ';
             list += '     <div class="info-wrapper"> ';
             list += '      <p class="name">'+response[i].b_s+'</p> ';
-            list += '      <div class="label-operator">'+response[i].a_n>1?"":"운영진"+'</div> ';
+            list += '      <div class="label-operator">'+a+'</div> ';
             list += '     </div> ';
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
-            list += '     <div class="more-icon" onclick="openCustomModal()"> &#8943;</div> ';
+            clog(user_code);
+            clog(response[i].usercode);
+            if(user_code!=response[i].usercode && response[i].b_n>0){
+                list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
+            }
             list += '   </div> ';
             list += '  </div> ';
             list += '</div> ';
@@ -175,7 +180,12 @@ var position;
 
         $('#crew_manage_list').append(list);
     }
-    function openCustomModal() {
+    function openCustomModal(position) {
+      clog(position);
+      if(position>1){
+        $('#manage').hide();
+        $('#out').hide();
+      }
       document.getElementById('customModal').style.display = 'block';
     }
 

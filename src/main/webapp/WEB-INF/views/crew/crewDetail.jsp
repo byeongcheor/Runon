@@ -550,7 +550,7 @@ $('#prevBtnInCreateModal').on('click', function() {
         });
     }
     function go_crew_manage(){
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + usercode;
     }
 
 </script>

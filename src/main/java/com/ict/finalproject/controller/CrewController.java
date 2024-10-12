@@ -398,7 +398,7 @@ public class CrewController {
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
-            if (id.equals("member")) {} crew_manage_select=service.crew_manage_member(crewCode);
+            if (id.equals("member")) {} crew_manage_select=service.crew_manage_member(crewCode,user_code);
 
         } catch (Exception e) {
             e.printStackTrace();
