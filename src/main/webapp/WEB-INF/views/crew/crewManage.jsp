@@ -156,7 +156,6 @@ var position;
         for(var i in response){
             list += '<li class="member-item"> ';
             list += '<div class="item-flex"> ';
-<<<<<<< HEAD
             list += '   <img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img"> ';
             list += '   <div class="profile-info"> ';
             list += '     <div class="info-wrapper"> ';
@@ -168,19 +167,6 @@ var position;
             list += '   <div class="dropdown"> ';
             list += '     <div class="more-icon" onclick="openCustomModal()"> &#8943;</div> ';
             list += '   </div> ';
-=======
-            list += '	<img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img"> ';
-            list += '	<div class="profile-info"> ';
-            list += '	  <div class="info-wrapper"> ';
-            list += '		<p class="name">'+response[i].b_s+'</p> ';
-            list += '		<div class="label-operator">'+response[i].a_n>1?"":"운영진"+'</div> ';
-            list += '	  </div> ';
-            list += '	</div> ';
-            list += '  <div class="menu"> ';
-            list += '	<div class="dropdown"> ';
-            list += '	  <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
-            list += '	</div> ';
->>>>>>> 49e83110a497bd96c067aa1e78bdbc835bf11f4f
             list += '  </div> ';
             list += '</div> ';
             list += '</li> ';
