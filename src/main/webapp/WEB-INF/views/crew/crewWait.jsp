@@ -45,19 +45,60 @@
                                </div>
                             </a>
                             <div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;">
-                                <button type="submit" class="btn btn-outline-secondary" onClick="join_write_check()">
+                                <button type="button" class="custom-button" onClick="openModal()">
                                     신청 확인
                                 </button>
                             </div>
                          </li>
+                         <li class="team-item" style="display: flex; justify-content: space-between; width: 100%;">
+                             <a class="team-link" style="flex-grow: 1;">
+                                <img src="/crew_upload/team.png" class="team-emblem">
+                                <div class="team-content">
+                                    <div style="display: flex; align-items: center;">
+                                         <span class="team-name" style="font-size: 18px; font-weight: bold;">선풍기</span>
+                                         <span class="cancel-notice">
+                                             팀에서 신청을 취소했어요
+                                         </span>
+                                    </div>
+                                </div>
+                             </a>
+                             <div class="join-check-button">
+                                <button type="button" class="custom-button" onClick="openModal()">
+                                    신청 확인
+                                </button>
+                             </div>
+                      </li>
                      </ul>
                 </section>
             </div>
         </div>
     </div>
 </div>
+<!-- 모달 창 -->
+    <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="joinModalLabel">내 신청</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>10월 12일 신청</p>
+            <p>가입신청합니다</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-bs-dismiss="modal">신청 취소하기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 <script>
-
+ function openModal() {
+        // Bootstrap의 모달을 표시하는 함수 호출
+        var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
+        myModal.show();
+      }
 
 </script>
