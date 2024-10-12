@@ -31,33 +31,14 @@
                     </div>
                 </section>
                 <section class="team-container">
-                    <ul class="team-list" id='team_list'>
-                        <li class="team-item">
-                            <a class="team-link">
-                               <img src="/crew_upload/team.png" class="team-emblem">
-                               <div class="team-content" style="flex-grow: 1;">
-                                   <div style="display: flex; align-items: center;">
-                                        <span class="team-name" style="font-size: 18px; font-weight: bold;">선풍기</span>
-                                        <span class="cancel-notice" style="font-size: 16px; color: rgb(255, 77, 55); margin-left: 10px;">
-                                            팀에서 신청을 취소했어요
-                                        </span>
-                                   </div>
-                               </div>
-                            </a>
-                            <!-- 신청 확인 버튼을 같은 선상의 오른쪽 끝으로 이동 -->
-                            <div class="join-check-button" style="margin-left: auto;">
-                                <button type="button" class="custom-button" onClick="openModal()">
-                                    신청 확인
-                                </button>
-                            </div>
-                         </li>
-                     </ul>
+              <ul class="team-list" id='team_list'>
+                    </ul>
                 </section>
             </div>
         </div>
     </div>
 </div>
-    <!-- 모달 창 -->
+<!-- 모달 창 -->
     <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -79,9 +60,12 @@
 var Authorization = localStorage.getItem("Authorization");
 var create_crew_code;
 
+<script>
+var Authorization = localStorage.getItem("Authorization");
+var create_crew_code;
+
     function openModal(crew_code) {
-        create_crew_code = crew_code;
-        var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
+        create_crew_code = crew_code;        var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
         $.ajax({
             url: '/crew/crew_wait_detail',
@@ -107,23 +91,25 @@ var create_crew_code;
         crew_wait_select();
     });
 
-    function crew_wait_select(){
+
         var list ='';
         $.ajax({
             url: '/crew/crew_wait_select',
             type: 'post',
             async: false,
             data: {
-                Authorization : Authorization
+
             },
             success: function(response) {
                 for (var i in response) {
                     var font_color = response[i].a_n > 1? "red":"blue";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
                     list += '<a class="team-link" style="flex-grow: 1;"> ';
+
                     list += '<img src="/crew_upload/'+response[i].logo+'" class="team-emblem" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')"> ';
                     list += '<div class="team-content"> ';
                     list += '<div style="display: flex; align-items: center;"> ';
+
                     list += '<span class="team-name" style="font-size: 18px; font-weight: bold;"onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')">'+response[i].crew_name+'</span> ';
                     list += '<span class="cancel-notice" style="font-size: 16px; color: '+font_color+'; margin-left: 10px;"> ';
                     if (response[i].a_n == 0) list += '승인을 기다리고있어요';
@@ -134,6 +120,7 @@ var create_crew_code;
                     list += '</div> ';
                     list += '</a> ';
                     list += '<div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
+
                     list += '<button type="submit" class="btn btn-outline-secondary" onClick="openModal('+response[i].create_crew_code+')"> ';
                     list += '신청 확인 ';
                     list += '</button> ';
@@ -146,6 +133,7 @@ var create_crew_code;
             }
         });
     }
+
     function crew_join_delete(){
         $.ajax({
             url: '/crew/join_delete',
