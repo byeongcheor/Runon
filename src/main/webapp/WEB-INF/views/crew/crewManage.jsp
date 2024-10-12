@@ -38,53 +38,13 @@
             <section class="section1">
               <div class="section_nav">
                 <ul>
-                  <li>멤버</li>
-                  <li>공지</li>
-                  <li>크루관리</li>
+                  <li id=member name=crew_select onClick="crew_manage_select(this)">멤버</li>
+                  <li id=notice name=crew_select onClick="crew_manage_select(this)">공지</li>
+                  <li id=manage name=crew_select onClick="crew_manage_select(this)">크루관리</li>
                 </ul>
               </div>
                   <div class="member">
-                    <ul class="member-list">
-                      <li class="member-item">
-                        <div class="item-flex">
-                          <!-- 프로필 정보 -->
-                          <a href="#" class="profile">
-                            <img src="https://d31wz4d3hgve8q.cloudfront.net/static/img/img_profile_default.png" class="profile-img">
-                            <div class="profile-info">
-                              <div class="info-wrapper">
-                                <p class="name">장재성</p>
-                                <div class="label-operator">운영진</div>
-                              </div>
-                            </div>
-                          </a>
-                          <!-- more-icon 클릭 시 모달 띄우기 -->
-                          <div class="menu">
-                            <div class="dropdown">
-                              <div class="more-icon" onclick="openModal()"> &#8943;</div>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="member-item">
-                      <div class="item-flex">
-                        <!-- 프로필 정보 -->
-                        <a href="#" class="profile">
-                          <img src="https://d31wz4d3hgve8q.cloudfront.net/static/img/img_profile_default.png" class="profile-img">
-                          <div class="profile-info">
-                            <div class="info-wrapper">
-                              <p class="name">장재성</p>
-                              <div class="label-operator">운영진</div>
-                            </div>
-                          </div>
-                        </a>
-                        <!-- more-icon 클릭 시 모달 띄우기 -->
-                        <div class="menu">
-                          <div class="dropdown">
-                            <div class="more-icon" onclick="openModal()"> &#8943;</div>
-                          </div>
-                        </div>
-                      </div>
-                      </li>
+                    <ul class="member-list" id=crew_manage_list>
                     </ul>
                 </div>
             </section>
@@ -116,13 +76,31 @@
         </div>
     </div>
 </div>
-
+<!-- 커스텀 모달 창 -->
+<div id="customModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <span class="custom-modal-title">장재성</span>
+      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body">
+      <button class="custom-modal-option">친구 신청</button>
+      <button class="custom-modal-option">운영진으로 추가</button>
+      <button class="custom-modal-option">연락처 복사</button>
+      <button class="custom-modal-danger">강제 퇴장</button>
+    </div>
+  </div>
+</div>
 <script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
+const user_code = urlParams.get('user_code');
+var position;
     $(document).ready(function() {
+        $('#member').css('color', 'black');
         crew_deatil_select();
+        crew_manage_select('');
     });
 
     function crew_deatil_select(){
@@ -149,6 +127,59 @@ const create_crew_code = urlParams.get('create_crew_code');
             }
         });
     }
+    function crew_manage_select(element){
+         var id = element.id===undefined?'member': element.id;
+         $('[name="crew_select"]').css('color', 'gray');
+         $('#'+id).css('color', 'black');
+    $.ajax({
+        url: '/crew/crew_manage_select',
+        type: 'post',
+        async: false,
+        data: {
+            Authorization    : Authorization,
+            create_crew_code : create_crew_code,
+            id               : id
+        },
+        success: function(response) {
+            clog(response[0]);
+            if (id=='member')crew_manage_select_member(response);
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+    }
+
+    function crew_manage_select_member(response){
+        $('#crew_manage_list').html('');
+        var list ='';
+        for(var i in response){
+            list += '<li class="member-item"> ';
+            list += '<div class="item-flex"> ';
+            list += '	<img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img"> ';
+            list += '	<div class="profile-info"> ';
+            list += '	  <div class="info-wrapper"> ';
+            list += '		<p class="name">'+response[i].b_s+'</p> ';
+            list += '		<div class="label-operator">'+response[i].a_n>1?"":"운영진"+'</div> ';
+            list += '	  </div> ';
+            list += '	</div> ';
+            list += '  <div class="menu"> ';
+            list += '	<div class="dropdown"> ';
+            list += '	  <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
+            list += '	</div> ';
+            list += '  </div> ';
+            list += '</div> ';
+            list += '</li> ';
+        }
 
 
+        $('#crew_manage_list').append(list);
+    }
+    function openCustomModal() {
+      document.getElementById('customModal').style.display = 'block';
+    }
+
+    function closeCustomModal() {
+      document.getElementById('customModal').style.display = 'none';
+    }
 </script>

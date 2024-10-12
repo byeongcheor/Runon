@@ -41,6 +41,9 @@ body{
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+        display: flex; /* 가로 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
+
 }
 .menu-desc p {
     margin: 5px 0; /* 문단 사이의 간격을 줄임 */
@@ -74,8 +77,8 @@ s
     flex-grow: 1;
 }
 .team-emblem {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 15px;
@@ -141,7 +144,7 @@ s
           background-color: #ff3333; /* hover 시 색상 변경 */
       }
       .modal-subtitle {
-          font-size: 12px; /* 작은 폰트 크기 */
+          font-size: 15px; /* 작은 폰트 크기 */
           color: #6c757d; /* 회색 텍스트 */
       }
       .text-wrapper {
@@ -153,3 +156,49 @@ s
           white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
           overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
       }
+
+.profileBox{
+    width: 63px;
+    height: 63px;
+    border-radius: 200px;
+    margin-right: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.profileImg{
+    width: 100%;
+    height: 100%;
+    border-radius: 200px;
+    object-fit: cover;
+}
+
+.menu-title {
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+.info-name-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.info-desc span {
+    font-size: 14px;
+    color: #9eaab3;
+}
+
+.info-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.info-time {
+    font-size: 13px;
+    margin-left: 5px;
+    color: #727f88;
+}
+.info-desc {
+    margin-top: 5px; /* 기존의 간격을 줄이기 위해 작은 값으로 설정 */
+    font-size: 12px;
+    color: #9eaab3;
+}
+

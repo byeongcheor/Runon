@@ -265,3 +265,82 @@
     cursor: pointer;
     display: inline-block;
   }
+  /* 커스텀 모달 기본 설정 */
+  .custom-modal {
+    display: none; /* 처음에는 보이지 않음 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+  }
+
+  /* 커스텀 모달 창 컨텐츠 */
+  .custom-modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 커스텀 모달 헤더 */
+  .custom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .custom-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .custom-close {
+    cursor: pointer;
+    font-size: 24px;
+  }
+
+  /* 커스텀 모달 내용 */
+  .custom-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 옵션 간의 간격 */
+    padding-top: 15px;
+  }
+
+  /* 일반 옵션 버튼 */
+  .custom-modal-option {
+    background-color: #f5f6f8;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .custom-modal-option:hover {
+    background-color: #e2e3e5;
+  }
+
+  /* 위험 옵션 버튼 (강제 퇴장) */
+  .custom-modal-danger {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .custom-modal-danger:hover {
+    background-color: #ff3333;
+  }
