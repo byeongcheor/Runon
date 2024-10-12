@@ -31,12 +31,14 @@
                     </div>
                 </section>
                 <section class="team-container">
+                    <ul class="team-list" id='team_list'>
+                    </ul>
                 </section>
             </div>
         </div>
     </div>
 </div>
-<!-- 모달 창 -->
+    <!-- 모달 창 -->
     <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -45,11 +47,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>10월 12일 신청</p>
-            <p>가입신청합니다</p>
+            <p class="modal-subtitle" id='write_date'></p>
+            <pre class="text-wrapper" id='content'></pre>
           </div>
           <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal">신청 취소하기</button>
+            <button type="button" data-bs-dismiss="modal" onClick="crew_join_delete();" >신청 취소하기</button>
           </div>
         </div>
       </div>
@@ -57,34 +59,55 @@
 
 
 <script>
-function openModal() {
-        // Bootstrap의 모달을 표시하는 함수 호출
+var Authorization = localStorage.getItem("Authorization");
+var create_crew_code;
+
+    function openModal(crew_code) {
+        create_crew_code = crew_code;
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
+        $.ajax({
+            url: '/crew/crew_wait_detail',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : crew_code
+            },
+            success: function(response) {
+                $('#write_date').text(response[0].writedate);
+                $('#content').text(response[0].content);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+
+
       }
 
     $(document).ready(function() {
         crew_wait_select();
     });
 
-function crew_wait_select(){
+    function crew_wait_select(){
         var list ='';
         $.ajax({
             url: '/crew/crew_wait_select',
             type: 'post',
             async: false,
             data: {
-                Authorization : Authorization,
+                Authorization : Authorization
             },
             success: function(response) {
                 for (var i in response) {
                     var font_color = response[i].a_n > 1? "red":"blue";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
                     list += '<a class="team-link" style="flex-grow: 1;"> ';
-                    list += '<img src="/crew_upload/'+response[i].logo+'" class="team-emblem"> ';
+                    list += '<img src="/crew_upload/'+response[i].logo+'" class="team-emblem" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')"> ';
                     list += '<div class="team-content"> ';
                     list += '<div style="display: flex; align-items: center;"> ';
-                    list += '<span class="team-name" style="font-size: 18px; font-weight: bold;">'+response[i].crew_name+'</span> ';
+                    list += '<span class="team-name" style="font-size: 18px; font-weight: bold;"onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')">'+response[i].crew_name+'</span> ';
                     list += '<span class="cancel-notice" style="font-size: 16px; color: '+font_color+'; margin-left: 10px;"> ';
                     if (response[i].a_n == 0) list += '승인을 기다리고있어요';
                     if (response[i].a_n == 1) list += '가입을 승인했어요 ';
@@ -94,22 +117,39 @@ function crew_wait_select(){
                     list += '</div> ';
                     list += '</a> ';
                     list += '<div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
-                    list += '<button type="submit" class="btn btn-outline-secondary" onClick="join_write_check()"> ';
+                    list += '<button type="submit" class="btn btn-outline-secondary" onClick="openModal('+response[i].create_crew_code+')"> ';
                     list += '신청 확인 ';
                     list += '</button> ';
                     list += '</div> ';
                 }   list += '</li> ';
                 $('#team_list').append(list);
-
             },
             error: function(e) {
                 console.error('Error: ', e);
             }
         });
     }
-    function join_write_check(){
-        clog('아기영선이!');
+    function crew_join_delete(){
+        $.ajax({
+            url: '/crew/join_delete',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization : Authorization,
+                create_crew_code : create_crew_code
+            },
+            success: function(result) {
+                $('#crew_request_delete').hide();
+                $('#crew_request_btn').show();
+                alert('가입신청이 취소되었습니다.');
+                window.location.reload();
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
-
-
+    function crew_page_detail(create_crew_code, crew_write_code) {
+        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
+    }
 </script>

@@ -56,6 +56,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_wait_detail(int user_code, int crewCode)
+    {
+        return dao.crew_wait_detail(user_code, crewCode);
+    }
+
+    @Override
     public int crew_join_select(int user_code, int crewCode)
     {
         return dao.crew_join_select(user_code, crewCode);
@@ -77,6 +83,12 @@ public class CrewServiceImpl implements CrewService{
     public int crew_write_delete(int user_code, int crewWriteCode)
     {
         return dao.crew_write_delete(user_code, crewWriteCode);
+    }
+
+    @Override
+    public int update14()
+    {
+        return dao.update14();
     }
 
     @Override

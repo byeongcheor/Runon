@@ -111,6 +111,7 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
+        service.update14();//14일이 지난 요청 거절로 처리
         List<CrewVO> crew_page = null;
         try {
             crew_page = service.crew_page_select(user_code);
@@ -350,6 +351,21 @@ public class CrewController {
             e.printStackTrace();
         }
         return crew_wait_select;
+    }
+
+    @PostMapping("/crew_wait_detail")
+    @ResponseBody
+    public List<CrewVO> crew_wait_detail(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int create_crew_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_wait_detail = null;
+        try {
+            crew_wait_detail = service.crew_wait_detail(user_code,create_crew_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_wait_detail;
     }
 
 
