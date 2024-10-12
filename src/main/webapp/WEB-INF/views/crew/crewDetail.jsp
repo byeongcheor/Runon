@@ -23,7 +23,7 @@
             <div class="content_left">
                 <section class="section3">
                     <div class="profile_container">
-                        <div class="team-header">
+                        <div class="team-header" onClick="go_crew_manage();">
                             <div class="team-emblem">
                                 <div class="emblem-wrapper">
                                     <div class="emblem-background">
@@ -33,6 +33,7 @@
                             </div>
                             <div class="team-content">
                                 <div><span class="team-name" id='team_name'></span></div>
+                                <span class="team-info" id='addr'></span>
                                 <span class="team-info" id='team_info' ></span>
                             </div>
                         </div>
@@ -311,6 +312,7 @@ $('#prevBtnInCreateModal').on('click', function() {
             clog(result);
                 $('#crew_img').attr('src', '/crew_upload/'+result[0].logo);
                 $('#team_name').text(result[0].crew_name);
+                $('#addr').text(result[0].addr);
                 $('#team_info').text(result[0].a_s);
                 $('#gender').text(result[0].gender);
                 $('#age').text(result[0].age);
@@ -546,6 +548,9 @@ $('#prevBtnInCreateModal').on('click', function() {
                 alert('크루 모집 수정 중 오류가 발생했습니다.');
             }
         });
+    }
+    function go_crew_manage(){
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
     }
 
 </script>

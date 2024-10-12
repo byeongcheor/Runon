@@ -375,7 +375,21 @@ public class CrewController {
         return "crew/crewManage";
     }
 
-
+    @PostMapping("/crew_deatil_select")
+    @ResponseBody
+    public List<CrewVO> crew_deatil_select(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int crewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_deatil_select = null;
+        try {
+            service.crew_write_hit_update(crewCode);
+            crew_deatil_select=service.crew_write_detail_select(user_code,crewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_deatil_select;
+    }
 
 
 
