@@ -120,9 +120,13 @@
     </insert>
 
     <select id="crew_write_detail_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.logo, a.crew_name, a.usercode, concat(a.gender,' · ',a.age) as a_s, b.teamPhoto as b_s, b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d %H:%i') AS writedate
+        select a.logo, a.crew_name, a.usercode, concat(a.gender,' · ',a.age) as a_s, b.teamPhoto as b_s
+        , b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d %H:%i') as writedate
+        , concat(a.addr,' ',a.addr_gu) as addr, DATE_FORMAT(a.writedate, '%Y-%m-%d') as c_s
         ,(select count(1)from crew_request_tbl where create_crew_code=a.create_crew_code)as a_n, ${param1} as b_n
         ,(select count(1)from crew_request_tbl where create_crew_code=a.create_crew_code and usercode=${param1})as c_n
+        ,(select count(1)from crew_member_tbl  where create_crew_code=${param2})as d_n
+        ,(select avg(floor(datediff(curdate(), birthdate) / 365.25))from user_tbl a ,crew_member_tbl b where b.create_crew_code = ${param2} and a.usercode = b.usercode) as e_n
         from   create_crew_tbl a, crew_write b
         where  a.create_crew_code = b.create_crew_code
         and    a.create_crew_code=${param2}
