@@ -141,7 +141,7 @@ s
           background-color: #ff3333; /* hover 시 색상 변경 */
       }
       .modal-subtitle {
-          font-size: 12px; /* 작은 폰트 크기 */
+          font-size: 15px; /* 작은 폰트 크기 */
           color: #6c757d; /* 회색 텍스트 */
       }
       .text-wrapper {

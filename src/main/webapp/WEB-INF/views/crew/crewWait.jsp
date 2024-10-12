@@ -60,12 +60,9 @@
 var Authorization = localStorage.getItem("Authorization");
 var create_crew_code;
 
-<script>
-var Authorization = localStorage.getItem("Authorization");
-var create_crew_code;
-
     function openModal(crew_code) {
-        create_crew_code = crew_code;        var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
+        create_crew_code = crew_code;
+        var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
         $.ajax({
             url: '/crew/crew_wait_detail',
@@ -83,35 +80,30 @@ var create_crew_code;
                 console.error('Error: ', e);
             }
         });
-
-
       }
-
     $(document).ready(function() {
         crew_wait_select();
     });
 
-
+    function crew_wait_select(){
         var list ='';
         $.ajax({
             url: '/crew/crew_wait_select',
             type: 'post',
             async: false,
             data: {
-
+                Authorization : Authorization
             },
             success: function(response) {
                 for (var i in response) {
                     var font_color = response[i].a_n > 1? "red":"blue";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
                     list += '<a class="team-link" style="flex-grow: 1;"> ';
-
                     list += '<img src="/crew_upload/'+response[i].logo+'" class="team-emblem" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')"> ';
                     list += '<div class="team-content"> ';
                     list += '<div style="display: flex; align-items: center;"> ';
-
                     list += '<span class="team-name" style="font-size: 18px; font-weight: bold;"onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')">'+response[i].crew_name+'</span> ';
-                    list += '<span class="cancel-notice" style="font-size: 16px; color: '+font_color+'; margin-left: 10px;"> ';
+                    list += '<span class="cancel-notice" style="font-size: 16px; color: '+font_color+'; margin-left: 10px;"onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].crew_write_code + ')"> ';
                     if (response[i].a_n == 0) list += '승인을 기다리고있어요';
                     if (response[i].a_n == 1) list += '가입을 승인했어요 ';
                     if (response[i].a_n == 9) list += '팀에서 신청을 취소했어요 ';
@@ -120,8 +112,7 @@ var create_crew_code;
                     list += '</div> ';
                     list += '</a> ';
                     list += '<div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
-
-                    list += '<button type="submit" class="btn btn-outline-secondary" onClick="openModal('+response[i].create_crew_code+')"> ';
+                    list += '<button type="submit" class="custom-button" onClick="openModal('+response[i].create_crew_code+')"> ';
                     list += '신청 확인 ';
                     list += '</button> ';
                     list += '</div> ';
@@ -133,7 +124,6 @@ var create_crew_code;
             }
         });
     }
-
     function crew_join_delete(){
         $.ajax({
             url: '/crew/join_delete',
@@ -155,6 +145,6 @@ var create_crew_code;
         });
     }
     function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
     }
 </script>

@@ -42,7 +42,7 @@
         border-radius: 10px 10px 0 0 ;
     }
     .section_nav{
-        padding-top: 10px;
+        padding-top: 20px;
         font-weight: 700;
         font-size: 20px;
         line-height: 20px;
@@ -54,9 +54,11 @@
         list-style: none;
         text-decoration: none;
         float: left;
+
     }
     .section_nav li{
         margin-right: 15px;
+        color: #6c757d;
     }
     .section_title{
             padding: 20px;
@@ -185,3 +187,81 @@
          width: 100px;
           height:20px;
     }
+
+  /* 프로필 이미지 */
+ .profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .member{
+    margin:10px 10px;
+
+  }
+
+  /* 기본 스타일 */
+  .member-list {
+    list-style: none; /* li의 기본 점 제거 */
+    margin: 0;
+    padding:0;
+  }
+
+
+  .item-flex {
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 좌우 요소 간 여백 자동 */
+    width: 90%; /* 부모 요소의 전체 너비 사용 */
+    padding: 10px 30px;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    margin-left: 10px;
+  }
+
+  .info-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .name {
+    margin-right: 10px; /* "장재성" 오른쪽에 공간 */
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  /* 운영진 스타일 */
+  .label-operator {
+    background-color: black; /* 검정 배경 */
+    color: white; /* 흰색 텍스트 */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* 루키 표시 */
+  .desc {
+    font-size: 12px;
+    color: #6c757d; /* 회색 텍스트 */
+    margin-top: 2px; /* 루키 표시 위에 약간의 간격 */
+  }
+
+  .menu {
+    margin-left: auto; /* more-icon을 오른쪽으로 밀기 */
+  }
+
+  /* 세로 3개 점 more-icon */
+  .more-icon {
+    font-size: 20px; /* 아이콘 크기 */
+    cursor: pointer;
+    display: inline-block;
+  }
