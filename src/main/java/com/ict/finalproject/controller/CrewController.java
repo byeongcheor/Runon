@@ -391,7 +391,11 @@ public class CrewController {
         return crew_deatil_select;
     }
 
-
+/////////////////////////// 크루가입승인 페이지////////////////////////////////////////
+@GetMapping("/crewApp")
+public String crewApp(){
+    return "crew/crewApp";
+}
 
 
 
