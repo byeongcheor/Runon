@@ -10,7 +10,7 @@ public interface CrewService {
     public List<CrewVO> crew_page_select(int user_code);
     public List<CrewVO> crew_wait_select(int user_code);
     public List<CrewVO> crew_write_detail_select(int user_code, int crewCode);
-    public List<CrewVO> crew_manage_member(int crewCode);
+    public List<CrewVO> crew_manage_member(int crewCode, int user_code);
     public List<CrewVO> crew_wait_detail(int user_code, int crewCode);
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail);
     public List<CrewVO> crew_write_detail_check(int crew_write_code);

@@ -255,7 +255,8 @@
     </update>
 
     <select id="crew_manage_member" resultType="com.ict.finalproject.vo.CrewVO">
-        select ifnull(a.profile_img,'basicimg.png') as a_s, a.username as b_s, b.position as a_n
+        select ifnull(a.profile_img,'basicimg.png') as a_s, a.username as b_s, b.position as a_n, a.usercode
+        ,(select count(1) from crew_member_tbl where create_crew_code = ${param1} and usercode = ${param2}) as b_n
         from user_tbl a ,crew_member_tbl b
         where b.create_crew_code = ${param1}
         and   a.usercode = b.usercode

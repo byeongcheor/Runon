@@ -112,6 +112,7 @@ var position;
                 create_crew_code : create_crew_code
             },
             success: function(response) {
+
                 $('#crew_img').attr('src', '/crew_upload/'+response[0].logo);
                 $('#crew_name').text(response[0].crew_name);
                 $('#addr').text(response[0].addr);
@@ -165,10 +166,10 @@ var position;
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
-            if(user_code!=response[i].usercode){
+            list += '     <div class="more-icon" onclick="openCustomModal()"> &#8943;</div> ';
+if(user_code!=response[i].usercode && response[i].b_n>0){
                 list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
-            }
-            list += '   </div> ';
+            }            list += '   </div> ';
             list += '  </div> ';
             list += '</div> ';
             list += '</li> ';
@@ -177,12 +178,13 @@ var position;
 
         $('#crew_manage_list').append(list);
     }
+
     function openCustomModal(position) {
+      clog(position);
       if(position>1){
         $('#manage').hide();
         $('#out').hide();
-      }
-      document.getElementById('customModal').style.display = 'block';
+      }      document.getElementById('customModal').style.display = 'block';
     }
 
     function closeCustomModal() {
