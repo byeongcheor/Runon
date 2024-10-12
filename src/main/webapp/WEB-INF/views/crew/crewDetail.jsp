@@ -248,7 +248,6 @@
           </div>
       </form>
 <script>
-var clog = console.log;
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
@@ -345,9 +344,9 @@ $('#prevBtnInCreateModal').on('click', function() {
                     }
                 }
             },
-error: function(e) {
-    console.error('Error: ', e);
-}
+            error: function(e) {
+                console.error('Error: ', e);
+            }
         });
     }
 
@@ -444,8 +443,6 @@ error: function(e) {
     }
 
     function crew_write_page_update_detail(){
-
-
         $.ajax({
             url: '/crew/crew_write_page_update_detail',
             type: 'post',

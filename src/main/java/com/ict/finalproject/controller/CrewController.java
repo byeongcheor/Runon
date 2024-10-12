@@ -108,7 +108,11 @@ public class CrewController {
                 }
             }
             String age = String.join(",", arr_age);
-            service.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);
+            service.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);//크루생성
+            int crew_code = service.crew_code_select(user_code);//크루코드 가져오기
+            int crew_position=1;
+            service.crew_member_insert(user_code,crew_code,crew_position);//크루멤버생성
+
         } catch (Exception e) {
             a = 0;
             e.printStackTrace();

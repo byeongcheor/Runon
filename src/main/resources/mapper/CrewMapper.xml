@@ -204,4 +204,25 @@
         ,writedate = now()
         where crew_write_code = ${param1}
     </update>
+    <select id="crew_code_select" resultType="int">
+        select create_crew_code
+        from   create_crew_tbl
+        where  usercode = ${param1}
+        order by writedate desc
+        limit 1
+    </select>
+    <insert id="crew_member_insert">
+        insert into crew_member_tbl
+        (
+            usercode
+            ,create_crew_code
+            ,position
+        )
+        values
+        (
+            ${param1}
+            ,${param2}
+            ,${param3}
+        )
+    </insert>
 </mapper>
