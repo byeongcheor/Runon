@@ -225,4 +225,13 @@
             ,${param3}
         )
     </insert>
+
+    <select id="crew_wait_select" resultType="com.ict.finalproject.vo.CrewVO">
+        select a.logo, a.crew_name, b.status as a_n
+        from create_crew_tbl a, crew_request_tbl b
+        where b.usercode = ${param1}
+        and   a.create_crew_code = b.create_crew_code
+    </select>
+
+
 </mapper>

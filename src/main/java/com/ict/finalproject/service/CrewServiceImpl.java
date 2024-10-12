@@ -26,6 +26,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_wait_select(int user_code)
+    {
+        return dao.crew_wait_select(user_code);
+    }
+
+    @Override
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail)
     {
         return dao.crew_page_write_detail(crew_page_write_detail);
