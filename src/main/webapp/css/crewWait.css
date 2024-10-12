@@ -64,7 +64,7 @@ body{
     border-bottom: 1px solid #ccc; /* 밑에 보더라인 추가 */
     padding:30px 30px 20px 50px;
     margin:0px 30px 30px 0px;
-s
+
 
 }
 .team-link {
@@ -86,10 +86,8 @@ s
 .team-content {
     display: flex;
     flex-direction: column;
-}
-    font-size: 14px;
-    color: rgb(255, 77, 55);
-    margin-left: 10px;
+
+
 }
 .team-name-box {
     font-size: 16px;
@@ -116,47 +114,16 @@ s
 .custom-button:hover {
     background-color: #b3e600; /* 마우스 오버 시 색상 변경 */
 }
-      .modal-content {
-          border-radius: 15px; /* 모달창 둥글게 */
-          border: none; /* 보더라인 제거 */
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-      }
-      .modal-header {
-          border-bottom: none; /* 보더 바텀라인 제거 */
-      }
-      .modal-footer {
-          border-top: none; /* 보더 탑라인 제거 */
-      }
-      .modal-body {
-          text-align: center;
-          font-size: 16px;
-      }
-      .modal-footer button {
-          width: 100%;
-          background-color: #ff4d4d; /* 빨간색 배경 */
-          color: white;
-          border-radius: 8px;
-          padding: 10px 0;
-          border: none;
-          font-size: 16px;
-      }
-      .modal-footer button:hover {
-          background-color: #ff3333; /* hover 시 색상 변경 */
-      }
-      .modal-subtitle {
-          font-size: 15px; /* 작은 폰트 크기 */
-          color: #6c757d; /* 회색 텍스트 */
-      }
-      .text-wrapper {
-          color: #333;
-          font-size: 16px;
-          line-height: 26px;
-          overflow: hidden;
-          font-family: inherit !important;
-          white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
-          overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
-      }
 
+.team_status {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left:30px;
+}
+.team__request {
+    color: #0d6efd;
+    font-size: 16px;
+}
 .profileBox{
     width: 63px;
     height: 63px;
@@ -180,10 +147,10 @@ s
     display: flex;
     align-items: center;
 }
-
 .info-desc span {
     font-size: 14px;
     color: #9eaab3;
+      margin:0 ;
 }
 
 .info-name {
@@ -197,8 +164,52 @@ s
     color: #727f88;
 }
 .info-desc {
-    margin-top: 5px; /* 기존의 간격을 줄이기 위해 작은 값으로 설정 */
     font-size: 12px;
     color: #9eaab3;
 }
+
+  .modal-content {
+          border-radius: 15px; /* 모달창 둥글게 */
+          border: none; /* 보더라인 제거 */
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+      }
+      .modal-header {
+          border-bottom: none; /* 보더 바텀라인 제거 */
+      }
+      .modal-footer {
+          border-top: none; /* 보더 탑라인 제거 */
+      }
+      .modal-body {
+          text-align: center;
+          font-size: 16px;
+      }
+      .modal-footer button {
+          width: 90%;
+          background-color: #ff4d4d; /* 빨간색 배경 */
+          color: white;
+          border-radius: 8px;
+          padding: 10px 0;
+          border: none;
+          margin-right:20px;
+          font-size: 16px;
+      }
+      .modal-footer button:hover {
+          background-color: #ff3333; /* hover 시 색상 변경 */
+      }
+
+
+      .modal-subtitle {
+          font-size: 15px; /* 작은 폰트 크기 */
+          color: #6c757d; /* 회색 텍스트 */
+      }
+      .text-wrapper {
+          color: #333;
+          font-size: 16px;
+          line-height: 26px;
+          overflow: hidden;
+          font-family: inherit !important;
+          white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
+          overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
+      }
+
 

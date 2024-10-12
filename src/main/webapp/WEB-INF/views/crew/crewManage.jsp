@@ -128,6 +128,7 @@ var position;
         });
     }
     function crew_manage_select(element){
+         $('#crew_manage_list').html('');
          var id = element.id===undefined?'member': element.id;
          $('[name="crew_select"]').css('color', 'gray');
          $('#'+id).css('color', 'black');
@@ -150,15 +151,20 @@ var position;
     }
 
     function crew_manage_select_member(response){
-        $('#crew_manage_list').html('');
         var list ='';
-
+        if(response[0].f_n>0 && response[0].a_n==1){
+            list += '<div onClick="go_request_wait()">'
+            list += '   <span>';
+            list +=         response[0].f_n+'명이 승인을 기다리고있어요.';
+            list += '   </span>';
+            list += '</div>'
+        }
         for(var i in response){
             var a = response[i].a_n>1?"":"운영진";
             list += '<li class="member-item"> ';
             list += '<div class="item-flex"> ';
-            list += '   <img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img"> ';
-            list += '   <div class="profile-info"> ';
+            list += '   <img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img" onClick="go_mypage('+response[i].usercode+')"> ';
+            list += '   <div class="profile-info" onClick="go_mypage('+response[i].usercode+')"> ';
             list += '     <div class="info-wrapper"> ';
             list += '      <p class="name">'+response[i].b_s+'</p> ';
             list += '      <div class="label-operator">'+a+'</div> ';
@@ -166,8 +172,6 @@ var position;
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
-            clog(user_code);
-            clog(response[i].usercode);
             if(user_code!=response[i].usercode && response[i].b_n>0){
                 list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
             }
@@ -192,4 +196,14 @@ var position;
     function closeCustomModal() {
       document.getElementById('customModal').style.display = 'none';
     }
+create_crew_code
+    function go_request_wait(){
+        window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code;
+
+
+    }
+    function go_mypage(usercode){
+        window.location.href = '/mypage/myHome?usercode=' + usercode;
+    }
+
 </script>

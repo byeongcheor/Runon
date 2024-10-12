@@ -14,6 +14,7 @@ public interface CrewService {
     public List<CrewVO> crew_wait_detail(int user_code, int crewCode);
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail);
     public List<CrewVO> crew_write_detail_check(int crew_write_code);
+    public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int totalRecord(PagingVO pVO);
     public int update14();
@@ -29,6 +30,7 @@ public interface CrewService {
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
+    public int crew_manage_app_yes(int user_code, int crewCode);
     public int crew_member_insert(int user_code, int crewCode, int crew_position);
 
 }

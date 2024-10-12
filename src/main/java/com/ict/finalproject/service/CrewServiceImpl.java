@@ -44,6 +44,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_app_select(int crew_code)
+    {
+        return dao.crew_app_select(crew_code);
+    }
+
+    @Override
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord)
     {
         return dao.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);
@@ -101,6 +107,12 @@ public class CrewServiceImpl implements CrewService{
     public int crew_join_delete(int user_code, int crewCode)
     {
         return dao.crew_join_delete(user_code, crewCode);
+    }
+
+    @Override
+    public int crew_manage_app_yes(int user_code, int crewCode)
+    {
+        return dao.crew_manage_app_yes(user_code, crewCode);
     }
 
     @Override

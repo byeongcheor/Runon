@@ -355,13 +355,15 @@ public class CrewController {
 
     @PostMapping("/crew_wait_detail")
     @ResponseBody
-    public List<CrewVO> crew_wait_detail(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int create_crew_code) {
+    public List<CrewVO> crew_wait_detail(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int create_crew_code, @RequestParam(value = "usercode", defaultValue = "0") int usercode) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_wait_detail = null;
+        int user_code2=usercode==0?user_code:usercode;
+
         try {
-            crew_wait_detail = service.crew_wait_detail(user_code,create_crew_code);
+            crew_wait_detail = service.crew_wait_detail(user_code2,create_crew_code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -398,7 +400,7 @@ public class CrewController {
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
-            if (id.equals("member")) {} crew_manage_select=service.crew_manage_member(crewCode,user_code);
+            if (id.equals("member"))crew_manage_select=service.crew_manage_member(crewCode,user_code);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -407,13 +409,37 @@ public class CrewController {
     }
 
 /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
-@GetMapping("/crewApp")
-public String crewApp(){
-    return "crew/crewApp";
-}
+    @GetMapping("/crewApp")
+    public String crewApp(){
+        return "crew/crewApp";
+    }
 
-
-
-
-
+    @PostMapping("/crew_app_select")
+    @ResponseBody
+    public List<CrewVO> crew_app_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_app_select = null;
+        try {
+            crew_app_select = service.crew_app_select(crewCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_app_select;
+    }
+    @PostMapping("/app")
+    @ResponseBody
+    public int app(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,  @RequestParam("usercode") int usercode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        int a=0;
+        try {
+            if (id.equals("yes")) service.crew_manage_app_yes(usercode,crewCode);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
 }
