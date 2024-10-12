@@ -12,7 +12,7 @@
       integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
       crossorigin="anonymous"
     ></script>
-<link rel="stylesheet" href="/css/crewWait.css" type="text/css">
+<link rel="stylesheet" href="/css/crewApp.css" type="text/css">
 <link rel="stylesheet" href="/css/crewApp.css" type="text/css">
 <div>
     <div id="bannerBox">
@@ -33,8 +33,7 @@
                 </section>
                 <section class="team-container">
                    <ul class="team-list" id='app_list'>
-                   </ul>
-                </section>
+                   </ul>                </section>
             </div>
         </div>
     </div>
@@ -94,8 +93,7 @@
        </div>
      </div>
    </div>
-</div>
-<script>
+</div><script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const crew_code = urlParams.get('create_crew_code');
@@ -104,6 +102,7 @@ const crew_code = urlParams.get('create_crew_code');
         myModal.show();
         $('#usercode').val(usercode);
         $.ajax({
+
            url: '/crew/crew_wait_detail',
            type: 'post',
            async: false,
@@ -124,21 +123,26 @@ const crew_code = urlParams.get('create_crew_code');
         crew_wait_select();
     });
 
+
     function crew_wait_select(usercode){
         var list ='';
         $.ajax({
+
             url: '/crew/crew_app_select',
             type: 'post',
             async: false,
             data: {
+
                 Authorization    : Authorization,
                 create_crew_code : crew_code
             },
             success: function(response) {
             $('#crew_name').text(response[0].crew_name+'/멤버관리');
                 for (var i in response) {
+
                     var font_color = response[i].b_n > 1? "red":"blue";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
+
                     list += '	<a class="team-link" style="flex-grow: 1;"> ';
                     list += '	  <div class="team-emblem-wrapper"> ';
                     list += '		<img src="/crew_upload/51b0be7d-0bfa-47d0-897a-40740b212cf6_a8.png" class="team-emblem" onclick="crew_page_detail(36,32)"> ';
@@ -228,5 +232,4 @@ function confirmRejection() {
     // 거절 확인 로직 (선택된 사유 확인 등)
     alert('거절 사유가 선택되었습니다.');
 }
-
 </script>

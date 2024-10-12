@@ -172,10 +172,8 @@ var position;
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
-            if(user_code!=response[i].usercode && response[i].b_n>0){
                 list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> &#8943;</div> ';
-            }
-            list += '   </div> ';
+            }            list += '   </div> ';
             list += '  </div> ';
             list += '</div> ';
             list += '</li> ';
@@ -184,13 +182,13 @@ var position;
 
         $('#crew_manage_list').append(list);
     }
+
     function openCustomModal(position) {
       clog(position);
       if(position>1){
         $('#manage').hide();
         $('#out').hide();
-      }
-      document.getElementById('customModal').style.display = 'block';
+     document.getElementById('customModal').style.display = 'block';
     }
 
     function closeCustomModal() {
