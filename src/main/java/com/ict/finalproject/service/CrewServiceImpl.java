@@ -62,6 +62,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_manage_member( int crewCode)
+    {
+        return dao.crew_manage_member(crewCode);
+    }
+
+    @Override
     public int crew_join_select(int user_code, int crewCode)
     {
         return dao.crew_join_select(user_code, crewCode);

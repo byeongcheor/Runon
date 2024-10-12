@@ -33,6 +33,7 @@
         select  a.create_crew_code,
                 a.crew_name,
                 a.logo,
+                ${param1} as usercode,
                 ifnull((select crew_write_code
                 from    crew_write
                 where   create_crew_code = a.create_crew_code
@@ -252,5 +253,12 @@
         where requested_date <= date_add(now(), interval -14 day);
     ]]>
     </update>
+
+    <select id="crew_manage_member" resultType="com.ict.finalproject.vo.CrewVO">
+        select ifnull(a.profile_img,'basicimg.png') as a_s, a.username as b_s, b.position as a_n
+        from user_tbl a ,crew_member_tbl b
+        where b.create_crew_code = ${param1}
+        and   a.usercode = b.usercode
+    </select>
 
 </mapper>
