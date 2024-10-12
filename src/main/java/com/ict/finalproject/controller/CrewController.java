@@ -53,19 +53,6 @@ public class CrewController {
         return "crew/crewList";
     }
 
-    //크루관리
-    @GetMapping("/crewManage")
-    public String crewCreate(){
-        return "crew/crewManage";
-    }
-
-    // 크루가입신청 확인 페이지
-    @GetMapping("/crewWait")
-    public String crewWait(){
-        return "crew/crewWait";
-    }
-
-
     @PostMapping("/search_crewList")
     @ResponseBody
     public List<CrewVO> search_crewList(
@@ -112,7 +99,6 @@ public class CrewController {
             int crew_code = service.crew_code_select(user_code);//크루코드 가져오기
             int crew_position=1;
             service.crew_member_insert(user_code,crew_code,crew_position);//크루멤버생성
-
         } catch (Exception e) {
             a = 0;
             e.printStackTrace();
@@ -344,4 +330,41 @@ public class CrewController {
         }
         return a; // 성공적으로 생성된 경우 1 반환
     }
+
+/////////////////////////// 크루가입신청 확인 페이지////////////////////////////////////////
+    @GetMapping("/crewWait")
+    public String crewWait(){
+        return "crew/crewWait";
+    }
+
+    @PostMapping("/crew_wait_select")
+    @ResponseBody
+    public List<CrewVO> crew_wait_select(@RequestParam("Authorization")String token) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> crew_wait_select = null;
+        try {
+            crew_wait_select = service.crew_wait_select(user_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return crew_wait_select;
+    }
+
+
+/////////////////////////크루관리///////////////////////////////////////////////
+    @GetMapping("/crewManage")
+    public String crewCreate(){
+        return "crew/crewManage";
+    }
+
+
+
+
+
+
+
+
+
 }

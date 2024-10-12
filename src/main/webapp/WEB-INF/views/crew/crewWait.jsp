@@ -31,44 +31,6 @@
                     </div>
                 </section>
                 <section class="team-container">
-                    <ul class="team-list" id='team-list'>
-                        <li class="team-item" style="display: flex; justify-content: space-between; width: 100%;">
-                            <a class="team-link" style="flex-grow: 1;">
-                               <img src="/crew_upload/team.png" class="team-emblem">
-                               <div class="team-content">
-                                   <div style="display: flex; align-items: center;">
-                                        <span class="team-name" style="font-size: 18px; font-weight: bold;">선풍기</span>
-                                        <span class="cancel-notice" style="font-size: 16px; color: rgb(255, 77, 55); margin-left: 10px;">
-                                            팀에서 신청을 취소했어요
-                                        </span>
-                                   </div>
-                               </div>
-                            </a>
-                            <div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;">
-                                <button type="button" class="custom-button" onClick="openModal()">
-                                    신청 확인
-                                </button>
-                            </div>
-                         </li>
-                         <li class="team-item" style="display: flex; justify-content: space-between; width: 100%;">
-                             <a class="team-link" style="flex-grow: 1;">
-                                <img src="/crew_upload/team.png" class="team-emblem">
-                                <div class="team-content">
-                                    <div style="display: flex; align-items: center;">
-                                         <span class="team-name" style="font-size: 18px; font-weight: bold;">선풍기</span>
-                                         <span class="cancel-notice">
-                                             팀에서 신청을 취소했어요
-                                         </span>
-                                    </div>
-                                </div>
-                             </a>
-                             <div class="join-check-button">
-                                <button type="button" class="custom-button" onClick="openModal()">
-                                    신청 확인
-                                </button>
-                             </div>
-                      </li>
-                     </ul>
                 </section>
             </div>
         </div>
@@ -95,10 +57,59 @@
 
 
 <script>
- function openModal() {
+function openModal() {
         // Bootstrap의 모달을 표시하는 함수 호출
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
       }
+
+    $(document).ready(function() {
+        crew_wait_select();
+    });
+
+function crew_wait_select(){
+        var list ='';
+        $.ajax({
+            url: '/crew/crew_wait_select',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization : Authorization,
+            },
+            success: function(response) {
+                for (var i in response) {
+                    var font_color = response[i].a_n > 1? "red":"blue";
+                    list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
+                    list += '<a class="team-link" style="flex-grow: 1;"> ';
+                    list += '<img src="/crew_upload/'+response[i].logo+'" class="team-emblem"> ';
+                    list += '<div class="team-content"> ';
+                    list += '<div style="display: flex; align-items: center;"> ';
+                    list += '<span class="team-name" style="font-size: 18px; font-weight: bold;">'+response[i].crew_name+'</span> ';
+                    list += '<span class="cancel-notice" style="font-size: 16px; color: '+font_color+'; margin-left: 10px;"> ';
+                    if (response[i].a_n == 0) list += '승인을 기다리고있어요';
+                    if (response[i].a_n == 1) list += '가입을 승인했어요 ';
+                    if (response[i].a_n == 9) list += '팀에서 신청을 취소했어요 ';
+                    list += '</span> ';
+                    list += '</div> ';
+                    list += '</div> ';
+                    list += '</a> ';
+                    list += '<div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
+                    list += '<button type="submit" class="btn btn-outline-secondary" onClick="join_write_check()"> ';
+                    list += '신청 확인 ';
+                    list += '</button> ';
+                    list += '</div> ';
+                }   list += '</li> ';
+                $('#team_list').append(list);
+
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }
+    function join_write_check(){
+        clog('아기영선이!');
+    }
+
 
 </script>
