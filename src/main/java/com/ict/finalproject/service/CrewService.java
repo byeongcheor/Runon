@@ -30,7 +30,10 @@ public interface CrewService {
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
-    public int crew_manage_app_yes(int user_code, int crewCode);
+    public int crew_member_insert2(int user_code, int crewCode);
+    public int crew_manage_app(int user_code, int crewCode, int status, String reason);
     public int crew_member_insert(int user_code, int crewCode, int crew_position);
+    public int crew_member_check(int user_code, int crewCode);
+    public int crew_member_upgrade(int user_code, int crewCode);
 
 }

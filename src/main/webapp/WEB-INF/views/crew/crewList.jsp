@@ -998,7 +998,7 @@ function submitCrewInfo() {
                          list += '<li class="team-item">';
                          list += '<a class="team-link">';
                          list += '<img src="/crew_upload/'+response[i].logo+'" class="teamemblem">';
-                         list += '<div class="team-name" onClick="go_my_crew(' + response[i].create_crew_code +','+ response[i].usercode+ ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
+                         list += '<div class="team-name" onClick="go_my_crew(' + response[i].create_crew_code +','+ response[i].usercode+','+ response[i].b_n+ ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
                          list +='</a>';
                          list+='</li>';
                     }
@@ -1057,9 +1057,9 @@ function submitCrewInfo() {
         $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
     }
-    function go_my_crew(create_crew_code,user_code) {
+    function go_my_crew(create_crew_code,user_code,position) {
         $('#myCrewModal').modal('hide');
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code;
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code+ '&position=' + position;
 ;    }
 
     function join_wait() {

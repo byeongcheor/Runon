@@ -134,7 +134,7 @@ body{
 
 /* 멤버 모집 조건 박스 스타일 */
 .recruitment-box {
-    margin: 10px 20px;
+    margin: 20px 20px;
     padding: 33px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -209,7 +209,6 @@ modal-title {
     line-height: 28px;
     color: #282b33;
 }
-
 
 .modal-content {
     min-height: 65vh; /* 최소 높이 설정 */
@@ -302,7 +301,7 @@ modal-title {
     color: #333;
     font-size: 16px;
     line-height: 26px;
-    min-height: 300px;
+    min-height: 350px;
     overflow: hidden;
     font-family: inherit !important;
     white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */

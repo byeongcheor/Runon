@@ -52,7 +52,7 @@
        <div class="modal-footer" style="display: flex; justify-content: space-between;">
          <input type=hidden id=usercode>
          <button type="button" class="custom-button" style="width: 48%; background-color: #ccff00; color:black;" data-bs-dismiss="modal" id="yes" onClick="app(this);">가입 승인</button>
-         <button type="button" class="btn modal-action-button" style="width: 48%;" data-bs-dismiss="modal" onClick="crew_reject()">거절 하기</button>
+         <button type="button" class="btn modal-action-button" style="width: 48%;" data-bs-dismiss="modal" id=no onClick="crew_reject()">거절 하기</button>
        </div>
      </div>
    </div>
@@ -67,29 +67,29 @@
        </div>
        <div class="modal-body">
          <div class="form-check">
-           <input class="form-check-input" type="checkbox" id="reason1">
+           <input class="form-check-input" type="checkbox" name=reason id="reason1"  value='1'>
            <label class="form-check-label" for="reason1">모집이 마감됐어요</label>
          </div>
          <div class="form-check">
-           <input class="form-check-input" type="checkbox" id="reason2">
+           <input class="form-check-input" type="checkbox" name=reason id="reason2" value='2'>
            <label class="form-check-label" for="reason2">성별이 맞지 않아요</label>
          </div>
          <div class="form-check">
-           <input class="form-check-input" type="checkbox" id="reason3">
+           <input class="form-check-input" type="checkbox" name=reason id="reason3" value='3'>
            <label class="form-check-label" for="reason3">나이가 맞지 않아요</label>
          </div>
          <div class="form-check">
-           <input class="form-check-input" type="checkbox" id="reason4">
+           <input class="form-check-input" type="checkbox" name=reason id="reason4" value='4'>
            <label class="form-check-label" for="reason4">소개가 부족해요</label>
          </div>
          <div class="form-check">
-           <input class="form-check-input" type="checkbox" id="reason5">
+           <input class="form-check-input" type="checkbox" name=reason id="reason5" value='5'>
            <label class="form-check-label" for="reason5">소개가 부적절해요 (광고, 도박 등)</label>
          </div>
        </div>
        <div class="modal-footer">
          <button type="button" class="btn btn-light" data-bs-dismiss="modal">취소</button>
-         <button type="button" class="btn btn-primary" onClick="confirmRejection();">확인</button>
+         <button type="button" class="btn btn-primary" onClick="app(this);">확인</button>
        </div>
      </div>
    </div>
@@ -97,6 +97,7 @@
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const crew_code = urlParams.get('create_crew_code');
+const position = urlParams.get('position');
     function openModal(usercode) {
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
@@ -113,6 +114,17 @@ const crew_code = urlParams.get('create_crew_code');
            },
            success: function(response) {
                $('#join_content').text(response[0].content);
+               $('#join_content').prop('disabled', true);
+               clog(response[0].content);
+               if(response[0].a_n==0){
+                    $('#yes').show();
+                    $('#no').show();
+               }
+               else{
+                  $('#yes').hide();
+                  $('#no').hide();
+               }
+
            },
            error: function(e) {
                console.error('Error: ', e);
@@ -139,10 +151,8 @@ const crew_code = urlParams.get('create_crew_code');
             success: function(response) {
             $('#crew_name').text(response[0].crew_name+'/멤버관리');
                 for (var i in response) {
-
-                    var font_color = response[i].b_n > 1? "red":"blue";
+                    var font_color = response[i].b_n > 1? "red":"#0d6efd";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
-
                     list += '	<a class="team-link" style="flex-grow: 1;"> ';
                     list += '	  <div class="team-emblem-wrapper"> ';
                     list += '		<img src="/crew_upload/51b0be7d-0bfa-47d0-897a-40740b212cf6_a8.png" class="team-emblem" onclick="crew_page_detail(36,32)"> ';
@@ -158,39 +168,21 @@ const crew_code = urlParams.get('create_crew_code');
                     list += '		</div> ';
                     list += '	  </div> ';
                     list += '	  <div class="team_status"> ';
-                    list += '		  <span class="team__request">';
+                    list += '		  <span class="team__request" style="color:'+font_color+'">';
                     if (response[i].b_n == 0) list += '승인을 기다리고있어요';
                     if (response[i].b_n == 1) list += '가입을 승인했어요 ';
-                    if (response[i].b_n == 9) list += '신청을 취소했어요 ';
+                    if (response[i].b_n == 9) list += '신청을 거절했어요 ';
                     list+='           </span> ';
                     list += '	  </div> ';
                     list += '	</a> ';
                     list += '	 <div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
-                    list += '		<button type="submit" class="custom-button" onclick="openModal('+response[i].usercode+')">신청확인</button> ';
+                    if(position==1){
+                        list += '		<button type="submit" class="custom-button" onclick="openModal('+response[i].usercode+')">신청확인</button> ';
+                    }
                     list += '	 </div> ';
                     list += '  </li> ';
                 }
                 $('#app_list').append(list);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
-    }
-    function crew_join_delete(){
-        $.ajax({
-            url: '/crew/join_delete',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization : Authorization,
-                create_crew_code : create_crew_code
-            },
-            success: function(result) {
-                $('#crew_request_delete').hide();
-                $('#crew_request_btn').show();
-                alert('가입신청이 취소되었습니다.');
-                window.location.reload();
             },
             error: function(e) {
                 console.error('Error: ', e);
@@ -202,25 +194,47 @@ const crew_code = urlParams.get('create_crew_code');
     }
     function app(element){
         var id = element.id===undefined?'member': element.id;
-       clog(id);
-        /*$.ajax({
-                url: '/crew/app',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization    : Authorization,
-                    create_crew_code : create_crew_code,
-                    id               : id,
-                    usercode         : $('#usercode').val()
-                },
-                success: function(response) {
-                    if (id=='member')crew_manage_select_member(response);
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-        });*/
+        var checkedValues = [];
+        var reason='';
+        var status = id=='yes'?1:9;
+        if(status==9){
+            $('input[name="reason"]:checked').each(function() {
+                checkedValues.push($(this).val());
+            });
+            reason=checkedValues.join(',');
+        }
+        $.ajax({
+            url: '/crew/app',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : crew_code,
+                status           : status,
+                usercode         : $('#usercode').val(),
+                reason           : reason
+            },
+            success: function(response) {
 
+                if(status==1){
+                    if(response==9) {
+                        alert('이미 같은 크루입니다.');
+                        return false;
+                    }
+                    alert('크루신청을 수락했습니다.');
+                    location.reload(true);
+                }
+                if(status==9){
+                    alert('크루신청을 거절했습니다.');
+                    $('#rejectModal').hide();
+                    location.reload(true);
+                }
+
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
 function crew_reject() {
     // 첫 번째 모달을 숨기고 거절 사유 모달을 보여줌

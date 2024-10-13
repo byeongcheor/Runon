@@ -30,17 +30,15 @@
     </select>
 
     <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select  a.create_crew_code,
-                a.crew_name,
-                a.logo,
-                ${param1} as usercode,
-                ifnull((select crew_write_code
-                from    crew_write
-                where   create_crew_code = a.create_crew_code
-                and     is_delete = 0
-                limit 1),0) as a_n
-        from    create_crew_tbl a
-        where   a.usercode = ${param1};
+        select a.create_crew_code,a.crew_name,a.logo,${param1} as usercode,b.position as b_n,
+        ifnull((select crew_write_code
+        from    crew_write
+        where   create_crew_code = b.create_crew_code
+        and     is_delete = 0
+        limit 1),0) as a_n
+        from   create_crew_tbl a, crew_member_tbl b
+        where  b.usercode = ${param1}
+        and    a.create_crew_code=b.create_crew_code
     </select>
 
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
@@ -240,7 +238,7 @@
     </select>
 
     <select id="crew_wait_detail" resultType="com.ict.finalproject.vo.CrewVO">
-        select content, DATE_FORMAT(requested_date, '%m월 %d일 신청') AS writedate,usercode
+        select content, DATE_FORMAT(requested_date, '%m월 %d일 신청') AS writedate,usercode, status as a_n,reason as a_s
         from   crew_request_tbl
         where  usercode = ${param1}
         and    create_crew_code  = ${param2}
@@ -282,10 +280,40 @@
             and   b.create_crew_code = c.create_crew_code
         ]]>
     </select>
-    <update id="crew_manage_app_yes">
+    <update id="crew_manage_app">
         update crew_request_tbl
-        set    status = 1
+        set    status = ${param3},
+               reason = '${param4}'
         where  usercode = ${param1}
-        and    crew_request_code  = ${param2}
+        and    create_crew_code  = ${param2}
+    </update>
+    <insert id="crew_member_insert2">
+        insert into crew_member_tbl
+        (
+            usercode
+            ,create_crew_code
+            ,position
+        )
+        values
+        (
+            ${param1}
+            ,${param2}
+            ,3
+        )
+    </insert>
+
+    <select id="crew_member_check" resultType="int">
+        select count(1)
+        from   crew_member_tbl
+        where  usercode = ${param1}
+        and    create_crew_code = ${param2}
+        and    position in (1,2,3)
+    </select>
+
+    <update id="crew_member_upgrade">
+        update crew_member_tbl
+        set    position = 2
+        where  usercode = ${param1}
+        and    create_crew_code = ${param2}
     </update>
 </mapper>

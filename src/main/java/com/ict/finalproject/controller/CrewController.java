@@ -430,16 +430,47 @@ public class CrewController {
     }
     @PostMapping("/app")
     @ResponseBody
-    public int app(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,  @RequestParam("usercode") int usercode) {
+    public int app(@RequestParam("Authorization")String token,
+                   @RequestParam("create_crew_code") int crewCode,
+                   @RequestParam("status") int status,
+                   @RequestParam("usercode") int usercode,
+                   @RequestParam("reason") String reason) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         int a=0;
         try {
-            if (id.equals("yes")) service.crew_manage_app_yes(usercode,crewCode);
+            if(status==1) {
+                int check = service.crew_member_check(usercode, crewCode);
+                System.out.println(check);
+                if(check>0) return 9;
+                service.crew_manage_app(usercode, crewCode, status, reason);
+                service.crew_member_insert2(usercode, crewCode);
+            }
+            else service.crew_manage_app(usercode, crewCode, status, reason);
             a=1;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return a;
     }
+    @PostMapping("/member_manage")
+    @ResponseBody
+    public int member_manage(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id, @RequestParam("usercode") int  usercode) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        int a = 0;
+        try {
+            if (id.equals("manage")){
+                System.out.println(usercode);
+                System.out.println(crewCode);
+                service.crew_member_upgrade(usercode,crewCode);
+                a=1;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
 }

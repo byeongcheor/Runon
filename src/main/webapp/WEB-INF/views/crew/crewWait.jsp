@@ -50,8 +50,9 @@
             <p class="modal-subtitle" id='write_date'></p>
             <pre class="text-wrapper" id='content'></pre>
           </div>
+          <div id=cancel_check_box></div>
           <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal" onClick="crew_join_delete();" >신청 취소하기</button>
+            <button type="button" data-bs-dismiss="modal" id=cancel_btn onClick="crew_join_delete();" >신청 취소하기</button>
           </div>
         </div>
       </div>
@@ -64,6 +65,7 @@ var create_crew_code;
         create_crew_code = crew_code;
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
+        var list = '';
         $.ajax({
             url: '/crew/crew_wait_detail',
             type: 'post',
@@ -75,6 +77,46 @@ var create_crew_code;
             success: function(response) {
                 $('#write_date').text(response[0].writedate);
                 $('#content').text(response[0].content);
+                $('#cancel_check_box').html('');
+                if(response[0].a_n==0) {
+                 $('#cancel_btn').show()
+                }
+                else {
+                    $('#cancel_btn').hide();
+                    list += '<div class="modal-body"> ';
+                    list += '	<div class="form-check"> ';
+                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason1"  value="1"> ';
+                    list += '	<label class="form-check-label" for="reason1">모집이 마감됐어요</label> ';
+                    list += '	</div> ';
+                    list += '	<div class="form-check"> ';
+                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason2" value="2"> ';
+                    list += '	<label class="form-check-label" for="reason2">성별이 맞지 않아요</label> ';
+                    list += '	</div> ';
+                    list += '	<div class="form-check"> ';
+                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason3" value="3"> ';
+                    list += '	<label class="form-check-label" for="reason3">나이가 맞지 않아요</label> ';
+                    list += '	</div> ';
+                    list += '	<div class="form-check"> ';
+                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason4" value="4"> ';
+                    list += '	<label class="form-check-label" for="reason4">소개가 부족해요</label> ';
+                    list += '	</div> ';
+                    list += '	<div class="form-check"> ';
+                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason5" value="5"> ';
+                    list += '	<label class="form-check-label" for="reason5">소개가 부적절해요 (광고, 도박 등)</label> ';
+                    list += '	</div> ';
+                    list += '</div> ';
+                    $('#cancel_check_box').append(list);
+                    var valuesToCheck = response[0].a_s;
+                    var valuesArray = valuesToCheck.split(',');
+
+                    $('input[name="reason"]').each(function() {
+                        if (valuesArray.includes($(this).val())) {
+                            $(this).prop('checked', true);
+                        }
+                    });
+                    $('input[name="reason"]').prop('disabled', true);
+                }
+
             },
             error: function(e) {
                 console.error('Error: ', e);

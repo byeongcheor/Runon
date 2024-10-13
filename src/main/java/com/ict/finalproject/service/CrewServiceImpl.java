@@ -110,9 +110,9 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int crew_manage_app_yes(int user_code, int crewCode)
+    public int crew_manage_app(int user_code, int crewCode, int status, String reason)
     {
-        return dao.crew_manage_app_yes(user_code, crewCode);
+        return dao.crew_manage_app(user_code, crewCode, status, reason);
     }
 
     @Override
@@ -143,8 +143,23 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int crew_member_insert2(int user_code, int crewCode) {
+        return dao.crew_member_insert2(user_code,crewCode);
+    }
+
+    @Override
     public int crew_name_check(String crew_name_check) {
         return dao.crew_name_check(crew_name_check);
+    }
+
+    @Override
+    public int crew_member_check(int user_code, int crewCode) {
+        return dao.crew_member_check(user_code, crewCode);
+    }
+
+    @Override
+    public int crew_member_upgrade(int user_code, int crewCode) {
+        return dao.crew_member_upgrade(user_code, crewCode);
     }
 
     @Override
