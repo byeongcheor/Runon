@@ -156,6 +156,53 @@ public class MypageController {
         service.createMarathonForm(marathonVO);
         return "200";
     }
+    //마라톤신청서삭제
+    @PostMapping("/mypage/deleteMarathonForm")
+    @ResponseBody
+    public String deleteMarathonForm(@RequestParam("usercode") int usercode,
+                                     @RequestParam("name") String name,
+                                     @RequestParam("tel") String tel,
+                                     @RequestParam("addr") String addr,
+                                     @RequestParam("addr_details") String addrDetails,
+                                     @RequestParam("gender") String gender,
+                                     @RequestParam("birth_date") String birthDate,
+                                     @RequestParam("size") String size
+                                     ){
+        MarathonFormVO mvo = service.selectMarathonForm(usercode);
+        if(mvo != null){
+            service.deleteMarathonForm(usercode);
+            return "deleted";
+        }
+        return "200";
+    }
+    //마라톤신청서수정
+    @PostMapping("/mypage/updateMarathonForm")
+    @ResponseBody
+    public String updateMarathonForm(
+            @RequestParam("usercode") int usercode,
+            @RequestParam("name") String name,
+            @RequestParam("tel") String tel,
+            @RequestParam("addr") String addr,
+            @RequestParam("addr_details") String addrDetails,
+            @RequestParam("gender") String gender,
+            @RequestParam("birth_date") String birthDate,
+            @RequestParam("size") String size
+    ){
+        MarathonFormVO mvo = service.selectMarathonForm(usercode);
+        System.out.println("여긴오니?");
+        if(mvo != null){
+            mvo.setName(name);
+            mvo.setTel(tel);
+            mvo.setAddr(addr);
+            mvo.setAddr_details(addrDetails);
+            mvo.setGender(gender);
+            mvo.setBirth_date(birthDate);
+            mvo.setSize(size);
+            service.updateMarathonForm(mvo);
+            return "updated";
+        }
+        return "200";
+    }
     //나의메이트이동
     @PostMapping("/mypage/openMymate")
     @ResponseBody

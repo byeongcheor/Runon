@@ -43,7 +43,15 @@
         INSERT INTO marathon_form_tbl (name, tel, addr, addr_details, gender, birth_date, size, terms_agreement, privacy_consent, media_consent, usercode)
         VALUES (#{name}, #{tel}, #{addr}, #{addr_details}, #{gender}, #{birth_date}, #{size}, #{terms_agreement}, #{privacy_consent}, #{media_consent}, #{usercode})
     </insert>
-
+    <delete id="deleteMarathonForm">
+        delete from marathon_form_tbl
+        where usercode=#{param1}
+    </delete>
+    <update id="updateMarathonForm">
+        update marathon_form_tbl
+        set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
+        gender=#{gender}, birth_date=#{birth_date}, size=#{size}, usercode=#{usercode}
+    </update>
     <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
         select
             c.certificate_code as certificate_code,

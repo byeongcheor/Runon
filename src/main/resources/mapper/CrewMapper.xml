@@ -30,19 +30,26 @@
     </select>
 
     <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code,a.crew_name,
-               (select count(crew_write_code)from crew_write where create_crew_code=a.create_crew_code)as a_n
-        from   create_crew_tbl a
-        where  a.usercode = ${param1}
+        select  a.create_crew_code,
+                a.crew_name,
+                a.logo,
+                ifnull((select crew_write_code
+                from    crew_write
+                where   create_crew_code = a.create_crew_code
+                and     is_delete = 0
+                limit 1),0) as a_n
+        from    create_crew_tbl a
+        where   a.usercode = ${param1};
     </select>
 
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content
+        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
         ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code) as a_n
         from  create_crew_tbl a, crew_write b
-        where a.create_crew_code = b.create_crew_code
-        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code
+        where b.is_delete = 0
+        and   a.create_crew_code = b.create_crew_code
+        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code,b.crew_write_code
         order by b.writedate desc
         limit 10 offset #{offset}
     </select>
@@ -52,7 +59,8 @@
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
         ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code) as a_n
         from create_crew_tbl a, crew_write b
-        where a.create_crew_code = b.create_crew_code
+        where b.is_delete = 0
+        and a.create_crew_code = b.create_crew_code
         and b.gender like ifnull(concat('%', '${param3}', '%'), '%')
         and b.age like ifnull(concat('%', '${param4}', '%'), '%')
         and concat(a.addr,' ',a.addr_gu) like ifnull(concat('%', '${param5}', '%'), '%')
@@ -124,12 +132,36 @@
         from   create_crew_tbl a, crew_write b
         where  a.create_crew_code = b.create_crew_code
         and    a.create_crew_code=${param2}
+        and    b.is_delete = 0
     </select>
     <select id="crew_join_select" resultType="int">
         select count(1)
         from   crew_request_tbl
         where  create_crew_code = ${param2}
         and    usercode = ${param1}
+    </select>
+    <select id="join_before_select" resultType="int">
+        select count(1)
+        FROM user_tbl u
+        JOIN crew_write cw ON
+        (cw.gender = '성별무관' OR
+        (cw.gender = '남자' AND u.gender = '남') OR
+        (cw.gender = '여자' AND u.gender = '여'))
+        WHERE cw.crew_write_code = ${param2}
+        AND (
+        (cw.age LIKE '%10대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 10 AND 19)
+        OR
+        (cw.age LIKE '%20대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 20 AND 29)
+        OR
+        (cw.age LIKE '%30대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 30 AND 39)
+        OR
+        (cw.age LIKE '%40대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 40 AND 49)
+        OR
+        (cw.age LIKE '%50대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) BETWEEN 50 AND 59)
+        OR
+        (cw.age LIKE '%60대%' AND TIMESTAMPDIFF(YEAR, u.birthdate, CURDATE()) >= 60)
+        )
+        and u.usercode = ${param1};
     </select>
     <insert id="crew_join_write">
 
@@ -146,9 +178,26 @@
             ,'${param3}'
         )
     </insert>
+
     <delete id="crew_join_delete">
         delete from   crew_request_tbl
         where  create_crew_code = ${param2}
         and    usercode = ${param1}
     </delete>
+
+    <update id="crew_write_delete">
+        update crew_write
+        set is_delete = 1,
+        delete_date = now()
+        where crew_write_code = ${param2}
+    </update>
+
+    <update id="crew_write_update">
+        update crew_write
+        set    teamPhoto = '${param3}'
+        ,age       = '${param4}'
+        ,gender	= '${param5}'
+        ,content   = '${param6}'
+        where crew_write_code = ${param1}
+    </update>
 </mapper>

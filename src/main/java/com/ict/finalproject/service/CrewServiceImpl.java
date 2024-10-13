@@ -50,6 +50,18 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int join_before_select(int user_code, int crewWriteCode)
+    {
+        return dao.join_before_select(user_code, crewWriteCode);
+    }
+
+    @Override
+    public int crew_write_delete(int user_code, int crewWriteCode)
+    {
+        return dao.crew_write_delete(user_code, crewWriteCode);
+    }
+
+    @Override
     public int crew_join_delete(int user_code, int crewCode)
     {
         return dao.crew_join_delete(user_code, crewCode);
@@ -89,6 +101,11 @@ public class CrewServiceImpl implements CrewService{
     @Override
     public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_add(third_crew_code, user_code, teamPhotoInput,age,gender,content);
+    }
+
+    @Override
+    public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
+        return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
 
 

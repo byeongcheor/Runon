@@ -16,6 +16,7 @@ public class MessageVO {
     private String recipient;      //받는 사람
 
 
+
     // 기존 생성자
     public MessageVO(int usercode,String nickname, String recipient, String content, String add_date) {
         this.usercode = usercode;

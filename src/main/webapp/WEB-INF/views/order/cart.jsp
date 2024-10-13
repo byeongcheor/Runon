@@ -14,7 +14,7 @@
     let appliedPoints = 0; // 적용된 포인트 (할인으로 적용됨)
 
     // 사용자 포인트(예시)
-    let userPoints = "0";
+    let userPoints = 1000;
 
     // 선택된 상품 삭제 함수
     function deleteSelectedItems() {
@@ -149,15 +149,11 @@
     // 포인트 최대 적용 함수
     function applyMaxPoints() {
         // 사용자 포인트 가져오기
-        const userPoints = getUserPoints(); // 사용자 포인트 가져오기
+        const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, '')); // 사용자 포인트 가져오기
         document.getElementById('discountInput').value = userPoints; // 입력 필드에 사용자 포인트 설정
 
         // 포인트 적용 후 총 금액 업데이트
         applyCoupon(); // 최대 포인트를 적용한 후 총 금액 업데이트
-    }
-    // 사용자 포인트 가져오기
-    function getUserPoints() {
-        return parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, '')) || 0; // 사용자 포인트 가져오기
     }
 
     // 포인트 적용하기
@@ -166,7 +162,7 @@
         let points = parseInt(document.getElementById('discountInput').value) || 0;
 
         // 입력한 포인트가 사용자 포인트를 초과하지 않는지 확인
-        const userPoints = getUserPoints();
+        const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, ''));
         if (points > userPoints) {
             alert("사용할 수 있는 포인트가 부족합니다. 최대 " + userPoints + " 원까지만 사용 가능합니다.");
             document.getElementById('discountInput').value = userPoints; // 최대 포인트로 설정
@@ -176,7 +172,7 @@
         // 총 상품 금액보다 포인트가 클 경우 포인트를 상품 금액까지만 적용
         let totalPrice = parseInt(document.getElementById("productTotal").innerText.replace(/[^0-9]/g, ''));
         if (points > totalPrice) {
-            points = totalPrice; // 포인트를 상품 금액으로 제한
+            points = totalPrice;
         }
 
         // 포인트 적용 후, 모달 닫기
@@ -189,7 +185,7 @@
     }
 
     // 총 금액과 할인 금액을 반영한 최종 금액 업데이트
-    function updateTotalAmountWithDiscount(appliedPoints) {
+    function updateTotalAmountWithDiscount() {
         // productTotal에서 총 상품 금액을 가져옵니다.
         const productTotalText = document.getElementById("productTotal").innerText;
         let productTotal = parseInt(productTotalText.replace(/[^0-9]/g, ''));
@@ -353,12 +349,9 @@
 
 
 <div class="cartFrm">
-    <div class="cartName" id="cartItemsContainer">
+    <div class="cartName">
         <h1>장바구니🛒</h1>
     </div>
-    <c:forEach var="cvo" items="${userselect}">
-        <input type='hidden' id=usercode value=${cvo.usercode}>
-    </c:forEach>
     <div class="cartMain">
         <div class="cartM">
             <div>
@@ -372,37 +365,40 @@
         </div>
 
         <div class="ticket_cart">
-            <c:forEach var="item" items="${cartItems}">
-                <div class="tipoff">
-                    <input type="hidden" id="productId" name="productId" value="${item.productId}"> <!-- 제품 ID -->
-                    <div class="checkB">
-                        <input type="checkbox" name="itemCheckbox" id="itemCheckbox" onclick="updateSelectAll()">
+            <div class="tipoff">
+                <input type="hidden" id="productId" name="productId" value="">
+                <div class="checkB">
+                    <input type="checkbox" name="itemCheckbox" id="itemCheckbox" onclick="updateSelectAll()">
+                </div>
+                <div class="ticket">
+                    <img src="../img/cart/marathonposter1.png" alt="마라톤 포스터" class="marathonP">
+                    <div class="marathonT">
+                        <span>2024 3대 마라톤 - 여의도 나이트런</span>
+                        <span>
+                                5.5Km / 티셔츠(L)
+                            </span>
                     </div>
-                    <div class="ticket">
-                        <img src="${item.poster_img}" alt="마라톤 포스터" class="marathonP"> <!-- 상품 이미지 -->
-                        <div class="marathonT">
-                            <span>${cartItem.marathon_name}</span> <!-- 마라톤 이름 -->
-                            <span>${cartItem.total_distance} / 티셔츠(L)</span> <!-- 추가 정보 -->
-                        </div>
+                </div>
+                <div class="marathonC">
+
+                    <div class="counter-container">
+                        <button onclick="decrease()">-</button>
+                        <span id="number">1</span>
+                        <button onclick="increase()">+</button>
                     </div>
-                    <div class="marathonC">
-                        <div class="counter-container">
-                            <button onclick="decrease()">-</button>
-                            <span id="number">${item.quantity}</span> <!-- 수량 -->
-                            <button onclick="increase()">+</button>
-                        </div>
-                        <div class="pointS">
-                            <button class="pointP" onclick="openModal()">
-                                <span>포인트적용</span>
-                            </button>
-                        </div><div class="modal" id="couponModal" style="display: none;">
+                    <div class="pointS">
+                        <button class="pointP" onclick="openModal()">
+                            <span>포인트적용</span>
+                        </button>
+                    </div>
+                    <div class="modal" id="couponModal" style="display: none;">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title">내 포인트</span>
                                 <button class="close-button" onclick="closeModal()">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p class="user-points">내 포인트: <span id="userPoints">${userPoints.mypoint}</span> 원</p> <!-- 회원 포인트 표시 -->
+                                <p class="user-points">내 포인트: <span id="userPoints">1000</span> 원</p> <!-- 회원 포인트 표시 -->
                                 <p class="coupon-text">사용할 포인트를 입력하세요:</p>
                                 <input type="number" id="discountInput" placeholder="0" min="0">
                             </div>
@@ -418,18 +414,17 @@
                             </div>
                         </div>
                     </div>
-
-                        <div class="ticketP">
-                            <span>${item.price}원</span> <!-- 상품 가격 -->
-                        </div>
-                        <div class="checkD" id="item1">
-                            <button class="delete-button" onclick="removeItem('item1')">
-                                <img src="../img/cart/closed.png" alt="닫기">
-                            </button>
-                        </div>
+                    <div class="ticketP">
+                        <span>25,000원</span>
+                    </div>
+                    <div class="checkD" id="item1">
+                        <button class="delete-button" onclick="removeItem('item1')">
+                            <img src="../img/cart/closed.png" alt="닫기">
+                        </button>
                     </div>
                 </div>
-            </c:forEach>
+            </div>
+
         </div>
     </div>
     <div class="cartBottom">
@@ -442,9 +437,9 @@
             <li>총 주문 금액</li>
         </ul>
         <ul class="payP">
-            <li id="productTotal">${order.total_amount}원</li>  <!-- 상품 금액 -->
-            <li id="discountAmount">${order.discount_amount}원</li>  <!-- 할인금액 -->
-            <li id="totalAmount">${order.real_amount}원</li>  <!-- 총 주문 금액 -->
+            <li id="productTotal">0원</li>
+            <li id="discountAmount">0원</li>
+            <li id="totalAmount">0원</li>
         </ul>
     </div>
     <div class="orderC">
@@ -455,4 +450,5 @@
             <button class="button" id="orderButton">선택 상품 주문하기</button>
         </div>
     </div>
+
 </div>

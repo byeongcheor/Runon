@@ -18,6 +18,10 @@ public interface MypageDAO {
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성
     public void createMarathonForm(MarathonFormVO marathonVO);
+    //마라톤신청서삭제
+    public void deleteMarathonForm(int usercode);
+    //마라톤신청서 수정
+    public int updateMarathonForm(MarathonFormVO marathonVO);
 
     //인증서리스트불러오기
     public List<CertificateVO> selectCertificateAll(String username);

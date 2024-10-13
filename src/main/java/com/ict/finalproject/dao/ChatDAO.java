@@ -1,10 +1,17 @@
 package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.MessageVO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+
+@Mapper
 public interface ChatDAO {
-    void sendMessage(MessageVO message);  // 메시지 전송
-    List<MessageVO> getChatHistory(String recipient);  // 채팅 기록 가져오기
+        // 메시지 저장 메서드
+        void insertMessage(MessageVO vo);
+
+        // 매칭 방 코드에 따른 메시지 조회
+        List<MessageVO> selectMessagesByRoomCode(int matchYn);
+
 }

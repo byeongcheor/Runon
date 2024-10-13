@@ -3,86 +3,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Document</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/css/slick.css" type="text/css">
-<link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
-<link rel="stylesheet" href="/css/main.css" type="text/css">
-<link rel="stylesheet" href="/css/mate.css" type="text/css">
-<script src="js/matechatting.js" type="text/javascript"></script>
-<!--WebSocket 라이브러리 추가 -->
-<!--https://cdnjs.com/libraries/sockjs-client -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- https://cdnjs.com/libraries/stomp.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/slick.css" type="text/css">
+    <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/css/mate.css" type="text/css">
+    <script src="js/matechatting.js" type="text/javascript"></script>
+    <!--WebSocket 라이브러리 추가 -->
+    <!--https://cdnjs.com/libraries/sockjs-client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- https://cdnjs.com/libraries/stomp.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 
 <body>
-    <div id="bannerBox">
-        <img src="/img/메이트베너.jpg" id="bannerImg"/>
-    </div>
-         <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
-            <input type='hidden' id=usercode value=${uvo.usercode}>
-            <input type='hidden' id=gender value=${uvo.gender}>
-            <input type='hidden' id=birthdate value=${uvo.birthdate}>
-            <input type='hidden' id=mate_popup_date value=${uvo.mate_popup_date}>
-            <input type='hidden' id=nickname value=${uvo.nickname}>
-         </c:forEach>
-    <div class="layout">
-            <!-- 중앙 메인 콘텐츠 -->
-            <div class="main-content">
-                <!-- 필터 -->
-                <div class="select-section">
-                    <div class="select-box-container">
-                        <div class="select-box" id="marathonSelect">
-                         
-                            <p>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span></p>
-                            <ul class="dropdown-menu options-list" id="options_list">
-                            </ul>
-                        </div>
-                        <div class="select-box" id="participationCountSelect">
-                           참가횟수 <span class="menu_select">&nbsp;▼</span>
-                           <ul class="dropdown-menu options-list">
-                               <li data-value="1">1~5</li>
-                               <li data-value="6">6~10</li>
-                               <li data-value="11">11~15</li>
-                               <li data-value="16">15회 이상</li>
-                           </ul>
-                        </div>
-                        <div class="select-box" id="mateCountSelect">
-                            메이트인원 <span class="menu_select">&nbsp;▼</span>
-                            <ul class="dropdown-menu options-list">
-                               
-                                <li data-value="2">2명</li>
-                                <li data-value="3">3명</li>
-                                <li data-value="4">4명</li>
-                                <li data-value="5">5명</li>
-                                <li data-value="6">6명</li>
-                                <li data-value="7">7명</li>
-                                <li data-value="8">8명</li>
-                                <li data-value="9">9명</li>
-                                <li data-value="10">10명</li>
-                                <li data-value="11">11명</li>
-                                <li data-value="12">12명</li>
-                                <li data-value="13">13명</li>
-                                <li data-value="14">14명</li>
-                                <li data-value="15">15명</li>
-                                <li data-value="16">16명</li>
-                            </ul>
-                        </div>
-                        <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
-                        <button class="search_match" id="accept" onclick="accept();">&nbsp;수락하기&nbsp;</button>
-                        <button class="search_match" id="accept_n" onclick="accept_n();">&nbsp;수락취소&nbsp;</button>
-                        <button class="search_match" id="out" onclick="match_out();">&nbsp;나가기&nbsp;</button>
-                    </div>
+<div id="bannerBox">
+    <img src="/img/메이트베너.jpg" id="bannerImg"/>
+</div>
+<c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
+<input type='hidden' id=usercode value=${uvo.usercode}>
+<input type='hidden' id=gender value=${uvo.gender}>
+<input type='hidden' id=birthdate value=${uvo.birthdate}>
+<input type='hidden' id=mate_popup_date value=${uvo.mate_popup_date}>
+<input type='hidden' id=nickname value=${uvo.nickname}>
+</c:forEach>
+<div class="layout">
+    <!-- 중앙 메인 콘텐츠 -->
+    <div class="main-content">
+        <!-- 필터 -->
+        <div class="select-section">
+            <div class="select-box-container">
+                <div class="select-box" id="marathonSelect">
+
+                    <p>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span></p>
+                    <ul class="dropdown-menu options-list" id="options_list">
+                    </ul>
                 </div>
-                <div class="profile-container"></div>
-            </div>        <!-- 랭킹 -->
-            <div class="ranking-container">
-            <div class="ranking">
-                <div style="margin-top: 5px;">
+                <div class="select-box" id="participationCountSelect">
+                    참가횟수 <span class="menu_select">&nbsp;▼</span>
+                    <ul class="dropdown-menu options-list">
+                        <li data-value="1">1~5</li>
+                        <li data-value="6">6~10</li>
+                        <li data-value="11">11~15</li>
+                        <li data-value="16">15회 이상</li>
+                    </ul>
+                </div>
+                <div class="select-box" id="mateCountSelect">
+                    메이트인원 <span class="menu_select">&nbsp;▼</span>
+                    <ul class="dropdown-menu options-list">
+
+                        <li data-value="2">2명</li>
+                        <li data-value="3">3명</li>
+                        <li data-value="4">4명</li>
+                        <li data-value="5">5명</li>
+                        <li data-value="6">6명</li>
+                        <li data-value="7">7명</li>
+                        <li data-value="8">8명</li>
+                        <li data-value="9">9명</li>
+                        <li data-value="10">10명</li>
+                        <li data-value="11">11명</li>
+                        <li data-value="12">12명</li>
+                        <li data-value="13">13명</li>
+                        <li data-value="14">14명</li>
+                        <li data-value="15">15명</li>
+                        <li data-value="16">16명</li>
+                    </ul>
+                </div>
+                <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
+                <button class="search_match" id="accept" onclick="accept();">&nbsp;수락하기&nbsp;</button>
+                <button class="search_match" id="accept_n" onclick="accept_n();">&nbsp;수락취소&nbsp;</button>
+                <button class="search_match" id="out" onclick="match_out();">&nbsp;나가기&nbsp;</button>
+            </div>
+        </div>
+        <div class="profile-container"></div>
+    </div>        <!-- 랭킹 -->
+    <div class="ranking-container">
+        <div class="ranking">
+            <div style="margin-top: 5px;">
                 <div class="menu-title">랭킹</div>
                 <ul class="rank-list">
                     <c:forEach var="rank" items="${ranking}">
@@ -92,9 +92,9 @@
                             <div class="rank-info">
                                 <span class="rank-name">${rank.nickname}</span>
                                 <div class="rank-details">
-                                        <span class="runkm">${rank.point_code}</span>
-                                     
-                                        <span class="crew-name">${rank.crew_name}</span>
+                                    <span class="runkm">${rank.point_code}</span>
+
+                                    <span class="crew-name">${rank.crew_name}</span>
                                 </div>
                             </div>
                         </li>
@@ -102,41 +102,44 @@
                 </ul>
                 <div class="more" id="more" onclick="ranking_more();">더보기</div>
             </div>
-            </div>
-            <!-- 오른쪽 채팅창 -->
-                <div id="chatbox">
-
-                    <!-- 대화내용 -->
-                    <div id="taMsg">
-                        <!-- 여기에 메시지들이 표시됩니다 -->
-                    </div>
-                    <!-- 메시지입력 -->
-
-                    <div class="chat-input">
-                        <input type="text" id="inputMsg" placeholder="채팅을 입력해 주세요">
-                        <button id="sendBtn">전송</button>
-                    </div>
-                </div>
         </div>
+        <!-- 오른쪽 채팅창 -->
+
+        <%--        <div id="chatbox" >--%>
+
+        <%--            <!-- 대화내용 -->--%>
+        <%--            <div id="taMsg">--%>
+        <%--                <!-- 여기에 메시지들이 표시됩니다 -->--%>
+        <%--            </div>--%>
+        <%--            <!-- 메시지입력 -->--%>
+
+        <%--            <div class="chat-input">--%>
+        <%--                <input type="text" id="inputMsg" placeholder="채팅을 입력해 주세요">--%>
+        <%--                <button id="sendBtn">전송</button>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+
     </div>
+
+</div>
 
 <!-- 옵션 선택 안내 모달 -->
 <div id="optionSelectModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>옵션을 선택해주세요</p>
-  </div>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>옵션을 선택해주세요</p>
+    </div>
 </div>
 
 <!-- 매칭 완료 후 선택 모달 -->
 <div id="matchCompleteModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>매칭이 완료되었습니다.</p>
-    <div class="modal-buttons">
-       <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
-      <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
-  </div>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>매칭이 완료되었습니다.</p>
+        <div class="modal-buttons">
+            <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+            <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
+    </div>
 </div>
 
 <!-- 매칭 이용방법 안내 모달 -->
@@ -149,22 +152,22 @@
 
         <h3 class="highlight-number">1. 매이트 매칭을 위한 필수 조건</h3>
         <p>- 참가하는 대회가 있어야 합니다. 본인이 결제한 대회가 없으면 매칭을 진행할 수 없습니다.<br>
-        - "내 대회" 드롭다운 메뉴에서 본인이 참여한 대회를 선택하세요.</p>
+            - "내 대회" 드롭다운 메뉴에서 본인이 참여한 대회를 선택하세요.</p>
 
         <h3 class="highlight-number">2. 매칭 조건 선택</h3>
         <p>- 참가 횟수와 매칭할 메이트 인원을 선택하세요. 2명부터 16명까지 선택 가능합니다.</p>
 
         <h3 class="highlight-number">3. 매칭 시작</h3>
         <p>- 매칭 조건을 설정한 후 "매칭하기" 버튼을 누르면 랜덤으로 같은 조건을 선택한 사람들과 매칭이 진행됩니다.<br>
-        - 매칭이 진행되면, 선택한 메이트 인원 수만큼 기본 프로필이 표시됩니다.</p>
+            - 매칭이 진행되면, 선택한 메이트 인원 수만큼 기본 프로필이 표시됩니다.</p>
 
         <h3 class="highlight-number">4. 매칭 상태 확인 및 채팅</h3>
         <p>- 프로필 주변에 초록색 테두리가 표시되면, 해당 유저가 매칭을 수락한 상태입니다. 모든 유저가 수락해야 매칭이 완료됩니다.<br>
-        - 매칭된 방에 입장하면 자동으로 채팅이 연결되어 유저들과 실시간 대화가 가능합니다.</p>
+            - 매칭된 방에 입장하면 자동으로 채팅이 연결되어 유저들과 실시간 대화가 가능합니다.</p>
 
         <h3 class="highlight-number">5. 프로필 사진</h3>
         <p>- 입장한 메이트의 성별은 기본 프로필 사진으로 나타납니다.<br>
-        - 자신의 기본 프로필을 클릭하면 런온에서 제공하는 다른 프로필로 바꿀 수 있습니다.</p>
+            - 자신의 기본 프로필을 클릭하면 런온에서 제공하는 다른 프로필로 바꿀 수 있습니다.</p>
 
         <h3 class="highlight-number">6. 매칭 완료 및 확인</h3>
         <p>- 매칭된 유저의 정보는 마이페이지에서 확인할 수 있습니다.</p>
@@ -302,6 +305,8 @@
                     clearInterval(intervalId);
                     mate_complite();
                     showMatchCompleteModal();
+
+
                 }
 
                 if(cnt==0){
@@ -384,8 +389,11 @@
                 participationCountValue:participationCountValue,
                 mateCountValue:mateCountValue
             },success:function(result){
-                match_yn=result;
-                match_view(result);
+                match_yn=result; // 방 코드 받아옴
+                match_view(result); // 방에 대한 정보 조회
+
+                // // 채팅방 연결
+                // chatConnection(match_yn); // 방 코드에 맞는 채팅방 연결
             },
             error:function(e){
             }
@@ -428,6 +436,7 @@
                 localStorage.removeItem('mateCountSelect');
                 localStorage.clear();// 이거 지워야 이용방법 모달안뜸
                 location.reload();  // 페이지 새로고침 추가
+
             },
             error:function(e){
             }
@@ -446,6 +455,8 @@
                 localStorage.removeItem('marathonSelect');
                 localStorage.removeItem('participationCountSelect');
                 localStorage.removeItem('mateCountSelect');
+
+
             },
             error:function(e){
             }
@@ -737,62 +748,72 @@
         });
     }
 
-//////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
 
 
     $(document).ready(function() {
-        // nickname 값을 가져와서 로그로 확인
-        var nickname = $('#nickname').val(); // hidden 필드에서 값 가져오기
-        console.log("로그인한 사용자의 닉네임: " + nickname);
+        // 방 코드가 제대로 설정되어 있는지 확인
+        if (match_yn && match_yn !== "undefined") {
+            console.log("유효한 방 코드: ", match_yn);
 
+            // nickname 값을 가져와서 로그로 확인
+            var nickname = $('#nickname').val(); // hidden 필드에서 값 가져오기
+            console.log("로그인한 사용자의 닉네임: " + nickname);
 
-        // 자동으로 채팅 서버 연결하기
-        chatConnection();
+            //채팅 서버 연결하기
+            chatConnection();
+            //이전 채팅 내역 불러오기
+            loadChatMessages();
 
-        // 서버로 메시지 보내기 (Enter 키)
-        $("#inputMsg").keyup(function(event){
-            if (event.keyCode === 13) {
+            // 서버로 메시지 보내기 (Enter 키)
+            $("#inputMsg").keyup(function(event) {
+                if (event.keyCode === 13) {
+                    sendMessageFromInput();
+                }
+            });
+
+            // 서버로 메시지 보내기 (전송 버튼)
+            $("#sendBtn").click(function() {
                 sendMessageFromInput();
-            }
-        });
+            });
 
-        // 서버로 메시지 보내기 (전송 버튼)
-        $("#sendBtn").click(function() {
-            sendMessageFromInput();
-        });
-
-        // 연결 끊기 처리
-        $("#disconnectBtn").click(function() {
-            sendMessage(usercode, nickname, 'all', nickname + "님이 퇴장하였습니다.");
-            if (stompClient != null) {
-                stompClient.disconnect();
-            }
-            socket = null;
-            stompClient = null;
-            disabledChat();
-        });
+        } else {
+            console.warn("방 코드가 올바르게 설정되지 않았습니다.");
+        }
     });
+
 
     // 채팅 서버와 연결하는 함수
     function chatConnection() {
-        socket = new SockJS("/chat");
+        // 매칭 방 코드가 0일 경우 채팅 연결 차단
+
+        if (match_yn === 0) {
+            console.warn("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
+            alert("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
+            return; // 채팅 연결을 막음
+        }
+
+        console.log("매칭 방 코드: ", match_yn);
+        socket = new SockJS("/chat"); // WebSocket 엔드포인트와 연결
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function(frame) {
             console.log('WebSocket 연결 성공:', frame);
-            setConnected();
+            // setConnected();
             console.log(usercode, nickname);
-            // 서버로 메시지 전송 (닉네임 접속 알림)
-            sendMessage(usercode, nickname, 'all', nickname + "님이 접속하였습니다.");
 
-            // 서버에서 받은 메시지를 구독하고 처리
-            stompClient.subscribe("/topic/messages", function(receiveMsg) {
+            // 방 코드에 따라 구독 경로 설정
+            stompClient.subscribe("/topic/messages/"+match_yn, function(receiveMsg) {
                 console.log('receiveMsg->',receiveMsg);
                 var jsonMsg = JSON.parse(receiveMsg.body);
                 console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
                 showCatMessage(jsonMsg);
             });
+            // 서버로 메시지 전송 (닉네임 접속 알림)
+            sendMessage(usercode, nickname, match_yn, nickname + "님이 접속하였습니다.");
         });
     }
+
+
 
     // 메시지를 입력창에서 가져와 서버로 전송하는 함수
     function sendMessageFromInput() {
@@ -800,21 +821,53 @@
         var inputMsg = $("#inputMsg").val(); // 입력한 메시지
         if (inputMsg === "") return false; // 빈 메시지 전송 방지
 
-        sendMessage(usercode, nickname, 'all', inputMsg); // 로그인한 회원의 닉네임으로 메시지 전송
+        sendMessage(usercode, nickname, match_yn, inputMsg); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
         $("#inputMsg").val(''); // 입력창 초기화
     }
 
+    // 메시지 불러오기 함수
+    function loadChatMessages() {
+        if (match_yn === 0) {
+            console.warn("매칭 방 코드가 0이므로 이전 메시지를 불러오지 않습니다.");
+            return; // 함수 종료
+        }
+
+        $.ajax({
+            url: "/message/chat/" + match_yn, // match_yn은 매칭된 방 코드
+            type: "GET",
+            success: function(data) {
+                console.log("서버에서 받은 메시지들:", data);
+                // 받은 메시지를 화면에 표시
+                data.forEach(function(message) {
+                    showCatMessage(message); // 각 메시지를 화면에 표시
+                });
+            },
+            error: function(error) {
+                console.error("메시지 불러오기 실패:", error);
+            }
+        });
+    }
+
+
     // 서버로 메시지 전송 함수
-    function sendMessage(usercode, nickname, recipient, content, add_date) {
+    function sendMessage(usercode, nickname,recipient, content, add_date) {
         let messageData = {
             usercode: usercode, // 전역 변수 usercode 사용
             nickname: nickname, // 전역 변수 nickname 사용
-            recipient: recipient,   // 수신자 정보
+            recipient: recipient, // 방 코드 (방 구분을 위한 식별자)
             content: content,    // 메시지 내용
             add_date: add_date
         };
         stompClient.debug = null;
-        stompClient.send("/message/chat", {}, JSON.stringify(messageData));
+        // WebSocket이 연결되었는지 확인 (readyState가 OPEN인지 확인)
+        if (socket.readyState === WebSocket.OPEN) {
+            // 각 방 코드에 맞는 경로로 메시지 전송
+            stompClient.send("/message/chat/" + match_yn, {}, JSON.stringify(messageData));
+            console.log("메시지가 전송되었습니다.");
+        } else {
+            console.error("WebSocket 연결이 완료되지 않았습니다. 연결 상태:", socket.readyState);
+        }
+
     }
 
 
@@ -850,25 +903,11 @@
         $("#taMsg").append(tag);
 
         // 스크롤을 최신 메시지로 자동 이동
-        document.getElementById("taMsg").scrollTop = document.getElementById("taMsg").scrollHeight;
+        var chatbox = document.getElementById("taMsg");
+        chatbox.scrollTop = chatbox.scrollHeight;
     }
 
-    // 채팅 창 비활성화 함수
-    function disabledChat() {
-        $("#nickname").val("");
-        $("#status").html("연결 후 채팅하세요.");
-        $("#inputMsg").val("");
-        $("#taMsg").html("");
-        $("#chatbox").css("display", "none");
-    }
 
-    // 서버와 채팅 서버 연결 상태 처리 함수
-    function setConnected() {
-        // $("#connected").prop('disabled', true); // 채팅 연결하기 비활성화
-        // $("#nickname").prop('disabled', true); // 닉네임 입력 비활성화
-        $("#status").html(nickname + "님이 접속하였습니다."); // 연결 상태 알림
-        $("#chatbox").css("display", "flex"); // 채팅 박스 표시
-    }
 
 
 
