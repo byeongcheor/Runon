@@ -204,6 +204,7 @@ public class CrewController {
         int a=0;
         try {
             int b = service.crew_join_select(user_code,crewCode);
+            System.out.println(b);
             if (b>0) return 0;
             service.crew_join_write(user_code,crewCode,join_content);
             a=1;
@@ -355,15 +356,14 @@ public class CrewController {
 
     @PostMapping("/crew_wait_detail")
     @ResponseBody
-    public List<CrewVO> crew_wait_detail(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int create_crew_code, @RequestParam(value = "usercode", defaultValue = "0") int usercode) {
+    public List<CrewVO> crew_wait_detail(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int create_crew_code, @RequestParam(value = "usercode", defaultValue = "0") int usercode,  @RequestParam(value = "request_code", defaultValue = "0") int request_code) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_wait_detail = null;
         int user_code2=usercode==0?user_code:usercode;
-
         try {
-            crew_wait_detail = service.crew_wait_detail(user_code2,create_crew_code);
+            crew_wait_detail = service.crew_wait_detail(user_code2,create_crew_code,request_code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -434,6 +434,7 @@ public class CrewController {
                    @RequestParam("create_crew_code") int crewCode,
                    @RequestParam("status") int status,
                    @RequestParam("usercode") int usercode,
+                   @RequestParam("request_code") int request_code,
                    @RequestParam("reason") String reason) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
@@ -441,12 +442,11 @@ public class CrewController {
         try {
             if(status==1) {
                 int check = service.crew_member_check(usercode, crewCode);
-                System.out.println(check);
                 if(check>0) return 9;
-                service.crew_manage_app(usercode, crewCode, status, reason);
+                service.crew_manage_app(usercode, crewCode, status, reason, request_code);
                 service.crew_member_insert2(usercode, crewCode);
             }
-            else service.crew_manage_app(usercode, crewCode, status, reason);
+            else service.crew_manage_app(usercode, crewCode, status, reason, request_code);
             a=1;
         } catch (Exception e) {
             e.printStackTrace();
@@ -455,16 +455,34 @@ public class CrewController {
     }
     @PostMapping("/member_manage")
     @ResponseBody
-    public int member_manage(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id, @RequestParam("usercode") int  usercode) {
+    public int member_manage(@RequestParam("Authorization")String token,
+                             @RequestParam("create_crew_code") int crewCode,
+                             @RequestParam("id") String id,
+                             @RequestParam("usercode") int  usercode,
+                             @RequestParam("reason") String reason,
+                             @RequestParam("reason_text") String reason_text) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
+        int my_user_code = service.usercodeSelect(user_name);
         int a = 0;
         try {
-            if (id.equals("manage")){
-                System.out.println(usercode);
-                System.out.println(crewCode);
+            if (id.equals("manage2")){
                 service.crew_member_upgrade(usercode,crewCode);
                 a=1;
+            }
+            if (id.equals("manage3")){
+                service.crew_member_downgrade(usercode,crewCode);
+                a=4;
+            }
+            if (id.equals("report")){
+                service.crew_member_report(usercode,my_user_code,reason,reason_text);
+                a=2;
+            }
+            if (id.equals("out")){
+                service.crew_member_out(usercode,crewCode);
+                int flag=1;
+                service.crew_history_insert(usercode,crewCode,flag);
+                a=3;
             }
 
         } catch (Exception e) {
@@ -472,5 +490,13 @@ public class CrewController {
         }
         return a;
     }
+
+/////////////////////////// 크루정보수정 페이지////////////////////////////////////////
+
+    @GetMapping("/crewRevise")
+    public String crewRevise(){
+        return "crew/crewRevise";
+    }
+
 
 }

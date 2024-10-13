@@ -254,6 +254,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const crew_write_code = urlParams.get('crew_write_code');
 var usercode;
+var position;
 $('#nextBtn').on('click', function() {
     $('#crewInfoModal').modal('hide');
     crew_write_detail_check(crew_write_code);
@@ -277,7 +278,7 @@ $('#prevBtnInCreateModal').on('click', function() {
 
     $(document).ready(function() {
         crew_detail_select();
-
+        clog('My position : '+position);
         $('#crew_write_code').val(crew_write_code);
     });
 
@@ -309,13 +310,13 @@ $('#prevBtnInCreateModal').on('click', function() {
                 create_crew_code : create_crew_code
             },
             success: function(result) {
-            clog(result);
                 $('#crew_img').attr('src', '/crew_upload/'+result[0].logo);
                 $('#team_name').text(result[0].crew_name);
                 $('#addr').text(result[0].addr);
                 $('#team_info').text(result[0].a_s);
                 $('#gender').text(result[0].gender);
                 $('#age').text(result[0].age);
+                position = result[0].f_n;
 
                 // 이미지가 있는 경우
                 if (result[0].b_s && result[0].b_s !== 'null') {
@@ -327,7 +328,7 @@ $('#prevBtnInCreateModal').on('click', function() {
 
                 $('#content').text(result[0].content);
                 $('#hits').text('조회수 ' + result[0].hits);
-                $('#crew_request').text('신청자수 ' + result[0].a_n);
+                $('#crew_request').text('신청자수 ' + result[0].c_n);
                 $('#write_date').text('업데이트    ' + result[0].writedate);
 
                 usercode = result[0].b_n;
@@ -344,6 +345,10 @@ $('#prevBtnInCreateModal').on('click', function() {
                         $('#crew_request_delete').hide();
                         $('#crew_request_btn').show();
                     }
+                }
+                if(result[0].g_n>0){
+                    $('#crew_request_btn').hide();
+                    $('#crew_request_delete').hide();
                 }
             },
             error: function(e) {
@@ -364,10 +369,12 @@ $('#prevBtnInCreateModal').on('click', function() {
                 join_content       : $('#join_content').val()
             },
             success: function(result) {
-                $('#crew_request_delete').show();
-                $('#crew_request_btn').hide();
-                if(result>0) alert('가입신청이 완료되었습니다.')
-                //else alert('이미 가입신청 되어있습니다.');
+                if(result>0) {
+                    alert('가입신청이 완료되었습니다.');
+                    $('#crew_request_delete').show();
+                    $('#crew_request_btn').hide();
+                }
+                else alert('이미 가입신청 되어있습니다.');
             },
             error: function(e) {
                 console.error('Error: ', e);
@@ -550,7 +557,7 @@ $('#prevBtnInCreateModal').on('click', function() {
         });
     }
     function go_crew_manage(){
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + usercode;
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + usercode + '&position=' + position;
     }
 
 </script>

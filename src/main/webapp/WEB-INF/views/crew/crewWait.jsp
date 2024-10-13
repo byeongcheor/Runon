@@ -61,18 +61,21 @@
 var Authorization = localStorage.getItem("Authorization");
 var create_crew_code;
 
-    function openModal(crew_code) {
+    function openModal(crew_code, request_code) {
         create_crew_code = crew_code;
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
         var list = '';
+        clog(crew_code);
+        clog(request_code);
         $.ajax({
             url: '/crew/crew_wait_detail',
             type: 'post',
             async: false,
             data: {
                 Authorization    : Authorization,
-                create_crew_code : crew_code
+                create_crew_code : crew_code,
+                request_code     : request_code
             },
             success: function(response) {
                 $('#write_date').text(response[0].writedate);
@@ -154,7 +157,7 @@ var create_crew_code;
                     list += '</div> ';
                     list += '</a> ';
                     list += '<div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
-                    list += '<button type="submit" class="custom-button" onClick="openModal('+response[i].create_crew_code+')"> ';
+                    list += '<button type="submit" class="custom-button" onClick="openModal('+response[i].create_crew_code+','+response[i].b_n+')"> ';
                     list += '신청 확인 ';
                     list += '</button> ';
                     list += '</div> ';

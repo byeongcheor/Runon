@@ -9,6 +9,7 @@
     <div id="bannerBox">
         <img src="/img/러닝고화질.jpg" id="bannerImg"/>
     </div>
+    <input type=hidden id=usercode />
     <div class="content_body">
         <div class="content_left">
             <section class="section3">
@@ -26,8 +27,10 @@
                     </div>
                 </div>
                 <div class="editCrew">
-                    <button type="button" id="editCrewBtn">크루정보변경</button>
-                    <button type="button" id="editCrewBtn" style="font-weight: bold; font-size: 24px;">&#8943;</button>
+                    <button type="button" class="editCrewBtn" id="editCrewBtn">크루정보변경</button>
+                    <button type="button" class="editCrewBtn" id="resignCrew" onclick="openResignModal()">
+                      <img src="/img/more.png" style="width: 14px; height: 14px;">
+                    </button>
                 </div>
                 <div class="statis">
                     <p style="font-weight: 700;">팀원변화</p>
@@ -80,13 +83,14 @@
 <div id="customModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <span class="custom-modal-title">장재성</span>
+      <span class="custom-modal-title" id=member_name></span>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option" id="manage">운영진으로 추가</button>
-      <button class="custom-modal-option" id="report" onClick="openRejectModal();">신고하기</button>
-      <button class="custom-modal-danger" id="out">강제 퇴장</button>
+      <button class="custom-modal-option" id="manage2" onClick="member_manage(this)">운영진으로 추가</button>
+      <button class="custom-modal-option" id="manage3" onClick="member_manage(this)">일반크루로 변경</button>
+      <button class="custom-modal-danger" onClick="openRejectModal();">신고하기</button>
+      <button class="custom-modal-danger" id="out" onClick="member_manage(this)">강제 퇴장</button>
     </div>
   </div>
 </div>
@@ -94,36 +98,36 @@
 <div id="rejectModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h5 class="modal-title">신고 사유를 선택해주세요</h5>
+      <h3 class="modal-title">신고 사유를 선택해주세요</h3>
       <span class="custom-close" onclick="closeRejectModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="reason1">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason1" value="1">
         <label class="form-check-label" for="reason1">무단으로 불참했어요 </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="reason2">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason2" value="2">
         <label class="form-check-label" for="reason2">시간 약속을 지키지 않아요 </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="reason3">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason3" value="3">
         <label class="form-check-label" for="reason3">크루 참여를 위해 속였어요</label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="reason4">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason4" value="4">
         <label class="form-check-label" for="reason4">매너가 없어요</label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="reason5">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason5" value="5">
         <label class="form-check-label" for="reason5">광고성 메세지를 보내요</label>
       </div>
     </div>
     <div class="mt-3">
-        <textarea id="report" name="report" class="report" placeholder="신고 사유를 추가로 작성하실 수 있습니다."></textarea>
+        <textarea id="report_content" name="report" class="report" placeholder="신고 사유를 추가로 작성하실 수 있습니다."></textarea>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="confirmRejection()">확인</button>
+        <button type="button" class="btn btn-primary" id="report"  onClick="member_manage(this)">확인</button>
         <button type="button" class="btn btn-light" onclick="closeRejectModal()">취소</button>
     </div>
   </div>
@@ -141,7 +145,7 @@
     <div class="custom-modal-body">
       <button class="custom-modal-option" id=update>프로필 수정</button>
       <button class="custom-modal-option" id=handoverCrewBtn>팀소유자 위임</button>
-      <button class="custom-modal-danger" id=crew_delete>팀 삭제하기</button>
+      <button class="custom-modal-danger" onclick="deleteTeam()" id=crew_delete >팀 삭제하기</button>
     </div>
   </div>
 </div>
@@ -149,13 +153,18 @@
 <div id="handoverModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h5>위임할 멤버를 선택하세요</h5>
+      <h3>위임할 멤버를 선택하세요</h3>
       <span class="custom-close" onclick="closeHandoverModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
       <!-- 팀 멤버 선택 -->
       <label class="team-member">
-        <input type="checkbox"  name="teamOwner" value="jang">
+        <input type="radio"  name="teamOwner" value="jang">
+        <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
+        <span class="team-name">장재성</span>
+      </label>
+      <label class="team-member">
+        <input type="radio"  name="teamOwner" value="jang">
         <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
         <span class="team-name">장재성</span>
       </label>
@@ -165,12 +174,26 @@
     </div>
   </div>
 </div>
+<!-- 팀 탈퇴하기 모달 -->
+<div id="resignModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h3 class="modal-title">어떤 걸 하시겠어요?</h3>
+      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body">
+      <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">팀 탈퇴하기</button>
+    </div>
+  </div>
+</div>
 <script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const user_code = urlParams.get('user_code');
 const position = urlParams.get('position');
+clog('My position : '+ position);
+clog('My user_code : '+ user_code);
     $(document).ready(function() {
         $('#member').css('color', 'black');
         crew_deatil_select();
@@ -216,6 +239,7 @@ const position = urlParams.get('position');
                 id               : id
             },
             success: function(response) {
+                $('#crew_manage_list').html('');
                 if (id=='member')crew_manage_select_member(response);
             },
             error: function(e) {
@@ -248,7 +272,7 @@ const position = urlParams.get('position');
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
             if(user_code!=response[i].usercode && response[i].b_n>0){
-                list += '     <div class="more-icon" onclick="openCustomModal('+response[i].a_n+')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
+                list += '     <div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname + '\', \'' + response[i].a_n + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
             }
             list += '   </div> ';
             list += '  </div> ';
@@ -259,16 +283,22 @@ const position = urlParams.get('position');
 
         $('#crew_manage_list').append(list);
     }
-    function openCustomModal(usercode) {
+    function openCustomModal(usercode,nickname,user_pisition) {
       $('#usercode').val(usercode);
-     /* if(position==1){
+      $('#member_name').text(nickname);
+      if(position==1){
         $('#manage2').show();
+        $('#manage3').show();
         $('#out').show();
       }
       else{
         $('#manage2').hide();
+        $('#manage3').hide();
         $('#out').hide();
-      }*/
+      }
+      clog(user_pisition);
+      if(user_pisition==2)$('#manage2').hide();
+      if(user_pisition==3)$('#manage3').hide();
 
       document.getElementById('customModal').style.display = 'block';
     }
@@ -280,6 +310,15 @@ const position = urlParams.get('position');
     }
     function member_manage(element){
         var id = element.id;
+        var reason='';
+        var checkedValues = [];
+        clog(id);
+        if(id=='report'){
+            $('input[name="report_reason"]:checked').each(function() {
+                checkedValues.push($(this).val());
+            });
+            reason = checkedValues.join(',');
+        }
         $.ajax({
             url: '/crew/member_manage',
             type: 'post',
@@ -288,11 +327,15 @@ const position = urlParams.get('position');
                 Authorization    : Authorization,
                 create_crew_code : create_crew_code,
                 id               : id,
-                usercode         : $('#usercode').val()
+                usercode         : $('#usercode').val(),
+                reason           : reason,
+                reason_text      : $('#report_content').val()
             },
             success: function(response) {
                 if(response==1) alert('운영진으로 추가되었습니다.');
-
+                if(response==4) alert('일반크루로 변경되었습니다.');
+                if(response==2) alert('신고접수가 되었습니다.');
+                if(response==3) alert('유저가 강퇴되었습니다.');
                 location.reload(true);
 
             },
@@ -307,46 +350,63 @@ const position = urlParams.get('position');
     document.getElementById("rejectModal").style.display = "block";
   }
 
-  // 신고 사유 선택 모달 닫기
-  function closeRejectModal() {
-    document.getElementById("rejectModal").style.display = "none";
-  }
-  // 신고 사유 확인 처리
-  function confirmRejection() {
-    alert("신고 사유가 제출되었습니다.");
-    closeRejectModal();
-  }
-
-    // 크루정보변경 버튼 클릭 시 모달 열기
-    document.getElementById("editCrewBtn").addEventListener("click", function() {
-      document.getElementById("informationModal").style.display = "block";
-    });
-
-    // 팀 소유자 위임 모달 열기 (informationModal 닫고 handoverModal 열기)
-    document.getElementById("handoverCrewBtn").addEventListener("click", function() {
-      document.getElementById("informationModal").style.display = "none"; // 정보 변경 모달 닫기
-      document.getElementById("handoverModal").style.display = "block"; // 팀 소유자 위임 모달 열기
-    });
-
-    // handoverModal의 닫기 버튼을 눌렀을 때 handoverModal을 닫고, 다시 informationModal 열기
-    function closeHandoverModal() {
-      document.getElementById("handoverModal").style.display = "none"; // handoverModal 닫기
-      document.getElementById("informationModal").style.display = "block"; // informationModal 다시 열기
+  //신고 사유 선택 모달 열기
+    function openRejectModal() {
+      document.getElementById("rejectModal").style.display = "block";
     }
 
-    // 위임하기 버튼 클릭 시 handoverModal 닫고 다시 informationModal 열기
-    function handoverOwnership() {
-      // 위임 로직 추가 (예: 서버 요청)
-      alert("팀 소유자가 위임되었습니다.");
-      closeHandoverModal(); // handoverModal을 닫고, informationModal 다시 열기
+    // 신고 사유 선택 모달 닫기
+    function closeRejectModal() {
+      document.getElementById("rejectModal").style.display = "none";
+    }
+    // 신고 사유 확인 처리
+    function confirmRejection() {
+      alert("신고 사유가 제출되었습니다.");
+      closeRejectModal();
     }
 
-    // 기존 모달 닫기 함수
-    function closeCustomModal() {
-      document.getElementById("customModal").style.display = "none";
-      document.getElementById("informationModal").style.display = "none";
-      document.getElementById("customModal").style.display = "none";
-    }
+      // 크루정보변경 버튼 클릭 시 모달 열기
+      document.getElementById("editCrewBtn").addEventListener("click", function() {
+        document.getElementById("informationModal").style.display = "block";
+      });
+
+      // 팀 소유자 위임 모달 열기 (informationModal 닫고 handoverModal 열기)
+      document.getElementById("handoverCrewBtn").addEventListener("click", function() {
+        document.getElementById("informationModal").style.display = "none"; // 정보 변경 모달 닫기
+        document.getElementById("handoverModal").style.display = "block"; // 팀 소유자 위임 모달 열기
+      });
+
+      // handoverModal의 닫기 버튼을 눌렀을 때 handoverModal을 닫고, 다시 informationModal 열기
+      function closeHandoverModal() {
+        document.getElementById("handoverModal").style.display = "none"; // handoverModal 닫기
+        document.getElementById("informationModal").style.display = "block"; // informationModal 다시 열기
+      }
+
+      // 위임하기 버튼 클릭 시 handoverModal 닫고 다시 informationModal 열기
+      function handoverOwnership() {
+        // 위임 로직 추가 (예: 서버 요청)
+        alert("팀 소유자가 위임되었습니다.");
+        closeHandoverModal(); // handoverModal을 닫고, informationModal 다시 열기
+      }
+
+      // 기존 모달 닫기 함수
+      function closeCustomModal() {
+        document.getElementById("customModal").style.display = "none";
+        document.getElementById("informationModal").style.display = "none";
+        document.getElementById("customModal").style.display = "none";
+        document.getElementById("resignModal").style.display = "none";
+      }
+
+      // 팀 탈퇴 모달 열기
+      function openResignModal() {
+        document.getElementById("resignModal").style.display = "block";
+      }
+      // 팀 탈퇴 처리 함수 (필요에 따라 서버 요청 등 추가 가능)
+      function resignTeam() {
+        alert("팀에서 탈퇴되었습니다.");
+        closeResignModal();
+      }
+
 
 
 

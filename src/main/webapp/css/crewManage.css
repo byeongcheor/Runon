@@ -1,193 +1,198 @@
-    body{
-        background-color: #F8FAFB;
-    }
-    #bannerBox{
-        width:100%;
-        height:200px;
-        margin: 0 auto;
-    }
-    #bannerImg{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+body{
+    background-color: #F8FAFB;
+}
+#bannerBox{
+    width:100%;
+    height:200px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    .content_body{
-        display: flex;
-        flex-direction: row;
-        max-width: 1024px;
-        margin: 0 auto;
-    }
-    .content_left{
-        position: relative;
-        width: 60%;
-        margin-right: 20px;
-        background-color: white;
-        height: 900px;
-        margin-top: 20px;
-        border-radius: 10px 10px 0 0 ;
-    }
-    .content_right{
-        width: 100%;
-    }
-    .section1{
-        background-color: white;
-        height: 550px;
-        margin-bottom: 10px;
-        border-radius: 10px;
-    }
-    .section2{
-        background-color: white;
-        height: 340px;
-        border-radius: 10px 10px 0 0 ;
-    }
-    .section_nav{
-        padding-top: 20px;
+.content_body{
+    display: flex;
+    flex-direction: row;
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.content_left{
+    position: relative;
+    width: 60%;
+    margin-right: 20px;
+    background-color: white;
+    height: 900px;
+    margin-top: 20px;
+    border-radius: 10px 10px 0 0 ;
+}
+.content_right{
+    width: 100%;
+}
+.section1{
+    background-color: white;
+    height: 550px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.section2{
+    background-color: white;
+    height: 340px;
+    border-radius: 10px 10px 0 0 ;
+}
+.section_nav{
+    padding-top: 20px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+.section_nav ul, .section_nav li{
+    list-style: none;
+    text-decoration: none;
+    float: left;
+
+}
+.section_nav li{
+    margin-right: 15px;
+    color: #6c757d;
+}
+.section_title{
+        padding: 20px;
+        padding-top: 30px;
         font-weight: 700;
         font-size: 20px;
         line-height: 20px;
         margin-top: 20px;
-        display: flex;
-        flex-direction: row;
-    }
-    .section_nav ul, .section_nav li{
-        list-style: none;
-        text-decoration: none;
-        float: left;
-
-    }
-    .section_nav li{
-        margin-right: 15px;
-        color: #6c757d;
-    }
-    .section_title{
-            padding: 20px;
-            padding-top: 30px;
-            font-weight: 700;
-            font-size: 20px;
-            line-height: 20px;
-            margin-top: 20px;
-            margin-left: 10px;
-        }
-    .menu_list{
-        list-style: none;
-    }
-    .menu_list li{
-        font-size: 18px;
-        list-style: none;
-    }
-    .menu_list li a{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        text-decoration: none;
-        cursor: pointer;
-        align-items: center;
-    }
-    .menu_list li a:link, .menu_list li a:visited{
-        list-style: none;
-        text-decoration: none;
-        color: #121212;
-    }
-    .menu_list li a:hover{
-        font-weight: 500;
-        color: #121212;
-    }
-    .list_container{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-    .icons{
-        font-size: 25px;
-        margin: 0;
-    }
-    .list_title{
-        margin-left: 15px;
-    }
-    .section3{
-        padding: 20px;
-    }
-    .profile_container{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .imgContainer{
-        width: 80px;
-        height: 80px;
-        border-radius: 200px;
-        margin-top: 10px;
-        margin-right: 40px;
-    }
-    .imgContainer>img:first-child{
-        width: 100%;
-        height: 100%;
-        border-radius: 200px;
-        object-fit: cover;
-    }
-    .mystatus{
-        padding-top: 20px;
-        width: 100%;
-        margin-top: 20px;
-    }
-    .status_items:first-child{
-        float: left;
-        margin-right: 20px;
-        margin-left: 5px;
-    }
-    .status_items{
-        width: 45%;
-        background-color: #F8FAFB;
-        border-radius: 10px;
-        float: left;
-        list-style: none;
-    }
-    .status_label{
-        padding-left: 20px;
-    }
-    .status_label>p:first-child{
-        font-weight: 700;
-    }
-    .statis{
-        margin-top: 150px;
-    }
-    .names{
         margin-left: 10px;
     }
-    .crew_infos{
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 20px;
-    }
-    .crew_imogi{
-        font-size: 15pt;
-        margin-right: 5px;
-    }
-    .crew_addr{
-        font-weight: 500;
-        font-size: 13pt;
-    }
-    .crew_addr2{
-        margin-left: auto;
-        max-width: 60%;
-        white-space: nowrap;
-        font-size: 13pt;
-        color: tomato;
-    }
-    .info_body{
-        padding: 30px;
-    }
-    #editCrewBtn{
-        margin-top: 20px;
-        background-color: white;
-        border-radius: 3px;
-        margin-left: 8px;
-        border: 1px solid lightgrey;
-         width: 100px;
-          height:20px;
-    }
-
+.menu_list{
+    list-style: none;
+}
+.menu_list li{
+    font-size: 18px;
+    list-style: none;
+}
+.menu_list li a{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-decoration: none;
+    cursor: pointer;
+    align-items: center;
+}
+.menu_list li a:link, .menu_list li a:visited{
+    list-style: none;
+    text-decoration: none;
+    color: #121212;
+}
+.menu_list li a:hover{
+    font-weight: 500;
+    color: #121212;
+}
+.list_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.icons{
+    font-size: 25px;
+    margin: 0;
+}
+.list_title{
+    margin-left: 15px;
+}
+.section3{
+    padding: 20px;
+}
+.profile_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.imgContainer{
+    width: 80px;
+    height: 80px;
+    border-radius: 200px;
+    margin-top: 10px;
+    margin-right: 40px;
+}
+.imgContainer>img:first-child{
+    width: 100%;
+    height: 100%;
+    border-radius: 200px;
+    object-fit: cover;
+}
+.mystatus{
+    padding-top: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+.status_items:first-child{
+    float: left;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+.status_items{
+    width: 45%;
+    background-color: #F8FAFB;
+    border-radius: 10px;
+    float: left;
+    list-style: none;
+}
+.status_label{
+    padding-left: 20px;
+}
+.status_label>p:first-child{
+    font-weight: 700;
+}
+.statis{
+    margin-top: 150px;
+}
+.names{
+    margin-left: 10px;
+}
+.crew_infos{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+.crew_imogi{
+    font-size: 15pt;
+    margin-right: 5px;
+}
+.crew_addr{
+    font-weight: 500;
+    font-size: 13pt;
+}
+.crew_addr2{
+    margin-left: auto;
+    max-width: 60%;
+    white-space: nowrap;
+    font-size: 13pt;
+    color: tomato;
+}
+.info_body{
+    padding: 30px;
+}
+.editCrewBtn{
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 3px;
+    margin-left: 8px;
+    border: 1px solid lightgrey;
+    width: 110px;
+    height:30px;
+    background-color: #e8f7ff;
+    font-weight: 500;
+    color: #1570ff;
+    padding: 0px 6px;
+    font-size: 14px;
+    text-align: center;
+}
   /* 프로필 이미지 */
  .profile-img {
     width: 40px;
@@ -283,7 +288,7 @@
     margin: 15% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+     width: 350px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
@@ -313,22 +318,25 @@
     display: flex;
     flex-direction: column;
     gap: 10px; /* 옵션 간의 간격 */
+    margin:10px 10px 25px 10px;
   }
 
-  /* 일반 옵션 버튼 */
-  .custom-modal-option {
-    background-color: #f5f6f8;
+/* 일반 옵션 버튼 */
+.custom-modal-option {
+    background-color: #f0f0f0; /* 밝고 중립적인 색상 */
     border: none;
     border-radius: 8px;
     padding: 12px 0;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
-  }
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+}
 
-  .custom-modal-option:hover {
-    background-color: #e2e3e5;
-  }
+/* 호버 상태 */
+.custom-modal-option:hover {
+    background-color: #e5e5e5; /* 조금 더 진한 중립적인 색상 */
+}
 
   /* 위험 옵션 버튼 (강제 퇴장) */
   .custom-modal-danger {
@@ -370,14 +378,14 @@
   .team-member {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
   }
 
   .team-profile {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    margin: 10px;
+    margin: 10px 10px 0px 10px;
+    object-fit: cover;
   }
 
   .team-name {
@@ -388,21 +396,22 @@
   .handover-btn {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: #ccff33; /* 연두색 배경 */
+    color: black; ; /* 흰색 글씨 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
+     font-size: 15px;
   }
 
   .handover-btn:hover {
-    background-color: #0056b3;
+    background-color: #b2e600;
   }
 
 .report{
-    width: 100%;
-    height: 100px;
-    margin-top: 20px;
+    width: 90%;
+    height: 150px;
+    margin-left:10px;
     border-radius: 12px;
     padding: 10px;
     background-color: #F7F7F7;

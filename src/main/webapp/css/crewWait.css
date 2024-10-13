@@ -21,7 +21,7 @@ body{
 .content-full {
     width: 100%;
     max-width: 1050px;
-    height: 800px;
+    min-height: 800px; /* 최소 높이를 800px로 설정 */
     background-color: white;
     margin: 20px auto;
     border-radius: 10px;

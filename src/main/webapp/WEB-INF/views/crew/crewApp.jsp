@@ -51,6 +51,7 @@
        </div>
        <div class="modal-footer" style="display: flex; justify-content: space-between;">
          <input type=hidden id=usercode>
+         <input type=hidden id=request_code>
          <button type="button" class="custom-button" style="width: 48%; background-color: #ccff00; color:black;" data-bs-dismiss="modal" id="yes" onClick="app(this);">가입 승인</button>
          <button type="button" class="btn modal-action-button" style="width: 48%;" data-bs-dismiss="modal" id=no onClick="crew_reject()">거절 하기</button>
        </div>
@@ -98,19 +99,24 @@ var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const crew_code = urlParams.get('create_crew_code');
 const position = urlParams.get('position');
-    function openModal(usercode) {
+if(position!=1){
+$('#yes').hide();
+$('#no').hide();
+}
+    function openModal(usercode, request_code) {
         var myModal = new bootstrap.Modal(document.getElementById('joinModal'));
         myModal.show();
         $('#usercode').val(usercode);
+        $('#request_code').val(request_code);
         $.ajax({
-
            url: '/crew/crew_wait_detail',
            type: 'post',
            async: false,
            data: {
                Authorization    : Authorization,
                create_crew_code : crew_code,
-               usercode         : usercode
+               usercode         : usercode,
+               request_code     : request_code
            },
            success: function(response) {
                $('#join_content').text(response[0].content);
@@ -177,7 +183,7 @@ const position = urlParams.get('position');
                     list += '	</a> ';
                     list += '	 <div class="join-check-button" style="display: flex; justify-content: flex-end; align-items: center;"> ';
                     if(position==1){
-                        list += '		<button type="submit" class="custom-button" onclick="openModal('+response[i].usercode+')">신청확인</button> ';
+                        list += '		<button type="submit" class="custom-button" onclick="openModal('+response[i].usercode+','+response[i].c_n+')">신청확인</button> ';
                     }
                     list += '	 </div> ';
                     list += '  </li> ';
@@ -212,7 +218,9 @@ const position = urlParams.get('position');
                 create_crew_code : crew_code,
                 status           : status,
                 usercode         : $('#usercode').val(),
-                reason           : reason
+                reason           : reason,
+                request_code     : $('#request_code').val()
+
             },
             success: function(response) {
 
