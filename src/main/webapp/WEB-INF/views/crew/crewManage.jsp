@@ -194,10 +194,15 @@ const user_code = urlParams.get('user_code');
 const position = urlParams.get('position');
 clog('My position : '+ position);
 clog('My user_code : '+ user_code);
+
+
     $(document).ready(function() {
         $('#member').css('color', 'black');
         crew_deatil_select();
         crew_manage_select('');
+        if(position !=1){
+            $('#wait_cnt').hide();
+        }
     });
 
     function crew_deatil_select(){
@@ -252,7 +257,7 @@ clog('My user_code : '+ user_code);
         var list ='';
         if(response[0].f_n>0 && response[0].a_n==1){
             list += '<div onClick="go_request_wait()">'
-            list += '   <span>';
+            list += '   <span id=wait_cnt>';
             list +=         response[0].f_n+'명이 승인을 기다리고있어요.';
             list += '   </span>';
             list += '</div>'
