@@ -367,8 +367,69 @@
             ,${param3}
             ,now()
         );
-
-
-
     </insert>
+    <insert id="vote_create">
+        insert into vote_tbl
+        (
+            usercode
+            ,create_crew_code
+            ,subject
+            ,enddate
+            ,opt1
+            ,opt2
+            ,opt3
+            ,opt4
+            ,opt5
+        )
+        values
+        (
+            ${param1}
+            ,${param2}
+            ,'${param3}'
+            ,'${param4}'
+            ,'${param5}'
+            ,'${param6}'
+            ,'${param7}'
+            ,'${param8}'
+            ,'${param9}'
+        );
+    </insert>
+
+    <select id="crew_manage_overview" resultType="com.ict.finalproject.vo.CrewVO">
+        <![CDATA[
+        (
+            select 0 as a_n,
+                   ifnull(a.profile_img, 'basicimg.png') as subject,
+                   a.nickname as writedate,
+                   ${param2} as b_n,
+                   (select count(1)
+                    from crew_member_tbl
+                    where create_crew_code = ${param1}) as c_n
+            from user_tbl a, crew_member_tbl b
+            where  a.usercode = b.usercode
+            and b.create_crew_code = ${param1}
+            order by b.position
+            limit 4
+        )
+        union
+        (
+            select 1 as a_n, subject, creationdate as writedate,
+                   case when enddate < now() then 9 else 1 end as b_n, 1 as c_n
+            from vote_tbl
+            where create_crew_code = ${param1}
+            order by creationdate desc
+            limit 1
+        )
+        union
+        (
+            select 2 as a_n, subject, writedate, 0 as b_n, 1 as c_n
+            from crew_notice_tbl
+            where create_crew_code = ${param1}
+            order by writedate desc
+            limit 3
+        )
+
+        ]]>
+    </select>
+
 </mapper>
