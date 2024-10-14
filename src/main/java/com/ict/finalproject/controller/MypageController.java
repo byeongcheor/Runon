@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,22 +42,24 @@ public class MypageController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+
     //유저정보보여주기(마이페이지홈, 회원정보수정)
     @PostMapping("mypage/myHome")
     @ResponseBody
     public MemberVO myHomegetToken(@RequestParam("Authorization")String token, Model model) {
-        token=token.substring("Bearer ".length());
-        String username=jwtUtil.setTokengetUsername(token);
-        MemberVO member = service.selectMember(username);
+        token = token.substring("Bearer ".length());
+        String username = jwtUtil.setTokengetUsername(token);
+        MemberVO member;
+
+        member = service.selectMember(username);
         String imgname = service.getProfileImg(username);
         String defaultImg = "/basicsimg.png";
-        if(username != null){
+        if (username != null) {
             model.addAttribute("userimg", imgname != null ? imgname : defaultImg);
         }
-        log.info("member:"+member);
+        log.info("member:" + member);
         return member;
     }
-
     //프로필업데이트
     @PostMapping("/mypage/updateProfile")
     @ResponseBody
@@ -78,8 +81,26 @@ public class MypageController {
         }
         try{
             String fileName = file.getOriginalFilename();
-            File targetFile = new File(UPLOAD_DIR+fileName);
+            String newFilename = System.currentTimeMillis()+fileName;
+            //이전 파일삭제
+            String preFileName = (String)session.getAttribute("imgname");
+            log.info("이전파일이름: " + preFileName);
+            if(preFileName != null){
+                String preFilePath = UPLOAD_DIR + preFileName.substring(preFileName.lastIndexOf("/")+1);
+                log.info("이전 파일 경로: " + preFilePath);
+                File preFile = new File(preFilePath);
+                if(preFile.exists()){
+                    if(preFile.delete()){
+                        log.info("이전파일삭제성공:{}",preFilePath);
+                    }else{
+                        log.info("이전파일삭제실패:{}",preFilePath);
+                    }
+                }
+            }
+            //새로운파일저장경로
+            File targetFile = new File(UPLOAD_DIR+newFilename);
             log.info("파일저장경로: {}", targetFile.getAbsolutePath());
+            //새로운파일저장
             file.transferTo(targetFile);
             log.info("파일저장성공: {}", fileName);
 
@@ -89,10 +110,10 @@ public class MypageController {
 
             if(username != null){
                 log.info("업뎃시작");
-                service.updateProfile(username, fileName);
+                service.updateProfile(username, newFilename);
                 log.info("업뎃완료");
 
-                String fileUrl = webPath+fileName;
+                String fileUrl = webPath+newFilename;
                 session.setAttribute("imgname", fileUrl);
                 log.info("세션이미지업뎃완:{}", fileUrl);
 
@@ -123,12 +144,29 @@ public class MypageController {
        // return "mypage/myHome";
     }
     //구매내역으로 이동
+    @PostMapping("mypage/purchaseList")
+    @ResponseBody
+    public String getPurchase(@RequestParam("username")String username,
+                              @RequestParam("usercode")int usercode){
+        return null;
+    }
     @GetMapping("mypage/purchaseList")
     public String purchaseList(){
 
         return "mypage/purchaseList";
     }
-
+    //구매내역리스트
+    @PostMapping("/mypage/viewOrder")
+    @ResponseBody
+    public Map<String, Object> orderList(@RequestParam("username")String username,
+                                         @RequestParam("usercode")int usercode){
+        List<OrderVO> list = service.selectOrderAll(usercode);
+        System.out.println(list);
+        Map<String, Object> result = new HashMap<>();
+        System.out.println(result);
+        result.put("list", list);
+        return result;
+    }
     //마라톤신청서조회
     @GetMapping("mypage/marathonFormCheck")
     @ResponseBody
@@ -375,83 +413,68 @@ public class MypageController {
         }
         return qvo;
     }
+    //회원정보수정폼
+    @PostMapping("/mypage/openEdit")
+    @ResponseBody
+    public MemberVO openEdit(@RequestParam("username")String username,
+                                        @RequestParam("usercode")int usercode) {
+        MemberVO member = service.selectOne(username);
+        return member;
+    }
     //회원정보수정(DB)
     @PostMapping("/mypage/editProfile")
     @ResponseBody
-    public ResponseEntity<Map<String,String>> editProfile(
-            @RequestParam("Authorization")String token,
+    public String editProfile(
+            @RequestParam("username") String username,
+            @RequestParam("name")String name,
             @RequestParam("currentPassword") String currentPassword,
             @RequestParam("newPassword") String newPassword,
+            @RequestParam("newPasswordConfirm") String newPasswordConfirm,
             @RequestParam("nickname") String nickname,
             @RequestParam("tel1") String tel1,
             @RequestParam("tel2") String tel2,
             @RequestParam("tel3") String tel3){
 
-        log.info("currentPassword:"+currentPassword);
-
-        token=token.substring("Bearer ".length());
-        String username=jwtUtil.setTokengetUsername(token);
-        MemberVO member = service.selectMember(username);
-        log.info("passchk : " + passwordEncoder.matches(currentPassword, member.getPassword()));
+        MemberVO member = service.selectOne(username);
+        System.out.println("여긴오니"+member);
         // 기존 비밀번호 확인
-        if (member == null || !passwordEncoder.matches(currentPassword, member.getPassword())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "현재 비밀번호가 일치하지 않습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        boolean passwordChk = service.checkPassword2(username, currentPassword);
+        System.out.println("비밀번호체크"+passwordChk);
+        if(passwordChk){
+            member.setNickname(nickname);
+            member.setTel(tel1);
+            member.setTel2(tel2);
+            member.setTel3(tel3);
+
+            if(newPassword != null && !newPassword.isEmpty()){
+                if(newPassword.equals(newPasswordConfirm)){
+                    member.setPassword(newPassword);
+                }else{
+                    return "비밀번호 일치하지않음";
+                }
+            }
+            service.editProfile(member);
+            return "success";
+        }else{
+            return "fail";
         }
-
-        // 새 비밀번호가 비어 있지 않을 경우 비밀번호 업데이트
-        if (newPassword != null && !newPassword.isEmpty()) {
-            member.setPassword(passwordEncoder.encode(newPassword));
-        }
-
-        member.setNickname(nickname);
-        member.setTel(tel1);
-        member.setTel2(tel2);
-        member.setTel3(tel3);
-
-        service.editProfile(member);
-
-        Map<String, String> response = new HashMap<>();
-        return ResponseEntity.ok().body(response);
     }
-    //회원탈퇴 (DB)]
+
+    //회원탈퇴(DB)
     @PostMapping("/mypage/deleteProfile")
     @ResponseBody
-    public ResponseEntity<Map<String,String>> deleteProfile(
-            @RequestHeader("Authorization") String token,
-            @RequestParam("currentPassword") String currentPassword
-    ){
-        log.info("currentPassword:"+currentPassword);
-       // 토큰에서 사용자명 추출
-       token = token.substring("Bearer ".length());
-       String username = jwtUtil.setTokengetUsername(token);
-       MemberVO member = service.selectMember(username);
-       System.out.println(member.getPassword());
-
-       // 비밀번호 확인
-       if (member == null || !passwordEncoder.matches(currentPassword, member.getPassword())) {
-           System.out.println("비밀번호일치하는지 확인");
-           Map<String, String> response = new HashMap<>();
-           response.put("error", "비밀번호가 일치하지 않습니다.");
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-       }
-       System.out.println("비밀번호일치하는지 확인22");
-       service.deactiveProfile(username, 1);
-       Map<String, String> response = new HashMap<>();
-       response.put("message", "회원탈퇴가 완료되었습니다.");
-
-       return ResponseEntity.ok().body(response);
+    public int deleteProfile(
+            @RequestParam("usercode")int usercode,
+            @RequestParam("currentPassword")String currentPassword){
+        System.out.println(usercode);
+        System.out.println(currentPassword);
+        boolean isDeleted = service.checkPassword(usercode, currentPassword);
+        System.out.println(isDeleted);
+        if(isDeleted){
+            return 1;
+        }else{
+            return 0;
+        }
     }
-
-    /*@PostMapping("/mypage/passwordChk")
-    @ResponseBody
-    public int passwordChk(@RequestParam("currentPassword") String currentPassword,
-                           @RequestParam("username") String username) {
-
-
-    }*/
-
-
 
 }
