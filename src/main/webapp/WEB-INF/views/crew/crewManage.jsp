@@ -491,7 +491,7 @@ function crew_overview(response) {
           }
           list +=       '</div>';
           list +=       '<div class="text-container"> ';
-          list +=          '<span class="main-text" >'+response[i].subject+'</span> ';
+          list +=          '<span class="main-text" onClick="voteNow()">'+response[i].subject+'</span> ';
           if(response[i].b_n==1){
               list +=          '<span class="sub-text">투표 진행중</span>';
           }
