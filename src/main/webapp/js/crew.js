@@ -88,12 +88,13 @@ function addr_select_draw(id){
     $('#'+id).append(list);
 }
 
-function addr_gu_select_draw(id,val){
+function addr_gu_select_draw(id,val,select_val){
     var list = '<option value="">상세지역</option>';
+    var select
     for (var i in area[val]) {
-        list += '<option value="' + area[val][i] + '">' + area[val][i] + '</option>';
+        var select = select_val==area[val][i]?'selected':'';
+        list += '<option value="' + area[val][i] + '"'+select+'>' + area[val][i]+ '</option>';
     }
     $('#'+id).html('');
     $('#'+id).append(list);
-
 }

@@ -21,12 +21,18 @@ public class CrewVO {
     private String c_s;
     private String d_s;
     private String e_s;
+    private String f_s;
+    private String g_s;
+    private String teamPhoto;
+    private String nickname;
 
     private int a_n;
     private int b_n;
     private int c_n;
     private int d_n;
     private int e_n;
+    private int f_n;
+    private int g_n;
     private int is_active;
     private int is_deleted;
     private int is_updated;
