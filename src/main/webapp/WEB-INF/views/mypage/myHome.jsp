@@ -360,7 +360,7 @@
             data: {
                 username: username1,
                 usercode: usercode1
-                },
+            },
             success: function (r) {
                 console.log(r);
                 // 서버에서 받은 데이터를 폼에 채워 넣기
@@ -395,8 +395,16 @@
             }
         });
     }
+    function setInfoDisclosure(is_info_disclosure) {
+        if (is_info_disclosure == 'Y') {
+            document.getElementById("radio1").checked = true;
+        } else {
+            document.getElementById("radio2").checked = true;
+        }
+    }
     //회원정보 수정폼전송
     function submitEditProfile(){
+
         var newPassword = document.getElementById("newPassword").value;
         var newPasswordConfirm = document.getElementById("newPasswordConfirm").value;
         // 새 비밀번호 확인
@@ -404,30 +412,49 @@
             alert("새 비밀번호가 일치하지 않습니다.");
             return false;
         }
+        var currentPassword = document.getElementById("currentPassword").value;
+        var nickname = document.getElementById("nickname").value;
+        var tel1 = document.getElementById("tel1_editProfile").value;
+        var tel2 = document.getElementById("tel2_editProfile").value;
+        var tel3 = document.getElementById("tel3_editProfile").value;
+        var zip_code = document.getElementById("zip_code").value;
+        var addr = document.getElementById("addr_editProfile").value;
+        var addr_details = document.getElementById("addr_details_editProfile").value;
+        var is_info_disclosure = document.querySelector('input[name="is_info_disclosure"]:checked').value;
         $.ajax({
-            url: "/mypage/editProfile",
-            type: "post",
-            data: {
-                username: username1,
-                name: document.getElementById("name_editProfile").value,
-                currentPassword: document.getElementById("currentPassword").value,
-                newPassword: newPassword,
-                newPasswordConfirm: newPasswordConfirm,
-                nickname: document.getElementById("nickname_editProfile").value,
-                tel1: document.getElementById("tel1_editProfile").value,
-                tel2: document.getElementById("tel2_editProfile").value,
-                tel3: document.getElementById("tel3_editProfile").value
-            },
-            success: function(r){
-                alert("회원정보가 수정되었습니다.");
-                closeModal("profileEditModal");
-                location.reload();
-            },error(e){
-                alert("회원정보 수정에 실패하였습니다.");
-                console.log(e);
+           url:"/mypage/editt",
+           type:"post",
+           data:{
+               usercode:usercode1,
+               username: username1,
+               currentPassword: currentPassword,
+               newPassword: newPassword,
+               newPasswordConfirm: newPasswordConfirm,
+               nickname: nickname,
+               tel1: tel1,
+               tel2: tel2,
+               tel3: tel3,
+               zip_code: zip_code,
+               addr: addr,
+               addr_details: addr_details,
+               is_info_disclosure: is_info_disclosure
+           } ,
+            success:function (r){
+               if(r=="fail"){
+                   alert("현재 비밀번호가 틀립니다.")
+               }else if(r=="false"){
+                   alert("새 비밀번호가 일치하지 않습니다.")
+               }else{
+                   alert("수정되었습니다.");
+                   closeModal(profileEditModal);
+               }
+
+            },error: function(e){
+               alert(e);
+               alert(여기안옴);
             }
-        })
-        return false;
+        });
+
     }
     //구매내역이동
     function getPurchaseList(){
@@ -649,38 +676,38 @@
     <div id="openMarathonFormModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeMarathonFormModal()">&times;</span>
-            <h2 style="text-align: center">마라톤신청서 작성</h2>
-            <form method="POST" action="" onsubmit="return submitMarathonForm()" >
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">마라톤신청서 작성</h2>
+            <form class="modal-contents" method="POST" action="" onsubmit="return submitMarathonForm()" >
                 <div>
                     <label for="name">이름:</label>
-                    <input type="text" id="name" name="name" maxlength="30" required />
+                    <input class="inputs" style="width: 100%;" type="text" id="name" name="name" maxlength="30" required />
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input type="tel" id="tel" name="tel" maxlength="15" required />
+                    <input class="inputs" type="tel" id="tel" name="tel" maxlength="15" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
-                    <input type="text" id="addr" name="addr" maxlength="100" required />
+                    <input class="inputs" type="text" id="addr" name="addr" maxlength="100" required />
                 </div>
                 <div>
                     <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                    <input class="inputs" type="text" id="addr_details" name="addr_details" maxlength="300" required />
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="gender" name="gender" required>
+                    <select id="gender" name="gender" style="margin-bottom: 25px;" required>
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
                 </div>
                 <div>
                     <label for="birth_date">생년월일:</label>
-                    <input type="date" id="birth_date" name="birth_date" required />
+                    <input class="inputs" type="date" id="birth_date" name="birth_date" required />
                 </div>
                 <div>
                     <label for="size">사이즈:</label>
-                    <input type="text" id="size" name="size" maxlength="30" required />
+                    <input class="inputs" type="text" id="size" name="size" maxlength="30" required />
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
@@ -692,7 +719,7 @@
                 </div>
                 <div>
                     <label for="media_consent">미디어 사용 동의:</label>
-                    <input type="checkbox" id="media_consent" name="media_consent" />
+                    <input type="checkbox" id="media_consent" name="media_consent" style="margin-bottom: 25px;"/>
                 </div>
                 <div>
                     <button type="submit">신청하기</button>
@@ -704,38 +731,38 @@
     <div id="editMarathonFormModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeEditMarathonFormModal()">&times;</span>
-            <h2 style="text-align: center">마라톤신청서 수정</h2>
-            <form action="/" onsubmit="return submiteditMarathonForm()" method="POST">
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">마라톤신청서 수정</h2>
+            <form class="modal-contents" action="/" onsubmit="return submiteditMarathonForm()" method="POST">
                 <div>
                     <label for="name">이름:</label>
-                    <input type="text" id="rname" name="name" maxlength="30" required />
+                    <input class="inputs" type="text" id="rname" name="name" maxlength="30" required />
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input type="tel" id="rtel" name="tel" maxlength="15" required />
+                    <input class="inputs" type="tel" id="rtel" name="tel" maxlength="15" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
-                    <input type="text" id="raddr" name="addr" maxlength="100" required />
+                    <input class="inputs" type="text" id="raddr" name="addr" maxlength="100" required />
                 </div>
                 <div>
                     <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="raddr_details" name="addr_details" maxlength="300" required />
+                    <input class="inputs" type="text" id="raddr_details" name="addr_details" maxlength="300" required />
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="rgender" name="gender" required>
+                    <select id="rgender" name="gender" style="margin-bottom: 25px;" required >
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
                 </div>
                 <div>
                     <label for="birth_date">생년월일:</label>
-                    <input type="date" id="rbirth_date" name="birth_date" required />
+                    <input class="inputs" type="date" id="rbirth_date" name="birth_date" required />
                 </div>
                 <div>
                     <label for="size">사이즈:</label>
-                    <input type="text" id="rsize" name="size" maxlength="30" required />
+                    <input class="inputs" type="text" id="rsize" name="size" maxlength="30" required />
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
@@ -747,7 +774,7 @@
                 </div>
                 <div>
                     <label for="media_consent">미디어 사용 동의:</label>
-                    <input type="checkbox" id="rmedia_consent" name="media_consent" />
+                    <input type="checkbox" id="rmedia_consent" name="media_consent" style="margin-bottom: 25px;" />
                 </div>
                 <div>
                     <button type="submit">수정하기</button>
@@ -761,7 +788,7 @@
         <div class="modal-content" style="width: 25%;">
             <span class="close-button" onclick="closeModal('profileEditModal')">&times;</span>
             <h2 style="text-align: center">회원정보 수정</h2>
-            <form method="post" id="editProfileForm" onsubmit="return submitEditProfile()" >
+
                 <div class="joinMain">
                     <div class="joinN">아이디<span>(이메일)</span></div>
                     <div class="joinI">
@@ -834,10 +861,10 @@
                     </div>
                     <input type="hidden" name="role" id="role" value="ROLE_USER">
                     <div class="btnBox">
-                        <button type="submit" style="margin-top: 20px;" id="savebtn">저장</button>
+                        <button type="button" onclick="submitEditProfile()" style="margin-top: 20px;" id="savebtn">저장</button>
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
     <!-- 회원탈퇴 모달 -->

@@ -95,8 +95,6 @@ public class MypageServiceImpl implements MypageService{
         boolean isMaTch = passwordEncoder.matches(curerntPassword, member.getPassword());
         return isMaTch;
     }
-
-
     @Override
     public MemberVO passwordChk(String username) {
         return dao.passwordChk(username);

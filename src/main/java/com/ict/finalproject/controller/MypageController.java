@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -422,35 +423,49 @@ public class MypageController {
         return member;
     }
     //회원정보수정(DB)
-    @PostMapping("/mypage/editProfile")
+    @PostMapping("/mypage/test")
+    @ResponseBody
+    public String asdf(@RequestParam("usercode")int usercode){
+        System.out.println("테스트");
+        System.out.println(usercode);
+        String a="test";
+        return a;
+    }
+
+    @PostMapping("/mypage/editt")
     @ResponseBody
     public String editProfile(
             @RequestParam("username") String username,
-            @RequestParam("name")String name,
             @RequestParam("currentPassword") String currentPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("newPasswordConfirm") String newPasswordConfirm,
             @RequestParam("nickname") String nickname,
             @RequestParam("tel1") String tel1,
             @RequestParam("tel2") String tel2,
-            @RequestParam("tel3") String tel3){
+            @RequestParam("tel3") String tel3,
+            @RequestParam("zip_code") int zip_code,
+            @RequestParam("addr") String addr,
+            @RequestParam("addr_details")String addr_details,
+            @RequestParam("is_info_disclosure")String is_info_disclosure){
 
         MemberVO member = service.selectOne(username);
         System.out.println("여긴오니"+member);
-        // 기존 비밀번호 확인
-        boolean passwordChk = service.checkPassword2(username, currentPassword);
-        System.out.println("비밀번호체크"+passwordChk);
+        boolean passwordChk = BCrypt.checkpw(currentPassword, member.getPassword());
+        System.out.println("비번체크:"+passwordChk);
         if(passwordChk){
             member.setNickname(nickname);
-            member.setTel(tel1);
+            member.setTel1(tel1);
             member.setTel2(tel2);
             member.setTel3(tel3);
-
-            if(newPassword != null && !newPassword.isEmpty()){
+            member.setAddr(addr);
+            member.setAddr_details(addr_details);
+            member.setIs_info_disclosure(is_info_disclosure);
+            if(newPassword!=null){
                 if(newPassword.equals(newPasswordConfirm)){
-                    member.setPassword(newPassword);
+                    String hashPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                    member.setPassword(hashPassword);
                 }else{
-                    return "비밀번호 일치하지않음";
+                    return "false";
                 }
             }
             service.editProfile(member);

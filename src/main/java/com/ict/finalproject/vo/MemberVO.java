@@ -45,6 +45,10 @@ public class MemberVO {
     private int ranking;
     private int mypoint;
 
+    private String currentPassword;
+    private String newPassword;
+    private String newPasswordConfirm;
+
     @Override
     public String toString() {
         return "MemberVO{" +
@@ -80,7 +84,18 @@ public class MemberVO {
                 ", mate_popup_date='" + mate_popup_date + '\'' +
                 ", ranking=" + ranking +
                 ", mypoint=" + mypoint +
+                ", currentPassword='" + currentPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", newPasswordConfirm='" + newPasswordConfirm + '\'' +
                 '}';
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 
     public int getRanking() {

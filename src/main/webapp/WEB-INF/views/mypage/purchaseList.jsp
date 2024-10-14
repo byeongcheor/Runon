@@ -237,25 +237,6 @@
                 <span>주문상태</span>
             </div>
             <div class="orderP" id="orderlist">
-<%--                <div class="orderP2">--%>
-<%--                    <div class="orderP3">--%>
-<%--                        <span>2024/09/28</span>--%>
-<%--                    </div>--%>
-<%--                    <div class="orderPd">--%>
-<%--                        <div class="orderPdImg">--%>
-<%--                            <div class="orderPdN">--%>
-<%--                                <span>2024 3대 마라톤 - 여의도 나이트런</span>--%>
-<%--                                <span>5.5Km,티셔츠(L)/1개</span>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                    <div class="orderPdP">--%>
-<%--                        <span>25,000원</span>--%>
-<%--                    </div>--%>
-<%--                    <div class="orderStatus">--%>
-<%--                        <span>주문완료</span>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
             </div>
         </div>
     </div>
