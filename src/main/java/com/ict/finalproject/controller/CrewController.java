@@ -394,13 +394,12 @@ public class CrewController {
     }
     @PostMapping("/crew_manage_select")
     @ResponseBody
-
+    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,                            @RequestParam(value = "flag", defaultValue = "") String flag) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
-
             if (id.equals("member")) {
                 crew_manage_select = service.crew_manage_member(crewCode, user_code);
             }
@@ -414,7 +413,6 @@ public class CrewController {
         }
         return crew_manage_select;
     }
-
 
     /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
     @GetMapping("/crewApp")
@@ -508,15 +506,15 @@ public class CrewController {
     @PostMapping("/vote_create")
     @ResponseBody
     public int vote_create(
-                           @RequestParam("Authorization")String token,
-                           @RequestParam("create_crew_code") int crewCode,
-                           @RequestParam("title") String title,
-                           @RequestParam("endDate") String endDate,
-                           @RequestParam("opt1") String opt1,
-                           @RequestParam("opt2") String opt2,
-                           @RequestParam("opt3") String opt3,
-                           @RequestParam(value = "opt4", defaultValue = "") String opt4,
-                           @RequestParam(value = "opt5", defaultValue = "") String opt5) {
+            @RequestParam("Authorization")String token,
+            @RequestParam("create_crew_code") int crewCode,
+            @RequestParam("title") String title,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("opt1") String opt1,
+            @RequestParam("opt2") String opt2,
+            @RequestParam("opt3") String opt3,
+            @RequestParam(value = "opt4", defaultValue = "") String opt4,
+            @RequestParam(value = "opt5", defaultValue = "") String opt5) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);

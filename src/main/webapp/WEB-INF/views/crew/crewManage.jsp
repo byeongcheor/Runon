@@ -385,7 +385,9 @@ clog('My user_code : '+ user_code);
             type: 'post',
             async: false,
             data: {
-
+                Authorization: Authorization,
+                create_crew_code: create_crew_code,
+                id: id
             },
             success: function(response) {
                 $('#crew_manage_list').html('');  // 이전 리스트 초기화
@@ -476,8 +478,6 @@ function crew_overview(response) {
           list += '<div class="member_more">전체 보기</div>'
           list += '</div>';
 
-        $('#crew_manage_list').append(list);
-    }
       for (var i = response[0].c_n; i<response.length;i++) {
         clog('i2 : '+i);
           list += '<li class="member-item"> ';
@@ -504,7 +504,8 @@ function crew_overview(response) {
       }
 
       $('#crew_manage_list').append(list);
-  }    function openCustomModal(usercode,nickname,user_pisition) {
+  }
+      function openCustomModal(usercode,nickname,user_pisition) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
       if(position==1){
@@ -675,27 +676,37 @@ function crew_overview(response) {
 
     // 투표 제출 함수
     function submitVote() {
-      // 투표 제출 로직
-      alert('투표가 제출되었습니다.');
-      closeVoteModal();
-    }
-    function submitVote() {
       const title = document.getElementById('voteTitle').value;
       const deadline = document.getElementById('voteDeadline').value;
-      const items = Array.from(document.querySelectorAll('#voteItems .input-field')).map(input => input.value);
 
       // 마감시간이 설정되지 않았을 경우 경고 메시지 표시
       if (!deadline) {
         alert('마감시간을 설정해주세요.');
         return; // 마감시간이 설정되지 않으면 함수 종료
       }
-
-      // 투표 제출 로직 - title, deadline, items 데이터를 서버로 전송하는 로직 작성
-      console.log('투표 제목:', title);
-      console.log('마감일 및 시간:', deadline);
-      console.log('항목들:', items);
-
-      alert('투표가 제출되었습니다.');
+        $.ajax({
+            url: '/crew/vote_create',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                title            : title,
+                opt1             : $('#vote1').val(),
+                opt2             : $('#vote2').val(),
+                opt3             : $('#vote3').val(),
+                opt4             : $('#vote4').val(),
+                opt5             : $('#vote5').val(),
+                endDate          : deadline
+            },
+            success: function(response) {
+                alert('투표가 제출되었습니다.');
+                location.reload(true);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
       closeVoteModal();
     }
 
