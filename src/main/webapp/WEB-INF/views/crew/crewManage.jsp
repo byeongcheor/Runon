@@ -33,6 +33,7 @@
                     </button>
                 </div>
                 <div class="statis">
+
                 </div>
             </section>
         </div>
@@ -40,6 +41,7 @@
             <section class="section1">
               <div class="section_nav">
                 <ul>
+
                   <li id="overview" name=crew_select onClick="crew_manage_select(this)">오버뷰</li>
                   <li id="notice" name=crew_select onClick="crew_manage_select(this)">공지</li>
                   <li id="member" name=crew_select onClick="crew_manage_select(this)">멤버</li>
@@ -54,6 +56,11 @@
                 <div class="section_title">크루정보</div>
                 <div class="info_body">
                     <div class="crew_infos">
+                        <span class="crew_imogi">🔥‍</span>
+                        <span class="crew_addr">️크루랭킹</span>
+                        <span class="crew_addr2" id="crew_ranking"></span>
+                    </div>
+                    <div class="crew_infos">
                         <span class="crew_imogi">📍</span>
                         <span class="crew_addr">활동지역</span>
                         <span class="crew_addr2" id="addr2"></span>
@@ -61,18 +68,19 @@
                     <div class="crew_infos">
                         <span class="crew_imogi">🏃‍</span>
                         <span class="crew_addr">️멤버수</span>
-                        <span class="crew_addr2" id=member_cnt></span>
+                        <span class="crew_addr2" id="member_cnt"></span>
                     </div>
                     <div class="crew_infos">
                         <span class="crew_imogi">🔍‍</span>
                         <span class="crew_addr">평균나이</span>
-                        <span class="crew_addr2" id=member_age_avg></span>
+                        <span class="crew_addr2" id="member_age_avg"></span>
                     </div>
                     <div class="crew_infos">
                         <span class="crew_imogi">✨</span>
                         <span class="crew_addr">크루생성일</span>
                         <span class="crew_addr2" id=create_date></span>
                     </div>
+
                </div>
             </section>
         </div>
@@ -141,7 +149,7 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
+     <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
       <button class="custom-modal-option" id="handoverCrewBtn">팀소유자 위임</button>
       <button class="custom-modal-danger" onclick="deleteTeam()" id="crew_delete" >팀 삭제하기</button>
     </div>
@@ -159,11 +167,13 @@
       <label class="team-member">
         <input type="radio"  name="teamOwner" value="jang">
         <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
+
         <span class="team-name">소시민</span>
       </label>
       <label class="team-member">
         <input type="radio"  name="teamOwner" value="jang">
         <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
+
         <span class="team-name">소시민</span>
       </label>
     </div>
@@ -172,6 +182,7 @@
     </div>
   </div>
 </div>
+
 <!-- 가로 점점점 모달 -->
 <div id="resignModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -223,8 +234,7 @@
       <button type="button" class="btn btn-light" style="font-size:14px;" onclick="closeVoteModal()">취소</button>
     </div>
   </div>
-</div>
-<!-- 투표하기 모달 -->
+</div><!-- 투표하기 모달 -->
 <div id="voteNowModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
@@ -238,15 +248,23 @@
       <div class="vote-options">
         <label class="vote-option">
           <input type="radio" name="voteOption" value="option1">
-          <span>10명</span>
+          <span>10명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
         </label>
         <label class="vote-option">
           <input type="radio" name="voteOption" value="option2">
-          <span>15명</span>
+          <span>15명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
         </label>
         <label class="vote-option">
           <input type="radio" name="voteOption" value="option3">
-          <span>20명</span>
+          <span>20명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option3">
+          <span>22명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option3">
+          <span>25명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
         </label>
       </div>
     </div>
@@ -256,7 +274,63 @@
     </div>
   </div>
 </div>
-<script>
+ <!-- 투표 현황 -->
+<div id="voteResultModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h3 class="modal-title">투표 현황</h3>
+      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body2">
+      <span class="modal-subtitle">크루수 제한건</span>
+      <p class="modal-deadline">12월 6일 오후 12:00 종료</p>
+      <div class="vote-results">
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 9일</span>
+            <span id="count-vote1" class="vote-count">1명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote1" class="progress" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 16일</span>
+            <span id="count-vote2" class="vote-count">3명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote2" class="progress" style="width: 60%; background-color: #FFA500;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 23일</span>
+            <span id="count-vote3" class="vote-count">0명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote3" class="progress" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 30일</span>
+            <span id="count-vote4" class="vote-count">0명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote4" class="progress" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-modal-footer">
+      <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
+    </div>
+  </div>
+</div><script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
@@ -302,18 +376,16 @@ clog('My user_code : '+ user_code);
         });
     }
     function crew_manage_select(element) {
-        var id = element.id === undefined || element === undefined? 'overview' : element.id;
+        var id = element.id === undefined ? 'overview' : element.id;
         $('[name="crew_select"]').css('color', 'gray');
         $('#' + id).css('color', 'black');
-
+          console.log("Selected id: ", id);  // 선택한 id 출력
         $.ajax({
             url: '/crew/crew_manage_select',
             type: 'post',
             async: false,
             data: {
-                Authorization: Authorization,
-                create_crew_code: create_crew_code,
-                id: id
+
             },
             success: function(response) {
                 $('#crew_manage_list').html('');  // 이전 리스트 초기화
@@ -326,8 +398,7 @@ clog('My user_code : '+ user_code);
                     crew_overview(response);
                     // 'overview'일 때는 section2를 다시 보이게
                     document.querySelector('.section2').style.display = 'block';
-                }
-            },
+                }            },
             error: function(e) {
                 console.error('Error: ', e);
             }
@@ -342,15 +413,19 @@ clog('My user_code : '+ user_code);
             list += '   <span id="wait_cnt">';
             list +=         response[0].f_n + ' 명이 승인을 기다리고있어요.';
             list += '   </span>';
+
             list += '   <img src="/img/way.png" style="width: 20px; height: 20px; padding:0; margin-right:40px; margin-top:3px;">';
             list += '</div>';
         }
+
         for (var i in response) {
             list += '<li class="member-item"> ';
             list += '<div class="item-flex"> ';
+
             list += '   <img src="/resources/uploadfile/' + response[i].a_s + '" class="profile-img" onClick="go_mypage(' + response[i].usercode + ')"> ';
             list += '   <div class="profile-info" onClick="go_mypage(' + response[i].usercode + ')"> ';
             list += '     <div class="info-wrapper"> ';
+
             list += '      <p class="name">' + response[i].b_s + '</p> ';
             if (response[i].a_n < 3) {
                 list += '      <div class="label-operator">운영진</div> ';
@@ -359,6 +434,7 @@ clog('My user_code : '+ user_code);
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
+
             if (user_code != response[i].usercode && response[i].b_n > 0) {
                 list += '     <div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname + '\', \'' + response[i].a_n + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
             }
@@ -371,7 +447,7 @@ clog('My user_code : '+ user_code);
         $('#crew_manage_list').append(list);
     }
 
-  function crew_overview(response) {
+function crew_overview(response) {
       clog(response);
       var list = '';
           list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
@@ -400,6 +476,8 @@ clog('My user_code : '+ user_code);
           list += '<div class="member_more">전체 보기</div>'
           list += '</div>';
 
+        $('#crew_manage_list').append(list);
+    }
       for (var i = response[0].c_n; i<response.length;i++) {
         clog('i2 : '+i);
           list += '<li class="member-item"> ';
@@ -426,9 +504,7 @@ clog('My user_code : '+ user_code);
       }
 
       $('#crew_manage_list').append(list);
-  }
-
-    function openCustomModal(usercode,nickname,user_pisition) {
+  }    function openCustomModal(usercode,nickname,user_pisition) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
       if(position==1){
@@ -546,7 +622,8 @@ clog('My user_code : '+ user_code);
         document.getElementById("resignModal").style.display = "none";
         document.getElementById('resignModal').style.display = 'none';
         document.getElementById('voteNowModal').style.display = 'none';
-      }
+        document.getElementById('voteNowModal').style.display = 'none';
+        document.getElementById('voteResultModal').style.display = 'none';      }
 
       // 팀 탈퇴 모달 열기
       function openResignModal() {
@@ -576,7 +653,6 @@ clog('My user_code : '+ user_code);
       votenum++
       if(votenum>5)$('#addVoteBtn').hide();
     }
-
     // 항목 삭제하는 함수
     function removeVoteItem(button) {
       const voteItem = button.parentElement; // 삭제 버튼의 부모 요소 (항목 div)를 가져옴
@@ -584,7 +660,6 @@ clog('My user_code : '+ user_code);
       votenum--;
       if(votenum<6)$('#addVoteBtn').show();
     }
-
 
     function openVoteModal() {
       // resignModal을 닫고 voteModal을 염
@@ -594,7 +669,6 @@ clog('My user_code : '+ user_code);
 
     function closeVoteModal() {
       // voteModal을 닫고 resignModal을 염
-      $('input[name="vote_opt"]').val('');
       document.getElementById('voteModal').style.display = 'none';
       openResignModal();
     }
@@ -602,42 +676,26 @@ clog('My user_code : '+ user_code);
     // 투표 제출 함수
     function submitVote() {
       // 투표 제출 로직
-
-
       alert('투표가 제출되었습니다.');
       closeVoteModal();
     }
     function submitVote() {
       const title = document.getElementById('voteTitle').value;
       const deadline = document.getElementById('voteDeadline').value;
+      const items = Array.from(document.querySelectorAll('#voteItems .input-field')).map(input => input.value);
+
       // 마감시간이 설정되지 않았을 경우 경고 메시지 표시
       if (!deadline) {
         alert('마감시간을 설정해주세요.');
         return; // 마감시간이 설정되지 않으면 함수 종료
       }
-        $.ajax({
-                url: '/crew/vote_create',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization    : Authorization,
-                    create_crew_code : create_crew_code,
-                    title            : title,
-                    opt1             : $('#vote1').val(),
-                    opt2             : $('#vote2').val(),
-                    opt3             : $('#vote3').val(),
-                    opt4             : $('#vote4').val(),
-                    opt5             : $('#vote5').val(),
-                    endDate          : deadline
-                },
-                success: function(response) {
-                    alert('투표가 제출되었습니다.');
-                    location.reload(true);
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+
+      // 투표 제출 로직 - title, deadline, items 데이터를 서버로 전송하는 로직 작성
+      console.log('투표 제목:', title);
+      console.log('마감일 및 시간:', deadline);
+      console.log('항목들:', items);
+
+      alert('투표가 제출되었습니다.');
       closeVoteModal();
     }
 
@@ -656,7 +714,46 @@ clog('My user_code : '+ user_code);
          alert('투표할 항목을 선택해주세요.');
       }
     }
+    function submitVoteNow() {
+      // 투표하기 모달을 숨기고
+      document.getElementById('voteNowModal').style.display = 'none';
+      // 투표 현황 모달을 보여줍니다.
+      document.getElementById('voteResultModal').style.display = 'block';
+    }
 
+    function updateVoteResults(votes) {
+      // 총 투표 수 계산
+      let totalVotes = votes.reduce(function (acc, vote) {
+        return acc + vote.count;
+      }, 0);
 
+      // 각 항목의 프로그레스 바와 투표 명수를 업데이트
+      $.each(votes, function (index, vote) {
+        // 퍼센트 계산
+        let percentage = (vote.count / totalVotes) * 100;
+
+        // 해당 항목의 progress-bar 너비와 색상 업데이트
+        $(`#progress-${vote.id}`).css({
+          width: percentage + '%',
+          backgroundColor: 'orange'
+        });
+
+        // 해당 항목의 투표 명수 업데이트
+        $(`#count-${vote.id}`).text(vote.count + '명');
+      });
+    }
+
+    // 예시 데이터 (DB에서 가져온 데이터 형식)
+    let votes = [
+      { id: 'vote1', count: 1 },
+      { id: 'vote2', count: 3 },
+      { id: 'vote3', count: 0 },
+      { id: 'vote4', count: 0 }
+    ];
+
+    // 페이지 로드 시 투표 결과 업데이트
+    $(document).ready(function() {
+      updateVoteResults(votes);
+    });
 
 </script>

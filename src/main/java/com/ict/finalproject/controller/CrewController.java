@@ -394,12 +394,13 @@ public class CrewController {
     }
     @PostMapping("/crew_manage_select")
     @ResponseBody
-    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,                            @RequestParam(value = "flag", defaultValue = "") String flag) {
+
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
+
             if (id.equals("member")) {
                 crew_manage_select = service.crew_manage_member(crewCode, user_code);
             }
@@ -413,6 +414,7 @@ public class CrewController {
         }
         return crew_manage_select;
     }
+
 
     /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
     @GetMapping("/crewApp")

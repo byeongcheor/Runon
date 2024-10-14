@@ -21,10 +21,12 @@ body{
 .content_left{
     position: relative;
     width: 60%;
-    margin-right: 20px;
     background-color: white;
     height: auto;
+    min-height: 400px;
+    margin-right: 20px;
     margin-top: 20px;
+    margin-bottom: 10px;
     border-radius: 10px 10px 0 0 ;
 }
 .content_right{
@@ -40,6 +42,7 @@ body{
     background-color: white;
     height: 340px;
     border-radius: 10px 10px 0 0 ;
+    margin-bottom: 10px;
 }
 .section_nav{
     padding-top: 20px;
@@ -57,7 +60,7 @@ body{
 
 }
 .section_nav li{
-    margin-right: 25px;
+    margin-right: 20px;
     color: #6c757d;
 }
 .section_title{
@@ -107,6 +110,7 @@ body{
 }
 .section3{
     padding: 20px;
+
 }
 .profile_container{
     display: flex;
@@ -183,7 +187,7 @@ body{
     color: tomato;
 }
 .info_body{
-    padding: 10px 30px 30px 30px;
+    padding: 10px 30px 10px 30px;
 }
 .editCrewBtn{
     margin-top: 20px;
@@ -306,7 +310,7 @@ body{
   /* 커스텀 모달 창 컨텐츠 */
   .custom-modal-content {
     background-color: white;
-    margin: 15% auto;
+    margin: 8% auto;
     padding: 20px;
     border-radius: 10px;
      width: 350px;
@@ -341,17 +345,7 @@ body{
     gap: 12px; /* 옵션 간의 간격 */
     margin:10px 10px 25px 10px;
   }
- /* 투표하기 모달 내용 */
-  custom-modal-body2{
-    display: flex;
-    flex-direction: column;
-    gap: 5px; /* 옵션 간의 간격 */
-    margin:20px;
-    padding:20px;
-    marg
-in-left:50%;
 
-  }
 /* 일반 옵션 버튼 */
 .custom-modal-option {
     background-color: #f0f0f0; /* 밝고 중립적인 색상 */
@@ -554,6 +548,16 @@ in-left:50%;
   color: red; /* 호버 시 색상 변경 */
 }
 
+/* 투표하기 모달 내용 */
+.custom-modal-body2 {
+    display: flex;
+    flex-direction: column; /* Use column to stack elements vertically */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    gap: 5px; /* Option spacing */
+    padding: 10px;
+}
+
 .vote-item {
   display: flex;
   align-items: center;
@@ -634,22 +638,14 @@ in-left:50%;
 .modal-subtitle {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px;
-  margin-left:20px
 }
 
 .modal-deadline {
   font-size: 13px;
   color: #b0b0b0;
   margin-bottom: 20px;
-  margin-left:20px
 }
 
-.vote-options {
-  margin-top: 10px;
-  margin-left:20px
-
-}
 
 .vote-option {
   display: flex;
@@ -661,4 +657,35 @@ in-left:50%;
 
 .vote-option input {
   margin-right: 10px;
+}
+.vote-results {
+  width:90%;
+}
+
+.vote-result {
+  margin-bottom: 15px; /* 항목 간 간격 */
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between; /* 옵션값과 투표명수를 양쪽 끝에 배치 */
+  align-items: center;
+  margin-bottom: 5px; /* 옵션과 그래프 사이의 간격 */
+}
+
+.vote-count {
+  font-weight: bold;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  width: 100%; /* 그래프 바의 너비를 100%로 설정 */
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #FFA500;
+  height: 100%;
 }
