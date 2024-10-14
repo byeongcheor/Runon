@@ -1004,7 +1004,7 @@ function submitCrewInfo() {
                     }
                      list += '<li class="team-item">';
                      list += '<a class="team-link">';
-                     list += '<img src="/crew_upload/team.png" class="teamemblem">';
+                     list += '<img src="/img/group.png" class="teamemblem">';
                      list += '<div class="team-name" onClick="join_wait()" id="write">가입 신청 내역</div>';
                      list +='</a>';
                      list+='</li>';

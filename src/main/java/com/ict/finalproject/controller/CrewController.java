@@ -333,7 +333,7 @@ public class CrewController {
         return a; // 성공적으로 생성된 경우 1 반환
     }
 
-/////////////////////////// 크루가입신청 확인 페이지////////////////////////////////////////
+    /////////////////////////// 크루가입신청 확인 페이지////////////////////////////////////////
     @GetMapping("/crewWait")
     public String crewWait(){
         return "crew/crewWait";
@@ -371,7 +371,7 @@ public class CrewController {
     }
 
 
-/////////////////////////크루관리///////////////////////////////////////////////
+    /////////////////////////크루관리///////////////////////////////////////////////
     @GetMapping("/crewManage")
     public String crewCreate(){
         return "crew/crewManage";
@@ -400,7 +400,9 @@ public class CrewController {
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
-            if (id.equals("member"))crew_manage_select=service.crew_manage_member(crewCode,user_code);
+            if (id.equals("member") || id.equals("overview")) {
+                crew_manage_select = service.crew_manage_member(crewCode, user_code);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -408,7 +410,7 @@ public class CrewController {
         return crew_manage_select;
     }
 
-/////////////////////////// 크루가입승인 페이지////////////////////////////////////////
+    /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
     @GetMapping("/crewApp")
     public String crewApp(){
         return "crew/crewApp";

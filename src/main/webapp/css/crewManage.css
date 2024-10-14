@@ -21,10 +21,12 @@ body{
 .content_left{
     position: relative;
     width: 60%;
-    margin-right: 20px;
     background-color: white;
-    height: 900px;
+    height: auto;
+    min-height: 400px;
+    margin-right: 20px;
     margin-top: 20px;
+    margin-bottom: 10px;
     border-radius: 10px 10px 0 0 ;
 }
 .content_right{
@@ -32,7 +34,7 @@ body{
 }
 .section1{
     background-color: white;
-    height: 550px;
+    min-height: 400px;
     margin-bottom: 10px;
     border-radius: 10px;
 }
@@ -40,6 +42,7 @@ body{
     background-color: white;
     height: 340px;
     border-radius: 10px 10px 0 0 ;
+    margin-bottom: 10px;
 }
 .section_nav{
     padding-top: 20px;
@@ -57,7 +60,7 @@ body{
 
 }
 .section_nav li{
-    margin-right: 15px;
+    margin-right: 20px;
     color: #6c757d;
 }
 .section_title{
@@ -107,6 +110,7 @@ body{
 }
 .section3{
     padding: 20px;
+
 }
 .profile_container{
     display: flex;
@@ -117,7 +121,7 @@ body{
     width: 80px;
     height: 80px;
     border-radius: 200px;
-    margin-top: 10px;
+    margin-top: 17px;
     margin-right: 40px;
 }
 .imgContainer>img:first-child{
@@ -154,7 +158,14 @@ body{
 }
 .names{
     margin-left: 10px;
+    font-size: 15px;
 }
+#addr{
+    color: #1570ff;
+     font-size: 16px;
+    font-weight: bold;
+}
+
 .crew_infos{
     display: flex;
     flex-direction: row;
@@ -176,34 +187,48 @@ body{
     color: tomato;
 }
 .info_body{
-    padding: 30px;
+    padding: 10px 30px 10px 30px;
 }
 .editCrewBtn{
     margin-top: 20px;
-    background-color: white;
-    border-radius: 3px;
     margin-left: 8px;
-    border: 1px solid lightgrey;
-    width: 110px;
-    height:30px;
-    background-color: #e8f7ff;
-    font-weight: 500;
-    color: #1570ff;
-    padding: 0px 6px;
-    font-size: 14px;
+    height:35px;
     text-align: center;
+    padding: 2px 6px;
+    font-weight: 500;
+    color: rgb(75, 90, 100);
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #f2f5f7;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none
+
 }
+
+.editCrew{
+    display: flex;
+    height: 36px;
+    gap: 4px;
+}
+
   /* 프로필 이미지 */
  .profile-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
+    margin: 0px 8px;
   }
 
   .member{
     margin:10px 10px;
 
+  }
+  .join_info{
+    padding-left: 30px;
   }
 
   /* 기본 스타일 */
@@ -218,8 +243,8 @@ body{
     display: flex; /* 가로 정렬 */
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: space-between; /* 좌우 요소 간 여백 자동 */
-    width: 90%; /* 부모 요소의 전체 너비 사용 */
-    padding: 10px 30px;
+    width: 90%;
+    padding: 10px 28px;
   }
 
   .profile {
@@ -240,7 +265,7 @@ body{
 
   .name {
     margin-right: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
   }
 
@@ -285,7 +310,7 @@ body{
   /* 커스텀 모달 창 컨텐츠 */
   .custom-modal-content {
     background-color: white;
-    margin: 15% auto;
+    margin: 8% auto;
     padding: 20px;
     border-radius: 10px;
      width: 350px;
@@ -317,7 +342,7 @@ body{
   .custom-modal-body {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* 옵션 간의 간격 */
+    gap: 12px; /* 옵션 간의 간격 */
     margin:10px 10px 25px 10px;
   }
 
@@ -444,10 +469,223 @@ body{
 }
 
 .modal-footer .btn-light {
-    background-color: #f8f9fa; /* 연한 배경 */
+    background-color: #f0f0f0; /* 취소 버튼을 항목 추가 버튼 색상으로 변경 */
     color: black; /* 검은색 글씨 */
 }
 
 .modal-footer .btn-light:hover {
-    background-color: #e2e6ea; /* 마우스 오버 시 연한 회색 */
+    background-color: #e2e6ea; /* 마우스 오버 시 색상 */
+}
+.overview_title{
+    font-size: 17px;
+    padding-bottom: 0px;
+    font-weight: 700;
+    line-height: 24px;
+
+}
+.member_more{
+    color: var(--blue-blue500, #1570ff);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    cursor: pointer;
+    margin-right:40px;
+     margin-top:6px;
+
+}
+
+.input-field {
+  width: 100%; /* 항목 추가 버튼과 같은 너비 */
+  font-size:14px;
+  padding: 11px;
+  margin-bottom: 10px;
+  background-color: #F7F7F7; /* 항목 추가 버튼과 같은 배경색 */
+  border: none; /* 보더라인 제거 */
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease; /* 포커스 전환 시 부드러운 애니메이션 */
+}
+
+.input-field:focus {
+  outline: none; /* 기본 포커스 아웃라인 제거 */
+  border-color: #80bdff; /* 연한 파란색 테두리 */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 부트스트랩의 연한 파란색 포커스 효과 */
+}
+
+
+.input-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.input-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.add-item-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.remove-item-button {
+  background-color: transparent; /* 배경 투명 */
+  border: none; /* 보더라인 없음 */
+  color: #333; /* 버튼 색상 */
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: -35px; /* 삭제 버튼이 항목 끝에 붙도록 조정 */
+  margin-bottom:13px;
+}
+
+.remove-item-button:hover {
+  color: red; /* 호버 시 색상 변경 */
+}
+
+/* 투표하기 모달 내용 */
+.custom-modal-body2 {
+    display: flex;
+    flex-direction: column; /* Use column to stack elements vertically */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    gap: 5px; /* Option spacing */
+    padding: 10px;
+}
+
+.vote-item {
+  display: flex;
+  align-items: center;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+
+.btn-light {
+  background-color: #f8f9fa;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+.add-item-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0; /* 항목 추가 버튼 배경색 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.vote-deadline{
+    margin-top:10px;
+}
+.deadline-label{
+  margin-bottom: 5px; /* 라벨을 위로 올리기 위한 마진 조정 */
+  font-size: 14px; /* 폰트 크기 조정 가능 */
+}
+
+.item-container {
+  display: flex;
+  align-items: center; /* 아이콘과 텍스트를 수직으로 중앙 정렬 */
+  width: 90%;
+  padding: 10px 28px;
+
+}
+
+.icon-container img {
+  width: 30px; /* 아이콘 너비 설정 */
+  height: 30px; /* 아이콘 높이 설정 */
+  margin: 0px 10px;
+
+}
+
+.text-container {
+  display: flex;
+  align-items: center; /* 주말여행과 진행중인 투표를 수직으로 중앙 정렬 */
+}
+
+.main-text {
+  font-size: 15px; /* 주말여행 텍스트 크기 */
+  color: #000; /* 검은색 텍스트 */
+  font-weight: bold; /* 굵은 텍스트 */
+  margin: 0px 8px; /* 주말여행과 진행중인 투표 사이 간격 */
+}
+
+.sub-text {
+  margin-left: 5px;
+  background-color: #e8f7ff;
+  font-weight: 500;
+  font-size: 12px;
+  text-align: center;
+  color: #1570ff;
+  padding: 0px 4px;
+}
+
+.modal-subtitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.modal-deadline {
+  font-size: 13px;
+  color: #b0b0b0;
+  margin-bottom: 20px;
+}
+
+
+.vote-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  padding-bottom:10px;
+}
+
+.vote-option input {
+  margin-right: 10px;
+}
+.vote-results {
+  width:90%;
+}
+
+.vote-result {
+  margin-bottom: 15px; /* 항목 간 간격 */
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between; /* 옵션값과 투표명수를 양쪽 끝에 배치 */
+  align-items: center;
+  margin-bottom: 5px; /* 옵션과 그래프 사이의 간격 */
+}
+
+.vote-count {
+  font-weight: bold;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  width: 100%; /* 그래프 바의 너비를 100%로 설정 */
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #FFA500;
+  height: 100%;
 }
