@@ -722,7 +722,9 @@
     // 모달 닫기 확인
     function confirmClose(modalId) {
         if (confirm("닫으시면 선택한 정보가 사라집니다. 닫으시겠습니까?")) {
-            $('#' + modalId).modal('hide');
+            $('#' + modalId).modal('hide'); // 모달 숨기기
+            $('.modal-backdrop').remove(); // 모달 백드롭(블러 처리된 배경) 강제 제거
+            $('body').removeClass('modal-open'); // 모달 닫힌 후 'modal-open' 클래스가 남아있다면 제거
         }
     }
     // Enter 키 입력 방지
@@ -752,9 +754,9 @@
             },
             success: function(result) {
                 for(var i in result){
-  list += '<div class="list_wrapper">';
+                list += '<div class="list_wrapper">';
                     list += ' <ul id="crew_list">';
-                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + '&crewWriteCode=' + result[i].crewWriteCode +')">';
+                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code +','+ result[i].crew_write_code +')">';
                     list += '   <div class="crew_profileimage">';
                     list += '       <div class="profileBox">';
                     list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
@@ -1054,8 +1056,8 @@ function submitCrewInfo() {
     }
 
     function crew_page_detail(create_crew_code, crew_write_code) {
-        $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
+        $('#createNewTeamModal').modal('hide');
     }
 
     function go_my_crew(create_crew_code,user_code,position) {

@@ -10,6 +10,7 @@
         <img src="/img/러닝고화질.jpg" id="bannerImg"/>
     </div>
     <input type=hidden id=usercode />
+    <input type=hidden id=vote_num />
     <div class="content_body">
         <div class="content_left">
             <section class="section3">
@@ -191,12 +192,47 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option" id="runMake" onClick="">공지 올리기</button>
+      <button class="custom-modal-option" id="noticeMake" onclick="openNoticeModal()">공지 올리기</button>
       <button class="custom-modal-option" id="voteMake" onclick="openVoteModal()">투표 올리기</button>
       <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">팀 탈퇴하기</button>
     </div>
   </div>
 </div>
+<!-- 공지사항 모달 -->
+  <form id="updateNoticeForm" enctype="multipart/form-data">
+    <div id="noticeCreateModal" class="custom-modal" style="display: none;">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5 class="custom-modal-title" id="noticeCreateModalLabel">공지사항 작성</h5>
+                <span class="custom-close" onclick="closeNoticeModal()">&times;</span>
+            </div>
+            <div class="custom-modal-body">
+                <div class="mb-3">
+                    <label for="noticeTitle" class="form-label">제목을 작성해 주세요</label>
+                    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" placeholder="제목 입력" required />
+                </div>
+                <div class="mb-3">
+                    <label for="noticeImage" class="form-label">이미지를 올려주세요</label>
+                    <p class="subtext">이미지가 없다면 기본 이미지가 제공됩니다!</p>
+                    <label class="upload-box" for="noticeImage">
+                         사진 업로드
+                         <input type="file" id="noticeImage" name="noticeImage" onchange="previewImages(event)" multiple />
+                    </label>
+                    <div id="previewContainer" style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                        <!-- 이미지 미리보기가 이곳에 추가됩니다 -->
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label">공지 내용</label>
+                    <textarea id="noticeContent" name="noticeContent" class="notice-content" placeholder="여기를 누르고 공지를 등록하세요"></textarea>
+                </div>
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" class="custom-btn" onclick="submitNotice()">등록하기</button>
+            </div>
+        </div>
+    </div>
+</form>
 <!-- 투표 모달 -->
 <div id="voteModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -241,32 +277,7 @@
       <h3 class="modal-title">투표하기 </h3>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
-    <div class="custom-modal-body2">
-      <span class="modal-subtitle">크루수 제한건</span>
-      <p class="modal-deadline">12월 6일 오후 12:00 종료</p>
-      <!-- 투표 선택 항목 (라디오 버튼) -->
-      <div class="vote-options">
-        <label class="vote-option">
-          <input type="radio" name="voteOption" value="option1">
-          <span>10명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
-        </label>
-        <label class="vote-option">
-          <input type="radio" name="voteOption" value="option2">
-          <span>15명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
-        </label>
-        <label class="vote-option">
-          <input type="radio" name="voteOption" value="option3">
-          <span>20명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
-        </label>
-        <label class="vote-option">
-          <input type="radio" name="voteOption" value="option3">
-          <span>22명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
-        </label>
-        <label class="vote-option">
-          <input type="radio" name="voteOption" value="option3">
-          <span>25명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
-        </label>
-      </div>
+    <div class="custom-modal-body2" id=vote_list>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" style="font-size:14px;" onclick="submitVoteNow()">투표하기</button>
@@ -281,50 +292,7 @@
       <h3 class="modal-title">투표 현황</h3>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
-    <div class="custom-modal-body2">
-      <span class="modal-subtitle">크루수 제한건</span>
-      <p class="modal-deadline">12월 6일 오후 12:00 종료</p>
-      <div class="vote-results">
-        <div class="vote-result">
-          <div class="result-row">
-            <span>2023년 12월 9일</span>
-            <span id="count-vote1" class="vote-count">1명</span>
-          </div>
-          <div class="progress-bar">
-            <div id="progress-vote1" class="progress" style="width: 20%;"></div>
-          </div>
-        </div>
-
-        <div class="vote-result">
-          <div class="result-row">
-            <span>2023년 12월 16일</span>
-            <span id="count-vote2" class="vote-count">3명</span>
-          </div>
-          <div class="progress-bar">
-            <div id="progress-vote2" class="progress" style="width: 60%; background-color: #FFA500;"></div>
-          </div>
-        </div>
-
-        <div class="vote-result">
-          <div class="result-row">
-            <span>2023년 12월 23일</span>
-            <span id="count-vote3" class="vote-count">0명</span>
-          </div>
-          <div class="progress-bar">
-            <div id="progress-vote3" class="progress" style="width: 0%;"></div>
-          </div>
-        </div>
-
-        <div class="vote-result">
-          <div class="result-row">
-            <span>2023년 12월 30일</span>
-            <span id="count-vote4" class="vote-count">0명</span>
-          </div>
-          <div class="progress-bar">
-            <div id="progress-vote4" class="progress" style="width: 0%;"></div>
-          </div>
-        </div>
-      </div>
+    <div class="custom-modal-body2" id=vote_results>
     </div>
     <div class="custom-modal-footer">
       <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
@@ -400,7 +368,13 @@ clog('My user_code : '+ user_code);
                     crew_overview(response);
                     // 'overview'일 때는 section2를 다시 보이게
                     document.querySelector('.section2').style.display = 'block';
-                }            },
+                }
+                else if (id == 'notice') {
+                    crew_notice(response);
+                    // 'member'일 때만 section2 숨기기
+                    document.querySelector('.section2').style.display = 'none';
+                }
+            },
             error: function(e) {
                 console.error('Error: ', e);
             }
@@ -449,15 +423,13 @@ clog('My user_code : '+ user_code);
         $('#crew_manage_list').append(list);
     }
 
-function crew_overview(response) {
-      clog(response);
+    function crew_overview(response) {
       var list = '';
           list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
           list += '<div class="overview_title">주요 멤버</div>'
           list += '<div class="member_more">전체 보기</div>'
           list += '</div>';
           for (var i = 0; i<response[0].c_n;i++) {
-          clog('i : '+i);
               list += '<li class="member-item"> ';
               list += '<div class="item-flex"> ';
               list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img" onClick="go_mypage(' + response[i].b_n + ')"> ';
@@ -479,7 +451,6 @@ function crew_overview(response) {
           list += '</div>';
 
       for (var i = response[0].c_n; i<response.length;i++) {
-        clog('i2 : '+i);
           list += '<li class="member-item"> ';
           list +=    '<div class="item-container"> ';
           list +=       '<div class="icon-container"> ';
@@ -491,11 +462,12 @@ function crew_overview(response) {
           }
           list +=       '</div>';
           list +=       '<div class="text-container"> ';
-          list +=          '<span class="main-text" onClick="voteNow()">'+response[i].subject+'</span> ';
           if(response[i].b_n==1){
+              list +=          '<span class="main-text" onClick="voteNow('+response[i].c_n+')">'+response[i].subject+'</span> ';
               list +=          '<span class="sub-text">투표 진행중</span>';
           }
          if(response[i].b_n==9){
+               list +=          '<span class="main-text" onClick="vote_select('+response[i].c_n+')">'+response[i].subject+'</span> ';
                list +=          '<span class="sub-text">투표 마감</span>';
           }
           list +=       '</div> ';
@@ -504,7 +476,37 @@ function crew_overview(response) {
       }
 
       $('#crew_manage_list').append(list);
-  }
+    }
+    function crew_notice(response) {
+        var list = '';
+        for (var i in response) {
+            list += '<li class="member-item"> ';
+            list +=    '<div class="item-container"> ';
+            list +=       '<div class="icon-container"> ';
+            if(response[i].a_n==1||response[i].a_n==3){
+              list +=       '   <img src="/img/vote.png"> ';
+            }
+            if(response[i].a_n==2){
+              list +=       '   <img src="/img/notice.png"> ';
+            }
+            list +=       '</div>';
+            list +=       '<div class="text-container"> ';
+            if(response[i].b_n==1){
+                list +=          '<span class="sub-text">투표 진행중</span>';
+                list +=          '<span class="main-text" onClick="voteNow('+response[i].c_n+')">'+response[i].subject+'</span> ';
+            }
+           if(response[i].b_n==9){
+                list +=          '<span class="sub-text">투표 마감</span>';
+                list +=          '<span class="main-text" onClick="vote_select('+response[i].c_n+')">'+response[i].subject+'</span> ';
+            }
+            list +=       '</div> ';
+            list +=    '</div> ';
+            list += '</li> ';
+        }
+
+        $('#crew_manage_list').append(list);
+    }
+
       function openCustomModal(usercode,nickname,user_pisition) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
@@ -538,7 +540,6 @@ function crew_overview(response) {
         var id = element.id;
         var reason='';
         var checkedValues = [];
-        clog(id);
         if(id=='report'){
             $('input[name="report_reason"]:checked').each(function() {
                 checkedValues.push($(this).val());
@@ -711,26 +712,163 @@ function crew_overview(response) {
     }
 
    // 투표하기 모달 열기
-     function voteNow() {
-       document.getElementById('voteNowModal').style.display = 'block';
-     }
+    function voteNow(vote_num) {
+        document.getElementById('voteNowModal').style.display = 'block';
+        $('#vote_num').val(vote_num);
+        $.ajax({
+            url: '/crew/vote_select',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                vote_num         : vote_num
+            },
+            success: function(response) {
+                $('#vote_list').html('');
+                $('#vote_results').html('');
+                var list = '';
+                var list2 = '';
+                list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+                list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+                list += '<div class="vote-options">';
+                for (var i = 1; i < 6; i++) {
+                    var key = 'opt' + i;
+                    if (response[0][key] == '') break;
+
+                    var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+
+                    list += '<label class="vote-option">';
+                    list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
+                    list += '    <span>' + response[0][key] + '</span>';
+                    list += '</label>';
+                }
+                list += '</div>';
+                $('#vote_list').html(list);
+                list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+                list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+                list2 += '<div class="vote-results">';
+                for (var i = 1; i < 6; i++) {
+                    var arr = ['a', 'a', 'b', 'c', 'd', 'e'];
+                    var key = 'opt' + i;
+                    var key2 = arr[i] + '_s';
+                    if (response[0][key] == '') break;
+                    if(response[0][key2]!==null){
+                        var arr_length = response[0][key2].split(',').length;
+                    }
+                    else var arr_length=0;
+                    response[0][key2] = response[0][key2]===null?'':response[0][key2];
+                    list2 += '      <div class="result-row">';
+                    list2 += '          <span>' + response[0][key] + '</span>';
+                    list2 += '          <span>' + response[0][key2] + '</span>';
+                    list2 += '          <span id="count-vote' + i + '" class="vote-count">' + arr_length + '명</span>';
+                    list2 += '      </div>';
+                    list2 += '      <div class="progress-bar">';
+                    list2 += '          <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+                    list2 += '      </div>';
+                }
+                list2 += '</div>';
+                $('#vote_results').html(list2);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }
+
+    /*function vote_select(vote_num) {
+        document.getElementById('voteNowModal').style.display = 'block';
+        $('#vote_num').val(vote_num);
+        $.ajax({
+            url: '/crew/vote_select',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                vote_num         : vote_num
+            },
+            success: function(response) {
+                $('#vote_results').html('');
+                var list2 = '';
+                list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+                list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+                list += '<div class="vote-options">';
+                for (var i = 1; i < 6; i++) {
+                    var key = 'opt' + i;
+                    if (response[0][key] == '') break;
+
+                    var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+
+                    list += '<label class="vote-option">';
+                    list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
+                    list += '    <span>' + response[0][key] + '</span>';
+                    list += '</label>';
+                }
+                list += '</div>';
+                $('#vote_list').html(list);
+                list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+                list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+                list2 += '<div class="vote-results">';
+                for (var i = 1; i < 6; i++) {
+                    var arr = ['a', 'a', 'b', 'c', 'd', 'e'];
+                    var key = 'opt' + i;
+                    var key2 = arr[i] + '_s';
+                    if (response[0][key] == '') break;
+                    if(response[0][key2]!==null){
+                        var arr_length = response[0][key2].split(',').length;
+                    }
+                    else var arr_length=0;
+                    response[0][key2] = response[0][key2]===null?'':response[0][key2];
+                    list2 += '      <div class="result-row">';
+                    list2 += '          <span>' + response[0][key] + '</span>';
+                    list2 += '          <span>' + response[0][key2] + '</span>';
+                    list2 += '          <span id="count-vote' + i + '" class="vote-count">' + arr_length + '명</span>';
+                    list2 += '      </div>';
+                    list2 += '      <div class="progress-bar">';
+                    list2 += '          <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+                    list2 += '      </div>';
+                }
+                list2 += '</div>';
+                $('#vote_results').html(list2);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+    }*/
 
    // 투표 제출 함수
     function submitVoteNow() {
-      const selectedOption = document.querySelector('input[name="voteOption"]:checked');
-      if (selectedOption) {
-        alert('투표가 완료되었습니다: ' + selectedOption.value);
-        closeVoteNowModal();
-      } else {
-         alert('투표할 항목을 선택해주세요.');
-      }
-    }
-    function submitVoteNow() {
+      var selectedOption = $('input[name="voteOption"]:checked').val();
+      $.ajax({
+          url: '/crew/vote_insert',
+          type: 'post',
+          async: false,
+          data: {
+              Authorization    : Authorization,
+              selectedOption   : selectedOption,
+              vote_num         : $('#vote_num').val()
+          },
+          success: function(response) {
+              if(response==0){
+                alert('이미 투표하셨습니다.');
+                return false;
+              }
+              else{
+                alert('투표가 제출되었습니다.');
+              }
+          },
+          error: function(e) {
+              console.error('Error: ', e);
+          }
+      });
       // 투표하기 모달을 숨기고
       document.getElementById('voteNowModal').style.display = 'none';
       // 투표 현황 모달을 보여줍니다.
       document.getElementById('voteResultModal').style.display = 'block';
     }
+
 
     function updateVoteResults(votes) {
       // 총 투표 수 계산
@@ -762,9 +900,69 @@ function crew_overview(response) {
       { id: 'vote4', count: 0 }
     ];
 
+
+
     // 페이지 로드 시 투표 결과 업데이트
     $(document).ready(function() {
       updateVoteResults(votes);
     });
+
+    // 공지사항 모달 열기
+    function openNoticeModal() {
+         closeCustomModal(); // 다른 모달을 닫음
+         document.getElementById('noticeCreateModal').style.display = 'block'; // 공지사항 모달 열기
+    }
+
+    // 공지사항 모달 닫기
+    function closeNoticeModal() {
+       document.getElementById('noticeCreateModal').style.display = 'none'; // 공지사항 모달 닫기
+       document.getElementById('resignModal').style.display = 'block'; // 다시 resignModal 열기
+    }
+
+    // 미리보기 이미지 삭제
+    function deletePreview() {
+        document.getElementById('previewContainer').style.display = 'none'; // 미리보기 컨테이너 숨김
+        document.getElementById('imagePreview').src = ''; // 이미지 미리보기 제거
+    }
+
+
+function previewImages(event) {
+    const previewContainer = document.getElementById('previewContainer');
+
+    // 선택된 파일들을 배열로 변환
+    const files = Array.from(event.target.files);
+
+    files.forEach(file => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // 이미지 미리보기 요소 생성
+            const imageContainer = document.createElement('div');
+            imageContainer.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imageContainer.appendChild(img);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '지우기';
+            deleteButton.classList.add('delete-btn');
+            deleteButton.onclick = function() {
+                imageContainer.remove(); // 이미지 미리보기 제거
+            };
+
+            imageContainer.appendChild(deleteButton);
+            previewContainer.appendChild(imageContainer);
+        };
+
+        reader.readAsDataURL(file); // 파일을 읽어 데이터 URL을 생성
+    });
+}
+
+function submitNotice() {
+    alert("공지사항이 등록되었습니다!");
+    closeNoticeModal(); // 모달 닫기
+}
+
 
 </script>

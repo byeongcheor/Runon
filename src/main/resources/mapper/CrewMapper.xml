@@ -44,7 +44,7 @@
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
         select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
-        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code) as a_n
+        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code and status = 0) as a_n
         from  create_crew_tbl a, crew_write b
         where b.is_delete = 0
         and   a.create_crew_code = b.create_crew_code
@@ -54,9 +54,9 @@
     </select>
 
     <select id="search_crewList" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content
+        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
-        ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code) as a_n
+        ,(select count(1) from crew_request_tbl where create_crew_code = a.create_crew_code and status = 0) as a_n
         from create_crew_tbl a, crew_write b
         where b.is_delete = 0
         and a.create_crew_code = b.create_crew_code
@@ -65,7 +65,7 @@
         and concat(a.addr,' ',a.addr_gu) like ifnull(concat('%', '${param5}', '%'), '%')
         and concat(a.addr,' ',a.addr_gu) like ifnull(concat('%', '${param6}', '%'), '%')
         and instr(concat(concat(a.addr,' ',a.addr_gu), '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull('${param7}', '')) > 0
-        group by a.create_crew_code, a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate, a.create_crew_code
+        group by a.create_crew_code, a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate, a.create_crew_code,b.crew_write_code
         order by ${param2} desc
         limit 10 offset ${param1}
     </select>
@@ -416,7 +416,7 @@
         union
         (
             select 1 as a_n, subject, creationdate as writedate,
-                   case when enddate < now() then 9 else 1 end as b_n, 1 as c_n
+                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
             from vote_tbl
             where create_crew_code = ${param1}
             order by creationdate desc
@@ -424,7 +424,7 @@
         )
         union
         (
-            select 2 as a_n, subject, writedate, 0 as b_n, 1 as c_n
+            select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
             from crew_notice_tbl
             where create_crew_code = ${param1}
             order by writedate desc
@@ -434,4 +434,93 @@
         ]]>
     </select>
 
+    <select id="crew_manage_notice" resultType="com.ict.finalproject.vo.CrewVO">
+        <![CDATA[
+        (
+            select 1 as a_n, subject, creationdate as writedate,
+                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
+            from vote_tbl
+            where create_crew_code = ${param1}
+            and   enddate > now()
+            order by creationdate desc
+        )
+        union
+        (
+            select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
+            from crew_notice_tbl
+            where create_crew_code = ${param1}
+            order by writedate desc
+        )
+        union
+        (
+            select 3 as a_n, subject, creationdate as writedate,
+                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
+            from vote_tbl
+            where create_crew_code = ${param1}
+            and   enddate < now()
+            order by creationdate desc
+        )
+        ]]>
+    </select>
+
+    <select id="vote_select" resultType="com.ict.finalproject.vo.CrewVO">
+        select
+        a.subject,
+        DATE_FORMAT(a.enddate, '%m월 %d일 %p %h:%i') as enddate,
+        (select selected_option from voter_tbl where vote_code= ${param2} and usercode = ${param1}) as f_s,
+        a.opt1,
+        (select group_concat(b.nickname separator ', ')
+        from voter_tbl v, user_tbl b
+        where v.usercode = b.usercode
+        and v.vote_code = a.vote_code
+        and v.selected_option = a.opt1) as a_s,  -- opt1에 투표한 사람들
+        a.opt2,
+        (select group_concat(b.nickname separator ', ')
+        from voter_tbl v, user_tbl b
+        where v.usercode = b.usercode
+        and v.vote_code = a.vote_code
+        and v.selected_option = a.opt2) as b_s,  -- opt2에 투표한 사람들
+        a.opt3,
+        (select group_concat(b.nickname separator ', ')
+        from voter_tbl v, user_tbl b
+        where v.usercode = b.usercode
+        and v.vote_code = a.vote_code
+        and v.selected_option = a.opt3) as c_s,  -- opt3에 투표한 사람들
+        a.opt4,
+        (select group_concat(b.nickname separator ', ')
+        from voter_tbl v, user_tbl b
+        where v.usercode = b.usercode
+        and v.vote_code = a.vote_code
+        and v.selected_option = a.opt4) as d_s,  -- opt4에 투표한 사람들
+        a.opt5,
+        (select group_concat(b.nickname separator ', ')
+        from voter_tbl v, user_tbl b
+        where v.usercode = b.usercode
+        and v.vote_code = a.vote_code
+        and v.selected_option = a.opt5) as e_s  -- opt5에 투표한 사람들
+        from vote_tbl a
+        where a.vote_code = ${param2}
+    </select>
+
+    <select id="vote_chek" resultType="int">
+        select count(1)
+        from  voter_tbl
+        where vote_code =${param2}
+        and   usercode =${param1}
+    </select>
+    <insert id="vote_insert">
+        insert into voter_tbl
+        (
+            usercode
+            ,vote_code
+            ,selected_option
+        )
+        values
+        (
+            ${param1}
+            ,${param2}
+            ,'${param3}'
+        )
+
+    </insert>
 </mapper>

@@ -26,6 +26,11 @@ public class CrewVO {
     private String g_s;
     private String teamPhoto;
     private String nickname;
+    private String opt1;
+    private String opt2;
+    private String opt3;
+    private String opt4;
+    private String opt5;
 
     private int a_n;
     private int b_n;
@@ -49,6 +54,7 @@ public class CrewVO {
     private String writedate;
     private String updated_date;
     private String activationdate;
+    private String enddate;
 
 
 

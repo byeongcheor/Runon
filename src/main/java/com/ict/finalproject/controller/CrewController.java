@@ -405,7 +405,9 @@ public class CrewController {
             }
             if ( id.equals("overview")) {
                 crew_manage_select = service.crew_manage_overview(crewCode, user_code);
-
+            }
+            if ( id.equals("notice")) {
+                crew_manage_select = service.crew_manage_notice(crewCode, user_code);
             }
 
         } catch (Exception e) {
@@ -491,6 +493,40 @@ public class CrewController {
                 a=3;
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+
+    @PostMapping("/vote_select")
+    @ResponseBody
+    public List<CrewVO> vote_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("vote_num") int vote_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> vote_select = null;
+        try {
+            vote_select = service.vote_select(user_code,vote_num);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vote_select;
+    }
+
+    @PostMapping("/vote_insert")
+    @ResponseBody
+    public int vote_insert(@RequestParam("Authorization")String token, @RequestParam("selectedOption") String selectedOption, @RequestParam("vote_num") int vote_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a=0;
+        try {
+            int b = service.vote_chek(user_code,vote_num);
+            if(b>0) return 0;
+            service.vote_insert(user_code,vote_num, selectedOption);
+            a=1;
         } catch (Exception e) {
             e.printStackTrace();
         }

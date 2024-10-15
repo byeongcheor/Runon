@@ -80,6 +80,18 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> crew_manage_notice( int crewCode, int user_code)
+    {
+        return dao.crew_manage_notice(crewCode, user_code);
+    }
+
+    @Override
+    public List<CrewVO> vote_select( int user_code, int vote_num)
+    {
+        return dao.vote_select(user_code, vote_num);
+    }
+
+    @Override
     public int crew_join_select(int user_code, int crewCode)
     {
         return dao.crew_join_select(user_code, crewCode);
@@ -207,6 +219,16 @@ public class CrewServiceImpl implements CrewService{
     @Override
     public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
+    }
+
+    @Override
+    public int vote_chek(int user_code, int vote_num) {
+        return dao.vote_chek(user_code, vote_num);
+    }
+
+    @Override
+    public int vote_insert(int user_code, int vote_num, String selectedOption) {
+        return dao.vote_insert(user_code,vote_num, selectedOption);
     }
 
 
