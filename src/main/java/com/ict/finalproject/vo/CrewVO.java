@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class CrewVO {
     private String crew_name;
     private String logo;
+    private String subject;
     private String content;
     private String addr;
     private String addr_gu;

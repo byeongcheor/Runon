@@ -11,6 +11,7 @@ public interface CrewService {
     public List<CrewVO> crew_wait_select(int user_code);
     public List<CrewVO> crew_write_detail_select(int user_code, int crewCode);
     public List<CrewVO> crew_manage_member(int crewCode, int user_code);
+    public List<CrewVO> crew_manage_overview(int crewCode, int user_code);
     public List<CrewVO> crew_wait_detail(int user_code, int crewCode,int request_code);
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail);
     public List<CrewVO> crew_write_detail_check(int crew_write_code);
@@ -36,6 +37,7 @@ public interface CrewService {
     public int crew_member_check(int user_code, int crewCode);
     public int crew_member_upgrade(int user_code, int crewCode);
     public int crew_member_downgrade(int user_code, int crewCode);
+    public int vote_create(int user_code, int crewCode, String endDate, String title, String opt1,String opt2,String opt3,String opt4,String opt5);
     public int crew_member_out(int user_code, int crewCode);
     public int crew_history_insert(int user_code, int crewCode, int flag);
     public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text);

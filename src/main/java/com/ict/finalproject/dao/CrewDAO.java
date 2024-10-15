@@ -13,6 +13,7 @@ public interface CrewDAO {
     public List<CrewVO> crew_wait_detail(int user_code, int crewCode, int request_code);
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail);
     public List<CrewVO> crew_manage_member(int crewCode, int user_code);
+    public List<CrewVO> crew_manage_overview(int crewCode, int user_code);
     public List<CrewVO> crew_write_detail_check(int crew_write_code );
     public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
@@ -39,5 +40,7 @@ public interface CrewDAO {
     public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text);
     public int crew_member_out(int user_code, int crewCode);
     public int crew_history_insert(int user_code, int crewCode, int flag);
+    public int vote_create(int user_code, int crewCode, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5);
+
 
 }

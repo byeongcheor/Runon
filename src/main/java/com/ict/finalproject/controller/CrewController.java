@@ -333,7 +333,7 @@ public class CrewController {
         return a; // 성공적으로 생성된 경우 1 반환
     }
 
-/////////////////////////// 크루가입신청 확인 페이지////////////////////////////////////////
+    /////////////////////////// 크루가입신청 확인 페이지////////////////////////////////////////
     @GetMapping("/crewWait")
     public String crewWait(){
         return "crew/crewWait";
@@ -371,7 +371,7 @@ public class CrewController {
     }
 
 
-/////////////////////////크루관리///////////////////////////////////////////////
+    /////////////////////////크루관리///////////////////////////////////////////////
     @GetMapping("/crewManage")
     public String crewCreate(){
         return "crew/crewManage";
@@ -394,13 +394,19 @@ public class CrewController {
     }
     @PostMapping("/crew_manage_select")
     @ResponseBody
-    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id) {
+    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,                            @RequestParam(value = "flag", defaultValue = "") String flag) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
         try {
-            if (id.equals("member"))crew_manage_select=service.crew_manage_member(crewCode,user_code);
+            if (id.equals("member")) {
+                crew_manage_select = service.crew_manage_member(crewCode, user_code);
+            }
+            if ( id.equals("overview")) {
+                crew_manage_select = service.crew_manage_overview(crewCode, user_code);
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -408,7 +414,7 @@ public class CrewController {
         return crew_manage_select;
     }
 
-/////////////////////////// 크루가입승인 페이지////////////////////////////////////////
+    /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
     @GetMapping("/crewApp")
     public String crewApp(){
         return "crew/crewApp";
@@ -497,6 +503,29 @@ public class CrewController {
     public String crewRevise(){
         return "crew/crewRevise";
     }
-
+    @PostMapping("/vote_create")
+    @ResponseBody
+    public int vote_create(
+            @RequestParam("Authorization")String token,
+            @RequestParam("create_crew_code") int crewCode,
+            @RequestParam("title") String title,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("opt1") String opt1,
+            @RequestParam("opt2") String opt2,
+            @RequestParam("opt3") String opt3,
+            @RequestParam(value = "opt4", defaultValue = "") String opt4,
+            @RequestParam(value = "opt5", defaultValue = "") String opt5) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a=0;
+        try {
+            service.vote_create(user_code, crewCode, title, endDate, opt1, opt2,opt3,opt4,opt5);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
 
 }

@@ -20,7 +20,7 @@ body{
 }
 .content-full {
     width: 100%;
-    max-width: 1050px;
+    max-width: 900px;
     min-height: 800px; /* 최소 높이를 800px로 설정 */
     background-color: white;
     margin: 20px auto;
@@ -41,15 +41,15 @@ body{
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
-        display: flex; /* 가로 정렬 */
-        align-items: center; /* 세로 중앙 정렬 */
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
 
 }
 .menu-desc p {
     margin: 5px 0; /* 문단 사이의 간격을 줄임 */
 }
 .team-container {
-    margin: 30px;
+    margin: 20px 40px;
 }
 .team-list {
     list-style-type: none;

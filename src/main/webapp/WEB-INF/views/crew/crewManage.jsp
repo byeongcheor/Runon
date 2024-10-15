@@ -33,7 +33,7 @@
                     </button>
                 </div>
                 <div class="statis">
-                    <p style="font-weight: 700;">팀원변화</p>
+
                 </div>
             </section>
         </div>
@@ -41,9 +41,10 @@
             <section class="section1">
               <div class="section_nav">
                 <ul>
-                  <li id=member name=crew_select onClick="crew_manage_select(this)">멤버</li>
-                  <li id=notice name=crew_select onClick="crew_manage_select(this)">공지</li>
-                  <li id=manage name=crew_select onClick="crew_manage_select(this)">크루관리</li>
+
+                  <li id="overview" name=crew_select onClick="crew_manage_select(this)">오버뷰</li>
+                  <li id="notice" name=crew_select onClick="crew_manage_select(this)">공지</li>
+                  <li id="member" name=crew_select onClick="crew_manage_select(this)">멤버</li>
                 </ul>
               </div>
                   <div class="member">
@@ -55,6 +56,11 @@
                 <div class="section_title">크루정보</div>
                 <div class="info_body">
                     <div class="crew_infos">
+                        <span class="crew_imogi">🔥‍</span>
+                        <span class="crew_addr">️크루랭킹</span>
+                        <span class="crew_addr2" id="crew_ranking"></span>
+                    </div>
+                    <div class="crew_infos">
                         <span class="crew_imogi">📍</span>
                         <span class="crew_addr">활동지역</span>
                         <span class="crew_addr2" id="addr2"></span>
@@ -62,19 +68,20 @@
                     <div class="crew_infos">
                         <span class="crew_imogi">🏃‍</span>
                         <span class="crew_addr">️멤버수</span>
-                        <span class="crew_addr2" id=member_cnt></span>
+                        <span class="crew_addr2" id="member_cnt"></span>
                     </div>
                     <div class="crew_infos">
                         <span class="crew_imogi">🔍‍</span>
                         <span class="crew_addr">평균나이</span>
-                        <span class="crew_addr2" id=member_age_avg></span>
+                        <span class="crew_addr2" id="member_age_avg"></span>
                     </div>
                     <div class="crew_infos">
                         <span class="crew_imogi">✨</span>
                         <span class="crew_addr">크루생성일</span>
                         <span class="crew_addr2" id=create_date></span>
                     </div>
-                </div>
+
+               </div>
             </section>
         </div>
     </div>
@@ -132,7 +139,6 @@
     </div>
   </div>
 </div>
-<--크루정보변경 모달-->
 <div id="informationModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
@@ -143,9 +149,9 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option" id=update>프로필 수정</button>
-      <button class="custom-modal-option" id=handoverCrewBtn>팀소유자 위임</button>
-      <button class="custom-modal-danger" onclick="deleteTeam()" id=crew_delete >팀 삭제하기</button>
+     <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
+      <button class="custom-modal-option" id="handoverCrewBtn">팀소유자 위임</button>
+      <button class="custom-modal-danger" onclick="deleteTeam()" id="crew_delete" >팀 삭제하기</button>
     </div>
   </div>
 </div>
@@ -161,12 +167,14 @@
       <label class="team-member">
         <input type="radio"  name="teamOwner" value="jang">
         <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
-        <span class="team-name">장재성</span>
+
+        <span class="team-name">소시민</span>
       </label>
       <label class="team-member">
         <input type="radio"  name="teamOwner" value="jang">
         <img src="/crew_upload/맹고기.jpeg"  class="team-profile">
-        <span class="team-name">장재성</span>
+
+        <span class="team-name">소시민</span>
       </label>
     </div>
     <div class="custom-modal-footer">
@@ -174,7 +182,8 @@
     </div>
   </div>
 </div>
-<!-- 팀 탈퇴하기 모달 -->
+
+<!-- 가로 점점점 모달 -->
 <div id="resignModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
@@ -182,16 +191,152 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
+      <button class="custom-modal-option" id="runMake" onClick="">일정 만들기</button>
+      <button class="custom-modal-option" id="voteMake" onclick="openVoteModal()">투표 올리기</button>
       <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">팀 탈퇴하기</button>
     </div>
   </div>
 </div>
-<script>
+<!-- 투표 모달 -->
+<div id="voteModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h3 class="modal-title">투표 만들기</h3>
+      <span class="custom-close" onclick="closeVoteModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body">
+      <input type="text" id="voteTitle" name=vote_opt  class="input-field" placeholder="투표 제목">
+      <!-- 항목 입력란이 추가될 공간 -->
+      <div id="voteItems">
+        <div class="vote-item">
+          <input type="text" class="input-field" name=vote_opt id=vote1 placeholder="항목 입력">
+        </div>
+        <div class="vote-item">
+          <input type="text" class="input-field" name=vote_opt id=vote2 placeholder="항목 입력">
+        </div>
+        <div class="vote-item">
+          <input type="text" class="input-field" name=vote_opt id=vote3 placeholder="항목 입력">
+        </div>
+      </div>
+      <!-- 항목 추가 버튼 -->
+      <button class="add-item-button" id=addVoteBtn onclick="addVoteItem()">+ 항목 추가</button>
+      <!-- 마감일 및 시간 입력 -->
+       <div class="vote-deadline">
+             <label style=" margin:5px;">
+               <input type="radio" id="enableDeadline" name="deadlineOption" value="enable" checked>
+               <span class="deadline-label">마감시간 설정</span>
+             </label>
+          <input type="datetime-local" id="voteDeadline" class="input-field">
+       </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" style="font-size:14px;"onclick="submitVote()" >투표 올리기</button>
+      <button type="button" class="btn btn-light" style="font-size:14px;" onclick="closeVoteModal()">취소</button>
+    </div>
+  </div>
+</div><!-- 투표하기 모달 -->
+<div id="voteNowModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h3 class="modal-title">투표하기 </h3>
+      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body2">
+      <span class="modal-subtitle">크루수 제한건</span>
+      <p class="modal-deadline">12월 6일 오후 12:00 종료</p>
+      <!-- 투표 선택 항목 (라디오 버튼) -->
+      <div class="vote-options">
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option1">
+          <span>10명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option2">
+          <span>15명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option3">
+          <span>20명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option3">
+          <span>22명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+        <label class="vote-option">
+          <input type="radio" name="voteOption" value="option3">
+          <span>25명뭐라뭐라뤄뤄마뤄무라무라무라무러</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" style="font-size:14px;" onclick="submitVoteNow()">투표하기</button>
+      <button type="button" class="btn btn-light" style="font-size:14px;" onclick="closeCustomModal()">취소</button>
+    </div>
+  </div>
+</div>
+ <!-- 투표 현황 -->
+<div id="voteResultModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h3 class="modal-title">투표 현황</h3>
+      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body2">
+      <span class="modal-subtitle">크루수 제한건</span>
+      <p class="modal-deadline">12월 6일 오후 12:00 종료</p>
+      <div class="vote-results">
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 9일</span>
+            <span id="count-vote1" class="vote-count">1명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote1" class="progress" style="width: 20%;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 16일</span>
+            <span id="count-vote2" class="vote-count">3명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote2" class="progress" style="width: 60%; background-color: #FFA500;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 23일</span>
+            <span id="count-vote3" class="vote-count">0명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote3" class="progress" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="vote-result">
+          <div class="result-row">
+            <span>2023년 12월 30일</span>
+            <span id="count-vote4" class="vote-count">0명</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-vote4" class="progress" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-modal-footer">
+      <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
+    </div>
+  </div>
+</div><script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const user_code = urlParams.get('user_code');
 const position = urlParams.get('position');
+var votenum=4;
 clog('My position : '+ position);
 clog('My user_code : '+ user_code);
 
@@ -230,53 +375,69 @@ clog('My user_code : '+ user_code);
             }
         });
     }
-    function crew_manage_select(element){
-         var id = element.id===undefined?'member': element.id;
-         $('[name="crew_select"]').css('color', 'gray');
-         $('#'+id).css('color', 'black');
+    function crew_manage_select(element) {
+        var id = element.id === undefined ? 'overview' : element.id;
+        $('[name="crew_select"]').css('color', 'gray');
+        $('#' + id).css('color', 'black');
+          console.log("Selected id: ", id);  // 선택한 id 출력
         $.ajax({
             url: '/crew/crew_manage_select',
             type: 'post',
             async: false,
             data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                id               : id
+                Authorization: Authorization,
+                create_crew_code: create_crew_code,
+                id: id
             },
             success: function(response) {
-                $('#crew_manage_list').html('');
-                if (id=='member')crew_manage_select_member(response);
-            },
+                $('#crew_manage_list').html('');  // 이전 리스트 초기화
+                if (id == 'member') {
+                    crew_manage_select_member(response);
+                    // 'member'일 때만 section2 숨기기
+                    document.querySelector('.section2').style.display = 'none';
+                }
+                else if (id == 'overview') {
+                    crew_overview(response);
+                    // 'overview'일 때는 section2를 다시 보이게
+                    document.querySelector('.section2').style.display = 'block';
+                }            },
             error: function(e) {
                 console.error('Error: ', e);
             }
         });
     }
 
-    function crew_manage_select_member(response){
-        var list ='';
-        if(response[0].f_n>0 && response[0].a_n==1){
-            list += '<div onClick="go_request_wait()">'
-            list += '   <span id=wait_cnt>';
-            list +=         response[0].f_n+'명이 승인을 기다리고있어요.';
+
+    function crew_manage_select_member(response) {
+        var list = '';
+        if (response[0].f_n > 0 && response[0].a_n == 1) {
+            list += '<div class="join_info" onClick="go_request_wait()" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+            list += '   <span id="wait_cnt">';
+            list +=         response[0].f_n + ' 명이 승인을 기다리고있어요.';
             list += '   </span>';
-            list += '</div>'
+
+            list += '   <img src="/img/way.png" style="width: 20px; height: 20px; padding:0; margin-right:40px; margin-top:3px;">';
+            list += '</div>';
         }
-        for(var i in response){
+
+        for (var i in response) {
             list += '<li class="member-item"> ';
             list += '<div class="item-flex"> ';
-            list += '   <img src="/resources/uploadfile/'+response[i].a_s+'" class="profile-img" onClick="go_mypage('+response[i].usercode+')"> ';
-            list += '   <div class="profile-info" onClick="go_mypage('+response[i].usercode+')"> ';
+
+            list += '   <img src="/resources/uploadfile/' + response[i].a_s + '" class="profile-img" onClick="go_mypage(' + response[i].usercode + ')"> ';
+            list += '   <div class="profile-info" onClick="go_mypage(' + response[i].usercode + ')"> ';
             list += '     <div class="info-wrapper"> ';
-            list += '      <p class="name">'+response[i].b_s+'</p> ';
-            if(response[i].a_n<3){
+
+            list += '      <p class="name">' + response[i].b_s + '</p> ';
+            if (response[i].a_n < 3) {
                 list += '      <div class="label-operator">운영진</div> ';
             }
             list += '     </div> ';
             list += '   </div> ';
             list += '  <div class="menu"> ';
             list += '   <div class="dropdown"> ';
-            if(user_code!=response[i].usercode && response[i].b_n>0){
+
+            if (user_code != response[i].usercode && response[i].b_n > 0) {
                 list += '     <div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname + '\', \'' + response[i].a_n + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
             }
             list += '   </div> ';
@@ -284,11 +445,67 @@ clog('My user_code : '+ user_code);
             list += '</div> ';
             list += '</li> ';
         }
-
-
+            console.log("Generated list: ", list);  // 생성된 list 출력
         $('#crew_manage_list').append(list);
     }
-    function openCustomModal(usercode,nickname,user_pisition) {
+
+function crew_overview(response) {
+      clog(response);
+      var list = '';
+          list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+          list += '<div class="overview_title">주요 멤버</div>'
+          list += '<div class="member_more">전체 보기</div>'
+          list += '</div>';
+          for (var i = 0; i<response[0].c_n;i++) {
+          clog('i : '+i);
+              list += '<li class="member-item"> ';
+              list += '<div class="item-flex"> ';
+              list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img" onClick="go_mypage(' + response[i].b_n + ')"> ';
+              list += '   <div class="profile-info" onClick="go_mypage(' + response[i].b_n + ')"> ';
+              list += '     <div class="info-wrapper"> ';
+              list += '      <p class="name">' + response[i].writedate + '</p> ';
+              list += '     </div> ';
+              list += '   </div> ';
+              list += '  <div class="menu"> ';
+              list += '   <div class="dropdown"> ';
+              list += '   </div> ';
+              list += '  </div> ';
+              list += '</div> ';
+              list += '</li> ';
+          }
+          list += '<div class="join_info" onClick="" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
+          list += '<div class="overview_title">최신 공지</div>'
+          list += '<div class="member_more">전체 보기</div>'
+          list += '</div>';
+
+      for (var i = response[0].c_n; i<response.length;i++) {
+        clog('i2 : '+i);
+          list += '<li class="member-item"> ';
+          list +=    '<div class="item-container"> ';
+          list +=       '<div class="icon-container"> ';
+          if(response[i].a_n==1){
+            list +=       '   <img src="/img/vote.png"> ';
+          }
+          if(response[i].a_n==2){
+            list +=       '   <img src="/img/notice.png"> ';
+          }
+          list +=       '</div>';
+          list +=       '<div class="text-container"> ';
+          list +=          '<span class="main-text" onClick="voteNow()">'+response[i].subject+'</span> ';
+          if(response[i].b_n==1){
+              list +=          '<span class="sub-text">투표 진행중</span>';
+          }
+         if(response[i].b_n==9){
+               list +=          '<span class="sub-text">투표 마감</span>';
+          }
+          list +=       '</div> ';
+          list +=    '</div> ';
+          list += '</li> ';
+      }
+
+      $('#crew_manage_list').append(list);
+  }
+      function openCustomModal(usercode,nickname,user_pisition) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
       if(position==1){
@@ -313,6 +530,10 @@ clog('My user_code : '+ user_code);
     function go_mypage(usercode){
         window.location.href = '/mypage/myHome?usercode=' + usercode;
     }
+    function crewRevise(){
+        window.location.href = '/crew/crewRevise';
+    }
+
     function member_manage(element){
         var id = element.id;
         var reason='';
@@ -400,7 +621,10 @@ clog('My user_code : '+ user_code);
         document.getElementById("informationModal").style.display = "none";
         document.getElementById("customModal").style.display = "none";
         document.getElementById("resignModal").style.display = "none";
-      }
+        document.getElementById('resignModal').style.display = 'none';
+        document.getElementById('voteNowModal').style.display = 'none';
+        document.getElementById('voteNowModal').style.display = 'none';
+        document.getElementById('voteResultModal').style.display = 'none';      }
 
       // 팀 탈퇴 모달 열기
       function openResignModal() {
@@ -409,11 +633,138 @@ clog('My user_code : '+ user_code);
       // 팀 탈퇴 처리 함수 (필요에 따라 서버 요청 등 추가 가능)
       function resignTeam() {
         alert("팀에서 탈퇴되었습니다.");
-        closeResignModal();
+        closeCustomModal();
       }
 
+      // 투표 모달 열기
+      function openVoteModal() {
+        document.getElementById('voteModal').style.display = 'block';
+      }
 
+    // 투표항목추가
+    function addVoteItem() {
+      const voteItems = document.getElementById('voteItems');
+      const newItem = document.createElement('div');
+      newItem.classList.add('vote-item');
 
+      newItem.innerHTML =
+           '<input type="text" class="input-field" name=vote_opt id="vote' + votenum + '" placeholder="항목 입력">' +
+           '<button class="remove-item-button" onclick="removeVoteItem(this)">&times;</button>';
+      voteItems.appendChild(newItem);
+      votenum++
+      if(votenum>5)$('#addVoteBtn').hide();
+    }
+    // 항목 삭제하는 함수
+    function removeVoteItem(button) {
+      const voteItem = button.parentElement; // 삭제 버튼의 부모 요소 (항목 div)를 가져옴
+      voteItem.remove(); // 해당 항목을 삭제
+      votenum--;
+      if(votenum<6)$('#addVoteBtn').show();
+    }
 
+    function openVoteModal() {
+      // resignModal을 닫고 voteModal을 염
+      closeCustomModal();
+      document.getElementById('voteModal').style.display = 'block';
+    }
+
+    function closeVoteModal() {
+      // voteModal을 닫고 resignModal을 염
+      document.getElementById('voteModal').style.display = 'none';
+      openResignModal();
+    }
+
+    // 투표 제출 함수
+    function submitVote() {
+      const title = document.getElementById('voteTitle').value;
+      const deadline = document.getElementById('voteDeadline').value;
+
+      // 마감시간이 설정되지 않았을 경우 경고 메시지 표시
+      if (!deadline) {
+        alert('마감시간을 설정해주세요.');
+        return; // 마감시간이 설정되지 않으면 함수 종료
+      }
+        $.ajax({
+            url: '/crew/vote_create',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                title            : title,
+                opt1             : $('#vote1').val(),
+                opt2             : $('#vote2').val(),
+                opt3             : $('#vote3').val(),
+                opt4             : $('#vote4').val(),
+                opt5             : $('#vote5').val(),
+                endDate          : deadline
+            },
+            success: function(response) {
+                alert('투표가 제출되었습니다.');
+                location.reload(true);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
+      closeVoteModal();
+    }
+
+   // 투표하기 모달 열기
+     function voteNow() {
+       document.getElementById('voteNowModal').style.display = 'block';
+     }
+
+   // 투표 제출 함수
+    function submitVoteNow() {
+      const selectedOption = document.querySelector('input[name="voteOption"]:checked');
+      if (selectedOption) {
+        alert('투표가 완료되었습니다: ' + selectedOption.value);
+        closeVoteNowModal();
+      } else {
+         alert('투표할 항목을 선택해주세요.');
+      }
+    }
+    function submitVoteNow() {
+      // 투표하기 모달을 숨기고
+      document.getElementById('voteNowModal').style.display = 'none';
+      // 투표 현황 모달을 보여줍니다.
+      document.getElementById('voteResultModal').style.display = 'block';
+    }
+
+    function updateVoteResults(votes) {
+      // 총 투표 수 계산
+      let totalVotes = votes.reduce(function (acc, vote) {
+        return acc + vote.count;
+      }, 0);
+
+      // 각 항목의 프로그레스 바와 투표 명수를 업데이트
+      $.each(votes, function (index, vote) {
+        // 퍼센트 계산
+        let percentage = (vote.count / totalVotes) * 100;
+
+        // 해당 항목의 progress-bar 너비와 색상 업데이트
+        $(`#progress-${vote.id}`).css({
+          width: percentage + '%',
+          backgroundColor: 'orange'
+        });
+
+        // 해당 항목의 투표 명수 업데이트
+        $(`#count-${vote.id}`).text(vote.count + '명');
+      });
+    }
+
+    // 예시 데이터 (DB에서 가져온 데이터 형식)
+    let votes = [
+      { id: 'vote1', count: 1 },
+      { id: 'vote2', count: 3 },
+      { id: 'vote3', count: 0 },
+      { id: 'vote4', count: 0 }
+    ];
+
+    // 페이지 로드 시 투표 결과 업데이트
+    $(document).ready(function() {
+      updateVoteResults(votes);
+    });
 
 </script>
