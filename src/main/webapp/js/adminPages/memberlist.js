@@ -4,7 +4,7 @@ setTimeout(function(){
     var page;
     reloadPage(page);
 
-},1)
+},100)
 
 function reloadPage(page,searchType,searchValue){
     if (page==null){

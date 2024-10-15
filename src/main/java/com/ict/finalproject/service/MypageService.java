@@ -1,19 +1,30 @@
 package com.ict.finalproject.service;
 
-import com.ict.finalproject.vo.CertificateVO;
-import com.ict.finalproject.vo.MarathonFormVO;
-import com.ict.finalproject.vo.MemberVO;
-import com.ict.finalproject.vo.QnAVO;
+import com.ict.finalproject.vo.*;
 
 import java.util.List;
 
 public interface MypageService {
+    public MemberVO selectOne(String username);
     public int selectUsercode(String username);
     public MemberVO selectMember(String username);
     public void updateProfile(String username, String profile_img);
     public String getProfileImg(String username);
     public int editProfile(MemberVO member);
     public int deactiveProfile(String username, int is_deleted);
+
+    //회원탈퇴 한번에 처리
+    public MemberVO getMember(int usercode);
+    public int insertDelUser(int usercode);
+    public int delFromUser(int usercode);
+    public int delFromPoint(int usercode);
+
+    public boolean checkPassword(int usercode, String curerntPassword);
+    public boolean checkPassword2(String username, String curerntPassword);
+
+    public MemberVO passwordChk(String username);
+    //주문목록
+    public List<OrderVO> selectOrderAll(int usercode);
     //마라톤신청서있는지조회
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성

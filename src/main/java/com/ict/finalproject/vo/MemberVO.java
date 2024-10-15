@@ -42,12 +42,18 @@ public class MemberVO {
     private String disabled_start_date;
     private String mate_popup_date;
 
+    private int ranking;
+    private int mypoint;
+
+    private String currentPassword;
+    private String newPassword;
+    private String newPasswordConfirm;
+
     @Override
     public String toString() {
         return "MemberVO{" +
                 "usercode=" + usercode +
                 ", username='" + username + '\'' +
-
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 ", name='" + name + '\'' +
@@ -72,11 +78,40 @@ public class MemberVO {
                 ", disabled_date='" + disabled_date + '\'' +
                 ", is_active='" + is_active + '\'' +
                 ", activation_date='" + activation_date + '\'' +
-                ", point_code=" + point_code +'\'' +
-                ", disabled_start_date=" + disabled_start_date +'\'' +
+                ", point_code=" + point_code +
                 ", nickname='" + nickname + '\'' +
+                ", disabled_start_date='" + disabled_start_date + '\'' +
                 ", mate_popup_date='" + mate_popup_date + '\'' +
+                ", ranking=" + ranking +
+                ", mypoint=" + mypoint +
+                ", currentPassword='" + currentPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", newPasswordConfirm='" + newPasswordConfirm + '\'' +
                 '}';
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
+
+    public int getMypoint() {
+        return mypoint;
+    }
+
+    public void setMypoint(int mypoint) {
+        this.mypoint = mypoint;
     }
 
     public String getMate_popup_date() {

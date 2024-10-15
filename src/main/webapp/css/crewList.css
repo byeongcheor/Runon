@@ -70,6 +70,7 @@
     line-height: 20px;
     color: #727f88;
     margin-bottom: 5px;
+    cursor: pointer; /* 마우스를 올렸을 때 손 모양으로 변경 */
 }
 .crew_title{
     display: flex;
@@ -88,6 +89,15 @@
 }
 .count{
     margin-left: 5px;
+}
+.count2{
+    margin-left: 5px;
+    background-color: #e8f7ff;
+    font-weight: 500;
+    font-size: 13px;
+    text-align: center;
+    color: #1570ff;
+    padding: 0px 4px;
 }
 .crewaddr{
     margin-bottom: 3px;
@@ -147,8 +157,4 @@
      height: auto; /* 기본적으로 사이즈 조절 */
      max-height: 200px; /* 필요에 따라 최대 높이 설정 */
      overflow-y: auto; /* 스크롤 가능하도록 */
- }
-
- .list_item {
-     cursor: pointer; /* 마우스를 올렸을 때 손 모양으로 변경 */
  }

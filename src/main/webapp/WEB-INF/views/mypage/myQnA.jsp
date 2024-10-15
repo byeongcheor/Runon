@@ -80,6 +80,39 @@
     .modal {
         z-index: 1000;  /* 다른 요소들 위에 모달을 표시 */
     }
+    .inputs{
+        border: 1px solid #d9e0e6;
+        background-color: #f8fafb;
+        width: 100%;
+        height: 54px;
+        border-radius: 16px;
+        padding: 14px 15px;
+        font-size: 16px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+    .modal-contents button{
+        background-color: #1570ff;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        margin-bottom: 20px;
+        line-height: 40px;
+        border-radius: 5px;
+        color: white;
+    }
+    .modal-content textarea{
+        border: 1px solid #d9e0e6;
+        background-color: #f8fafb;
+        width: 100%;
+        height: 200px;
+        border-radius: 16px;
+        padding: 14px 15px;
+        font-size: 16px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
 </style>
 <script>
     setTimeout(function(){
@@ -237,11 +270,11 @@
         <div id="uploadQnA" class="modal" style="display:none;">
             <div class="modal-content" style="width: 20%;">
                 <span class="close-button" onclick="closeModal()">&times;</span>
-                <h2 style="text-align: center">QnA작성하기</h2>
-                <form method="post"  action="/" onsubmit="return submitQnA()">
+                <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">QnA작성하기</h2>
+                <form class="modal-contents" method="post"  action="/" onsubmit="return submitQnA()">
                     <div>
                         <div>
-                            <input type="text" name="subject" id="subject" placeholder="제목을 입력하세요." required/>
+                            <input class="inputs" type="text" name="subject" id="subject" placeholder="제목을 입력하세요." required/>
                         </div>
                         <div>
                             <textarea name="content" id="content" placeholder="내용을 입력하세요." required></textarea>

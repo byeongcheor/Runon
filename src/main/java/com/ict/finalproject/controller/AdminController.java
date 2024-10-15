@@ -201,8 +201,10 @@ public class AdminController {
 
 
     }
-
-
+    @GetMapping("/adminlist")
+    public String adminlist(){
+       return "adminPages/adminlist";
+    }
 
 
 }
