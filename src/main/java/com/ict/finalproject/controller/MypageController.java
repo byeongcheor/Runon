@@ -191,7 +191,6 @@ public class MypageController {
     @ResponseBody
     public String createMarathonForm(
             MarathonFormVO marathonVO){
-        System.out.println("sadf"+marathonVO);
         service.createMarathonForm(marathonVO);
         return "200";
     }
@@ -228,7 +227,6 @@ public class MypageController {
             @RequestParam("size") String size
     ){
         MarathonFormVO mvo = service.selectMarathonForm(usercode);
-        System.out.println("여긴오니?");
         if(mvo != null){
             mvo.setName(name);
             mvo.setTel(tel);
@@ -245,7 +243,8 @@ public class MypageController {
     //나의메이트이동
     @PostMapping("/mypage/openMymate")
     @ResponseBody
-    public String openMymate(@RequestParam("username")String username){
+    public String openMymate(@RequestParam("username")String username,
+                             @RequestParam("usercode")int usercode){
         return null;
     }
     @GetMapping("/mypage/myMate")
@@ -266,19 +265,65 @@ public class MypageController {
 
         return result;
     }
+    //메이트 신고내역 있는지 확인
+    @PostMapping("/mypage/checkReport")
+    @ResponseBody
+    public Map<String, Object> checkReport(
+            @RequestParam("usercode") int usercode,
+            @RequestParam("matchingroom") int matchingroom
+    ){
+        ReportVO report = service.selectReportForm(usercode, matchingroom);
+        System.out.println(report);
+        Map<String, Object> result = new HashMap<>();
+        if(report != null){
+            result.put("exists", true);
+            result.put("data", report);
+        }else{
+            result.put("exists", false);
+        }
+        return result;
+    }
     //메이트 신고하기 (DB)
     @PostMapping("/mypage/createReport")
     @ResponseBody
-    public String createReport(
-            @RequestParam("username") String username,
+    public ReportVO createReport(
+            @RequestParam("offender") int offender,
             @RequestParam("usercode") int usercode,
-            @RequestParam("offender_code")int offender_code,
             @RequestParam("subjectReport") String subjectReport,
             @RequestParam("contentReport") String contentReport,
-            @RequestParam("proofReport") String proofReport
+            @RequestParam("proofReport") MultipartFile file,
+            @RequestParam("matchingroom") int matchingroom,
+            HttpServletRequest request
     ){
-        System.out.println("신고할 메이트 유저코드"+offender_code);
-        return "success";
+        ReportVO rvo = new ReportVO();
+        try{
+            String saveDir = request.getServletContext().getRealPath("/resources/uploadReport/");
+            File dir = new File(saveDir);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+            if(!file.isEmpty()){
+                String original = file.getOriginalFilename();
+                String miliFile = System.currentTimeMillis()+original;
+                String savePath = saveDir+miliFile;
+                file.transferTo(new File(savePath));
+                System.out.println("확인1");
+                rvo.setVictim_code(usercode);
+                rvo.setOffender_code(offender);
+                rvo.setReport_reason(subjectReport);
+                rvo.setReport_content(contentReport);
+                rvo.setProof_img(miliFile);
+                rvo.setMatching_room_code(matchingroom);
+                service.reportMate(rvo);
+                System.out.println("DB에 저장완");
+            }
+            System.out.println("저장됐지?");
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("여긴오면안돼");
+        }
+        System.out.println("라스트확인");
+        return rvo;
     }
     //내기록인증하기 이동
     @PostMapping("/mypage/certificate")

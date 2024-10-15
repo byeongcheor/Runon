@@ -23,7 +23,7 @@
     .body_container{
         background-color: white;
         width: 900px;
-        height: 900px;
+        height: auto;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
     }
@@ -226,6 +226,7 @@
 <div>
     <div class="page_title">구매내역</div>
     <div class="body_container">
+        <div class="why" style="height: 500px;">
         <div class="orderStTop">
             <div class="orderStN">
                 <br>
@@ -238,6 +239,7 @@
             </div>
             <div class="orderP" id="orderlist">
             </div>
+        </div>
         </div>
     </div>
 </div>

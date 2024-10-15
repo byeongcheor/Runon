@@ -45,7 +45,7 @@
     #profiles{
         border-bottom: 1px solid black;
     }
-    #profils{
+    #profiles{
         line-height: 40px;
         border-bottom: 1px solid lightgray;
     }
@@ -130,18 +130,17 @@
             data:{
                 usercode:usercode1
             },success: function(r){
-                console.log(r.member);
                 var tag="";
                 $.each(r.member, function(i,vo){
                     tag += `
-                        <div class="row" id="profils">
+                        <div class="row" id="profiles">
                             <div class="col-sm-2 p-2" id="profile_Box">
                                 <img src="/resources/uploadfile/${vo.profile_img ? vo.profile_img : 'basicimg.png'}" id="profile_Img"/>
                             </div>
                             <div class="col-sm-3 p-2" id="nicknameReport">`+vo.nickname+`</div>
                             <div class="col-sm-1 p-2">`+vo.gender+`</div>
                             <div class="col-sm-3 p-2">`+vo.mate_popup_date+`</div>
-                            <div class="col-sm-3 p-2"><button type="button" class="btn btn-outline-danger" onclick="openReport(${vo.usercode})">신고하기</button></div>
+                            <div class="col-sm-3 p-2"><button type="button" class="btn btn-outline-danger" onclick="checkReport(`+vo.usercode+`, `+vo.matching_room_code+`)">신고하기</button></div>
                         </div>
                     `;
                 });
@@ -154,48 +153,111 @@
         })
     },1000);
 
-    function openReport(usercode){
-        document.getElementById("usercodeReport").value = usercode;
+    //신고하기 모달 열기
+    function openReport(offender, matchingroomcode){
+        document.getElementById("usercodeReport").value = offender;
+        document.getElementById("matchingroom").value = matchingroomcode;
+        console.log("신고할 사람:"+ offender);
         var modal = document.getElementById("uploadReport");
         if(modal) {
-            console.log(usercode);
+            console.log(offender);
             modal.style.display = "block";
         }else{
             console.log("안열림");
         }
     }
+    //신고하기 모달닫기
     function closeReport(){
         var modal = document.getElementById("uploadReport");
         if(modal) {
             modal.style.display = "none";
         }
     }
+    //신고내역 모달열기
+    function openReportDetail(offender, matchingroomcode){
+        document.getElementById("viewusercodeReport").value = offender;
+        document.getElementById("viewmatchingroom").value = matchingroomcode;
+        var modal = document.getElementById("viewReport");
+        if(modal) {
+            modal.style.display = "block";
+        }else{
+            console.log("안열림");
+        }
+    }
+    //신고내역 모달닫기
+    function closeViewReport(){
+        var modal = document.getElementById("viewReport");
+        if(modal) {
+            modal.style.display = "none";
+        }
+    }
+    //신고작성제출
     function submitReport(){
-        var usercode = document.getElementById("usercodeReport").value;
+        usercode = usercode1;
+        var offender = document.getElementById("usercodeReport").value;
         var subjectReport = document.getElementById("subjectReport").value;
         var contentReport = document.getElementById("contentReport").value;
-        var proofReport = document.getElementById("proofReport").value;
+        var proofReport = document.getElementById("proofReport").files[0];
+        var matchingroom = document.getElementById("matchingroom").value;
+        var formData = new FormData();
+        formData.append("usercode", usercode)
+        formData.append("offender", offender)
+        formData.append("subjectReport", subjectReport);
+        formData.append("contentReport", contentReport);
+        formData.append("proofReport", proofReport);
+        formData.append("matchingroom", matchingroom);
         $.ajax({
             url:"/mypage/createReport",
             type:"post",
-            data:{
-                username: username1,
-                usercode: usercode1,
-                offender_code: usercode,
-                nickname: nickname,
-                subjectReport: subjectReport,
-                contentReport: contentReport,
-                proofReport: proofReport
-            },success: function(r){
+            data:formData,
+            contentType: false,
+            processData: false
+            ,success: function(r){
                 alert("성공");
-                if(r=="success"){
-                    alert(nickname);
-                }
+                closeReport();
             },error: function(e){
                 alert("실패");
             }
         });
         return false;
+    }
+    //신고내역이 있는지 확인
+    function checkReport(offender, matchingroomcode){
+
+        $.ajax({
+            url:"/mypage/checkReport",
+            type: "post",
+            data: {
+                usercode: usercode1,
+                matchingroom: matchingroomcode
+            },
+            success: function(r){
+                if(r.exists){
+                    var datas = r.data;
+                    alert("기존에 작성한 신고내역이 있습니다.");
+                    console.log(r.data);
+                    var result = datas.report_status;
+                    if(result == 0){
+                        document.getElementById("resultstatus").value = "관리자가 신고내역 처리중";
+                    }else{
+                        document.getElementById("resultstatus").value = "신고내역 처리완료";
+                    }
+                    var modal = document.getElementById("viewReport");
+                    if(modal){
+                        document.getElementById("viewsubjectReport").value=datas.report_reason;
+                        document.getElementById("viewcontentReport").value=datas.report_content;
+                        document.getElementById("resultstatus").valur=result;
+                    }
+                    openReportDetail(offender, matchingroomcode);
+                }else{
+                    alert("기존에 작성한 신고내역이 없습니다.");
+                    openReport(offender, matchingroomcode);
+                }
+            },error: function(e){
+                alert("신고여부 확인 중 오류")
+                console.log(e);
+            }
+        })
     }
 </script>
 <div id="bannerBox">
@@ -220,9 +282,10 @@
             <div class="modal-content" style="width: 20%;">
                 <span class="close-button" style="text-align: right;" onclick="closeReport()">&times;</span>
                 <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px; margin-bottom: 20px;">신고하기</h2>
-                <form method="post" class="modal-contents" action="/" onsubmit="return submitReport()">
+                <form method="post" class="modal-contents" enctype="multipart/form-data" action="/" onsubmit="return submitReport()">
                     <div>
                         <input type="hidden" id="usercodeReport" name="usercodeReport">
+                        <input type="hidden" id="matchingroom" name="matchingroom">
                         <div>
                             <input class="inputs" type="text" name="subjectReport" id="subjectReport" placeholder="제목을 입력해주세요." required/>
                         </div>
@@ -233,6 +296,29 @@
                             <input type="file" name="proofReport" id="proofReport"/>
                         </div>
                         <button type="submit">제출하기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- 신고한 내용 모달 -->
+        <div id="viewReport" class="modal" style="display:none;">
+            <div class="modal-content" style="width: 20%;">
+                <span class="close-button" style="text-align: right;" onclick="closeViewReport()">&times;</span>
+                <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px; margin-bottom: 20px;">신고하기</h2>
+                <form method="post" class="modal-contents" enctype="multipart/form-data" action="/" onsubmit="return editReport()">
+                    <div>
+                        <input type="hidden" id="viewusercodeReport" name="usercodeReport">
+                        <input type="hidden" id="viewmatchingroom" name="matchingroom">
+                        <div>
+                            <input class="inputs" type="text" name="subjectReport" id="viewsubjectReport" readonly/>
+                        </div>
+                        <div>
+                            <textarea name="contentReport" id="viewcontentReport" readonly></textarea>
+                        </div>
+                        <div>
+                            <input class="inputs" type="text" name="resultstatus" id="resultstatus" style="color: tomato;" readonly/>
+                        </div>
+                        <div>* 신고내역 취소 및 기타문의사항은 1:1문의하기로 관리자에게 문의해주세요.</div>
                     </div>
                 </form>
             </div>

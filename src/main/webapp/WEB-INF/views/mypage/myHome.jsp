@@ -7,49 +7,6 @@
 <script src="/js/login&join/JoinForm.js" type="text/javascript"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-
-<style>
-
-    .modal {
-        display: none;  /* 처음에는 숨겨둠 */
-        position: fixed;
-        z-index: 1;  /* 모달이 다른 요소들 위에 표시되도록 설정 */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);  /* 반투명한 배경 */
-        background-color: rgba(0,0,0,0.4);  /* 반투명한 배경 */
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 30%;  /* 모달의 너비 설정 */
-        border-radius: 15px;
-    }
-
-    .close-button {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close-button:hover,
-    .close-button:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    .modal {
-        z-index: 1000;  /* 다른 요소들 위에 모달을 표시 */
-    }
-
-</style>
 <script>
     //QnA 이동
     function openQnA(){
@@ -74,7 +31,9 @@
         $.ajax({
             url: "/mypage/openMymate",
             type: "Post",
-            data: {username:username},
+            data: {
+                username:username,
+                usercode:usercode1},
             success: function(r) {
                 location.href = "/mypage/myMate";
             },
@@ -144,7 +103,6 @@
 
     //마라톤신청서 존재여부
     function checkMarathonForm(){
-
         $.ajax({
             url: "/mypage/marathonFormCheck",
             data: {usercode:usercode1},
@@ -787,67 +745,65 @@
     <div id="profileEditModal" class="modal" style="display: none;">
         <div class="modal-content" style="width: 25%;">
             <span class="close-button" onclick="closeModal('profileEditModal')">&times;</span>
-            <h2 style="text-align: center">회원정보 수정</h2>
-
-                <div class="joinMain">
-                    <div class="joinN">아이디<span>(이메일)</span></div>
-                    <div class="joinI">
-                        <input type="text" name="username" id="username_editProfile" readonly/>
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">회원정보 수정</h2>
+            <div class="modal-contents">
+                <div>
+                    <div>아이디<span>(이메일)</span></div>
+                    <div>
+                        <input class="inputs" type="text" name="username" id="username_editProfile" readonly/>
                     </div>
-                    <div class="joinN">기존 비밀번호</div>
-                    <div class="joinI">
-                        <input type="password" name="currentPassword" id="currentPassword"  placeholder="기존 비밀번호를 입력해주세요." required/>
+                    <div>기존 비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="currentPassword" id="currentPassword"  placeholder="기존 비밀번호를 입력해주세요." required/>
                         <input type ="hidden" value="N">
                     </div>
-                    <div class="joinN">새 비밀번호</div>
-                    <div class="joinI">
-                        <input type="password" name="newPassword" id="newPassword" placeholder="변경할 비밀번호를 입력해주세요."/>
+                    <div>새 비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="newPassword" id="newPassword" placeholder="변경할 비밀번호를 입력해주세요."/>
                     </div>
-                    <div class="joinN">새 비밀번호확인</div>
-                    <div class="joinI">
-                        <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="변경할 비밀번호를 재입력해주세요"/>
+                    <div>새 비밀번호확인</div>
+                    <div>
+                        <input class="inputs" type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="변경할 비밀번호를 재입력해주세요"/>
                     </div>
-                    <div class="joinN">이름</div>
-                    <div class="joinI">
-                        <input type="text" name="name" id="name_editProfile" value="name" readonly/>
-                        <input type="button" value=" 남 " id="genderm" onclick="gendercheck(this.value)" disabled/>
-                        <input type="button" value=" 여 " id="genderw" onclick="gendercheck(this.value)" disabled/>
+                    <div>이름</div>
+                    <div>
+                        <input class="inputs" type="text" name="name" id="name_editProfile" value="name" readonly/>
                         <input type="hidden" name="gender" id="gender_editProfile" value="gender" disabled/>
                     </div>
-                    <div class="joinN">생년월일</div>
-                    <div class="joinI">
-                        <input type="text" name="birthdate" id="birthdate" value="birthdate" disabled/>
+                    <div>생년월일</div>
+                    <div>
+                        <input class="inputs" type="text" name="birthdate" id="birthdate" value="birthdate" disabled/>
                     </div>
-                    <div class="joinN">닉네임</div>
-                    <div class="joinI">
-                        <input type="text" name="nickname" id="nickname" onblur="nicknamecheck()" value="nickname"/>
+                    <div>닉네임</div>
+                    <div>
+                        <input  class="inputs" type="text" name="nickname" id="nickname" onblur="nicknamecheck()" value="nickname"/>
                         <input type="hidden" name="nickChk" id="nickChk" value="N">
                     </div>
                     <div id="nickCheck" style="font-size: 0.8em;"></div>
-                    <div class="joinN">연락처</div>
-                    <div class="joinT">
-                        <select name="tel1" id="tel1_editProfile" value="tel1">
+                    <div>연락처</div>
+                    <div>
+                        <select  class="inputs" style="width:33%" name="tel1" id="tel1_editProfile" value="tel1">
                             <option>010</option>
                             <option>02</option>
                             <option>031</option>
                             <option>051</option>
                         </select> -
-                        <input type="text" name="tel2" id="tel2_editProfile" size="4"  minlength="3" maxlength="4" value="tel2"/> -
-                        <input type="text" name="tel3" id="tel3_editProfile" size="4" maxlength="4" value="tel3"/>
+                        <input  class="inputs" style="width:30%" type="text" name="tel2" id="tel2_editProfile" size="4"  minlength="3" maxlength="4" value="tel2"/> -
+                        <input  class="inputs" style="width:30%" type="text" name="tel3" id="tel3_editProfile" size="4" maxlength="4" value="tel3"/>
                         <input type="hidden" name="tel" id="tel_editProfile">
                     </div>
-                    <div class="joinN">우편번호</div>
-                    <div class="joinZ">
-                        <input type="text" name="zip_code" id="zip_code" size="5" placeholder="선택사항"/>
-                        <input type="button" id="zipSearch" value="우편변호찾기" onclick="daumPostcode()"/>
+                    <div>우편번호</div>
+                    <div>
+                        <input class="inputs" style="width:50%" type="text" name="zip_code" id="zip_code" size="5" placeholder="선택사항"/>
+                        <input class="modalbtn" style="width:30%" type="button" id="zipSearch" value="우편번호찾기" onclick="daumPostcode()"/>
                     </div>
-                    <div class="joinN">주소</div>
-                    <div class="joinI">
-                        <input type="text" name="addr" id="addr_editProfile" style="width:70%" placeholder="선택사항입니다"/>
+                    <div>주소</div>
+                    <div>
+                        <input class="inputs" style="width:100%" type="text" name="addr" id="addr_editProfile" style="width:70%" placeholder="선택사항입니다"/>
                     </div>
-                    <div class="joinN">상세주소</div>
-                    <div class="joinI">
-                        <input type="text" name="addr_details" id="addr_details_editProfile" placeholder="선택사항입니다"/>
+                    <div>상세주소</div>
+                    <div>
+                        <input class="inputs" type="text" name="addr_details" id="addr_details_editProfile" placeholder="선택사항입니다"/>
                     </div>
                     <div class="joinN info">개인정보 공개여부
                         <div class="form-check" style="color: #899cb5;">
@@ -861,25 +817,25 @@
                     </div>
                     <input type="hidden" name="role" id="role" value="ROLE_USER">
                     <div class="btnBox">
-                        <button type="button" onclick="submitEditProfile()" style="margin-top: 20px;" id="savebtn">저장</button>
+                        <button type="button" onclick="submitEditProfile()" style="margin-top: 20px; width: 100%; background-color:#1570ff; " id="savebtn">저장</button>
                     </div>
                 </div>
-
+            </div>
         </div>
     </div>
     <!-- 회원탈퇴 모달 -->
     <div id="profileDeleteModal" class="modal" style="display:none;">
-        <div class="modal-content" style="width: 25%;">
+        <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeDeleteProfileModal()">&times;</span>
-            <h2 style="text-align: center">회원탈퇴</h2>
-            <form method="post" id="deleteProfileForm" onsubmit="return submitDeleteProfile()">
-                <div class="joinMain">
-                    <div class="joinN">비밀번호</div>
-                    <div class="joinI" style="text-align: center;">
-                        <input type="password" name="deletePassword" id="deletePassword" placeholder="비밀번호를 입력해주세요" required/>
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">회원탈퇴</h2>
+            <form method="post" class="modal-contents" id="deleteProfileForm" onsubmit="return submitDeleteProfile()">
+                <div>
+                    <div>비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="deletePassword" id="deletePassword" placeholder="비밀번호를 입력해주세요" required/>
                     </div>
                     <div class="btnBox">
-                        <button type="submit" style="margin-top: 20px;" id="deleteBtn">탈퇴하기</button>
+                        <button type="submit" style="margin-top: 20px; width: 100%; background-color:#1570ff; " id="deleteBtn">탈퇴하기</button>
                     </div>
                 </div>
             </form>

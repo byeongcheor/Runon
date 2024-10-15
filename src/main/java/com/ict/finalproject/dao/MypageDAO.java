@@ -1,13 +1,14 @@
 package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface MypageDAO {
     public MemberVO selectOne(String username);
     public int selectUsercode(String username);
-    public MemberVO selectMember(String username);
+    public MemberVO selectMember(@Param("userName") String username);
     public void updateProfile(String username, String profile_img);
     public String getProfileImg(String username);
     public int editProfile(MemberVO member);
@@ -43,6 +44,10 @@ public interface MypageDAO {
 
     //메이트이력리스트
     public List<MemberVO> selectMemberAll(int usercode);
+    //메이트 신고하기
+    public int reportMate(ReportVO report);
+    //신고내역 있는지 확인
+    public ReportVO selectReportForm(int usercode, int matching_room_code);
 
     //qna리스트
     public List<QnAVO> selectQnAAll(int usercode);

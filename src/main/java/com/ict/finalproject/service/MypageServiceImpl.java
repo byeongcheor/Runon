@@ -151,6 +151,16 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public int reportMate(ReportVO report) {
+        return dao.reportMate(report);
+    }
+
+    @Override
+    public ReportVO selectReportForm(int usercode, int matching_room_code) {
+        return dao.selectReportForm(usercode, matching_room_code);
+    }
+
+    @Override
     public List<QnAVO> selectQnAAll(int usercode) {
         return dao.selectQnAAll(usercode);
     }

@@ -49,6 +49,8 @@ public class MemberVO {
     private String newPassword;
     private String newPasswordConfirm;
 
+    private int matching_room_code;
+
     @Override
     public String toString() {
         return "MemberVO{" +
@@ -87,7 +89,24 @@ public class MemberVO {
                 ", currentPassword='" + currentPassword + '\'' +
                 ", newPassword='" + newPassword + '\'' +
                 ", newPasswordConfirm='" + newPasswordConfirm + '\'' +
+                ", matching_room_code=" + matching_room_code +
                 '}';
+    }
+
+    public int getMatching_room_code() {
+        return matching_room_code;
+    }
+
+    public void setMatching_room_code(int matching_room_code) {
+        this.matching_room_code = matching_room_code;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     public String getCurrentPassword() {

@@ -47,16 +47,16 @@
         a.name,
         a.username,
         COALESCE(SUM(b.score_change), 0) AS Total_Km,
-        COALESCE(d.crew_name, 'No Crew') AS crew_name
+        COALESCE(GROUP_CONCAT(DISTINCT d.crew_name SEPARATOR ', '), 'No Crew') AS crew_name
         FROM user_tbl a
         LEFT JOIN record_tbl b ON a.usercode = b.usercode
         LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
         LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
-<!--        WHERE a.is_info_disclosure = 'Y'-->
-        GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name, a.name, a.username
+        GROUP BY a.usercode, a.nickname, a.profile_img, a.name, a.username
         ) AS AllUsers
         LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
-        WHERE AllUsers.usercode = (SELECT usercode FROM user_tbl WHERE username = #{param1});
+        WHERE AllUsers.usercode = (SELECT usercode FROM user_tbl WHERE username = #{userName});
+
     </select>
     <update id="updateProfile">
         update user_tbl set profile_img = #{param2} where username = #{param1}
@@ -174,18 +174,26 @@
         where certificate_code=#{param1}
     </select>
     <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
-        select u.*
+        select u.*, a.matching_room_code
         from user_tbl u
-        where u.usercode in (
-            select a.usercode
-            from applicant_tbl a
-            where a.matching_room_code in (
-                select matching_room_code
-                from applicant_tbl
-                where usercode = #{param1}
-            )
+        join applicant_tbl a on u.usercode = a.usercode
+        where a.matching_room_code in (
+        select matching_room_code
+        from applicant_tbl
+        where usercode = #{param1}
         )
         and u.usercode != #{param1}
+    </select>
+    <insert id="reportMate">
+        insert into report_tbl
+        (offender_code, report_reason, victim_code, matching_room_code, report_content, proof_img)
+        values(#{offender_code}, #{report_reason}, #{victim_code}, #{matching_room_code}, #{report_content}, #{proof_img})
+    </insert>
+    <select id="selectReportForm" resultType="com.ict.finalproject.vo.ReportVO">
+        select *
+        from report_tbl
+        where victim_code = #{param1} and matching_room_code = #{param2}
+        limit 1
     </select>
     <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
         select *

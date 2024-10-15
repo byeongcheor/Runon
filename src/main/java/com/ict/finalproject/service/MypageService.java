@@ -37,7 +37,8 @@ public interface MypageService {
     public int deleteCertificate(int certificate_code);
     public CertificateVO selectCertificate(int certificate_code);
     public List<MemberVO> selectMemberAll(int usercode);
-
+    public int reportMate(ReportVO report);
+    public ReportVO selectReportForm(int usercode, int matching_room_code);
     public List<QnAVO> selectQnAAll(int usercode);
     public void updateQnA(QnAVO qna);
     public QnAVO selectQnA(int qna_code);
