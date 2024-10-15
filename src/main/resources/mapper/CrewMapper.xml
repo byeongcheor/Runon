@@ -237,14 +237,16 @@
         where  b.usercode = ${param1}
         and    a.create_crew_code = b.create_crew_code
         and    a.create_crew_code = c.create_crew_code
+        order by b.requested_date desc
     </select>
 
     <select id="crew_wait_detail" resultType="com.ict.finalproject.vo.CrewVO">
-        select content, DATE_FORMAT(requested_date, '%m월 %d일 신청') AS writedate,usercode, status as a_n,reason as a_s
+        select content, DATE_FORMAT(requested_date, '%m월 %d일 신청') AS writedate, usercode, status as a_n, reason as a_s
         from   crew_request_tbl
         where  usercode = ${param1}
-        and    create_crew_code  = ${param2}
+        and    create_crew_code = ${param2}
         and    crew_request_code = ${param3}
+        order by requested_date desc
     </select>
 
     <update id="update14">
@@ -267,21 +269,23 @@
 
     <select id="crew_app_select" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-            select a.nickname,
-            case
-            when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
-            when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
-            when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
-            else concat(timestampdiff(day, b.requested_date, now()), '일 전')
-            end as a_s,
-            a.gender,c.crew_name,b.crew_request_code as c_n
-            ,timestampdiff(year, a.birthdate, curdate()) as b_s,a.addr,timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n
-            ,b.usercode
-            from  user_tbl a, crew_request_tbl b, create_crew_tbl c
-            where b.create_crew_code =	${param1}
-            and   a.usercode = b.usercode
-            and   b.create_crew_code = c.create_crew_code
-        ]]>
+        select a.nickname,
+        case
+        when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
+        when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
+        when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
+        else concat(timestampdiff(day, b.requested_date, now()), '일 전')
+        end as a_s,
+        a.gender, c.crew_name, b.crew_request_code as c_n,
+        timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
+        timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
+        b.usercode
+        from user_tbl a, crew_request_tbl b, create_crew_tbl c
+        where b.create_crew_code = ${param1}
+        and a.usercode = b.usercode
+        and b.create_crew_code = c.create_crew_code
+        order by b.requested_date desc -- 최신순 정렬 추가
+    ]]>
     </select>
     <update id="crew_manage_app">
         update crew_request_tbl
@@ -334,8 +338,7 @@
         offender_code
         ,victim_code
         ,report_reason
-        ,report_reason_text
-        ,report_status
+        ,report_content
         )
         values
         (
@@ -343,7 +346,6 @@
         ,${param2}
         ,'${param3}'
         ,'${param4}'
-        ,'처리중'
         )
     </insert>
     <delete id="crew_member_out">
@@ -356,7 +358,7 @@
         insert into crew_history_tbl
         (
             usercode
-            ,creeate_crew_code
+            ,create_crew_code
             ,flag
             ,withdrawaldate
         )

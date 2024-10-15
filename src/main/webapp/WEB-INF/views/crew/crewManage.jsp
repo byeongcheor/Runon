@@ -191,7 +191,7 @@
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
-      <button class="custom-modal-option" id="runMake" onClick="">일정 만들기</button>
+      <button class="custom-modal-option" id="runMake" onClick="">공지 올리기</button>
       <button class="custom-modal-option" id="voteMake" onclick="openVoteModal()">투표 올리기</button>
       <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">팀 탈퇴하기</button>
     </div>
