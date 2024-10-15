@@ -14,31 +14,48 @@ function formCheck(event){
 
     }
     $.ajax({
-        type: "post",
-        url:"/login",
-        data:{username:username,password:password },
-        //success:function (response){
-        success:function (response,status,xhr){
-            alert("요청성공");
-            const token = xhr.getResponseHeader("Authorization");
-            const refreshToken = xhr.getResponseHeader('refreshToken');
+        url:"/login&join/disableCheck",
+        type:"post",
+        data:{
+            username:username,
+            password:password,
+        },
+        success:function (r){
+            if(r.result!=0){
+                $.ajax({
+                    type: "post",
+                    url:"/login",
+                    data:{username:username,password:password },
+                    //success:function (response){
+                    success:function (response,status,xhr){
+                        const token = xhr.getResponseHeader("Authorization");
+                        const refreshToken = xhr.getResponseHeader('refreshToken');
+                        localStorage.setItem("refresh",refreshToken);
+                        localStorage.setItem("Authorization",token);
 
-            console.log(token);
-            console.log(refreshToken);
-            localStorage.setItem("refresh",refreshToken);
-            localStorage.setItem("Authorization",token);
-            opener.window.location.reload();
+                        window.close();
+                        opener.window.location.reload();
+                    },
+                    error:function (e){
+                        console.log(e);
+                        alert(e.message);
+                    }
 
-            window.close();
+                });
+
+            }else if(r.result==0) {
+
+                alert("아이디가 정지되었습니다.\n시작일:"+r.disabled_start_date+"\n정지기한:"+r.disabled_date+"까지입니다.");
+            }
 
 
         },
         error:function (e){
-            console.log(e);
-            alert(e.message);
-        }
 
+            console.log(e.message);
+        }
     });
+
 
 }
     function joinPopup(){

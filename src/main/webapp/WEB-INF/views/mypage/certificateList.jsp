@@ -82,6 +82,28 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+    .inputs{
+        border: 1px solid #d9e0e6;
+        background-color: #f8fafb;
+        width: 100%;
+        height: 54px;
+        border-radius: 16px;
+        padding: 14px 15px;
+        font-size: 16px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+    .modal-contents button{
+        background-color: #1570ff;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        margin-bottom: 20px;
+        line-height: 40px;
+        border-radius: 5px;
+        color: white;
+    }
 </style>
 <script>
     setTimeout(function(){
@@ -209,11 +231,11 @@
             <div id="uploadFileModal" class="modal" style="display:none;">
                 <div class="modal-content" style="width: 20%;">
                     <span class="close-button" onclick="closeUploadModal()">&times;</span>
-                    <h2 style="text-align: center">기록인증첨부</h2>
-                    <form method="post"  action="/" id="uploadForm" onsubmit="return submitUploadForm()">
+                    <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">기록인증첨부</h2>
+                    <form class="modal-contents" method="post"  action="/" id="uploadForm" onsubmit="return submitUploadForm()">
                         <div>
                             <div>
-                                <input type="text" name="content" id="content" placeholder="마라톤 대회명을 입력하세요." required/>
+                                <input class="inputs" type="text" name="content" id="content" placeholder="마라톤 대회명을 입력하세요." required/>
                             </div>
                             <div>
                                 <input type="file" name="proof_photo" id="proof_photo"/>

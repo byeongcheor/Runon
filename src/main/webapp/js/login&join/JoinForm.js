@@ -99,6 +99,7 @@ function setKeyCheck(){
         document.getElementById("chk").value = "N";
     }
 }
+
 //form 유효성검사하기
 function formCheck(){
     var tel1=document.getElementById("tel1").value;
@@ -159,9 +160,6 @@ function formCheck(){
         alert("생년월일이 잘못되었습니다.");
         return false;
     }
-
-
-
     return true;
 }
 function gendercheck(gender){
