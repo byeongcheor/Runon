@@ -52,7 +52,7 @@
         LEFT JOIN record_tbl b ON a.usercode = b.usercode
         LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
         LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
-        WHERE a.is_info_disclosure = 'Y'
+<!--        WHERE a.is_info_disclosure = 'Y'-->
         GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name, a.name, a.username
         ) AS AllUsers
         LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
@@ -185,6 +185,7 @@
                 where usercode = #{param1}
             )
         )
+        and u.usercode != #{param1}
     </select>
     <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
         select *

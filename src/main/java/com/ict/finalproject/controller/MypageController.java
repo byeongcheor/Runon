@@ -51,14 +51,14 @@ public class MypageController {
         token = token.substring("Bearer ".length());
         String username = jwtUtil.setTokengetUsername(token);
         MemberVO member;
-
+        log.info("member:" + username);
         member = service.selectMember(username);
         String imgname = service.getProfileImg(username);
-        String defaultImg = "/basicsimg.png";
+        String defaultImg = "/basicimg.png";
         if (username != null) {
             model.addAttribute("userimg", imgname != null ? imgname : defaultImg);
         }
-        log.info("member:" + member);
+
         return member;
     }
     //프로필업데이트
@@ -265,6 +265,20 @@ public class MypageController {
         result.put("member", membervo);
 
         return result;
+    }
+    //메이트 신고하기 (DB)
+    @PostMapping("/mypage/createReport")
+    @ResponseBody
+    public String createReport(
+            @RequestParam("username") String username,
+            @RequestParam("usercode") int usercode,
+            @RequestParam("offender_code")int offender_code,
+            @RequestParam("subjectReport") String subjectReport,
+            @RequestParam("contentReport") String contentReport,
+            @RequestParam("proofReport") String proofReport
+    ){
+        System.out.println("신고할 메이트 유저코드"+offender_code);
+        return "success";
     }
     //내기록인증하기 이동
     @PostMapping("/mypage/certificate")

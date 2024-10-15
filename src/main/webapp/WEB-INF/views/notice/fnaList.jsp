@@ -48,7 +48,7 @@
     .faq_title{
         font-size: 24pt;
         font-weight: 700;
-        line-height: 32px;
+        line-height: 43px;
     }
     .faq_searchbar{
         width: 100%;
@@ -87,7 +87,10 @@
     }
     .accordionitems {
         box-shadow: 0px -1px 0px 0px #ddd inset;
-        border-bottom: 1px solid #ddd inset;
+        border-bottom: 1px solid rgba(255,255,255,0.5);
+        /*padding-left: 20px;*/
+        width: 95%;
+        margin: 0 auto;
     }
     .item_title{
         justify-content: flex-start;
@@ -143,20 +146,25 @@
         background: #f8fafb;
         font-size: 14px;
         font-weight: 400;
-        line-height: 22px;
+        line-height: 25px;
         color: #282b33 !important;
         word-break: break-all;
     }
-    pre{
+    .faq_content{
         display: block;
         unicode-bidi: isolate;
-        white-space: pre;
+        white-space: pre-wrap;
         margin: 1em 0px;
+        font-size: 14px;
+    }
+    .faq_content::first-line{
+        font-weight: bold;
     }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const btns = document.querySelectorAll(".item_title");
+        const searchInput = document.querySelector("#searchWord");
 
         btns.forEach((btn) => {
             btn.addEventListener("click", () => {
@@ -182,6 +190,24 @@
             allContents.forEach(content => content.classList.remove("active"));
             allArrows.forEach(arrow => arrow.classList.remove("rotate"));
         }
+        //검색어 입력시 필터링
+        searchInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") { // 엔터 키 감지
+                const query = searchInput.value.toLowerCase();
+                const items = document.querySelectorAll(".accordionitems");
+
+                items.forEach(item => {
+                    const subject = item.querySelector(".item_title p").textContent.toLowerCase();
+                    const content = item.querySelector(".faq_content").textContent.toLowerCase();
+
+                    if (subject.includes(query) || content.includes(query)) {
+                        item.style.display = "block";  // 검색어가 포함되면 보이게 설정
+                    } else {
+                        item.style.display = "none";  // 포함되지 않으면 숨김 처리
+                    }
+                });
+            }
+        });
     });
 </script>
 <div class="contentbody">
@@ -197,40 +223,25 @@
                     무엇을 도와드릴까요?
                 </div>
                 <div class="faq_searchbar">
-                    <img width="20" height="20" src="https://d31wz4d3hgve8q.cloudfront.net/static/img/ic_search_3.svg">
-                    <input type="search" placeholder="검색어를 입력하세요."/>
+                        <img width="20" height="20" src="https://d31wz4d3hgve8q.cloudfront.net/static/img/ic_search_3.svg">
+                        <input type="search" id="searchWord" placeholder="검색어를 입력하세요."/>
                 </div>
             </div>
             <div class="faq_list">
                 <div class="listbody">
                     <ul>
-                        <li class="accordionitems">
-                            <div class="item_title">
-                                <p>Q. 소셜 매치 취소/변경 환불 규정을 알고 싶어요</p>
-                                <span id="arrowbtn" class="faq__arrow arrow down" style="border-color: rgb(172, 172, 172);"></span>
-                            </div>
-                            <div class="item_content">
-                                    <pre class="faq_content">
-                                        <b>소셜 매치 취소 시 환불 정책</b>
-                                        • 매치 2일 전: 무료 취소
-                                        • 매치 1일 전: 80% 환불
-                                        • 당일 ~ 매치 시작 90분 전까지: 20% 환불
-                                        • 매치 시작 90분 이내: 환불 불가
-                                    </pre>
-                            </div>
-                        </li>
-                        <li class="accordionitems"></li>
-                        <div class="item_title">
-                            <p>Q. 매치 진행을 위한 최소 인원이 궁금해요</p>
-                            <span class="faq__arrow arrow down" style="border-color: rgb(172, 172, 172);"></span>
-                        </div>
-                        <div class="item_content">
-                                    <pre class="faq_content">
-                                        <b>매치 성격 및 구장 크기</b>
-                                        에 따라 진행을 위한 최소 인원은 달라질 수 있습니다.
-                                    </pre>
-                        </div>
-                        </li>
+                        <c:forEach var="vo" items="${list}">
+                            <li class="accordionitems">
+                                <div class="item_title">
+                                    <p>Q. ${vo.subject}</p>
+                                    <span id="arrowbtn" class="faq__arrow arrow down" style="border-color: rgb(172, 172, 172);"></span>
+                                </div>
+                                <div class="item_content">
+                                    <div class="faq_content">${vo.content}</div>
+                                </div>
+                            </li>
+                        </c:forEach>
+
                     </ul>
                 </div>
             </div>
