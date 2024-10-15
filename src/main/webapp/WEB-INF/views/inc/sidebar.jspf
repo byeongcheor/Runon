@@ -1,0 +1,36 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+
+<link rel="stylesheet" href="/css/adminPages/sidebar.css" type="text/css">
+<script src="/js/adminPages/sidebar.js" type="text/javascript"></script>
+<div id="body">
+    <div id="sidebar">
+        <div id="testbar">
+            <div id="logo"><img src="/img/logo3.png"></div>
+            <div id="menu">
+                <div class="menubox"><a class="menus" href="/adminPages/adminHome">Dashboard</a></div>
+                <div class="menubox">
+                    <a class="menus" href="/adminPages/memberlist">Members</a>
+                </div>
+                <div class="menubox"><a class="menus" href="">관리자관리</a></div>
+                <div onclick="report()" id="report" class="mouse menubox">
+                    <a class="menus" id="reportfont" >신고 관리</a>
+
+                </div>
+                <div class="submenu hidden">
+                    <div>&nbsp; &nbsp; ReportList</div>
+
+                </div>
+                <div class="submenu hideen">
+
+                    <div>&nbsp; &nbsp; 신고 처리</div>
+                </div>
+                <div class="menubox"><a class="menus" href="">게시판관리</a></div>
+                <div class="menubox"><a class="menus" href="">기록인증</a></div>
+                <div class="menubox"><a class="menus" href="">결제정보</a></div>
+            </div>
+            <div id="lastmenu">
+                <a href="/">홈으로 이동</a>
+            </div>
+        </div>
+    </div>

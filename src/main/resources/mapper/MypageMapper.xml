@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MypageDAO">
+    <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">
+        SELECT u.*, p.mypoint
+        FROM user_tbl u
+        LEFT JOIN point_tbl p ON u.usercode = p.usercode
+        WHERE username=#{username}
+    </select>
+    <update id="updateProfile">
+        update user_tbl set profile_img = #{param2} where username = #{param1}
+    </update>
+    <select id="getProfileImg" resultType="String">
+        select profile_img
+        from user_tbl
+        where username=#{param1}
+    </select>
+    <update id="editProfile" parameterType="com.ict.finalproject.vo.MemberVO">
+        update user_tbl
+        set password=#{password}, nickname=#{nickname}, addr=#{addr},
+        addr_details=#{addr_details}, zip_code=#{zip_code}, tel=#{tel}, is_info_disclosure=#{is_info_disclosure}
+        where username=#{username}
+    </update>
+    <update id="deactiveProfile">
+        update user_tbl
+        set is_deleted = 1, deleted_date = now()
+        where username = #{param1}
+    </update>
+    <select id="selectMarathonForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
+        SELECT *
+        FROM marathon_form_tbl
+        WHERE usercode = #{param1} AND is_deleted = 0
+        limit 1;
+    </select>
+    <select id="selectUsercode" parameterType="com.ict.finalproject.vo.MemberVO">
+        select usercode
+        from user_tbl
+        where username=#{username}
+    </select>
+    <insert id="createMarathonForm" parameterType="com.ict.finalproject.vo.MarathonFormVO">
+        INSERT INTO marathon_form_tbl (name, tel, addr, addr_details, gender, birth_date, size, terms_agreement, privacy_consent, media_consent, usercode)
+        VALUES (#{name}, #{tel}, #{addr}, #{addr_details}, #{gender}, #{birth_date}, #{size}, #{terms_agreement}, #{privacy_consent}, #{media_consent}, #{usercode})
+    </insert>
+    <delete id="deleteMarathonForm">
+        delete from marathon_form_tbl
+        where usercode=#{param1}
+    </delete>
+    <update id="updateMarathonForm">
+        update marathon_form_tbl
+        set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
+        gender=#{gender}, birth_date=#{birth_date}, size=#{size}, usercode=#{usercode}
+    </update>
+    <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
+        select
+            c.certificate_code as certificate_code,
+            c.content as content,
+            c.proof_photo as proof_photo,
+            c.updated_date as updated_date,
+            c.result_status as result_status,
+            c.result_date as result_date
+        from certificate_tbl c
+        join order_tbl o on c.order_code = o.order_code
+        join cart_tbl ct on o.cart_code = ct.cart_code
+        join marathon_list_tbl m on ct.marathon_code = m.marathon_code
+        join user_tbl u on c.username = u.username
+        where c.username = #{param1}
+    </select>
+    <insert id="updateCertificate" parameterType="com.ict.finalproject.vo.CertificateVO">
+        insert into certificate_tbl (content, proof_photo, result_status, order_code, username)
+        values (#{content}, #{proof_photo}, '처리중', 1, #{username})
+    </insert>
+    <delete id="deleteCertificate" parameterType="int">
+        delete from certificate_tbl
+        where certificate_code = #{param1}
+    </delete>
+    <select id="selectCertificate" parameterType="int" resultType="com.ict.finalproject.vo.CertificateVO">
+        select *
+        from certificate_tbl
+        where certificate_code=#{param1}
+    </select>
+    <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
+        select u.*
+        from user_tbl u
+        where u.usercode in (
+            select a.usercode
+            from applicant_tbl a
+            where a.matching_room_code in (
+                select matching_room_code
+                from applicant_tbl
+                where usercode = #{param1}
+            )
+        )
+    </select>
+    <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
+        select *
+        from qna_tbl
+        where usercode=#{param1} and is_deleted = 0
+    </select>
+    <insert id="updateQnA" parameterType="com.ict.finalproject.vo.QnAVO">
+        insert into qna_tbl (qna_code, qna_subject, qna_content, usercode)
+        values(#{qna_code}, #{qna_subject}, #{qna_content}, #{usercode})
+    </insert>
+    <select id="selectQnA" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*, a.answer_content answer_content
+        from qna_tbl q
+        left join answer_tbl a
+        on q.qna_code = a.qna_code
+        where q.qna_code=#{param1}
+    </select>
+    <update id="deleteQnA" parameterType="int">
+        update qna_tbl
+        set is_deleted =1, deleted_date=now()
+        where qna_code=#{param1}
+    </update>
+    <update id="updateQnAStatus">
+        update qna_tbl
+        set qna_status = #{param1}
+        where qna_code = #{param2}
+    </update>
+</mapper>

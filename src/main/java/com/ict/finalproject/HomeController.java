@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +28,10 @@ public class HomeController {
         return "home";
     }
 
+
     @PostMapping("/setToKengetUsers")
     @ResponseBody
-    public Map<String,Object>setToKengetUsers(@RequestParam("ToKen")String ToKen){
+    public Map<String,Object> setToKengetUsers(@RequestParam("ToKen")String ToKen){
         Map<String,Object> map = new HashMap<String,Object>();
         String username=jwtUtil.setTokengetUsername(ToKen);
         MemberVO mvo = joinService.getUsers(username);

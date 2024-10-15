@@ -4,6 +4,7 @@ let number = 1;
 function increase() {
     number++;
     document.getElementById("number").textContent = number;
+
 }
 
 function decrease() {

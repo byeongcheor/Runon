@@ -35,6 +35,7 @@ public class CrewVO {
     private int create_crew_code;
     private int hits;
     private int total_record;
+    private int usercode;
 
     private String deleted_date;
     private String writedate;
