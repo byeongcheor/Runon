@@ -50,7 +50,7 @@
             <p class="modal-subtitle" id='write_date'></p>
             <pre class="text-wrapper" id='content'></pre>
           </div>
-          <div id=cancel_check_box></div>
+          <div id=cancel_check_box class="rejected_list"></div>
           <div class="modal-footer">
             <button type="button" data-bs-dismiss="modal" id=cancel_btn onClick="crew_join_delete();" >신청 취소하기</button>
           </div>
@@ -81,51 +81,51 @@ var create_crew_code;
                 $('#write_date').text(response[0].writedate);
                 $('#content').text(response[0].content);
                 $('#cancel_check_box').html('');
-                if(response[0].a_n==0) {
-                 $('#cancel_btn').show()
-                }
-                else {
-                    $('#cancel_btn').hide();
-                    list += '<div class="modal-body"> ';
-                    list += '	<div class="form-check"> ';
-                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason1"  value="1"> ';
-                    list += '	<label class="form-check-label" for="reason1">모집이 마감됐어요</label> ';
-                    list += '	</div> ';
-                    list += '	<div class="form-check"> ';
-                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason2" value="2"> ';
-                    list += '	<label class="form-check-label" for="reason2">성별이 맞지 않아요</label> ';
-                    list += '	</div> ';
-                    list += '	<div class="form-check"> ';
-                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason3" value="3"> ';
-                    list += '	<label class="form-check-label" for="reason3">나이가 맞지 않아요</label> ';
-                    list += '	</div> ';
-                    list += '	<div class="form-check"> ';
-                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason4" value="4"> ';
-                    list += '	<label class="form-check-label" for="reason4">소개가 부족해요</label> ';
-                    list += '	</div> ';
-                    list += '	<div class="form-check"> ';
-                    list += '	<input class="form-check-input" type="checkbox" name=reason id="reason5" value="5"> ';
-                    list += '	<label class="form-check-label" for="reason5">소개가 부적절해요 (광고, 도박 등)</label> ';
-                    list += '	</div> ';
-                    list += '</div> ';
-                    $('#cancel_check_box').append(list);
-                    var valuesToCheck = response[0].a_s;
-                    var valuesArray = valuesToCheck.split(',');
 
-                    $('input[name="reason"]').each(function() {
-                        if (valuesArray.includes($(this).val())) {
-                            $(this).prop('checked', true);
+                var valuesToCheck = response[0].a_s;
+                var valuesArray = valuesToCheck.split(',');
+
+                if (response[0].a_n == 0) {
+                    $('#cancel_btn').show();
+                }
+                if (response[0].a_n == 1) {
+                    $('#cancel_btn').hide();
+                }
+
+                if (response[0].a_n == 9) {
+                    $('#cancel_btn').hide();
+
+                    var options = [
+                        { id: 'reason1', value: '1', label: '모집이 마감됐어요' },
+                        { id: 'reason2', value: '2', label: '성별이 맞지 않아요' },
+                        { id: 'reason3', value: '3', label: '나이가 맞지 않아요' },
+                        { id: 'reason4', value: '4', label: '소개가 부족해요' },
+                        { id: 'reason5', value: '5', label: '소개가 부적절해요 (광고, 도박 등)' }
+                    ];
+                    list += '<div class="rejected_title">';
+                    list += '    <span class="reason-text">거절이유</span>';
+                    list += '</div>';
+
+                    // 값이 존재하는 항목만 출력
+                    options.forEach(function(option) {
+                        if (valuesArray.includes(option.value)) {
+                            list += '<div class="rejected_text">';
+                            list += '    <div class="form-reason">';
+                            list += '        <li class="reason-text">' + option.label + '</li>';
+                            list += '    </div>';
+                            list += '</div>';
                         }
                     });
-                    $('input[name="reason"]').prop('disabled', true);
-                }
 
+                    $('#cancel_check_box').append(list);
+                }
             },
             error: function(e) {
                 console.error('Error: ', e);
             }
         });
-      }
+    }
+
     $(document).ready(function() {
         crew_wait_select();
     });

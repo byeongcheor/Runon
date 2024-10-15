@@ -1057,6 +1057,7 @@ function submitCrewInfo() {
         $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
     }
+
     function go_my_crew(create_crew_code,user_code,position) {
         $('#myCrewModal').modal('hide');
         window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code+ '&position=' + position;
