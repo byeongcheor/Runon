@@ -44,6 +44,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> getCrewInfo(int create_crew_code)
+    {
+        return dao.getCrewInfo(create_crew_code);
+    }
+
+    @Override
     public List<CrewVO> crew_app_select(int crew_code)
     {
         return dao.crew_app_select(crew_code);
@@ -177,6 +183,10 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int crew_name_double_check(String teamName,int create_crew_code) {
+        return dao.crew_name_double_check(teamName,create_crew_code);
+    }
+    @Override
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content, String age, int user_code) {
         return dao.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);
     }
@@ -220,6 +230,11 @@ public class CrewServiceImpl implements CrewService{
     public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
+    @Override
+    public int updateCrewInfo(int create_crew_code, int user_code, String teamName,String teamPhotoInput, String age, String gender, String content,String city,String region) {
+        return dao.updateCrewInfo(create_crew_code, user_code, teamName,teamPhotoInput,age,gender,content,city,region);
+    }
+
 
     @Override
     public int vote_chek(int user_code, int vote_num) {

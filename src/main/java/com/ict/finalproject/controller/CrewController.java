@@ -518,27 +518,22 @@ public class CrewController {
     @PostMapping("/vote_insert")
     @ResponseBody
     public int vote_insert(@RequestParam("Authorization")String token, @RequestParam("selectedOption") String selectedOption, @RequestParam("vote_num") int vote_num) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
+        token = token.substring("Bearer ".length());
+        user_name = jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        int a=0;
+        int a = 0;
         try {
-            int b = service.vote_chek(user_code,vote_num);
-            if(b>0) return 0;
-            service.vote_insert(user_code,vote_num, selectedOption);
-            a=1;
+            int b = service.vote_chek(user_code, vote_num);
+            if (b > 0) return 0;
+            service.vote_insert(user_code, vote_num, selectedOption);
+            a = 1;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return a;
     }
 
-/////////////////////////// 크루정보수정 페이지////////////////////////////////////////
-
-    @GetMapping("/crewRevise")
-    public String crewRevise(){
-        return "crew/crewRevise";
-    }
+    ////////// 투표 만들기 ////////
     @PostMapping("/vote_create")
     @ResponseBody
     public int vote_create(
@@ -564,4 +559,88 @@ public class CrewController {
         return a;
     }
 
+
+    /////////////////////////// 크루정보수정 페이지////////////////////////////////////////
+
+    @GetMapping("/crewRevise")
+    public String crewRevise(){
+        return "crew/crewRevise";
+    }
+
+    //////////////////////크루 정보 불러오기//////////////////////////////////
+    @PostMapping("/getCrewInfo")
+    @ResponseBody
+    public List<CrewVO> getCrewInfo(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int create_crew_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> getCrewInfo = null;
+        try {
+            getCrewInfo = service.getCrewInfo(create_crew_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println("getCrewInfo-->>"+getCrewInfo);
+        return getCrewInfo;
+    }
+
+    /////////////////////크루 정보 업데이트/////////////////////
+    @PostMapping("/updateCrewInfo")
+    @ResponseBody
+    public int updateCrewInfo(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestParam("create_crew_code") int create_crew_code,
+            @RequestParam("city") String city,
+            @RequestParam("teamName") String teamName,
+            @RequestParam("region") String region,
+            @RequestParam("teamEmblem") MultipartFile[] teamPhotoInput,
+            @RequestParam("age[]") String[] arr_age,
+            @RequestParam("gender") String gender,
+            @RequestParam("teamIntro") String content) {
+
+        int result = 0;
+        String fileName = "";
+        token = token.substring("Bearer ".length());
+
+        try {
+            // 크루명 중복 체크 (다른 크루와 이름이 중복되는지 확인)
+            result = service.crew_name_double_check(teamName, create_crew_code);
+            System.out.println("crew_name_double_check-->>" + result);
+
+            // 중복된 크루명이 있으면 중복 에러 반환
+            if (result > 0) {
+                return 1; // 중복된 크루명 있음
+            }
+
+            // JWT에서 사용자 이름을 가져오고, 사용자 코드를 조회
+            user_name = jwtUtil.setTokengetUsername(token);
+            user_code = service.usercodeSelect(user_name);
+
+            UUID uuid = UUID.randomUUID();
+
+            // 파일 업로드가 있는 경우 처리 (해당 부분은 수정하지 않음)
+            if (teamPhotoInput != null && teamPhotoInput.length > 0 && !teamPhotoInput[0].isEmpty()) {
+                MultipartFile file = teamPhotoInput[0];
+                fileName = uuid.toString() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+                Path path = Paths.get(uploadDir + File.separator + fileName);
+                Files.copy(file.getInputStream(), path);
+            }
+            // 나이대 배열을 하나의 문자열로 결합 (해당 부분도 수정하지 않음)
+            String age = String.join(",", arr_age);
+
+            // 크루 정보 업데이트
+            result = service.updateCrewInfo(create_crew_code, user_code, teamName, fileName, age, gender, content, city, region);
+
+            // 성공적으로 업데이트된 경우
+            if (result > 0) {
+                return 0; // 성공
+            } else {
+                return -1; // 실패 (업데이트되지 않음)
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1; // 에러 발생 시 -1 반환
+        }
+    }
 }
+

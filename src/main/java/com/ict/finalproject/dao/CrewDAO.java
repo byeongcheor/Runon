@@ -17,6 +17,7 @@ public interface CrewDAO {
     public List<CrewVO> crew_manage_overview(int crewCode, int user_code);
     public List<CrewVO> crew_manage_notice(int crewCode, int user_code);
     public List<CrewVO> crew_write_detail_check(int crew_write_code );
+    public List<CrewVO> getCrewInfo(int create_crew_code );
     public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int totalRecord(PagingVO pVO);
@@ -25,9 +26,11 @@ public interface CrewDAO {
     public int crew_code_select(int user_code);
     public int crew_write_hit_update(int writeCrewCode);
     public int crew_name_check(String crew_name_check);
+    public int crew_name_double_check(String teamName,int create_crew_code);
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content, String age, int user_code);
     public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content);
     public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content);
+    public int updateCrewInfo(int create_crew_code, int user_code, String teamName,String teamPhotoInput, String age, String gender, String content,String city,String region);
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
     public int join_before_select(int user_code, int crewWriteCode);

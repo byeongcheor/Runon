@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="${pageContext.request.contextPath}/js/crew.js" type="text/javascript"></script>
-
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="/css/crewManage.css" type="text/css">
 
 <div>
@@ -16,9 +17,9 @@
             <section class="section3">
                 <div class="profile_container">
                     <div class="names">
-                        <h1 id='crew_name'></h1>
-                        <p id='addr'></p>
-                        <p id='crew_info'></p>
+                        <h3 id='crew_name' ></h3>
+                        <span id='addr'style="display: block;"></span>
+                        <span id='crew_info' style="display: block;"></span>
                     </div>
 
                     <div class="profileimage">
@@ -188,7 +189,7 @@
 <div id="resignModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">어떤 걸 하시겠어요?</h3>
+      <h4 class="modal-title">어떤 걸 하시겠어요?</h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
@@ -201,20 +202,19 @@
 <!-- 공지사항 모달 -->
   <form id="updateNoticeForm" enctype="multipart/form-data">
     <div id="noticeCreateModal" class="custom-modal" style="display: none;">
-        <div class="custom-modal-content">
+        <div class="custom-modal-content2">
             <div class="custom-modal-header">
-                <h5 class="custom-modal-title" id="noticeCreateModalLabel">공지사항 작성</h5>
+                <h5 class="custom-modal-title2" id="noticeCreateModalLabel">공지사항 작성</h5>
                 <span class="custom-close" onclick="closeNoticeModal()">&times;</span>
             </div>
             <div class="custom-modal-body">
                 <div class="mb-3">
-                    <label for="noticeTitle" class="form-label">제목을 작성해 주세요</label>
-                    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" placeholder="제목 입력" required />
+                    <label for="noticeTitle" class="form-label2">제목을 작성해 주세요</label>
+                    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" style="margin-top:10px;" placeholder="제목 입력" required />
                 </div>
                 <div class="mb-3">
-                    <label for="noticeImage" class="form-label">이미지를 올려주세요</label>
-                    <p class="subtext">이미지가 없다면 기본 이미지가 제공됩니다!</p>
-                    <label class="upload-box" for="noticeImage">
+                    <label for="noticeImage" class="form-label2">이미지를 올려주세요</label>
+                    <label class="upload-box" for="noticeImage" style="margin-top:10px;">
                          사진 업로드
                          <input type="file" id="noticeImage" name="noticeImage" onchange="previewImages(event)" multiple />
                     </label>
@@ -223,17 +223,17 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <label class="form-label">공지 내용</label>
-                    <textarea id="noticeContent" name="noticeContent" class="notice-content" placeholder="여기를 누르고 공지를 등록하세요"></textarea>
+                    <label class="form-label2">공지 내용</label>
+                    <textarea id="noticeContent" name="noticeContent" class="form-control notice-content" placeholder="여기를 누르고 공지를 등록하세요"></textarea>
                 </div>
             </div>
             <div class="custom-modal-footer">
-                <button type="button" class="custom-btn" onclick="submitNotice()">등록하기</button>
+                <button type="button" class="custom-btn2" onclick="submitNotice()">등록하기</button>
             </div>
         </div>
     </div>
 </form>
-<!-- 투표 모달 -->
+<!-- 투표 만들기 모달 -->
 <div id="voteModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
@@ -270,11 +270,13 @@
       <button type="button" class="btn btn-light" style="font-size:14px;" onclick="closeVoteModal()">취소</button>
     </div>
   </div>
-</div><!-- 투표하기 모달 -->
+</div>
+
+<!-- 투표하기 모달 -->
 <div id="voteNowModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">투표하기 </h3>
+      <h4 class="modal-title">투표 하기 </h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body2" id=vote_list>
@@ -289,22 +291,44 @@
 <div id="voteResultModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">투표 현황</h3>
+      <h4 class="modal-title">투표 현황</h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
-    <div class="custom-modal-body2" id=vote_results>
+    <div class="custom-modal-body3" id=vote_results>
     </div>
     <div class="custom-modal-footer">
       <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
-</div><script>
+</div>
+<!-- 닉네임 리스트 모달 -->
+<div id="nicknameModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h4 class="modal-title">투표자 명단</h4>
+      <span class="custom-close" onclick="closeNicknameModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body" id="nickname_list"></div>
+    <div class="custom-modal-footer">
+      <button class="handover-btn" onclick="closeNicknameModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const user_code = urlParams.get('user_code');
 const position = urlParams.get('position');
 var votenum=4;
+if(position >1){
+    $('#editCrewBtn').hide();
+}
+if(position>2){
+    $('#noticeMake').hide();
+    $('#voteMake').hide();
+}
 clog('My position : '+ position);
 clog('My user_code : '+ user_code);
 
@@ -432,8 +456,8 @@ clog('My user_code : '+ user_code);
           for (var i = 0; i<response[0].c_n;i++) {
               list += '<li class="member-item"> ';
               list += '<div class="item-flex"> ';
-              list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img" onClick="go_mypage(' + response[i].b_n + ')"> ';
-              list += '   <div class="profile-info" onClick="go_mypage(' + response[i].b_n + ')"> ';
+              list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img"> ';
+              list += '   <div class="profile-info"> ';
               list += '     <div class="info-wrapper"> ';
               list += '      <p class="name">' + response[i].writedate + '</p> ';
               list += '     </div> ';
@@ -445,7 +469,7 @@ clog('My user_code : '+ user_code);
               list += '</div> ';
               list += '</li> ';
           }
-          list += '<div class="join_info" onClick="" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
+          list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
           list += '<div class="overview_title">최신 공지</div>'
           list += '<div class="member_more">전체 보기</div>'
           list += '</div>';
@@ -484,26 +508,33 @@ clog('My user_code : '+ user_code);
             list +=    '<div class="item-container"> ';
             list +=       '<div class="icon-container"> ';
             if(response[i].a_n==1||response[i].a_n==3){
-              list +=       '   <img src="/img/vote.png"> ';
+              list +=       '<img src="/img/vote.png"> ';
+              list +=       '</div>';
+              list +=       '<div class="text-container" onClick="voteNow('+response[i].c_n+')"> ';
+              if(response[i].b_n==1){
+                  list +=   '<span class="sub-text">투표 진행중</span>';
+                  list +=   '<span class="main-text">'+response[i].subject+'</span> ';
+                  var aa =   response[i].e_n == 1? "참여":"미참여"
+                  list +=   '<div>'+response[i].e_n+"명 참여, "+aa+'<div>'
+                  list +=   '<div>'+response[i].enddate+" 까지 마감"+'<div>'
+              }
+             if(response[i].b_n==9){
+                  list +=   '<span class="sub-text">투표 마감</span>';
+                  list +=   '<span class="main-text">'+response[i].subject+'</span> ';
+                  list +=   '<div>'+response[i].e_n+"명 참여, "+aa+'<div>'
+                  list +=   '<div>'+response[i].enddate+" 까지 마감"+'<div>'
+              }
             }
             if(response[i].a_n==2){
               list +=       '   <img src="/img/notice.png"> ';
             }
             list +=       '</div>';
             list +=       '<div class="text-container"> ';
-            if(response[i].b_n==1){
-                list +=          '<span class="sub-text">투표 진행중</span>';
-                list +=          '<span class="main-text" onClick="voteNow('+response[i].c_n+')">'+response[i].subject+'</span> ';
-            }
-           if(response[i].b_n==9){
-                list +=          '<span class="sub-text">투표 마감</span>';
-                list +=          '<span class="main-text" onClick="vote_select('+response[i].c_n+')">'+response[i].subject+'</span> ';
-            }
+
             list +=       '</div> ';
             list +=    '</div> ';
             list += '</li> ';
         }
-
         $('#crew_manage_list').append(list);
     }
 
@@ -529,11 +560,9 @@ clog('My user_code : '+ user_code);
     function go_request_wait(){
         window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code + '&position=' + position;
     }
-    function go_mypage(usercode){
-        window.location.href = '/mypage/myHome?usercode=' + usercode;
-    }
-    function crewRevise(){
-        window.location.href = '/crew/crewRevise';
+    function crewRevise() {
+        // user_code와 create_crew_code 값을 URL에 추가하여 넘기기
+        window.location.href = '/crew/crewRevise?user_code=' + user_code + '&create_crew_code=' + create_crew_code;
     }
 
     function member_manage(element){
@@ -625,7 +654,12 @@ clog('My user_code : '+ user_code);
         document.getElementById('resignModal').style.display = 'none';
         document.getElementById('voteNowModal').style.display = 'none';
         document.getElementById('voteNowModal').style.display = 'none';
-        document.getElementById('voteResultModal').style.display = 'none';      }
+        document.getElementById('voteResultModal').style.display = 'none';
+      }
+      // 투표현황 모달 닫기
+      function closeNicknameModal() {
+          document.getElementById('nicknameModal').style.display = 'none';
+      }
 
       // 팀 탈퇴 모달 열기
       function openResignModal() {
@@ -663,6 +697,12 @@ clog('My user_code : '+ user_code);
       if(votenum<6)$('#addVoteBtn').show();
     }
 
+    // 투표자 명단 모달 열기
+    function showVoterList(voters) {
+        document.getElementById('nicknameModal').style.display = 'block';
+        $('#nickname_list').html('<li>' + voters + '</li>');
+    }
+
     function openVoteModal() {
       // resignModal을 닫고 voteModal을 염
       closeCustomModal();
@@ -675,16 +715,23 @@ clog('My user_code : '+ user_code);
       openResignModal();
     }
 
-    // 투표 제출 함수
+    // 투표 만들기 함수
     function submitVote() {
-      const title = document.getElementById('voteTitle').value;
-      const deadline = document.getElementById('voteDeadline').value;
+        const title = document.getElementById('voteTitle').value;
+        const deadline = document.getElementById('voteDeadline').value;
 
-      // 마감시간이 설정되지 않았을 경우 경고 메시지 표시
-      if (!deadline) {
-        alert('마감시간을 설정해주세요.');
-        return; // 마감시간이 설정되지 않으면 함수 종료
-      }
+        if (!deadline) {
+            alert('마감시간을 설정해주세요.');
+            return;
+        }
+
+        const currentTime = new Date();
+        const voteDeadlineTime = new Date(deadline);
+        const fiveMinutesInMillis = 10 * 60 * 1000;
+        if (voteDeadlineTime - currentTime < fiveMinutesInMillis) {
+            alert('마감시간은 현재 시간 기준으로 최소 10분 이후여야 합니다. 다시 설정해주세요.');
+            return;
+        }
         $.ajax({
             url: '/crew/vote_create',
             type: 'post',
@@ -708,12 +755,12 @@ clog('My user_code : '+ user_code);
                 console.error('Error: ', e);
             }
         });
-      closeVoteModal();
+
+        closeVoteModal();
     }
 
-   // 투표하기 모달 열기
+    // 투표하기 모달 열기
     function voteNow(vote_num) {
-        document.getElementById('voteNowModal').style.display = 'block';
         $('#vote_num').val(vote_num);
         $.ajax({
             url: '/crew/vote_select',
@@ -732,6 +779,7 @@ clog('My user_code : '+ user_code);
                 list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
                 list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
                 list += '<div class="vote-options">';
+
                 for (var i = 1; i < 6; i++) {
                     var key = 'opt' + i;
                     if (response[0][key] == '') break;
@@ -745,30 +793,32 @@ clog('My user_code : '+ user_code);
                 }
                 list += '</div>';
                 $('#vote_list').html(list);
+
                 list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
                 list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
                 list2 += '<div class="vote-results">';
+
                 for (var i = 1; i < 6; i++) {
-                    var arr = ['a', 'a', 'b', 'c', 'd', 'e'];
+                    var arr = ['a', 'b', 'c', 'd', 'e'];  // arr 배열은 여전히 0부터 시작
                     var key = 'opt' + i;
-                    var key2 = arr[i] + '_s';
-                    if (response[0][key] == '') break;
-                    if(response[0][key2]!==null){
-                        var arr_length = response[0][key2].split(',').length;
-                    }
-                    else var arr_length=0;
-                    response[0][key2] = response[0][key2]===null?'':response[0][key2];
-                    list2 += '      <div class="result-row">';
-                    list2 += '          <span>' + response[0][key] + '</span>';
-                    list2 += '          <span>' + response[0][key2] + '</span>';
-                    list2 += '          <span id="count-vote' + i + '" class="vote-count">' + arr_length + '명</span>';
-                    list2 += '      </div>';
-                    list2 += '      <div class="progress-bar">';
-                    list2 += '          <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
-                    list2 += '      </div>';
+                    var key2 = arr[i - 1] + '_s';  // i가 1부터 시작하므로 i-1로 접근
+
+                    if (response[0][key] == '') break;  // 옵션이 없는 경우 반복 종료
+                    var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
+                    var voters = response[0][key2] ? response[0][key2] : '';
+
+                    list2 += '<div class="result-row" onclick="showVoterList(\'' + voters + '\')">';
+                    list2 += '    <span>' + response[0][key] + '</span>';
+                    list2 += '    <span>' + arr_length + '명</span>';
+                    list2 += '</div>';
+                    list2 += '<div class="progress-bar">';
+                    list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+                    list2 += '</div>';
                 }
                 list2 += '</div>';
                 $('#vote_results').html(list2);
+                if(response[0].f_s=='' && response[0].a_n==1)document.getElementById('voteNowModal').style.display = 'block'
+                else document.getElementById('voteResultModal').style.display = 'block';
             },
             error: function(e) {
                 console.error('Error: ', e);
