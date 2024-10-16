@@ -46,7 +46,7 @@ public class CartController {
         return username;
     }
 
-    @GetMapping("cart")
+    @GetMapping("/cart")
     public String cart(CartVO vo, Model model){//
         try {
             // 장바구니 항목 조회
@@ -66,7 +66,7 @@ public class CartController {
 
 
     //주문내역
-    @GetMapping("ordersheet")
+    @GetMapping("/ordersheet")
     public String ordersheet(){
 
         return "order/ordersheet";

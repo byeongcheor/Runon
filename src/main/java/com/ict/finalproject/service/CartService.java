@@ -2,6 +2,7 @@ package com.ict.finalproject.service;
 
 import com.ict.finalproject.vo.CartVO;
 import com.ict.finalproject.vo.MateVO;
+import com.ict.finalproject.vo.ReportVO;
 
 import java.util.List;
 

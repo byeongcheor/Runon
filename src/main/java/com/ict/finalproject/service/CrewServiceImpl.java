@@ -67,6 +67,7 @@ public class CrewServiceImpl implements CrewService{
         return dao.crew_join_delete(user_code, crewCode);
     }
 
+
     @Override
     public int totalRecord(PagingVO pVO)
     {
@@ -107,6 +108,10 @@ public class CrewServiceImpl implements CrewService{
     public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
-
+    /*채팅방 크루연결 */
+    @Override
+    public List<CrewVO> getCrewList() {
+        return dao.getCrewList();
+    }
 
 }

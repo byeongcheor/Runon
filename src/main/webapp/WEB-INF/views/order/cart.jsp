@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" href="/css/cart.css" type="text/css">
-
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 <script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
 
@@ -344,6 +344,8 @@
         }
 
     }
+
+
 
 </script>
 

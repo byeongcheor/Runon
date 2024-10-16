@@ -33,6 +33,7 @@ function formCheck(event){
                         localStorage.setItem("refresh",refreshToken);
                         localStorage.setItem("Authorization",token);
 
+
                         window.close();
                         opener.window.location.reload();
                     },

@@ -12,9 +12,9 @@ public class ReportVO {
     private int offender_code;
     private String report_reason;
     private String report_date;
-    private String victim_code;
-    private String crew_history_code;
-    private String matching_room_code;
-    private String report_status;
-
+    private int victim_code;
+    private int crew_history_code;
+    private int matching_room_code;
+    private int report_status;
+    private String report_content;
 }

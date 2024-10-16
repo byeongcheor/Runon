@@ -3,7 +3,9 @@ package com.ict.finalproject.service;
 import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.PagingVO;
 
+
 import java.util.List;
+
 
 public interface CrewService {
     public List<CrewVO> crewSelectPaging(PagingVO pVO);
@@ -23,5 +25,9 @@ public interface CrewService {
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
+
+    /*채팅방 크루연결 */
+    public List<CrewVO> getCrewList();
+
 
 }

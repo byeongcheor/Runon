@@ -200,4 +200,11 @@
         ,content   = '${param6}'
         where crew_write_code = ${param1}
     </update>
+
+    <select id="getCrewList" resultType="com.ict.finalproject.vo.CrewVO">
+        SELECT create_crew_code, crew_name, logo
+        FROM create_crew_tbl;
+    </select>
+
+
 </mapper>

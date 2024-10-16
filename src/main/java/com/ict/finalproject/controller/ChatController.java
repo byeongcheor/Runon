@@ -2,8 +2,11 @@ package com.ict.finalproject.controller;
 
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.ChatService;
+import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.service.MateService;
+import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.MessageVO;
+import com.ict.finalproject.vo.ReportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -11,9 +14,12 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +31,9 @@ public class ChatController {
 
     @Autowired
     ChatService chatservice;
+    @Autowired
+    CrewService crewservice;
+
 
 
 
@@ -97,6 +106,76 @@ public class ChatController {
         return chatservice.getMessagesByMatchYn(matchYn); // 정상적인 방 코드일 때만 메시지 조회
     }
 
+    @PostMapping("/chat/report")
+    @ResponseBody
+    public ReportVO report(@RequestBody ReportVO reportVO) {
+        try {
+
+            System.out.println("Received report data: " + reportVO.toString());
+
+            // 현재 날짜 및 시간을 포맷에 맞춰 설정
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            reportVO.setReport_date(now.format(formatter)); // report_date 필드에 현재 시간 설정
+
+            // 신고 정보를 데이터베이스에 저장
+            chatservice.saveReport(reportVO); // 서비스 호출
+
+            // 신고 정보가 저장된 reportVO 객체 반환
+            return reportVO; // ResponseEntity 대신 reportVO 반환
+        } catch (Exception e) {
+            // 예외 발생 시 null 반환 또는 다른 처리
+            reportVO.setReport_content("신고 접수 실패: " + e.getMessage());
+            return reportVO; // 실패 시에도 ReportVO 반환
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    @GetMapping("/mate/mate")
+//    public String mateChat(Model model){
+//        List<CrewVO> chatList = crewservice.getCrewList();  // 크루 리스트를 가져오는 서비스
+//
+//        // 로그 추가
+//        log.info("mateChat 호출됨");  // 이 로그가 찍히는지 확인하세요
+//
+//        if (chatList != null && !chatList.isEmpty()) {
+//            for (CrewVO crew : chatList) {
+//                log.info("Crew Name: " + crew.getCrew_name()); // 로깅 사용
+//            }
+//        } else {
+//            log.warn("크루 목록을 가져오지 못했습니다."); // 로깅 사용
+//        }
+//        model.addAttribute("chatList", chatList);  // 모델에 데이터를 담아 JSP에 전달
+//
+//        return "mate/mate";  // JSP 파일 경로로 반환
+//    }
+//
 
 }
 

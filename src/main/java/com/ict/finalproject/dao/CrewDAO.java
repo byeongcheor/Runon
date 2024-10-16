@@ -24,5 +24,6 @@ public interface CrewDAO {
     public int crew_write_delete(int user_code, int crewWriteCode);
     public int crew_join_delete(int user_code, int crewCode);
 
-
+    /*채팅방 크루연결 */
+    public List<CrewVO> getCrewList();
 }

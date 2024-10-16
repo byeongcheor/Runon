@@ -11,13 +11,10 @@
     <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
     <link rel="stylesheet" href="/css/main.css" type="text/css">
     <link rel="stylesheet" href="/css/mate.css" type="text/css">
-    <script src="js/matechatting.js" type="text/javascript"></script>
-    <!--WebSocket 라이브러리 추가 -->
-    <!--https://cdnjs.com/libraries/sockjs-client -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- https://cdnjs.com/libraries/stomp.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
+    <%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
+
 
 <body>
 <div id="bannerBox">
@@ -103,21 +100,6 @@
                 <div class="more" id="more" onclick="ranking_more();">더보기</div>
             </div>
         </div>
-        <!-- 오른쪽 채팅창 -->
-
-        <%--        <div id="chatbox" >--%>
-
-        <%--            <!-- 대화내용 -->--%>
-        <%--            <div id="taMsg">--%>
-        <%--                <!-- 여기에 메시지들이 표시됩니다 -->--%>
-        <%--            </div>--%>
-        <%--            <!-- 메시지입력 -->--%>
-
-        <%--            <div class="chat-input">--%>
-        <%--                <input type="text" id="inputMsg" placeholder="채팅을 입력해 주세요">--%>
-        <%--                <button id="sendBtn">전송</button>--%>
-        <%--            </div>--%>
-        <%--        </div>--%>
 
     </div>
 
@@ -207,8 +189,7 @@
     var gender=$('#gender').val();
     var token = localStorage.getItem("Authorization");
     var nickname=$('#nickname').val();
-    let socket; // socket 객체
-    let stompClient; // stomp를 이용하여 서버와 메시지를 주고 받는다.
+
 
 
 
@@ -749,163 +730,6 @@
     }
 
     //////////////////////////////////////////////////////////////////////////////////
-
-
-    $(document).ready(function() {
-        // 방 코드가 제대로 설정되어 있는지 확인
-        if (match_yn && match_yn !== "undefined") {
-            console.log("유효한 방 코드: ", match_yn);
-
-            // nickname 값을 가져와서 로그로 확인
-            var nickname = $('#nickname').val(); // hidden 필드에서 값 가져오기
-            console.log("로그인한 사용자의 닉네임: " + nickname);
-
-            //채팅 서버 연결하기
-            chatConnection();
-            //이전 채팅 내역 불러오기
-            loadChatMessages();
-
-            // 서버로 메시지 보내기 (Enter 키)
-            $("#inputMsg").keyup(function(event) {
-                if (event.keyCode === 13) {
-                    sendMessageFromInput();
-                }
-            });
-
-            // 서버로 메시지 보내기 (전송 버튼)
-            $("#sendBtn").click(function() {
-                sendMessageFromInput();
-            });
-
-        } else {
-            console.warn("방 코드가 올바르게 설정되지 않았습니다.");
-        }
-    });
-
-
-    // 채팅 서버와 연결하는 함수
-    function chatConnection() {
-        // 매칭 방 코드가 0일 경우 채팅 연결 차단
-
-        if (match_yn === 0) {
-            console.warn("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
-            alert("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
-            return; // 채팅 연결을 막음
-        }
-
-        console.log("매칭 방 코드: ", match_yn);
-        socket = new SockJS("/chat"); // WebSocket 엔드포인트와 연결
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            console.log('WebSocket 연결 성공:', frame);
-            // setConnected();
-            console.log(usercode, nickname);
-
-            // 방 코드에 따라 구독 경로 설정
-            stompClient.subscribe("/topic/messages/"+match_yn, function(receiveMsg) {
-                console.log('receiveMsg->',receiveMsg);
-                var jsonMsg = JSON.parse(receiveMsg.body);
-                console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
-                showCatMessage(jsonMsg);
-            });
-            // 서버로 메시지 전송 (닉네임 접속 알림)
-            sendMessage(usercode, nickname, match_yn, nickname + "님이 접속하였습니다.");
-        });
-    }
-
-
-
-    // 메시지를 입력창에서 가져와 서버로 전송하는 함수
-    function sendMessageFromInput() {
-
-        var inputMsg = $("#inputMsg").val(); // 입력한 메시지
-        if (inputMsg === "") return false; // 빈 메시지 전송 방지
-
-        sendMessage(usercode, nickname, match_yn, inputMsg); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
-        $("#inputMsg").val(''); // 입력창 초기화
-    }
-
-    // 메시지 불러오기 함수
-    function loadChatMessages() {
-        if (match_yn === 0) {
-            console.warn("매칭 방 코드가 0이므로 이전 메시지를 불러오지 않습니다.");
-            return; // 함수 종료
-        }
-
-        $.ajax({
-            url: "/message/chat/" + match_yn, // match_yn은 매칭된 방 코드
-            type: "GET",
-            success: function(data) {
-                console.log("서버에서 받은 메시지들:", data);
-                // 받은 메시지를 화면에 표시
-                data.forEach(function(message) {
-                    showCatMessage(message); // 각 메시지를 화면에 표시
-                });
-            },
-            error: function(error) {
-                console.error("메시지 불러오기 실패:", error);
-            }
-        });
-    }
-
-
-    // 서버로 메시지 전송 함수
-    function sendMessage(usercode, nickname,recipient, content, add_date) {
-        let messageData = {
-            usercode: usercode, // 전역 변수 usercode 사용
-            nickname: nickname, // 전역 변수 nickname 사용
-            recipient: recipient, // 방 코드 (방 구분을 위한 식별자)
-            content: content,    // 메시지 내용
-            add_date: add_date
-        };
-        stompClient.debug = null;
-        // WebSocket이 연결되었는지 확인 (readyState가 OPEN인지 확인)
-        if (socket.readyState === WebSocket.OPEN) {
-            // 각 방 코드에 맞는 경로로 메시지 전송
-            stompClient.send("/message/chat/" + match_yn, {}, JSON.stringify(messageData));
-            console.log("메시지가 전송되었습니다.");
-        } else {
-            console.error("WebSocket 연결이 완료되지 않았습니다. 연결 상태:", socket.readyState);
-        }
-
-    }
-
-
-    // 서버에서 받은 메시지를 화면에 표시하는 함수
-    function showCatMessage(data) {
-        console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
-        // 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
-        var tag = '';
-        // 내가 보낸 메시지인 경우 (오른쪽에 표시)
-        if (data.usercode == usercode) {
-            tag += `
-        <div class="chat-message">
-            <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
-            <div class="message-info">
-                <span class="nickname">`+data.nickname+`</span>
-                <p>`+data.content+`</p>
-                <div class="timestamp">`+data.add_date+`</div>
-            </div>
-        </div>`;
-        } else {
-            // 다른 사람이 보낸 메시지인 경우(왼쪽에 표시)
-            tag += `
-        <div class="chat-message-left">
-            <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
-            <div class="message-info">
-                <span class="nickname">`+data.nickname+`</span>
-                <p>`+data.content+`</p>
-                <div class="timestamp-left">`+data.add_date+`</div>
-            </div>
-        </div>`;
-        }
-        // 메시지를 채팅창에 추가
-        $("#taMsg").append(tag);
-
-        // 스크롤을 최신 메시지로 자동 이동
-        var chatbox = document.getElementById("taMsg");
-        chatbox.scrollTop = chatbox.scrollHeight;
-    }
 
 
 
