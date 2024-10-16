@@ -48,4 +48,7 @@ public interface CrewService {
     public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text);
     public int vote_chek(int user_code, int vote_num);
     public int vote_insert(int user_code, int vote_num, String selectedOption);
+
+    /*채팅방 크루연결 */
+    public List<CrewVO> getCrewList();
 }

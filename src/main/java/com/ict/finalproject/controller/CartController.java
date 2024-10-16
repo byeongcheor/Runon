@@ -15,15 +15,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/order")
 public class CartController {
     @Autowired
     CartService service;
@@ -33,32 +31,31 @@ public class CartController {
     String username ="";
     int    usercode = 0;
 
-    @PostMapping("/cartUser")
+    @PostMapping("/test")
     @ResponseBody
-    public String cartUser(@RequestParam("Authorization") String token) {
+    public String test(@RequestParam("Authorization")String token) {
         token=token.substring("Bearer ".length());
-        System.out.println("1111111");
         try {
             username = jwtUtil.setTokengetUsername(token);
-            System.out.println("Username from Token: " + username);
+            usercode = service.usercodeSelect(username); // usercode 가져오기
+            System.out.println("User code: " + usercode);
         } catch (Exception e) {
             System.out.println("Error parsing token: " + e.getMessage());
-            e.printStackTrace(); // 전체 스택 트레이스 확인
+            e.printStackTrace();
         }
         return username;
     }
 
-    @GetMapping("order/cart")
-    public String cart(CartVO vo, HttpServletRequest request, Model model){//
+    @GetMapping("/cart")
+    public String cart(CartVO vo, Model model){//
         try {
-            usercode = service.usercodeSelect(username);
-            List<CartVO> userselect = service.userselect(usercode);
             // 장바구니 항목 조회
             List<CartVO> cartItems = service.getCartItemsByUserCode(usercode);
-            System.out.println(userselect);
-            model.addAttribute("cartItems", cartItems); // 모델에 장바구니 항목 추가
-            model.addAttribute("vo",vo);
-            model.addAttribute("userselect",userselect);
+            model.addAttribute("cartItems", cartItems); // 장바구니 항목을 모델에 추가
+
+            // 회원의 포인트 정보 가져오기
+            PointVO pointInfo = pointService.getPointByUsercode(usercode);
+            model.addAttribute("userPoints", pointInfo); // 포인트 정보를 모델에 추가
 
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
@@ -68,10 +65,8 @@ public class CartController {
     }
 
 
-
-
     //주문내역
-    @GetMapping("order/ordersheet")
+    @GetMapping("/ordersheet")
     public String ordersheet(){
 
         return "order/ordersheet";

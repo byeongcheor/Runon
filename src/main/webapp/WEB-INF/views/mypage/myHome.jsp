@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/css/mypage/editProfileModal.css" type="text/css">
 <script src="/js/login&join/JoinForm.js" type="text/javascript"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 <script>
     //QnA 이동
     function openQnA(){

@@ -3,20 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.ChatDAO">
-    <!-- 메시지 삽입 -->
-    <insert id="insertMessage" parameterType="com.ict.finalproject.vo.MessageVO">
-        INSERT INTO message_tbl (content, add_date, usercode, recipient)
-        VALUES (#{content}, NOW(), #{usercode}, #{recipient})
+    <insert id="insertMessage" parameterType="com.ict.finalproject.vo.MessageVO" useGeneratedKeys="true" keyProperty="message_code">
+        INSERT INTO message_tbl (content, add_date, usercode, recipient, nickname)
+        VALUES (#{content}, #{add_date}, #{usercode}, #{recipient}, #{nickname})
     </insert>
 
-    <!-- 특정 사용자가 받은 메시지 조회 (또는 전체 채팅 메시지) -->
-    <select id="selectMessages" parameterType="String" resultType="com.ict.finalproject.vo.MessageVO">
-        SELECT message_code, content, add_date, usercode, recipient
+    <select id="selectMessagesByRoomCode" resultType="com.ict.finalproject.vo.MessageVO">
+        SELECT *
         FROM message_tbl
-        WHERE recipient = #{recipient} OR recipient = 'all'
+        WHERE recipient = #{match_yn}
         ORDER BY add_date ASC
     </select>
-
-
-
+    <insert id="insertReport" parameterType="com.ict.finalproject.vo.ReportVO">
+        INSERT INTO report_tbl (offender_code, report_reason, report_date, victim_code, crew_history_code, matching_room_code, report_status, report_content)
+        VALUES (#{offender_code}, #{report_reason}, #{report_date}, #{victim_code}, #{crew_history_code}, #{matching_room_code}, #{report_status}, #{report_content})
+    </insert>
+    <select id="getUserCountByCode" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM user_tbl WHERE usercode = #{userCode}
+    </select>
 </mapper>

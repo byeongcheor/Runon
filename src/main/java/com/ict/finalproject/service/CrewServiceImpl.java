@@ -247,4 +247,11 @@ public class CrewServiceImpl implements CrewService{
     }
 
 
+    /*채팅방 크루연결 */
+    @Override
+    public List<CrewVO> getCrewList() {
+        return dao.getCrewList();
+    }
+
+
 }
