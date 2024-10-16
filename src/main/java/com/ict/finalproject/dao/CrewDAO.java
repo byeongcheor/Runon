@@ -48,6 +48,7 @@ public interface CrewDAO {
     public int vote_create(int user_code, int crewCode, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5);
     public int vote_chek(int user_code, int vote_num);
     public int vote_insert(int user_code, int vote_num, String selectedOption);
+    public int resign_select(int crewCode,int position);
 
     /*채팅방 크루연결 */
     public List<CrewVO> getCrewList();

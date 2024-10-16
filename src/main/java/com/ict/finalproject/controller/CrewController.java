@@ -576,6 +576,28 @@ public class CrewController {
         return a;
     }
 
+    @PostMapping("/resign_team")
+    @ResponseBody
+    public int resign_team(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("position") int position) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        int cnt=0;
+        try {
+            cnt = service.resign_select(crewCode,position);
+            if(position==1 && cnt>1) return 0;
+            service.crew_member_out(user_code,crewCode);
+            int flag = 2;
+            service.crew_history_insert(user_code,crewCode,flag);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+
 
     /////////////////////////// 크루정보수정 페이지////////////////////////////////////////
 

@@ -35,6 +35,7 @@ public interface CrewService {
     public int crew_join_select(int user_code, int crewCode);
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
+    public int resign_select(int crewCode,int position);
     public int crew_join_delete(int user_code, int crewCode);
     public int crew_member_insert2(int user_code, int crewCode);
     public int crew_manage_app(int user_code, int crewCode, int status, String reason, int request_code);
