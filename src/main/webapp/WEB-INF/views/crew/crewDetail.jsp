@@ -23,7 +23,7 @@
             <div class="content_left">
                 <section class="section3">
                     <div class="profile_container">
-                        <div class="team-header">
+                        <div class="team-header" onClick="go_crew_manage();">
                             <div class="team-emblem">
                                 <div class="emblem-wrapper">
                                     <div class="emblem-background">
@@ -33,6 +33,7 @@
                             </div>
                             <div class="team-content">
                                 <div><span class="team-name" id='team_name'></span></div>
+                                <span class="team-info" id='addr'></span>
                                 <span class="team-info" id='team_info' ></span>
                             </div>
                         </div>
@@ -248,23 +249,36 @@
           </div>
       </form>
 <script>
-var clog = console.log;
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
 const crew_write_code = urlParams.get('crew_write_code');
 var usercode;
+var position;
 $('#nextBtn').on('click', function() {
     $('#crewInfoModal').modal('hide');
+    crew_write_detail_check(crew_write_code);
     $('#thirdModal').modal('show');
 });
+
 $('#nextBtnInThirdModal').on('click', function() {
     $('#thirdModal').modal('hide');
     $('#uploadTeamPhotoModal').modal('show');
 });
+$('#prevBtnInThirdModal').on('click', function() {
+    // 두 번째 모달을 닫고 첫 번째 모달을 다시 열기
+    $('#thirdModal').modal('hide');
+    $('#crewInfoModal').modal('show');
+});
+$('#prevBtnInCreateModal').on('click', function() {
+    // 두번째 모달을 열고 3번쨰 모달을 닫는 코드 추가
+    $('#uploadTeamPhotoModal').modal('hide');  // 현재 모달을 닫음
+    $('#thirdModal').modal('show');  // 두 번째 모달을 다시 띄움
+});
+
     $(document).ready(function() {
         crew_detail_select();
-
+        clog('My position : '+position);
         $('#crew_write_code').val(crew_write_code);
     });
 
@@ -296,12 +310,13 @@ $('#nextBtnInThirdModal').on('click', function() {
                 create_crew_code : create_crew_code
             },
             success: function(result) {
-            clog(result);
                 $('#crew_img').attr('src', '/crew_upload/'+result[0].logo);
                 $('#team_name').text(result[0].crew_name);
+                $('#addr').text(result[0].addr);
                 $('#team_info').text(result[0].a_s);
                 $('#gender').text(result[0].gender);
                 $('#age').text(result[0].age);
+                position = result[0].f_n;
 
                 // 이미지가 있는 경우
                 if (result[0].b_s && result[0].b_s !== 'null') {
@@ -313,7 +328,7 @@ $('#nextBtnInThirdModal').on('click', function() {
 
                 $('#content').text(result[0].content);
                 $('#hits').text('조회수 ' + result[0].hits);
-                $('#crew_request').text('신청자수 ' + result[0].a_n);
+                $('#crew_request').text('신청자수 ' + result[0].c_n);
                 $('#write_date').text('업데이트    ' + result[0].writedate);
 
                 usercode = result[0].b_n;
@@ -331,10 +346,14 @@ $('#nextBtnInThirdModal').on('click', function() {
                         $('#crew_request_btn').show();
                     }
                 }
+                if(result[0].g_n>0){
+                    $('#crew_request_btn').hide();
+                    $('#crew_request_delete').hide();
+                }
             },
-error: function(e) {
-    console.error('Error: ', e);
-}
+            error: function(e) {
+                console.error('Error: ', e);
+            }
         });
     }
 
@@ -350,10 +369,12 @@ error: function(e) {
                 join_content       : $('#join_content').val()
             },
             success: function(result) {
-                $('#crew_request_delete').show();
-                $('#crew_request_btn').hide();
-                if(result>0) alert('가입신청이 완료되었습니다.')
-                //else alert('이미 가입신청 되어있습니다.');
+                if(result>0) {
+                    alert('가입신청이 완료되었습니다.');
+                    $('#crew_request_delete').show();
+                    $('#crew_request_btn').hide();
+                }
+                else alert('이미 가입신청 되어있습니다.');
             },
             error: function(e) {
                 console.error('Error: ', e);
@@ -408,27 +429,29 @@ error: function(e) {
     }
 
     function crew_write_delete(){
-        $.ajax({
-            url: '/crew/crew_write_delete',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization : Authorization,
-                crew_write_code : crew_write_code
-            },
-            success: function(result) {
-                alert('크루모집이 취소되었습니다.');
-                window.location.href = '/crew/crewList';
-
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+        if (confirm('모집을 중단하시겠습니까?')) {
+            $.ajax({
+                url: '/crew/crew_write_delete',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization: Authorization,
+                    crew_write_code: crew_write_code
+                },
+                success: function(result) {
+                    alert('크루모집이 취소되었습니다.');
+                    window.location.href = '/crew/crewList';
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
+        } else {
+            alert('취소되었습니다.');
+        }
     }
+
     function crew_write_page_update_detail(){
-
-
         $.ajax({
             url: '/crew/crew_write_page_update_detail',
             type: 'post',
@@ -456,44 +479,85 @@ error: function(e) {
             }
         });
     }
-    function crew_write_update() {
-       var form = $('#crew_write_update')[0];
-       var formData = new FormData(form);
-       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
-       var genderChecked = $('input[name="gender3"]:checked').length > 0;
-       if (!ageChecked) {
-           alert('주요 나이대를 선택해주세요.');
-           return false;
-       }
-       if (!genderChecked) {
-           alert('성별을 선택해주세요.');
-           return false;
-       }
-       if($('#teamIntro3').val()==''){
-           alert('모집내용을 입력해주세요.');
-           return false;
-       };
-       $.ajax({
-           url: '/crew/crew_write_update',
-           type: 'POST',
-           headers: {
-               Authorization: localStorage.getItem('Authorization')
-           },
-           data: formData,
-           processData: false,
-           contentType: false,
-           success: function(response) {
-               alert('크루 모집 수정되었습니다!');
-               $('#uploadTeamPhotoModal').modal('hide');
-               setTimeout(function() {crew_detail_select()}, 100);
-           },
-           error: function(error) {
-               console.log(error);
-               alert('크루 모집 수정 중 오류가 발생했습니다.');
-           }
-       });
+
+    function crew_write_detail_check(crew_write_code) {
+        $.ajax({
+            url: '/crew/crew_write_detail_check',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: localStorage.getItem('Authorization'),
+                crew_write_code: crew_write_code  // 전역변수 사용
+            },
+            success: function(result) {
+                // 두 번째 모달 (thirdModal)에 성별 및 나이대 값 적용
+                $('input[name="gender3"][value="' + result[0].gender + '"]').prop('checked', true);
+
+                var age_arr = result[0].age.split(',');
+                $('input[type="checkbox"][name="age[]3"]').prop('checked', false); // 체크박스 초기화
+                for (var i in age_arr) {
+                    $('input[name="age[]3"][value="' + age_arr[i] + '"]').prop('checked', true);
+                }
+
+                // 세 번째 모달 (uploadTeamPhotoModal)에 팀 소개 및 이미지 적용
+                $('#teamIntro3').val(result[0].content);
+                if (result[0].teamPhoto) {
+                    $('#teamPhotoPreview').attr('src', '/crew_upload/' + result[0].teamPhoto).show(); // 팀 사진 미리보기
+                    $('#photoPreviewSection').show();
+                } else {
+                    $('#photoPreviewSection').hide();
+                }
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
+    function crew_write_update() {
+        var form = $('#crew_write_update')[0];
+        var formData = new FormData(form);
 
+        // 성별과 나이 선택 여부 확인
+        var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+        var genderChecked = $('input[name="gender3"]:checked').length > 0;
 
+        if (!ageChecked) {
+            alert('주요 나이대를 선택해주세요.');
+            return false;
+        }
+        if (!genderChecked) {
+            alert('성별을 선택해주세요.');
+            return false;
+        }
+
+        if ($('#teamIntro3').val() == '') {
+            alert('모집내용을 입력해주세요.');
+            return false;
+        }
+
+        // 글 수정 폼 데이터를 서버로 전송
+        $.ajax({
+            url: '/crew/crew_write_update',
+            type: 'POST',
+            headers: {
+                Authorization: localStorage.getItem('Authorization')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('크루 모집이 수정되었습니다!');
+                $('#uploadTeamPhotoModal').modal('hide');
+                setTimeout(function() { crew_detail_select(); }, 100); // 업데이트된 내용을 다시 불러오는 함수
+            },
+            error: function(error) {
+                console.log(error);
+                alert('크루 모집 수정 중 오류가 발생했습니다.');
+            }
+        });
+    }
+    function go_crew_manage(){
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + usercode + '&position=' + position;
+    }
 
 </script>

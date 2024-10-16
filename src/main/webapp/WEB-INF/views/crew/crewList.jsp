@@ -98,7 +98,7 @@
                             <div class="crew_title">
                                 <span class="crewname"style=" font-weight: bold; font-size:16px;"><b>${cvo.crew_name}</b></span>
                                 <span class="count">🏃‍♀️${cvo.num}<span>
-                                <span class="count">멤버모집<span>
+                                <span class="count2">멤버모집<span>
                             </div>
                             <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">
                                 <span class="crewaddr">${cvo.addr}</span>&nbsp;&nbsp;&nbsp;
@@ -723,7 +723,9 @@
     // 모달 닫기 확인
     function confirmClose(modalId) {
         if (confirm("닫으시면 선택한 정보가 사라집니다. 닫으시겠습니까?")) {
-            $('#' + modalId).modal('hide');
+            $('#' + modalId).modal('hide'); // 모달 숨기기
+            $('.modal-backdrop').remove(); // 모달 백드롭(블러 처리된 배경) 강제 제거
+            $('body').removeClass('modal-open'); // 모달 닫힌 후 'modal-open' 클래스가 남아있다면 제거
         }
     }
     // Enter 키 입력 방지
@@ -753,9 +755,9 @@
             },
             success: function(result) {
                 for(var i in result){
-  list += '<div class="list_wrapper">';
+                list += '<div class="list_wrapper">';
                     list += ' <ul id="crew_list">';
-                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + '&crewWriteCode=' + result[i].crewWriteCode +')">';
+                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code +','+ result[i].crew_write_code +')">';
                     list += '   <div class="crew_profileimage">';
                     list += '       <div class="profileBox">';
                     list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
@@ -765,7 +767,7 @@
                     list += '       <div class="crew_title">';
                     list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>'+result[i].crew_name+'</b></span>';
                     list += '           <span class="count">🏃‍♀️'+result[i].num+'<span>';
-                    list += '           <span class="count">멤버모집<span>';
+                    list += '           <span class="count2">멤버모집<span>';
                     list += '       </div>';
                     list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
                     list += '          <span class="crewaddr">'+result[i].addr+'</span>&nbsp;&nbsp;&nbsp';
@@ -996,11 +998,19 @@ function submitCrewInfo() {
                 }
                 if(flag==2){
                     for (var i in response) {
-                         list += '<li class="team-item">'
-                         list += '<img src="/crew_upload/'+response[i].logo+'" class="profileImg">';
-                         list += '<div class="option-btn" onClick="go_my_crew(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
-                         list +='</li>';
+                         list += '<li class="team-item">';
+                         list += '<a class="team-link">';
+                         list += '<img src="/crew_upload/'+response[i].logo+'" class="teamemblem">';
+                         list += '<div class="team-name" onClick="go_my_crew(' + response[i].create_crew_code +','+ response[i].usercode+','+ response[i].b_n+ ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
+                         list +='</a>';
+                         list+='</li>';
                     }
+                     list += '<li class="team-item">';
+                     list += '<a class="team-link">';
+                     list += '<img src="/img/group.png" class="teamemblem">';
+                     list += '<div class="team-name" onClick="join_wait()" id="write">가입 신청 내역</div>';
+                     list +='</a>';
+                     list+='</li>';
                     $('#team_list').append(list);
                 }
             },
@@ -1047,9 +1057,20 @@ function submitCrewInfo() {
     }
 
     function crew_page_detail(create_crew_code, crew_write_code) {
-        $('#createNewTeamModal').modal('hide');
         window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
+        $('#createNewTeamModal').modal('hide');
     }
+
+    function go_my_crew(create_crew_code,user_code,position) {
+        $('#myCrewModal').modal('hide');
+        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code+ '&position=' + position;
+;    }
+
+    function join_wait() {
+        $('#myCrewModal').modal('hide');
+        window.location.href = '/crew/crewWait';
+    }
+
     function crew_add_popup(){
         resetForm(); // 폼 리셋
         $('#createNewTeamModal').modal('hide');

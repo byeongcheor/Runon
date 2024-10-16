@@ -3,11 +3,60 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.MypageDAO">
+    <select id="selectOne" resultType="com.ict.finalproject.vo.MemberVO">
+        select *
+        from user_tbl
+        where username = #{param1}
+    </select>
+<!--    <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">-->
+<!--        SELECT u.*, p.mypoint-->
+<!--        FROM user_tbl u-->
+<!--        LEFT JOIN point_tbl p ON u.usercode = p.usercode-->
+<!--        WHERE username=#{username}-->
+<!--    </select>-->
     <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">
-        SELECT u.*, p.mypoint
-        FROM user_tbl u
-        LEFT JOIN point_tbl p ON u.usercode = p.usercode
-        WHERE username=#{username}
+        <!--SELECT AllUsers.*, u.mypoint
+        FROM (
+        SELECT RANK() OVER (ORDER BY SUM(b.score_change) DESC) AS ranking,
+        a.usercode,
+        a.nickname,
+        a.profile_img,
+        a.name,
+        a.username,
+        SUM(b.score_change) AS Total_Km,
+        COALESCE(d.crew_name, 'No Crew') AS crew_name
+        FROM user_tbl a
+        JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        WHERE a.is_info_disclosure = 'Y'
+        GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name, a.name, a.username
+        ) AS AllUsers
+        LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
+        WHERE AllUsers.usercode = (select usercode from user_tbl where username = #{param1});-->
+        SELECT AllUsers.*, u.mypoint
+        FROM (
+        SELECT
+        CASE
+        WHEN SUM(b.score_change) IS NOT NULL THEN RANK() OVER (ORDER BY SUM(b.score_change) DESC)
+        ELSE NULL
+        END AS ranking,
+        a.usercode,
+        a.nickname,
+        a.profile_img,
+        a.name,
+        a.username,
+        COALESCE(SUM(b.score_change), 0) AS Total_Km,
+        COALESCE(GROUP_CONCAT(DISTINCT d.crew_name SEPARATOR ', '), 'No Crew') AS crew_name
+        FROM user_tbl a
+        LEFT JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        GROUP BY a.usercode, a.nickname, a.profile_img, a.name, a.username
+        ) AS AllUsers
+        LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
+        WHERE AllUsers.usercode = (SELECT usercode FROM user_tbl WHERE username = #{userName});
+
     </select>
     <update id="updateProfile">
         update user_tbl set profile_img = #{param2} where username = #{param1}
@@ -28,6 +77,50 @@
         set is_deleted = 1, deleted_date = now()
         where username = #{param1}
     </update>
+    <select id="getMember" resultType="com.ict.finalproject.vo.MemberVO">
+        select * from user_tbl
+        where usercode=#{usercode}
+    </select>
+    <insert id="insertDelUser">
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code, point_change_code)
+        select u.usercode,
+        u.username,
+        u.password,
+        u.nickname,
+        u.addr,
+        u.addr_details,
+        u.zip_code,
+        u.birthdate,
+        u.gender,
+        u.tel,
+        u.profile_img,
+        u.is_info_disclosure,
+        u.role,
+        u.is_google,
+        u.creation_date,
+        p.mypoint,
+        p.point_code,
+        p.point_change_code
+        from user_tbl u
+        left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
+    </insert>
+    <delete id="delFromUser">
+        delete from user_tbl where usercode=#{param1}
+    </delete>
+    <delete id="delFromPoint">
+        delete from point_tbl where usercode=#{param1}
+    </delete>
+    <select id="passwordChk" resultType="com.ict.finalproject.vo.MemberVO">
+        select username, passsword
+        from user_tbl
+        where username=#{param1}
+    </select>
+    <select id="selectOrderAll" resultType="com.ict.finalproject.vo.OrderVO">
+        select o.*, m.marathon_name marathon_name
+        from order_tbl o
+        join marathon_list_tbl m on o.marathon_code = m.marathon_code
+        where o.usercode = #{param1}
+    </select>
     <select id="selectMarathonForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
         SELECT *
         FROM marathon_form_tbl
@@ -81,17 +174,26 @@
         where certificate_code=#{param1}
     </select>
     <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
-        select u.*
+        select u.*, a.matching_room_code
         from user_tbl u
-        where u.usercode in (
-            select a.usercode
-            from applicant_tbl a
-            where a.matching_room_code in (
-                select matching_room_code
-                from applicant_tbl
-                where usercode = #{param1}
-            )
+        join applicant_tbl a on u.usercode = a.usercode
+        where a.matching_room_code in (
+        select matching_room_code
+        from applicant_tbl
+        where usercode = #{param1}
         )
+        and u.usercode != #{param1}
+    </select>
+    <insert id="reportMate">
+        insert into report_tbl
+        (offender_code, report_reason, victim_code, matching_room_code, report_content, proof_img)
+        values(#{offender_code}, #{report_reason}, #{victim_code}, #{matching_room_code}, #{report_content}, #{proof_img})
+    </insert>
+    <select id="selectReportForm" resultType="com.ict.finalproject.vo.ReportVO">
+        select *
+        from report_tbl
+        where victim_code = #{param1} and matching_room_code = #{param2}
+        limit 1
     </select>
     <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
         select *
