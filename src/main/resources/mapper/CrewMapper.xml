@@ -554,10 +554,16 @@
 
     </insert>
 
-
     <select id="getCrewList" resultType="com.ict.finalproject.vo.CrewVO">
         SELECT create_crew_code, crew_name, logo
         FROM create_crew_tbl;
     </select>
+
+    <select id="resign_select" resultType="int">
+        SELECT count(1)
+        FROM crew_member_tbl
+        where create_crew_code=${param1}
+    </select>
+
 
 </mapper>

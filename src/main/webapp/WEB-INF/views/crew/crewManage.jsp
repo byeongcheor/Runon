@@ -17,7 +17,7 @@
             <section class="section3">
                 <div class="profile_container">
                     <div class="names">
-                        <h3 id='crew_name' ></h3>
+                        <h4 id='crew_name' ></h4>
                         <span id='addr'style="display: block;"></span>
                         <span id='crew_info' style="display: block;"></span>
                     </div>
@@ -82,7 +82,6 @@
                         <span class="crew_addr">크루생성일</span>
                         <span class="crew_addr2" id=create_date></span>
                     </div>
-
                </div>
             </section>
         </div>
@@ -492,7 +491,7 @@ clog('My user_code : '+ user_code);
           }
          if(response[i].b_n==9){
                list +=          '<span class="main-text" onClick="vote_select('+response[i].c_n+')">'+response[i].subject+'</span> ';
-               list +=          '<span class="sub-text">투표 마감</span>';
+               list +=          '<span class="sub-text" style=" background-color: black; color: white;">투표 마감</span>';
           }
           list +=       '</div> ';
           list +=    '</div> ';
