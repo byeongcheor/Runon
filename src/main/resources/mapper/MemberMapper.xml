@@ -49,4 +49,5 @@
     <update id="enableUser">
         update user_tbl set is_disabled=0 ,disabled_date=null where username=#{param1}
     </update>
+
 </mapper>

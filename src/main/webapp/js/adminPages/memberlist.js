@@ -1,12 +1,15 @@
 var searchType=null;
 var searchValue=null;
+var searchType2=null;
+var searchValue2=null;
 setTimeout(function(){
     var page;
     reloadPage(page);
 
 },100)
 
-function reloadPage(page,searchType,searchValue){
+function reloadPage(page,searchType,searchValue,searchType2,searchValue2){
+
     if (page==null){
         page=1;
     }
@@ -17,63 +20,113 @@ function reloadPage(page,searchType,searchValue){
     if (searchType&&searchValue){
         Data.searchType=searchType;
         Data.searchValue=searchValue;
+
     }
+    if(searchType2&&searchValue2){
+        Data.searchType2=searchType2;
+        Data.searchValue2=searchValue2;
+    }
+    if (usercode1){
+        Data.usercode=usercode1;
+    }
+
     $.ajax({
-        url:"/adminPages/selectmlist",
-        type:"POST",
-        data:Data,
-        success:function(r){
-
-            var members = r.list;  // 회원 목록
-            var pVO = r.pvo;  // 페이징 정보
-            var role=r.role
-            // 1. 회원 목록 렌더링
-
-                var tag = "<li><div id='usertitle2'><div class='username '>아이디 </div><div class='name'>이름</div>";
-                tag += "<div class='nickname'>닉네임</div><div class='is_google'>소셜로그인여부</div><div class='is_info_disclosure'>정보공개여부</div>";
-                tag += "<div class='tel'>전화번호</div><div class='birthdate'>생년월일</div>";
-                tag += "<div class='creation_date'>가입일</div><div class='buttonline'></div></div></li>";
-
-                members.forEach(function (member) {
-                    tag += "<li><div class='usertitle3'><input type='checkbox' name='test[]' class='checkbox' style='display: none;' value='" + member.usercode + "'/>";
-                    tag += "<div class='username'>" + member.username + "</div><div class='name'>" + member.name + "</div>";
-                    tag += "<div class='nickname'>" + member.nickname + "</div><div class='is_google'>" + member.is_google + "</div><div class='is_info_disclosure'>";
-                    tag += member.is_info_disclosure + "</div>";
-                    tag += "<div class='tel'>" + member.tel + "</div>";
-                    tag += "<div class='birthdate'>" + member.birthdate + "</div><div class='creation_date'>" + (member.creation_date).substring(0, 10) + "</div>";
-                    tag += "<button class='btn btn-outline-secondary buttonline' type='button' style='flex-shrink: 0;' onclick='userdetail(" + member.usercode + ")'>상세보기</button></div></li>";
-                });
-
-                $("#userList").html(tag);
-
-                // 2. 페이징 정보 렌더링
-                var paginationTag = "";
-
-                // 이전 버튼
-                if (pVO.nowPage > 1) {
-                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pVO.nowPage - 1) + ", searchType, searchValue);'>Previous</a></li>";
-                }
-
-                // 페이지 번호 출력
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
-                    if (p <= pVO.totalPage) {
-                        paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ", searchType, searchValue);'>" + p + "</a></li>";
-                    }
-                }
-
-                // 다음 버튼
-                if (pVO.nowPage < pVO.totalPage) {
-                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pVO.nowPage + 1) + ", searchType, searchValue);'>Next</a></li>";
-                }
-
-                $(".pagination").html(paginationTag);
-
-
+        url:"/adminPages/RoleCheck",
+        type:"post",
+        data:{
+            usercode:usercode1
         },
-        error: function (e) {
-            console.log(e);
+        success:function(r){
+            var role=r.Avo.role
+            var Avo=r.Avo;
+            if(role<2||Avo.admin_code==0) {
+
+
+
+                var checkboxlisttag= '<button type="button" className="clickbox" onClick="blockhidden()">체크표시</button>';
+                checkboxlisttag+= '<button type="button" className="clickbox" onClick="checkAll()">일괄체크</button>';
+                checkboxlisttag+='<button type="button" className="clickbox" onClick="selectExcel()">선택엑셀</button>';
+                document.getElementById("checkboxlist").style.display = "block";
+                document.getElementById("checkboxlist").innerHTML=checkboxlisttag;
+                var AdminRole2tag=`<button type="button"  onclick="selectList('2')">유저만 보기</button><button  onclick="selectList('1')" type="button">관리자만 보기</button><button onclick=" selectList('0')">전체보기</button>`;
+                document.getElementById("AdminRole2").style.display = "block";
+                document.getElementById("AdminRole2").innerHTML=AdminRole2tag;
+                var hiddendowntag= `<input type="button" value="전체유저정보받기" onclick="excelDownload()"/>`;
+                document.getElementById("hiddendown").style.display = "block";
+                document.getElementById("hiddendown").innerHTML=hiddendowntag;
+
+            }
+            if (role < 3 || Avo.admin_code == 0) {
+
+                $.ajax({
+                    url: "/adminPages/selectmlist",
+                    type: "POST",
+                    data: Data,
+                    success: function (r) {
+                        var Avo = r.Avo;
+                        var members = r.list;  // 회원 목록
+                        var pVO = r.pvo;  // 페이징 정보
+
+                        // 1. 회원 목록 렌더링
+
+                        var tag = "<li><div id='usertitle2'><div class='username '>아이디 </div><div class='name'>이름</div>";
+                        tag += "<div class='nickname'>닉네임</div><div class='is_google'>소셜로그인여부</div><div class='is_info_disclosure'>정보공개여부</div>";
+                        tag += "<div class='tel'>전화번호</div><div class='birthdate'>생년월일</div>";
+                        tag += "<div class='creation_date'>가입일</div><div class='buttonline'></div></div></li>";
+
+                        members.forEach(function (member) {
+                            tag += "<li><div class='usertitle3'><input type='checkbox' name='test[]' class='checkbox' style='display: none;' value='" + member.usercode + "'/>";
+                            tag += "<div class='username'>" + member.username + "</div><div class='name'>" + member.name + "</div>";
+                            tag += "<div class='nickname'>" + member.nickname + "</div><div class='is_google'>" + member.is_google + "</div><div class='is_info_disclosure'>";
+                            tag += member.is_info_disclosure + "</div>";
+                            tag += "<div class='tel'>" + member.tel + "</div>";
+                            tag += "<div class='birthdate'>" + member.birthdate + "</div><div class='creation_date'>" + (member.creation_date).substring(0, 10) + "</div>";
+                            if (Avo.role<2||Avo.admin_code==0){
+                                tag += "<button class='btn btn-outline-secondary buttonline' type='button' style='flex-shrink: 0;' onclick='userdetail(" + member.usercode + ")'>상세보기</button></div></li>";
+                            }else {
+                                tag += "<button class='btn btn-outline-secondary buttonline' type='button' style='flex-shrink: 0;' onclick='userdetail(" + ((member.role=="ROLE_USER") ? member.usercode :'"n"' ) + ")'>상세보기</button></div></li>";
+                            }
+                        });
+
+                        $("#userList").html(tag);
+
+                        // 2. 페이징 정보 렌더링
+                        var paginationTag = "";
+
+                        // 이전 버튼
+                        if (pVO.nowPage > 1) {
+                            paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pVO.nowPage - 1) + ", searchType, searchValue,searchType2,searchValue2);'>Previous</a></li>";
+                        }
+
+                        // 페이지 번호 출력
+                        for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                            if (p <= pVO.totalPage) {
+                                paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ", searchType, searchValue,searchType2,searchValue2);'>" + p + "</a></li>";
+                            }
+                        }
+
+                        // 다음 버튼
+                        if (pVO.nowPage < pVO.totalPage) {
+                            paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pVO.nowPage + 1) + ", searchType, searchValue,searchType2,searchValue2);'>Next</a></li>";
+                        }
+
+                        $(".pagination").html(paginationTag);
+
+
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            }else{
+                alert("권한이 없습니다.");
+            }
+
         }
-    });
+
+
+    })
+
 }
 function excelDownload(){
     $.ajax({
@@ -92,27 +145,40 @@ function download(data){
     const wb = XLSX.utils.book_new();  // 새로운 Workbook 생성
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");  // 워크시트를 Workbook에 추가
     XLSX.writeFile(wb, "data.xlsx");  // Excel
+
 }
 function userdetail(usercode){
+    if (usercode!="n"){
+        userCode=usercode;
+    }else{
+        alert("권한이 없습니다");
+        return false;
+    }
     document.getElementById("userdetailbackground").style.display="block";
     $.ajax({
         url:"/adminPages/userdetail",
         type:"post",
-        data:{usercode:usercode
+        data:{usercode:userCode,
+            adminusercode:usercode1
         },
         success:function(r){
             var rlist=r.rlist;
             var users=r.mvo;
             var recordlist=r.recordlist;
             var payVo=r.payVo;
-            var usertag=`
-            
-            <div id="userprofile">
-                <img src="../../profileImg/`+users.profile_img+`"/>
-               <div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>
+            var AdminRole=r.Avo.role;
+            var Admincode=r.Avo.admin_code;
+            var delete_role=r.Avo.permission_delete;
 
-                <div>`;
-            if (users.is_disabled==0){
+
+            var usertag = `<div id='userprofile'><img src="../../profileImg/` + users.profile_img + `"/>`;
+
+            if ((AdminRole<2&&delete_role==1&&users.role!="ROLE_ADMIN")||Admincode==0){
+
+                usertag+=`<div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>`;
+            }
+                usertag+=`<div>`;
+            if (users.is_disabled==0&&users.role=="ROLE_USER"){
             usertag+= `
                     <form method="post"  onsubmit="return disableUser(`+users.usercode+`)">
                         <select id="stopDuration">
@@ -124,7 +190,8 @@ function userdetail(usercode){
                         <input type="submit" value="정지" />
                     </form>
                     `;
-            }else{
+
+            }else if(users.role=="ROLE_USER"){
                 usertag+=`
                 <div>정지된 유저입니다 <br/>
                 정지시작:`+users.disabled_start_date+`<br/>
@@ -133,6 +200,14 @@ function userdetail(usercode){
                     
                
                 `;
+            } if (Admincode==0){
+                if(users.role=="ROLE_USER"){
+                    usertag+="<button type='button' onclick='roleUp(\""+users.usercode+"\")'>관리자 승격</button>";
+                }else if (users.role=="ROLE_ADMIN"){
+
+                    usertag +="<h2>관리자</h2>";
+                    usertag +="<button type='button' onclick='roleDown(\""+users.usercode+"\",\""+users.nickname+"\")'>관리자 박탈</button>";
+                }
             }
 
 
@@ -152,14 +227,51 @@ function userdetail(usercode){
                     <div id="tel">핸드폰번호:`+users.tel+`</div>
                     <div id="reportcnt">신고당한횟수:`+rlist.length+`</div>
                 </div>
-                <div class="onelow">
-                    <div id="zipcode">우편번호:`+users.zip_code+`</div>
-                    <div id="addr"> 주소:`+users.addr+` </div>
-                </div>
-                <div class="onelow">
-                    <div id="addrdetail">상세주소:`+users.addr_details+`</div>
-                </div>
-            </div>`;
+                `;
+
+            if (users.zip_code!=null &&(AdminRole<2||Admincode==0)){
+
+                usertag+=`
+                    <div class="onelow">
+                        <div id="zipcode">우편번호:`+users.zip_code+`</div>
+                        <div id="addr"> 주소:`+users.addr+` </div>    
+                    </div>
+                    <div class="onelow">
+                        <div id="addrdetail">상세주소:`+users.addr_details+`</div>
+                    </div>`;
+            }else if (users.zip_code!=null&&(AdminRole<2||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
+                if (users.addr.length>5) {
+                    var userAddr = users.addr.substring(0, users.addr.length - 5) + '*****';
+                }else{
+                    userAddr="*****";
+                }
+                if(users.addr_details.length>5){
+                    var addrDetails=users.addr_details.substring(0,users.addr_details-5)+"*****";
+                }else{
+                    addrDetails="*****";
+                }
+                var zip_code = users.zip_code.substring(0, 2) + '**' + users.zip_code.substring(4);
+                usertag +=`
+                    <div class="onelow">
+                        <div id="zipcode">우편번호:`+zip_code+`</div>
+                        <div id="addr"> 주소:`+userAddr+` </div>    
+                    </div>
+                    <div class="onelow">
+                        <div id="addrdetail">상세주소:`+userAddr+`</div>
+                    </div>`;
+            }else{
+                usertag +=`
+                    <div class="onelow">
+                        <div id="zipcode">우편번호:`+users.zip_code+`</div>
+                        <div id="addr"> 주소:`+users.addr+` </div>    
+                    </div>
+                    <div class="onelow">
+                        <div id="addrdetail">상세주소:`+users.addr_details+`</div>
+                    </div>`;
+            }
+
+            
+            usertag+=`</div>`;
             document.getElementById("usermain").innerHTML=usertag;
             var totalscore=0;
             recordlist.forEach(function(recordlist){
@@ -281,7 +393,8 @@ function searchbutton(){
         alert("검색어를 입력해주세요");
         return false;
     }
-    reloadPage(1,searchType,searchValue);
+    document.getElementById("searchtext").value="";
+    reloadPage(1,searchType,searchValue,searchType2,searchValue2);
 
 
 }
@@ -344,4 +457,63 @@ function selectExcel(){
 
     });
 
+}
+function selectList(role){
+
+    if (role==1) {
+        searchType2="role";
+        role = "ROLE_ADMIN";
+    }else if (role==0){
+       ;
+        reloadPage(1,null,null,null,null);
+        return false;
+    }
+    else{
+        searchType2="role";
+        role="ROLE_USER";
+    }
+    searchValue2=role;
+    reloadPage(1,searchType,searchValue,searchType2,searchValue2);
+}
+function roleUp(code){
+
+
+    $.ajax({
+        url:"/adminPages/roleUp",
+        type:"post",
+        data:{
+            usercode:code
+        },
+        success:function(r){
+
+            document.getElementById("userdetailbackground").style.display="none";
+            userdetail(code);
+        },error:function(e){
+            console.error(e);
+        }
+
+    })
+}
+function roleDown(code,nickname){
+    if (confirm(nickname+"님의 권한을 박탈하시겠습니까?")){
+        if(confirm("정말 박탈하시겠습니까?")){
+            $.ajax({
+                url:"/adminPages/roleDown",
+                type:"post",
+                data:{
+                    usercode:code
+                },
+                success:function(r){
+                    document.getElementById("userdetailbackground").style.display="none";
+                    userdetail(code);
+                }
+                ,error:function(e){
+                    console.error(e);
+                }
+            })
+        }
+    }
+}
+function changeOption(){
+    document.getElementById("searchtext").focus();
 }

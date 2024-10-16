@@ -44,30 +44,34 @@ public class LoginController {
         //입력한 비번값이 db랑비교해서 맞으면
 //        if (bCryptPasswordEncoder.matches(password, vo.getPassword())) {
         //정지 되었는지 확인
-        if (vo.getIs_disabled().equals("1")) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dateTime = LocalDateTime.parse(vo.getDisabled_date(), formatter);
-            LocalDateTime now = LocalDateTime.now();
-            //정지상태(1)이고 정지 기한이 아직 안지났으면
-            if (dateTime.isBefore(now)) {
-                result = memberService.enableUser(username);
-                map.put("result", result);
-                return map;
-            }
-            else {
-                map.put("disabled_date", vo.getDisabled_date());
-                map.put("disabled_start_date", vo.getDisabled_start_date());
-                map.put("result",result);
-                return map;
+        if (vo!=null) {
+            if (vo.getIs_disabled().equals("1")) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dateTime = LocalDateTime.parse(vo.getDisabled_date(), formatter);
+                LocalDateTime now = LocalDateTime.now();
+                //정지상태(1)이고 정지 기한이 아직 안지났으면
+                if (dateTime.isBefore(now)) {
+                    result = memberService.enableUser(username);
+                    map.put("result", result);
+                    return map;
+                }
+                else {
+                    map.put("disabled_date", vo.getDisabled_date());
+                    map.put("disabled_start_date", vo.getDisabled_start_date());
+                    map.put("result",result);
+                    return map;
+                }
             }
         }
-//        } 정지 기한이 아니면
-        else {
-            result=3;
-            map.put("result",result);
-            return map;
-        }
-        //정지상태(1)인데 아직 기한이 남았을때
+    //        } 정지 기한이 아니면
+//        else {
+//            result=3;
+//            map.put("result",result);
+//            return map;
+//        }
+        result=3;
+        map.put("result",result);
+        return map;  //정지상태(1)인데 아직 기한이 남았을때
 
 
     }

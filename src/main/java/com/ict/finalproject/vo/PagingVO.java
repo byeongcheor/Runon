@@ -12,7 +12,62 @@ public class PagingVO {
     private String searchWord;
     private String addr;
 
+    private String searchKey2;
+    private String searchWord2;
+    private String sort;
+    private String schedule;
 
+    @Override
+    public String toString() {
+        return "PagingVO{" +
+                "nowPage=" + nowPage +
+                ", onePageRecord=" + onePageRecord +
+                ", offset=" + offset +
+                ", totalRecord=" + totalRecord +
+                ", totalPage=" + totalPage +
+                ", onePageNum=" + onePageNum +
+                ", startPageNum=" + startPageNum +
+                ", searchKey='" + searchKey + '\'' +
+                ", searchWord='" + searchWord + '\'' +
+                ", addr='" + addr + '\'' +
+                ", searchKey2='" + searchKey2 + '\'' +
+                ", searchWord2='" + searchWord2 + '\'' +
+                ", sort='" + sort + '\'' +
+                ", schedule='" + schedule + '\'' +
+                '}';
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
+    public String getSearchKey2() {
+        return searchKey2;
+    }
+
+    public void setSearchKey2(String searchKey2) {
+        this.searchKey2 = searchKey2;
+    }
+
+    public String getSearchWord2() {
+        return searchWord2;
+    }
+
+    public void setSearchWord2(String searchWord2) {
+        this.searchWord2 = searchWord2;
+    }
 
     public String getSearchKey() {
         return searchKey;

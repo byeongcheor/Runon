@@ -1,14 +1,17 @@
 
 // 장바구니에 추가된 상품 수량 변경부분
-
+let number = 1;
+let price=0;
 // 총 금액을 전역 변수로 선언
-let totalAmount; // 총 금액 초기화
-let appliedPoints ; // 적용된 포인트 (할인으로 적용됨)
+let totalAmount = 0; // 총 금액 초기화
+let appliedPoints = 0; // 적용된 포인트 (할인으로 적용됨)
 // 사용자 포인트(예시)
-
+let userPoints = 1000;
 
 setTimeout(function(){
-
+    var usercode=usercode1
+    var token = localStorage.getItem("Authorization");
+    alert(usercode);
     const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
 
     // 모든 항목을 기본적으로 선택
@@ -39,40 +42,42 @@ setTimeout(function(){
             alert("선택한 상품이 없습니다."); // 체크된 상품이 없으면 메시지 표시
         }
     });
-    cartload();
+    $.ajax({
+        url:"/order/cart",
+        type:"POST",
+        data: {
+            usercode: usercode1,
+        },
+        success: function(r) {
+            cart = r.ordercart;
+            cart.forEach(function (cart) {
+                tag = "<div>list.subject</div>"
+            });
+            document.getElementById('orderButton').innerHTML = tag;
+        }
+    });
 
-},300);
+},100);
 
 // 선택된 상품 삭제 함수
 function deleteSelectedItems() {
     const checkedItems = document.querySelectorAll('input[name="itemCheckbox"]:checked');
     alert(usercode1);
+    alert(username1);
     if (checkedItems.length === 0) {
         alert("삭제할 상품을 선택해 주세요.");
         return; // 선택된 상품이 없으면 종료
     }
-    let CheckedItems=[];
-    checkedItems.forEach(item => {
-        const tipoffElement = item.value; // 해당 상품의 부모 요소를 찾음
-        CheckedItems.push(item.value);
-        // 반복문확인 console.log(tipoffElement);// DOM에서 해당 상품 삭제
 
-    });
-    // 배열에 값 들어가는거 확인console.log(CheckedItems);
-    // 총 금액 업데이트
-    // updateProductTotal(); // 총 금액을 재계산하여 업데이트
-    // db조회후 안보이게
-    $.ajax({
-        url:"/order/deleted",
-        type:"post",
-        contentType:"application/json",
-        data:JSON.stringify({
-            items:CheckedItems
-        }),
-        success:function(r){
-            cartload();
+    checkedItems.forEach(item => {
+        const tipoffElement = item.closest('.tipoff'); // 해당 상품의 부모 요소를 찾음
+        if (tipoffElement) {
+            tipoffElement.remove(); // DOM에서 해당 상품 삭제
         }
     });
+
+    // 총 금액 업데이트
+    updateProductTotal(); // 총 금액을 재계산하여 업데이트
 }
 
 
@@ -116,27 +121,41 @@ function updateProductTotal() {
         document.getElementById('totalAmount').innerText = finalAmount.toLocaleString() + "원";
     });
 }
-function increase(test,cart_code) {
-    datas={};
+function increase() {
 
-   if (test==1){
-        datas.action="add";
-   }else{
-       datas.action = "remove";
-   }
-   datas.cart_code=cart_code;
-   $.ajax({
-       url:"/order/cartupdate",
-       type:"post",
-       data:datas,
-       success:function(r){
-           cartload();
-       }
+    number++;
+    document.getElementById("number").textContent = number;
 
-   });
-
+    // 수량이 증가할 때 총 가격 업데이트
+    updateProductTotal();
 }
 
+function decrease() {
+    if (number > 1) {
+        number--;
+        document.getElementById("number").textContent = number;
+
+        // 수량이 감소할 때 총 가격 업데이트
+        updateProductTotal();
+    }
+}
+
+
+
+
+
+// 포인트 모달 열기
+function openModal() {
+    document.getElementById("couponModal").style.display = "flex";
+}
+
+// 포인트 모달 닫기
+function closeModal() {
+    document.getElementById("couponModal").style.display = "none";
+}
+
+// 상품 삭제 시 금액 업데이트 및 DOM에서 해당 항목 제거
+// 상품 삭제 시 금액 업데이트 및 DOM에서 해당 항목 제거
 function removeItem(itemId, price) {
     var item = document.getElementById(itemId);
 
@@ -267,8 +286,10 @@ function updateSelectAll() {
 }
 
 // 페이지 로드 시 모든 상품을 선택된 상태로 설정
+$(document).ready(function () {
 
-
+});
+//온로드 끝
 // 토스페이먼츠 결제 요청
 const clientKey = "test_ck_ma60RZblrqKzA7jLeex63wzYWBn1";
 const customerKey = "l1lg7ARfyrAiOiFlTQ2Eu";
@@ -335,41 +356,4 @@ async function requestPayment(checkedItems) {
         alert("결제 요청을 다시 시도해주세요."); // 사용자에게 알림
     }
 
-}
-
-function cartload(){
-    $.ajax({
-        url:"/order/cart",
-        type:"POST",
-        data: {
-            usercode: usercode1,
-        },
-        success: function(r) {
-            cart = r.cartItems;
-
-            var tag="<div class='tipoff'>";
-            cart.forEach(function (cart) {
-                var price=cart.price.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
-                var amount=(cart.price*cart.quantity).toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
-                tag+='<div class="oneline">' +
-                    '<input type="hidden" id="productId" name="productId" value="'+cart.marathon_code+'">';
-                tag+=   '<div class="checkB"><input type="checkbox" name="itemCheckbox" id="itemCheckbox" value="'+cart.cart_code+'" onclick="updateSelectAll()"></div>';
-                tag+=   '<div class="ticket"><img src="'+cart.poster_img+'" alt="마라톤 포스터" class="marathonP"><span class="marathonT">'+cart.marathon_name+ '</span></div>';
-
-
-                tag+=   '<div class="marathonC">'+
-                    '<div class="counter-container">' +
-                    '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';
-                tag += '<span id="number">' + cart.quantity + '</span>';
-                tag += '<button onclick="increase(1, ' + cart.cart_code + ')">+</button>' ;
-                tag+=           '</div></div>' +
-                    '<div class="price">'+price+'</div>' +
-                    '<div class="amount">'+amount+'</div>' +
-                    '</div>';
-
-            });
-            tag+=`</div>`;
-            document.getElementById('ticket_cart').innerHTML = tag;
-        }
-    });
 }
