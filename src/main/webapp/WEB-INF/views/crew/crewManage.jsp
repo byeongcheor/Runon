@@ -17,7 +17,7 @@
             <section class="section3">
                 <div class="profile_container">
                     <div class="names">
-                        <h4 id='crew_name' ></h4>
+                        <h3 id='crew_name' ></h3>
                         <span id='addr'style="display: block;"></span>
                         <span id='crew_info' style="display: block;"></span>
                     </div>
@@ -82,6 +82,7 @@
                         <span class="crew_addr">크루생성일</span>
                         <span class="crew_addr2" id=create_date></span>
                     </div>
+
                </div>
             </section>
         </div>
@@ -315,677 +316,583 @@
 </div>
 
 <script>
-var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const create_crew_code = urlParams.get('create_crew_code');
-const user_code = urlParams.get('user_code');
-const position = urlParams.get('position');
-var votenum=4;
-if(position >1){
-    $('#editCrewBtn').hide();
-}
-if(position>2){
-    $('#noticeMake').hide();
-    $('#voteMake').hide();
-}
-clog('My position : '+ position);
-clog('My user_code : '+ user_code);
+   var Authorization = localStorage.getItem("Authorization");
+   const urlParams = new URLSearchParams(window.location.search);
+   const create_crew_code = urlParams.get('create_crew_code');
+   const user_code = urlParams.get('user_code');
+   const position = urlParams.get('position');
+   var votenum = 4;
 
+   if (position > 1) {
+      $('#editCrewBtn').hide();
+   }
+   if (position > 2) {
+      $('#noticeMake').hide();
+      $('#voteMake').hide();
+   }
 
-    $(document).ready(function() {
-        $('#member').css('color', 'black');
-        crew_deatil_select();
-        crew_manage_select('');
-        if(position !=1){
-            $('#wait_cnt').hide();
-        }
-    });
+   clog('My position : ' + position);
+   clog('My user_code : ' + user_code);
 
-    function crew_deatil_select(){
-        $.ajax({
-            url: '/crew/crew_deatil_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code
-            },
-            success: function(response) {
+   $(document).ready(function() {
+      $('#member').css('color', 'black');
+      crew_deatil_select();
+      crew_manage_select('');
+      if (position != 1) {
+         $('#wait_cnt').hide();
+      }
+   });
 
-                $('#crew_img').attr('src', '/crew_upload/'+response[0].logo);
-                $('#crew_name').text(response[0].crew_name);
-                $('#addr').text(response[0].addr);
-                $('#addr2').text(response[0].addr);
-                $('#crew_info').text(response[0].a_s);
-                $('#member_cnt').text(response[0].d_n+'명');
-                $('#create_date').text(response[0].c_s);
-                $('#member_age_avg').text(response[0].e_n+'세');
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+   function crew_deatil_select() {
+      $.ajax({
+         url: '/crew/crew_deatil_select',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code
+         },
+         success: function(response) {
+            $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
+            $('#crew_name').text(response[0].crew_name);
+            $('#addr').text(response[0].addr);
+            $('#addr2').text(response[0].addr);
+            $('#crew_info').text(response[0].a_s);
+            $('#member_cnt').text(response[0].d_n + '명');
+            $('#create_date').text(response[0].c_s);
+            $('#member_age_avg').text(response[0].e_n + '세');
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
+      });
+   }
+
+   function crew_manage_select(element) {
+      var id = element.id === undefined ? 'overview' : element.id;
+      $('[name="crew_select"]').css('color', 'gray');
+      $('#' + id).css('color', 'black');
+      console.log("Selected id: ", id);
+      $.ajax({
+         url: '/crew/crew_manage_select',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            id: id
+         },
+         success: function(response) {
+            $('#crew_manage_list').html('');
+            if (id == 'member') {
+               crew_manage_select_member(response);
+               document.querySelector('.section2').style.display = 'none';
+            } else if (id == 'overview') {
+               crew_overview(response);
+               document.querySelector('.section2').style.display = 'block';
+            } else if (id == 'notice') {
+               crew_notice(response);
+               document.querySelector('.section2').style.display = 'none';
             }
-        });
-    }
-    function crew_manage_select(element) {
-        var id = element.id === undefined ? 'overview' : element.id;
-        $('[name="crew_select"]').css('color', 'gray');
-        $('#' + id).css('color', 'black');
-          console.log("Selected id: ", id);  // 선택한 id 출력
-        $.ajax({
-            url: '/crew/crew_manage_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization: Authorization,
-                create_crew_code: create_crew_code,
-                id: id
-            },
-            success: function(response) {
-                $('#crew_manage_list').html('');  // 이전 리스트 초기화
-                if (id == 'member') {
-                    crew_manage_select_member(response);
-                    // 'member'일 때만 section2 숨기기
-                    document.querySelector('.section2').style.display = 'none';
-                }
-                else if (id == 'overview') {
-                    crew_overview(response);
-                    // 'overview'일 때는 section2를 다시 보이게
-                    document.querySelector('.section2').style.display = 'block';
-                }
-                else if (id == 'notice') {
-                    crew_notice(response);
-                    // 'member'일 때만 section2 숨기기
-                    document.querySelector('.section2').style.display = 'none';
-                }
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
-    }
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
+      });
+   }
 
-
-    function crew_manage_select_member(response) {
-        var list = '';
-        if (response[0].f_n > 0 && response[0].a_n == 1) {
-            list += '<div class="join_info" onClick="go_request_wait()" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
-            list += '   <span id="wait_cnt">';
-            list +=         response[0].f_n + ' 명이 승인을 기다리고있어요.';
-            list += '   </span>';
-
-            list += '   <img src="/img/way.png" style="width: 20px; height: 20px; padding:0; margin-right:40px; margin-top:3px;">';
-            list += '</div>';
-        }
-
-        for (var i in response) {
-            list += '<li class="member-item"> ';
-            list += '<div class="item-flex"> ';
-
-            list += '   <img src="/resources/uploadfile/' + response[i].a_s + '" class="profile-img" onClick="go_mypage(' + response[i].usercode + ')"> ';
-            list += '   <div class="profile-info" onClick="go_mypage(' + response[i].usercode + ')"> ';
-            list += '     <div class="info-wrapper"> ';
-
-            list += '      <p class="name">' + response[i].b_s + '</p> ';
-            if (response[i].a_n < 3) {
-                list += '      <div class="label-operator">운영진</div> ';
-            }
-            list += '     </div> ';
-            list += '   </div> ';
-            list += '  <div class="menu"> ';
-            list += '   <div class="dropdown"> ';
-
-            if (user_code != response[i].usercode && response[i].b_n > 0) {
-                list += '     <div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname + '\', \'' + response[i].a_n + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
-            }
-            list += '   </div> ';
-            list += '  </div> ';
-            list += '</div> ';
-            list += '</li> ';
-        }
-            console.log("Generated list: ", list);  // 생성된 list 출력
-        $('#crew_manage_list').append(list);
-    }
-
-    function crew_overview(response) {
+   function crew_manage_select_member(response) {
       var list = '';
-          list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
-          list += '<div class="overview_title">주요 멤버</div>'
-          list += '<div class="member_more">전체 보기</div>'
-          list += '</div>';
-          for (var i = 0; i<response[0].c_n;i++) {
-              list += '<li class="member-item"> ';
-              list += '<div class="item-flex"> ';
-              list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img"> ';
-              list += '   <div class="profile-info"> ';
-              list += '     <div class="info-wrapper"> ';
-              list += '      <p class="name">' + response[i].writedate + '</p> ';
-              list += '     </div> ';
-              list += '   </div> ';
-              list += '  <div class="menu"> ';
-              list += '   <div class="dropdown"> ';
-              list += '   </div> ';
-              list += '  </div> ';
-              list += '</div> ';
-              list += '</li> ';
-          }
-          list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
-          list += '<div class="overview_title">최신 공지</div>'
-          list += '<div class="member_more">전체 보기</div>'
-          list += '</div>';
-
-      for (var i = response[0].c_n; i<response.length;i++) {
-          list += '<li class="member-item"> ';
-          list +=    '<div class="item-container"> ';
-          list +=       '<div class="icon-container"> ';
-          if(response[i].a_n==1){
-            list +=       '   <img src="/img/vote.png"> ';
-          }
-          if(response[i].a_n==2){
-            list +=       '   <img src="/img/notice.png"> ';
-          }
-          list +=       '</div>';
-          list +=       '<div class="text-container"> ';
-          if(response[i].b_n==1){
-              list +=          '<span class="main-text" onClick="voteNow('+response[i].c_n+')">'+response[i].subject+'</span> ';
-              list +=          '<span class="sub-text">투표 진행중</span>';
-          }
-         if(response[i].b_n==9){
-               list +=          '<span class="main-text" onClick="vote_select('+response[i].c_n+')">'+response[i].subject+'</span> ';
-               list +=          '<span class="sub-text" style=" background-color: black; color: white;">투표 마감</span>';
-          }
-          list +=       '</div> ';
-          list +=    '</div> ';
-          list += '</li> ';
+      if (response[0].f_n > 0 && response[0].a_n == 1) {
+         list += '<div class="join_info" onClick="go_request_wait()" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+         list += '   <span id="wait_cnt">';
+         list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
+         list += '   </span>';
+         list += '   <img src="/img/way.png" style="width: 20px; height: 20px; padding:0; margin-right:40px; margin-top:3px;">';
+         list += '</div>';
       }
 
+      for (var i in response) {
+         list += '<li class="member-item"> ';
+         list += '<div class="item-flex"> ';
+         list += '   <img src="/resources/uploadfile/' + response[i].a_s + '" class="profile-img"> ';
+         list += '   <div class="profile-info"> ';
+         list += '     <div class="info-wrapper"> ';
+         list += '      <p class="name">' + response[i].b_s + '</p> ';
+         if (response[i].a_n < 3) {
+            list += '      <div class="label-operator">운영진</div> ';
+         }
+         list += '     </div> ';
+         list += '   </div> ';
+         list += '  <div class="menu"> ';
+         list += '   <div class="dropdown"> ';
+         if (user_code != response[i].usercode && response[i].b_n > 0) {
+            list += '     <div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname + '\', \'' + response[i].a_n + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div> ';
+         }
+         list += '   </div> ';
+         list += '  </div> ';
+         list += '</div> ';
+         list += '</li> ';
+      }
+      console.log("Generated list: ", list);
       $('#crew_manage_list').append(list);
-    }
-    function crew_notice(response) {
-        var list = '';
-        for (var i in response) {
-            list += '<li class="member-item"> ';
-            list +=    '<div class="item-container"> ';
-            list +=       '<div class="icon-container"> ';
-            if(response[i].a_n==1||response[i].a_n==3){
-              list +=       '<img src="/img/vote.png"> ';
-              list +=       '</div>';
-              list +=       '<div class="text-container" onClick="voteNow('+response[i].c_n+')"> ';
-              if(response[i].b_n==1){
-                  list +=   '<span class="sub-text">투표 진행중</span>';
-                  list +=   '<span class="main-text">'+response[i].subject+'</span> ';
-                  var aa =   response[i].e_n == 1? "참여":"미참여"
-                  list +=   '<div>'+response[i].e_n+"명 참여, "+aa+'<div>'
-                  list +=   '<div>'+response[i].enddate+" 까지 마감"+'<div>'
-              }
-             if(response[i].b_n==9){
-                  list +=   '<span class="sub-text">투표 마감</span>';
-                  list +=   '<span class="main-text">'+response[i].subject+'</span> ';
-                  list +=   '<div>'+response[i].e_n+"명 참여, "+aa+'<div>'
-                  list +=   '<div>'+response[i].enddate+" 까지 마감"+'<div>'
-              }
-            }
-            if(response[i].a_n==2){
-              list +=       '   <img src="/img/notice.png"> ';
-            }
-            list +=       '</div>';
-            list +=       '<div class="text-container"> ';
+   }
 
-            list +=       '</div> ';
-            list +=    '</div> ';
-            list += '</li> ';
-        }
-        $('#crew_manage_list').append(list);
-    }
+   function crew_overview(response) {
+      var list = '';
+      list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+      list += '<div class="overview_title">주요 멤버</div>';
+      list += '<div class="member_more">전체 보기</div>';
+      list += '</div>';
+      for (var i = 0; i < response[0].c_n; i++) {
+         list += '<li class="member-item"> ';
+         list += '<div class="item-flex"> ';
+         list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img"> ';
+         list += '   <div class="profile-info"> ';
+         list += '     <div class="info-wrapper"> ';
+         list += '      <p class="name">' + response[i].writedate + '</p> ';
+         list += '     </div> ';
+         list += '   </div> ';
+         list += '  <div class="menu"> ';
+         list += '   <div class="dropdown"> ';
+         list += '   </div> ';
+         list += '  </div> ';
+         list += '</div> ';
+         list += '</li> ';
+      }
+      list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
+      list += '<div class="overview_title">최신 공지</div>';
+      list += '<div class="member_more">전체 보기</div>';
+      list += '</div>';
 
-      function openCustomModal(usercode,nickname,user_pisition) {
+      for (var i = response[0].c_n; i < response.length; i++) {
+         list += '<li class="member-item"> ';
+         list += '   <div class="item-container"> ';
+         list += '      <div class="icon-container"> ';
+         if (response[i].a_n == 1) {
+            list += '   <img src="/img/vote.png"> ';
+         }
+         if (response[i].a_n == 2) {
+            list += '   <img src="/img/notice.png"> ';
+         }
+         list += '      </div>';
+         list += '      <div class="text-container"> ';
+         if (response[i].b_n == 1) {
+            list += '<span class="main-text" onClick="voteNow(' + response[i].c_n + ')">' + response[i].subject + '</span> ';
+            list += '<span class="sub-text">투표 진행중</span>';
+         }
+         if (response[i].b_n == 9) {
+            list += '<span class="main-text" onClick="vote_select(' + response[i].c_n + ')">' + response[i].subject + '</span> ';
+            list += '<span class="sub-text">투표 마감</span>';
+         }
+         list += '      </div> ';
+         list += '   </div> ';
+         list += '</li> ';
+      }
+      $('#crew_manage_list').append(list);
+   }
+
+   function crew_notice(response) {
+      var list = '';
+      for (var i in response) {
+         list += '<li class="member-item"> ';
+         list += '   <div class="item-container"> ';
+         list += '      <div class="icon-container"> ';
+         if (response[i].a_n == 1 || response[i].a_n == 3) {
+            list += '   <img src="/img/vote.png"> ';
+            list += '      </div>';
+            list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ')"> ';
+            if (response[i].b_n == 1) {
+               list += '<span class="sub-text">투표 진행중</span>';
+               list += '<span class="main-text">' + response[i].subject + '</span> ';
+               var aa = response[i].e_n == 1 ? "참여" : "미참여";
+               list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
+               list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
+            }
+            if (response[i].b_n == 9) {
+               list += '<span class="sub-text">투표 마감</span>';
+               list += '<span class="main-text">' + response[i].subject + '</span> ';
+               var aa = response[i].e_n == 1 ? "참여" : "미참여";
+               list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
+               list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
+            }
+         }
+         if (response[i].a_n == 2) {
+            list += '   <img src="/img/notice.png"> ';
+         }
+         list += '      </div>';
+         list += '      <div class="text-container"> ';
+         list += '      </div> ';
+         list += '   </div> ';
+         list += '</li> ';
+      }
+      $('#crew_manage_list').append(list);
+   }
+
+   function openCustomModal(usercode, nickname, user_pisition) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
-      if(position==1){
-        $('#manage2').show();
-        $('#manage3').show();
-        $('#out').show();
-      }
-      else{
-        $('#manage2').hide();
-        $('#manage3').hide();
-        $('#out').hide();
+      if (position == 1) {
+         $('#manage2').show();
+         $('#manage3').show();
+         $('#out').show();
+      } else {
+         $('#manage2').hide();
+         $('#manage3').hide();
+         $('#out').hide();
       }
       clog(user_pisition);
-      if(user_pisition==2)$('#manage2').hide();
-      if(user_pisition==3)$('#manage3').hide();
+      if (user_pisition == 2) $('#manage2').hide();
+      if (user_pisition == 3) $('#manage3').hide();
 
       document.getElementById('customModal').style.display = 'block';
-    }
-    function go_request_wait(){
-        window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code + '&position=' + position;
-    }
-    function crewRevise() {
-        // user_code와 create_crew_code 값을 URL에 추가하여 넘기기
-        window.location.href = '/crew/crewRevise?user_code=' + user_code + '&create_crew_code=' + create_crew_code;
-    }
+   }
 
-    function member_manage(element){
-        var id = element.id;
-        var reason='';
-        var checkedValues = [];
-        if(id=='report'){
-            $('input[name="report_reason"]:checked').each(function() {
-                checkedValues.push($(this).val());
-            });
-            reason = checkedValues.join(',');
-        }
-        $.ajax({
-            url: '/crew/member_manage',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                id               : id,
-                usercode         : $('#usercode').val(),
-                reason           : reason,
-                reason_text      : $('#report_content').val()
-            },
-            success: function(response) {
-                if(response==1) alert('운영진으로 추가되었습니다.');
-                if(response==4) alert('일반크루로 변경되었습니다.');
-                if(response==2) alert('신고접수가 되었습니다.');
-                if(response==3) alert('유저가 강퇴되었습니다.');
-                location.reload(true);
+   function go_request_wait() {
+      window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code + '&position=' + position;
+   }
 
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
-    }
+   function crewRevise() {
+      window.location.href = '/crew/crewRevise?user_code=' + user_code + '&create_crew_code=' + create_crew_code;
+   }
 
-//신고 사유 선택 모달 열기
-  function openRejectModal() {
-    document.getElementById("rejectModal").style.display = "block";
-  }
+   function member_manage(element) {
+      var id = element.id;
+      var reason = '';
+      var checkedValues = [];
+      if (id == 'report') {
+         $('input[name="report_reason"]:checked').each(function() {
+            checkedValues.push($(this).val());
+         });
+         reason = checkedValues.join(',');
+      }
+      $.ajax({
+         url: '/crew/member_manage',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            id: id,
+            usercode: $('#usercode').val(),
+            reason: reason,
+            reason_text: $('#report_content').val()
+         },
+         success: function(response) {
+            if (response == 1) alert('운영진으로 추가되었습니다.');
+            if (response == 4) alert('일반크루로 변경되었습니다.');
+            if (response == 2) alert('신고접수가 되었습니다.');
+            if (response == 3) alert('유저가 강퇴되었습니다.');
+            location.reload(true);
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
+      });
+   }
 
-  //신고 사유 선택 모달 열기
-    function openRejectModal() {
+   function openRejectModal() {
       document.getElementById("rejectModal").style.display = "block";
-    }
+   }
 
-    // 신고 사유 선택 모달 닫기
-    function closeRejectModal() {
+   function closeRejectModal() {
       document.getElementById("rejectModal").style.display = "none";
-    }
-    // 신고 사유 확인 처리
-    function confirmRejection() {
+   }
+
+   function confirmRejection() {
       alert("신고 사유가 제출되었습니다.");
       closeRejectModal();
-    }
+   }
 
-      // 크루정보변경 버튼 클릭 시 모달 열기
-      document.getElementById("editCrewBtn").addEventListener("click", function() {
-        document.getElementById("informationModal").style.display = "block";
+   document.getElementById("editCrewBtn").addEventListener("click", function() {
+      document.getElementById("informationModal").style.display = "block";
+   });
+
+   document.getElementById("handoverCrewBtn").addEventListener("click", function() {
+      document.getElementById("informationModal").style.display = "none";
+      document.getElementById("handoverModal").style.display = "block";
+   });
+
+   function closeHandoverModal() {
+      document.getElementById("handoverModal").style.display = "none";
+      document.getElementById("informationModal").style.display = "block";
+   }
+
+   function handoverOwnership() {
+      alert("팀 소유자가 위임되었습니다.");
+      closeHandoverModal();
+   }
+
+   function closeCustomModal() {
+      document.getElementById("customModal").style.display = "none";
+      document.getElementById("informationModal").style.display = "none";
+      document.getElementById("resignModal").style.display = "none";
+      document.getElementById("voteNowModal").style.display = "none";
+      document.getElementById("voteResultModal").style.display = "none";
+   }
+
+   function closeNicknameModal() {
+      document.getElementById('nicknameModal').style.display = 'none';
+   }
+
+   function openResignModal() {
+      document.getElementById("resignModal").style.display = "block";
+   }
+
+   function resignTeam() {
+      $.ajax({
+         url: '/crew/resign_team',
+         type: 'POST',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            position: position
+         },
+         success: function(response) {
+            if (response == 0) {
+               alert("크루원이 있어서 탈퇴가 불가능합니다.");
+               return false;
+            } else {
+               alert("팀에서 탈퇴되었습니다.");
+               window.location.href = '/crew/crewList';
+            }
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
       });
+      closeCustomModal();
+   }
 
-      // 팀 소유자 위임 모달 열기 (informationModal 닫고 handoverModal 열기)
-      document.getElementById("handoverCrewBtn").addEventListener("click", function() {
-        document.getElementById("informationModal").style.display = "none"; // 정보 변경 모달 닫기
-        document.getElementById("handoverModal").style.display = "block"; // 팀 소유자 위임 모달 열기
-      });
+   function openVoteModal() {
+      document.getElementById('voteModal').style.display = 'block';
+   }
 
-      // handoverModal의 닫기 버튼을 눌렀을 때 handoverModal을 닫고, 다시 informationModal 열기
-      function closeHandoverModal() {
-        document.getElementById("handoverModal").style.display = "none"; // handoverModal 닫기
-        document.getElementById("informationModal").style.display = "block"; // informationModal 다시 열기
-      }
-
-      // 위임하기 버튼 클릭 시 handoverModal 닫고 다시 informationModal 열기
-      function handoverOwnership() {
-        // 위임 로직 추가 (예: 서버 요청)
-        alert("팀 소유자가 위임되었습니다.");
-        closeHandoverModal(); // handoverModal을 닫고, informationModal 다시 열기
-      }
-
-      // 기존 모달 닫기 함수
-      function closeCustomModal() {
-        document.getElementById("customModal").style.display = "none";
-        document.getElementById("informationModal").style.display = "none";
-        document.getElementById("customModal").style.display = "none";
-        document.getElementById("resignModal").style.display = "none";
-        document.getElementById('resignModal').style.display = 'none';
-        document.getElementById('voteNowModal').style.display = 'none';
-        document.getElementById('voteNowModal').style.display = 'none';
-        document.getElementById('voteResultModal').style.display = 'none';
-      }
-      // 투표현황 모달 닫기
-      function closeNicknameModal() {
-          document.getElementById('nicknameModal').style.display = 'none';
-      }
-
-      // 팀 탈퇴 모달 열기
-      function openResignModal() {
-        document.getElementById("resignModal").style.display = "block";
-      }
-      // 팀 탈퇴 처리 함수 (필요에 따라 서버 요청 등 추가 가능)
-      function resignTeam() {
-        alert("팀에서 탈퇴되었습니다.");
-        closeCustomModal();
-      }
-
-      // 투표 모달 열기
-      function openVoteModal() {
-        document.getElementById('voteModal').style.display = 'block';
-      }
-
-    // 투표항목추가
-    function addVoteItem() {
+   function addVoteItem() {
       const voteItems = document.getElementById('voteItems');
       const newItem = document.createElement('div');
       newItem.classList.add('vote-item');
 
       newItem.innerHTML =
-           '<input type="text" class="input-field" name=vote_opt id="vote' + votenum + '" placeholder="항목 입력">' +
-           '<button class="remove-item-button" onclick="removeVoteItem(this)">&times;</button>';
+         '<input type="text" class="input-field" name=vote_opt id="vote' + votenum + '" placeholder="항목 입력">' +
+         '<button class="remove-item-button" onclick="removeVoteItem(this)">&times;</button>';
       voteItems.appendChild(newItem);
-      votenum++
-      if(votenum>5)$('#addVoteBtn').hide();
-    }
-    // 항목 삭제하는 함수
-    function removeVoteItem(button) {
-      const voteItem = button.parentElement; // 삭제 버튼의 부모 요소 (항목 div)를 가져옴
-      voteItem.remove(); // 해당 항목을 삭제
+      votenum++;
+      if (votenum > 5) $('#addVoteBtn').hide();
+   }
+
+   function removeVoteItem(button) {
+      const voteItem = button.parentElement;
+      voteItem.remove();
       votenum--;
-      if(votenum<6)$('#addVoteBtn').show();
-    }
+      if (votenum < 6) $('#addVoteBtn').show();
+   }
 
-    // 투표자 명단 모달 열기
-    function showVoterList(voters) {
-        document.getElementById('nicknameModal').style.display = 'block';
-        $('#nickname_list').html('<li>' + voters + '</li>');
-    }
+   function showVoterList(voters) {
+      document.getElementById('nicknameModal').style.display = 'block';
+      $('#nickname_list').html('<li>' + voters + '</li>');
+   }
 
-    function openVoteModal() {
-      // resignModal을 닫고 voteModal을 염
+   function openVoteModal() {
       closeCustomModal();
       document.getElementById('voteModal').style.display = 'block';
-    }
+   }
 
-    function closeVoteModal() {
-      // voteModal을 닫고 resignModal을 염
+   function closeVoteModal() {
       document.getElementById('voteModal').style.display = 'none';
       openResignModal();
-    }
+   }
 
-    // 투표 만들기 함수
-    function submitVote() {
-        const title = document.getElementById('voteTitle').value;
-        const deadline = document.getElementById('voteDeadline').value;
+   function submitVote() {
+      const title = document.getElementById('voteTitle').value;
+      const deadline = document.getElementById('voteDeadline').value;
 
-        if (!deadline) {
-            alert('마감시간을 설정해주세요.');
-            return;
-        }
+      if (!deadline) {
+         alert('마감시간을 설정해주세요.');
+         return;
+      }
 
-        const currentTime = new Date();
-        const voteDeadlineTime = new Date(deadline);
-        const fiveMinutesInMillis = 10 * 60 * 1000;
-        if (voteDeadlineTime - currentTime < fiveMinutesInMillis) {
-            alert('마감시간은 현재 시간 기준으로 최소 10분 이후여야 합니다. 다시 설정해주세요.');
-            return;
-        }
-        $.ajax({
-            url: '/crew/vote_create',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                title            : title,
-                opt1             : $('#vote1').val(),
-                opt2             : $('#vote2').val(),
-                opt3             : $('#vote3').val(),
-                opt4             : $('#vote4').val(),
-                opt5             : $('#vote5').val(),
-                endDate          : deadline
-            },
-            success: function(response) {
-                alert('투표가 제출되었습니다.');
-                location.reload(true);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+      const currentTime = new Date();
+      const voteDeadlineTime = new Date(deadline);
+      const fiveMinutesInMillis = 10 * 60 * 1000;
+      if (voteDeadlineTime - currentTime < fiveMinutesInMillis) {
+         alert('마감시간은 현재 시간 기준으로 최소 10분 이후여야 합니다. 다시 설정해주세요.');
+         return;
+      }
+
+      $.ajax({
+         url: '/crew/vote_create',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            title: title,
+            opt1: $('#vote1').val(),
+            opt2: $('#vote2').val(),
+            opt3: $('#vote3').val(),
+            opt4: $('#vote4').val(),
+            opt5: $('#vote5').val(),
+            endDate: deadline
+         },
+         success: function(response) {
+            alert('투표가 제출되었습니다.');
+            location.reload(true);
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
+      });
+      closeVoteModal();
+   }
+
+   function voteNow(vote_num) {
+      $('#vote_num').val(vote_num);
+      $.ajax({
+         url: '/crew/vote_select',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            vote_num: vote_num
+         },
+         success: function(response) {
+            $('#vote_list').html('');
+            $('#vote_results').html('');
+            var list = '';
+            var list2 = '';
+            list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+            list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+            list += '<div class="vote-options">';
+
+            for (var i = 1; i < 6; i++) {
+               var key = 'opt' + i;
+               if (response[0][key] == '') break;
+
+               var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+
+               list += '<label class="vote-option">';
+               list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
+               list += '    <span>' + response[0][key] + '</span>';
+               list += '</label>';
             }
-        });
+            list += '</div>';
+            $('#vote_list').html(list);
 
-        closeVoteModal();
-    }
+            list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+            list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+            list2 += '<div class="vote-results">';
 
-    // 투표하기 모달 열기
-    function voteNow(vote_num) {
-        $('#vote_num').val(vote_num);
-        $.ajax({
-            url: '/crew/vote_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                vote_num         : vote_num
-            },
-            success: function(response) {
-                $('#vote_list').html('');
-                $('#vote_results').html('');
-                var list = '';
-                var list2 = '';
-                list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list += '<div class="vote-options">';
+            for (var i = 1; i < 6; i++) {
+               var arr = ['a', 'b', 'c', 'd', 'e'];
+               var key = 'opt' + i;
+               var key2 = arr[i - 1] + '_s';
 
-                for (var i = 1; i < 6; i++) {
-                    var key = 'opt' + i;
-                    if (response[0][key] == '') break;
+               if (response[0][key] == '') break;
+               var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
+               var voters = response[0][key2] ? response[0][key2] : '';
 
-                    var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
-
-                    list += '<label class="vote-option">';
-                    list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
-                    list += '    <span>' + response[0][key] + '</span>';
-                    list += '</label>';
-                }
-                list += '</div>';
-                $('#vote_list').html(list);
-
-                list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list2 += '<div class="vote-results">';
-
-                for (var i = 1; i < 6; i++) {
-                    var arr = ['a', 'b', 'c', 'd', 'e'];  // arr 배열은 여전히 0부터 시작
-                    var key = 'opt' + i;
-                    var key2 = arr[i - 1] + '_s';  // i가 1부터 시작하므로 i-1로 접근
-
-                    if (response[0][key] == '') break;  // 옵션이 없는 경우 반복 종료
-                    var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
-                    var voters = response[0][key2] ? response[0][key2] : '';
-
-                    list2 += '<div class="result-row" onclick="showVoterList(\'' + voters + '\')">';
-                    list2 += '    <span>' + response[0][key] + '</span>';
-                    list2 += '    <span>' + arr_length + '명</span>';
-                    list2 += '</div>';
-                    list2 += '<div class="progress-bar">';
-                    list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
-                    list2 += '</div>';
-                }
-                list2 += '</div>';
-                $('#vote_results').html(list2);
-                if(response[0].f_s=='' && response[0].a_n==1)document.getElementById('voteNowModal').style.display = 'block'
-                else document.getElementById('voteResultModal').style.display = 'block';
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+               list2 += '<div class="result-row" onclick="showVoterList(\'' + voters + '\')">';
+               list2 += '    <span>' + response[0][key] + '</span>';
+               list2 += '    <span>' + arr_length + '명</span>';
+               list2 += '</div>';
+               list2 += '<div class="progress-bar">';
+               list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+               list2 += '</div>';
             }
-        });
-    }
-
-    /*function vote_select(vote_num) {
-        document.getElementById('voteNowModal').style.display = 'block';
-        $('#vote_num').val(vote_num);
-        $.ajax({
-            url: '/crew/vote_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                vote_num         : vote_num
-            },
-            success: function(response) {
-                $('#vote_results').html('');
-                var list2 = '';
-                list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list += '<div class="vote-options">';
-                for (var i = 1; i < 6; i++) {
-                    var key = 'opt' + i;
-                    if (response[0][key] == '') break;
-
-                    var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
-
-                    list += '<label class="vote-option">';
-                    list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
-                    list += '    <span>' + response[0][key] + '</span>';
-                    list += '</label>';
-                }
-                list += '</div>';
-                $('#vote_list').html(list);
-                list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list2 += '<div class="vote-results">';
-                for (var i = 1; i < 6; i++) {
-                    var arr = ['a', 'a', 'b', 'c', 'd', 'e'];
-                    var key = 'opt' + i;
-                    var key2 = arr[i] + '_s';
-                    if (response[0][key] == '') break;
-                    if(response[0][key2]!==null){
-                        var arr_length = response[0][key2].split(',').length;
-                    }
-                    else var arr_length=0;
-                    response[0][key2] = response[0][key2]===null?'':response[0][key2];
-                    list2 += '      <div class="result-row">';
-                    list2 += '          <span>' + response[0][key] + '</span>';
-                    list2 += '          <span>' + response[0][key2] + '</span>';
-                    list2 += '          <span id="count-vote' + i + '" class="vote-count">' + arr_length + '명</span>';
-                    list2 += '      </div>';
-                    list2 += '      <div class="progress-bar">';
-                    list2 += '          <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
-                    list2 += '      </div>';
-                }
-                list2 += '</div>';
-                $('#vote_results').html(list2);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+            list2 += '</div>';
+            $('#vote_results').html(list2);
+            if (response[0].f_s ===null && response[0].a_n == 0) {
+               document.getElementById('voteNowModal').style.display = 'block';
+            } else {
+               document.getElementById('voteResultModal').style.display = 'block';
             }
-        });
-    }*/
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
+      });
+   }
 
-   // 투표 제출 함수
-    function submitVoteNow() {
+   function submitVoteNow() {
       var selectedOption = $('input[name="voteOption"]:checked').val();
       $.ajax({
-          url: '/crew/vote_insert',
-          type: 'post',
-          async: false,
-          data: {
-              Authorization    : Authorization,
-              selectedOption   : selectedOption,
-              vote_num         : $('#vote_num').val()
-          },
-          success: function(response) {
-              if(response==0){
-                alert('이미 투표하셨습니다.');
-                return false;
-              }
-              else{
-                alert('투표가 제출되었습니다.');
-              }
-          },
-          error: function(e) {
-              console.error('Error: ', e);
-          }
+         url: '/crew/vote_insert',
+         type: 'post',
+         async: false,
+         data: {
+            Authorization: Authorization,
+            selectedOption: selectedOption,
+            vote_num: $('#vote_num').val()
+         },
+         success: function(response) {
+            if (response == 0) {
+               alert('이미 투표하셨습니다.');
+               return false;
+            } else {
+               alert('투표가 제출되었습니다.');
+            }
+         },
+         error: function(e) {
+            console.error('Error: ', e);
+         }
       });
-      // 투표하기 모달을 숨기고
       document.getElementById('voteNowModal').style.display = 'none';
-      // 투표 현황 모달을 보여줍니다.
       document.getElementById('voteResultModal').style.display = 'block';
-    }
+   }
 
-
-    function updateVoteResults(votes) {
-      // 총 투표 수 계산
-      let totalVotes = votes.reduce(function (acc, vote) {
-        return acc + vote.count;
+   function updateVoteResults(votes) {
+      let totalVotes = votes.reduce(function(acc, vote) {
+         return acc + vote.count;
       }, 0);
 
-      // 각 항목의 프로그레스 바와 투표 명수를 업데이트
-      $.each(votes, function (index, vote) {
-        // 퍼센트 계산
-        let percentage = (vote.count / totalVotes) * 100;
+      $.each(votes, function(index, vote) {
+         let percentage = (vote.count / totalVotes) * 100;
 
-        // 해당 항목의 progress-bar 너비와 색상 업데이트
-        $(`#progress-${vote.id}`).css({
-          width: percentage + '%',
-          backgroundColor: 'orange'
-        });
+         $(`#progress-${vote.id}`).css({
+            width: percentage + '%',
+            backgroundColor: 'orange'
+         });
 
-        // 해당 항목의 투표 명수 업데이트
-        $(`#count-${vote.id}`).text(vote.count + '명');
+         $(`#count-${vote.id}`).text(vote.count + '명');
       });
-    }
+   }
 
-    // 예시 데이터 (DB에서 가져온 데이터 형식)
-    let votes = [
+   let votes = [
       { id: 'vote1', count: 1 },
       { id: 'vote2', count: 3 },
       { id: 'vote3', count: 0 },
       { id: 'vote4', count: 0 }
-    ];
+   ];
 
-
-
-    // 페이지 로드 시 투표 결과 업데이트
-    $(document).ready(function() {
+   $(document).ready(function() {
       updateVoteResults(votes);
-    });
+   });
 
-    // 공지사항 모달 열기
-    function openNoticeModal() {
-         closeCustomModal(); // 다른 모달을 닫음
-         document.getElementById('noticeCreateModal').style.display = 'block'; // 공지사항 모달 열기
-    }
+   function openNoticeModal() {
+      closeCustomModal();
+      document.getElementById('noticeCreateModal').style.display = 'block';
+   }
 
-    // 공지사항 모달 닫기
-    function closeNoticeModal() {
-       document.getElementById('noticeCreateModal').style.display = 'none'; // 공지사항 모달 닫기
-       document.getElementById('resignModal').style.display = 'block'; // 다시 resignModal 열기
-    }
+   function closeNoticeModal() {
+      document.getElementById('noticeCreateModal').style.display = 'none';
+      document.getElementById('resignModal').style.display = 'block';
+   }
 
-    // 미리보기 이미지 삭제
-    function deletePreview() {
-        document.getElementById('previewContainer').style.display = 'none'; // 미리보기 컨테이너 숨김
-        document.getElementById('imagePreview').src = ''; // 이미지 미리보기 제거
-    }
+   function deletePreview() {
+      document.getElementById('previewContainer').style.display = 'none';
+      document.getElementById('imagePreview').src = '';
+   }
 
+   function previewImages(event) {
+      const previewContainer = document.getElementById('previewContainer');
+      const files = Array.from(event.target.files);
 
-function previewImages(event) {
-    const previewContainer = document.getElementById('previewContainer');
-
-    // 선택된 파일들을 배열로 변환
-    const files = Array.from(event.target.files);
-
-    files.forEach(file => {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            // 이미지 미리보기 요소 생성
+      files.forEach(file => {
+         const reader = new FileReader();
+         reader.onload = function(e) {
             const imageContainer = document.createElement('div');
             imageContainer.style.position = 'relative';
 
@@ -997,21 +904,18 @@ function previewImages(event) {
             deleteButton.textContent = '지우기';
             deleteButton.classList.add('delete-btn');
             deleteButton.onclick = function() {
-                imageContainer.remove(); // 이미지 미리보기 제거
+               imageContainer.remove();
             };
 
             imageContainer.appendChild(deleteButton);
             previewContainer.appendChild(imageContainer);
-        };
+         };
+         reader.readAsDataURL(file);
+      });
+   }
 
-        reader.readAsDataURL(file); // 파일을 읽어 데이터 URL을 생성
-    });
-}
-
-function submitNotice() {
-    alert("공지사항이 등록되었습니다!");
-    closeNoticeModal(); // 모달 닫기
-}
-
-
+   function submitNotice() {
+      alert("공지사항이 등록되었습니다!");
+      closeNoticeModal();
+   }
 </script>

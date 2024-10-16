@@ -246,6 +246,12 @@ public class CrewServiceImpl implements CrewService{
         return dao.vote_insert(user_code,vote_num, selectedOption);
     }
 
+    @Override
+    public int resign_select(int crewCode,int position) {
+        return dao.resign_select(crewCode,position);
+    }
+
+
 
     /*채팅방 크루연결 */
     @Override

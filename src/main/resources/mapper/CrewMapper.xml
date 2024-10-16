@@ -465,7 +465,7 @@
         (
             select 1 as a_n, subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
                    1 as b_n, a.vote_code as c_n,
-                   (select count(1) from voter_tbl where vote_code=${param1}) as d_n,
+                   (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                    (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n
             from vote_tbl a
             where create_crew_code = ${param1}
@@ -483,7 +483,7 @@
         (
             select 3 as a_n, a.subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
                    9 as b_n, vote_code as c_n,
-                   (select count(1) from voter_tbl where vote_code=${param1}) as d_n,
+                   (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                    (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n
             from vote_tbl a
             where create_crew_code = ${param1}
