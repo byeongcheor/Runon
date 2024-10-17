@@ -39,7 +39,7 @@
     </div>
 </div>
 <!-- 모달 창 -->
-    <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
+   <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -103,7 +103,7 @@ var create_crew_code;
                         { id: 'reason5', value: '5', label: '소개가 부적절해요 (광고, 도박 등)' }
                     ];
                     list += '<div class="rejected_title">';
-                    list += '    <span class="reason-text">거절이유</span>';
+                    list += '    <span class="reason-text">거절 이유</span>';
                     list += '</div>';
 
                     // 값이 존재하는 항목만 출력

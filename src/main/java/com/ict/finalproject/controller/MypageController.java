@@ -190,6 +190,7 @@ public class MypageController {
     @PostMapping("/mypage/createMarathonForm")
     @ResponseBody
     public String createMarathonForm(
+            @RequestParam("usercode") int usercode,
             MarathonFormVO marathonVO){
         service.createMarathonForm(marathonVO);
         return "200";

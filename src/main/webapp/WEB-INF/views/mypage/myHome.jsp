@@ -139,7 +139,6 @@
     //마라톤 신청서 작성폼 전송
     function submitMarathonForm(){
         const formData = {
-
             name: document.getElementById("name").value,
             tel: document.getElementById("tel").value,
             addr: document.getElementById("addr").value,
@@ -157,8 +156,8 @@
             $.ajax({
                 url: "/mypage/createMarathonForm",
                 type: "post",
-
-                data: {usercode:usercode1,
+                data: {
+                    usercode:usercode1,
                     name: document.getElementById("name").value,
                     tel: document.getElementById("tel").value,
                     addr: document.getElementById("addr").value,

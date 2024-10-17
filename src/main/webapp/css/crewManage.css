@@ -121,7 +121,7 @@ body{
     width: 80px;
     height: 80px;
     border-radius: 200px;
-    margin-top: 17px;
+    margin-top: 10px;
     margin-right: 40px;
 }
 .imgContainer>img:first-child{
@@ -229,6 +229,7 @@ body{
   }
   .join_info{
     padding-left: 30px;
+    padding-bottom:10px;
   }
 
   /* 기본 스타일 */
@@ -244,7 +245,7 @@ body{
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: space-between; /* 좌우 요소 간 여백 자동 */
     width: 90%;
-    padding: 10px 28px;
+    padding: 5px 28px 10px 28px;
   }
 
   .profile {
@@ -273,9 +274,11 @@ body{
   .label-operator {
     background-color: black; /* 검정 배경 */
     color: white; /* 흰색 텍스트 */
-    padding: 2px 6px;
+    padding: 2px 5px;
     border-radius: 4px;
     font-size: 12px;
+    margin-bottom: 20px;
+    height:20px;
   }
 
   /* 루키 표시 */
@@ -313,9 +316,19 @@ body{
     margin: 8% auto;
     padding: 20px;
     border-radius: 10px;
-     width: 350px;
+     width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+   .custom-modal-content2 {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 750px;
+      height:auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
 
   /* 커스텀 모달 헤더 */
   .custom-modal-header {
@@ -330,6 +343,16 @@ body{
     font-weight: bold;
     margin-bottom:10px;
 }
+  .custom-modal-title2 {
+    font-size: 21px;
+    font-weight: bold;
+
+}
+.form-label2{
+    font-size: 17px;
+    font-weight: bold;
+}
+
   .custom-close {
     cursor: pointer;
     font-size: 28px;
@@ -556,7 +579,22 @@ body{
     align-items: center; /* Vertically center the content */
     gap: 5px; /* Option spacing */
     padding: 10px;
+
 }
+
+/* 투표하기 모달 내용 */
+.custom-modal-body3 {
+    display: flex;
+    flex-direction: column; /* Use column to stack elements vertically */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    gap: 5px; /* Option spacing */
+    padding: 10px;
+    padding-bottom: 30px;
+
+
+}
+
 
 .vote-item {
   display: flex;
@@ -602,7 +640,7 @@ body{
   display: flex;
   align-items: center; /* 아이콘과 텍스트를 수직으로 중앙 정렬 */
   width: 90%;
-  padding: 10px 28px;
+  padding: 5px 28px 10px 28px;
 
 }
 
@@ -659,7 +697,7 @@ body{
   margin-right: 10px;
 }
 .vote-results {
-  width:90%;
+  width:80%;
 }
 
 .vote-result {
@@ -688,4 +726,102 @@ body{
 .progress {
   background-color: #FFA500;
   height: 100%;
+}
+#previewContainer {
+  display: flex;
+    flex-wrap: wrap; /* 이미지가 여러 개일 때 줄 바꿈 */
+    gap: 10px; /* 이미지 간격 */
+    margin-top: 10px; /* 위 요소와의 간격 */
+}
+
+#previewContainer img {
+    width: 100px; /* 이미지 가로 크기 */
+    height: 100px; /* 이미지 세로 크기 */
+    object-fit: cover; /* 이미지가 영역에 맞게 자르기 */
+    border-radius: 10px; /* 이미지 모서리 둥글게 */
+    position: relative; /* 버튼 위치를 위해 설정 */
+}
+
+.delete-btn {
+    position: absolute; /* 이미지 안에서 버튼을 위치 */
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7); /* 반투명 배경 */
+    border: none; /* 버튼 테두리 제거 */
+    padding: 2px 5px; /* 버튼 안쪽 여백 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    border-radius: 3px; /* 버튼 모서리 둥글게 */
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 255, 255, 1); /* 호버 시 배경색 변경 */
+}
+
+.upload-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    height: 38px;
+    cursor: pointer;
+    text-align: center;
+    color: #6c757d;
+}
+
+.upload-box input[type="file"] {
+    display: none;
+}
+.notice-content {
+    width: 100%;
+    height: 300px;
+    margin-top: 10px;
+    border-radius: 12px;
+    padding: 10px;
+    background-color: #F7F7F7;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 2px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.custom-btn {
+    background-color: #d1ff33;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.custom-btn:hover {
+    background-color: #b8e629;
+}
+
+.custom-btn2 {
+    width: 100%;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: #D1FF33;
+    border: none;
+    color: black;
+}
+
+.custom-btn2:hover {
+    background-color: #b8e629;
 }

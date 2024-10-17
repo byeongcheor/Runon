@@ -124,7 +124,7 @@
     <select id="selectMarathonForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
         SELECT *
         FROM marathon_form_tbl
-        WHERE usercode = #{param1} AND is_deleted = 0
+        WHERE usercode = #{param1}
         limit 1;
     </select>
     <select id="selectUsercode" parameterType="com.ict.finalproject.vo.MemberVO">
@@ -143,7 +143,9 @@
     <update id="updateMarathonForm">
         update marathon_form_tbl
         set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
-        gender=#{gender}, birth_date=#{birth_date}, size=#{size}, usercode=#{usercode}
+        gender=#{gender}, birth_date=#{birth_date}, size=#{size}
+        where usercode=#{usercode
+        }
     </update>
     <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
         select

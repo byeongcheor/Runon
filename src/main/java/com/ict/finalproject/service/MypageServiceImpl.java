@@ -86,6 +86,7 @@ public class MypageServiceImpl implements MypageService{
         return false;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean checkPassword2(String username, String curerntPassword) {
         MemberVO member = dao.selectMember(username);
