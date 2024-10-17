@@ -205,7 +205,7 @@ function userdetail(usercode){
                     usertag+="<button type='button' onclick='roleUp(\""+users.usercode+"\")'>관리자 승격</button>";
                 }else if (users.role=="ROLE_ADMIN"){
 
-                    usertag +="<h2>관리자</h2>";
+                    usertag +="<h2>관리자👑</h2>";
                     usertag +="<button type='button' onclick='roleDown(\""+users.usercode+"\",\""+users.nickname+"\")'>관리자 박탈</button>";
                 }
             }
@@ -216,16 +216,16 @@ function userdetail(usercode){
             </div>
             <div id="userstatus">
                 <div class="onelow">
-                    <div id="name">이름:`+users.name+`</div>
-                    <div id="username">아이디:`+users.username+ `</div>
+                    <div id="name"><b>이름:</b>`+users.name+`</div>
+                    <div id="username"><b>아이디:</b>`+users.username+ `</div>
                 </div>
                 <div class="onelow">
-                    <div id="nickname">닉네임:`+users.nickname+`</div>
-                    <div id="birthday">생년월일:`+users.birthdate+`</div>
+                    <div id="nickname"><b>닉네임:</b>`+users.nickname+`</div>
+                    <div id="birthday"><b>생년월일:</b>`+users.birthdate+`</div>
                 </div>
                 <div class="onelow">
-                    <div id="tel">핸드폰번호:`+users.tel+`</div>
-                    <div id="reportcnt">신고당한횟수:`+rlist.length+`</div>
+                    <div id="tel"><b>핸드폰번호:</b>`+users.tel+`</div>
+                    <div id="reportcnt"><b>신고당한횟수:</b>`+rlist.length+`</div>
                 </div>
                 `;
 
@@ -233,11 +233,11 @@ function userdetail(usercode){
 
                 usertag+=`
                     <div class="onelow">
-                        <div id="zipcode">우편번호:`+users.zip_code+`</div>
-                        <div id="addr"> 주소:`+users.addr+` </div>    
+                        <div id="zipcode"><b>우편번호:</b>`+users.zip_code+`</div>
+                        <div id="addr"> <b>주소:</b>`+users.addr+` </div>    
                     </div>
                     <div class="onelow">
-                        <div id="addrdetail">상세주소:`+users.addr_details+`</div>
+                        <div id="addrdetail"><b>상세주소:</b>`+users.addr_details+`</div>
                     </div>`;
             }else if (users.zip_code!=null&&(AdminRole<2||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
                 if (users.addr.length>5) {
@@ -253,20 +253,20 @@ function userdetail(usercode){
                 var zip_code = users.zip_code.substring(0, 2) + '**' + users.zip_code.substring(4);
                 usertag +=`
                     <div class="onelow">
-                        <div id="zipcode">우편번호:`+zip_code+`</div>
-                        <div id="addr"> 주소:`+userAddr+` </div>    
+                        <div id="zipcode"><b>우편번호:</b>`+zip_code+`</div>
+                        <div id="addr"> <b>주소:</b>`+userAddr+` </div>    
                     </div>
                     <div class="onelow">
-                        <div id="addrdetail">상세주소:`+userAddr+`</div>
+                        <div id="addrdetail"><b>상세주소:</b>`+userAddr+`</div>
                     </div>`;
             }else{
                 usertag +=`
                     <div class="onelow">
-                        <div id="zipcode">우편번호:`+users.zip_code+`</div>
-                        <div id="addr"> 주소:`+users.addr+` </div>    
+                        <div id="zipcode"><b>우편번호:</b>`+users.zip_code+`</div>
+                        <div id="addr"> <b>주소:</b>`+users.addr+` </div>    
                     </div>
                     <div class="onelow">
-                        <div id="addrdetail">상세주소:`+users.addr_details+`</div>
+                        <div id="addrdetail"><b>상세주소:</b>`+users.addr_details+`</div>
                     </div>`;
             }
 
@@ -281,7 +281,7 @@ function userdetail(usercode){
 
 
             if (recordlist==null || recordlist==""){
-                recordtag +="<h2 style='text-align: center'>아직 기록이 없습니다.</h2>";
+                recordtag +="<h2 style='text-align: center; font-size: 13pt;'>아직 기록이 없습니다.</h2>";
             }else{
                 recordlist.forEach(function(recordlist){
                     recordtag += "<li> 점수변동 "+recordlist.score_change+"km 현재점수:"+recordlist.now_score+"km 변동일:"+recordlist.changedate.substring(0,10)+"</li>"
@@ -296,7 +296,7 @@ function userdetail(usercode){
             });
             var paytag="<h1 style='text-align: center'>총결제액:"+totalamont.toLocaleString('ko-KR')+"</h1><ul>";
             if (payVo==null||payVo==""){
-                paytag +="<h2 style='text-align: center'>결제내역이 없습니다</h2>";
+                paytag +="<h2 style='text-align: center; font-size: 13pt;'>결제내역이 없습니다</h2>";
             }else{
                 payVo.forEach(function(payVo){
                     paytag += "<li><div class='paycontent' style='text-align: center'>대회명:"+payVo.marathon_name+"수량:"

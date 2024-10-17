@@ -1,3 +1,4 @@
+
 #DashboardHead{
     background-color: #fff;
 }
@@ -175,13 +176,13 @@ ul,li{
 }
 .alink:hover{
     background-color: #ddd;
-
 }
 
 .adminContainer{
     display: flex;
     flex-direction: column;
     width: 110%;
+    height: 100vh;
     background-color: #F0F0F0;
 }
 .chartHead{

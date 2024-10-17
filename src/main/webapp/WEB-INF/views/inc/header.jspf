@@ -101,10 +101,10 @@ function crew() {
                     <a href="/"><img src="/img/logo3.png" id="logoimage"/></a>
                 </div>
                 <ul>
-                    <li><a class="menus">MARATHON</a></li>
+                    <li><a href="/marathon/marathonList">MARATHON</a></li>
                     <li><a class="menus" href="/mate/mate">MATE</a></li>
                     <li><a class="menus" href="/crew/crewList">CREW</a></li>
-                    <li><a class="menus">NOTICE</a></li>
+                    <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/order/cart">CART</a></li>
 <%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>
                     <li><a onclick="mypage()">MY</a></li>
