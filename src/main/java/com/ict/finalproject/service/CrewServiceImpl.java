@@ -92,6 +92,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> vote_detail( int vote_num)
+    {
+        return dao.vote_detail(vote_num);
+    }
+
+    @Override
     public List<CrewVO> vote_select( int user_code, int vote_num)
     {
         return dao.vote_select(user_code, vote_num);
@@ -265,6 +271,26 @@ public class CrewServiceImpl implements CrewService{
     @Override
     public int resign_select(int crewCode,int position) {
         return dao.resign_select(crewCode,position);
+    }
+
+    @Override
+    public int vote_member_chek(int vote_num) {
+        return dao.vote_member_chek(vote_num);
+    }
+
+    @Override
+    public int vote_delete(int vote_num) {
+        return dao.vote_delete(vote_num);
+    }
+
+    @Override
+    public int voter_delete(int vote_num) {
+        return dao.voter_delete(vote_num);
+    }
+
+    @Override
+    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5) {
+        return dao.vote_update(vote_num, title, endDate, opt1, opt2,opt3,opt4,opt5);
     }
 
 

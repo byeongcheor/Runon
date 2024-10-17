@@ -19,6 +19,7 @@ public interface CrewDAO {
     public List<CrewVO> crew_write_detail_check(int crew_write_code );
     public List<CrewVO> getCrewInfo(int create_crew_code );
     public List<CrewVO> crew_app_select(int crew_code);
+    public List<CrewVO> vote_detail(int vote_num);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int totalRecord(PagingVO pVO);
     public int update14();
@@ -53,6 +54,10 @@ public interface CrewDAO {
     public int vote_chek(int user_code, int vote_num);
     public int vote_insert(int user_code, int vote_num, String selectedOption);
     public int resign_select(int crewCode,int position);
+    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5);
+    public int vote_member_chek(int vote_num);
+    public int vote_delete(int vote_num);
+    public int voter_delete(int vote_num);
 
     /*채팅방 크루연결 */
     public List<CrewVO> getCrewList();

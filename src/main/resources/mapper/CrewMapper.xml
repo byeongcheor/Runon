@@ -55,6 +55,12 @@
         and    a.create_crew_code=b.create_crew_code
     </select>
 
+    <select id="vote_detail" resultType="com.ict.finalproject.vo.CrewVO">
+        select subject,enddate,opt1,opt2,opt3,opt4,opt5
+        from vote_tbl
+        where vote_code = ${param1}
+    </select>
+
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
         select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
@@ -513,16 +519,16 @@
                1 as b_n, a.vote_code as c_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
-               NULL as content
+               NULL as content,a.usercode
         from vote_tbl a
         where create_crew_code = ${param1}
         and   enddate > now()
-        order by creationdate desc
+        order by enddate desc
     )
     union
     (
         select 2 as a_n, subject, writedate as enddate, 0 as b_n, crew_notice_code as c_n, NULL as d_n, 99999 as e_n,
-               content
+               content,usercode
         from crew_notice_tbl
         where create_crew_code = ${param1}
         order by writedate desc
@@ -533,11 +539,11 @@
                9 as b_n, vote_code as c_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
-               NULL as content
+               NULL as content,a.usercode
         from vote_tbl a
         where create_crew_code = ${param1}
         and   enddate < now()
-        order by creationdate desc
+        order by enddate desc
     )
     ]]>
     </select>
@@ -587,6 +593,7 @@
         where vote_code =${param2}
         and   usercode =${param1}
     </select>
+
     <insert id="vote_insert">
         insert into voter_tbl
         (
@@ -614,5 +621,34 @@
         where create_crew_code=${param1}
     </select>
 
+    <select id="vote_member_chek" resultType="int">
+        SELECT IFNULL(MAX(usercode), 0)
+        FROM voter_tbl
+        where vote_code =${param1}
+    </select>
 
+    <update id="vote_update">
+        update vote_tbl
+        set
+        subject = '${param2}'
+        ,enddate = '${param3}'
+        ,opt1    = '${param4}'
+        ,opt2    = '${param5}'
+        ,opt3    = '${param6}'
+        ,opt4    = '${param7}'
+        ,opt5    = '${param8}'
+        where    vote_code = ${param1}
+    </update>
+
+    <delete id="vote_delete">
+        delete
+        from vote_tbl
+        where vote_code = ${param1}
+    </delete>
+
+    <delete id="voter_delete">
+        delete
+        from voter_tbl
+        where vote_code = ${param1}
+    </delete>
 </mapper>

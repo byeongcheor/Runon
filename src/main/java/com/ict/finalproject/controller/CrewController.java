@@ -1,7 +1,7 @@
 package com.ict.finalproject.controller;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.vo.CrewVO;
@@ -18,8 +18,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -411,23 +409,26 @@ public class CrewController {
     }
     @PostMapping("/crew_manage_select")
     @ResponseBody
-    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,
+    public List<CrewVO> crew_manage_select(@RequestParam("Authorization") String token,
+                                           @RequestParam("create_crew_code") int crewCode,
+                                           @RequestParam("id") String id,
                                            @RequestParam(value = "flag", defaultValue = "") String flag) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
+        token = token.substring("Bearer ".length());
+        user_name = jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_manage_select = null;
+
         try {
-            if (id.equals("member")) {
+            if (id.equals("member") || id.equals("handoverCrewBtn")) {
+                // handoverCrewBtn이 'member'와 같은 처리 로직을 사용할 경우 이 조건에 추가
                 crew_manage_select = service.crew_manage_member(crewCode, user_code);
             }
-            if ( id.equals("overview")) {
+            if (id.equals("overview")) {
                 crew_manage_select = service.crew_manage_overview(crewCode, user_code);
             }
-            if ( id.equals("notice")) {
+            if (id.equals("notice")) {
                 crew_manage_select = service.crew_manage_notice(crewCode, user_code);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -582,6 +583,61 @@ public class CrewController {
             e.printStackTrace();
         }
         return a;
+    }
+    @PostMapping("/vote_rud")
+    @ResponseBody
+    public List<CrewVO> vote_rud(
+            @RequestParam("Authorization")String token,
+            @RequestParam("create_crew_code") int crewCode,
+            @RequestParam("flag") String flag,
+            @RequestParam("vote_num") int vote_num,
+            @RequestParam(value = "title", defaultValue = "") String title,
+            @RequestParam(value = "endDate", defaultValue = "") String endDate,
+            @RequestParam("opt1") String opt1,
+            @RequestParam("opt2") String opt2,
+            @RequestParam("opt3") String opt3,
+            @RequestParam(value = "opt4", defaultValue = "") String opt4,
+            @RequestParam(value = "opt5", defaultValue = "") String opt5) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+
+        List<CrewVO> vote_read = new ArrayList<>();;
+        try {
+            if(flag.equals("R")){
+                vote_read =  service.vote_detail(vote_num);
+            }
+            if(flag.equals("U")){
+                int a = service.vote_member_chek(vote_num);
+                // CrewVO 객체 생성
+                CrewVO crew = new CrewVO();
+                if(a>0){
+                    // a_s 필드에 "1" 설정
+                    crew.setA_s("1");
+                    // 리스트에 추가
+                    vote_read.add(crew);
+                    return vote_read;
+                }
+                else {
+                    // a_s 필드에 "0" 설정
+                    crew.setA_s("0");
+                    // 리스트에 추가
+                    vote_read.add(crew);
+                    service.vote_update(vote_num, title, endDate, opt1, opt2, opt3, opt4, opt5);
+                }
+            }
+            if(flag.equals("D")){
+                service.voter_delete(vote_num);
+                service.vote_delete(vote_num);
+                return vote_read;
+            }
+
+            //service.vote_create(user_code, crewCode, title, endDate, opt1, opt2,opt3,opt4,opt5);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vote_read;
     }
 
     @PostMapping("/resign_team")
