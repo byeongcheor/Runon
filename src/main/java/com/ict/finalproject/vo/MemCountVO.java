@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointVO {
-    private int point_code;
-    private int usercode;
-    private int mypoint;
-    private int point_change_code;
-    private int point_change;
+public class MemCountVO {
+    private int allCount;
+    private int MCount;
+    private String Mgender="남";
+    private int WCount;
+    private String Wgender="여";
 }

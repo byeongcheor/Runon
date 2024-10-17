@@ -49,8 +49,17 @@
 
 
 }
-#checkboxlist{
+#AdminRole2{
+    display: none;
+
+    margin: auto auto auto 0px;
+}
+#AdminRole2>button{
+    margin-left: 5px;
+}
+#checkboxlist,#hiddendown{
     margin: auto 0;
+    display: none;
 }
 #mainmid>div{
     margin-left: 30px;
@@ -58,8 +67,9 @@
 }
 #mainmid>div>form{
     display: flex;
-    width: 100%;
+
     height: 60px;
+    margin: 0 auto;
 }
 #searchbutton{
 
@@ -80,6 +90,7 @@
     overflow: hidden;
 
 
+
 }
 #searchbar>select{
     height: 34px;
@@ -96,6 +107,7 @@
     height: 30px;
     margin: auto 0;
     border: 1px solid black;
+
 
 }
 #searchbar>div>input:focus{

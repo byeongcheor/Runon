@@ -7,6 +7,7 @@ public interface LoginDAO {
     public Boolean checkToken(String username);
     public void updateToken(String refreshToken,String username);
 
-
+    //로그인했을때마다 방문자 추가
+    public void loginHistory(String username,String ip);
 
 }

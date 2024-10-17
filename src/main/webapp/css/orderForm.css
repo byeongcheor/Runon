@@ -1,7 +1,7 @@
 .cartFrm{
-            width: 1000px;
-            margin: 0px auto 0px;
-        }
+    width: 1000px;
+    margin: 0px auto 0px;
+}
 .cartName{
     display: flex;
     flex-direction: row;
@@ -18,7 +18,7 @@
     text-align: center;
     color: rgb(51, 51, 51);
 }
-.cartMain{
+.orderMain{
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -27,7 +27,7 @@
 .oneline{
     display: flex;
 }
-.cartM{
+.orderM{
     display: flex;
     flex-direction: row;
     -webkit-box-pack: start;
@@ -41,30 +41,27 @@
     color: rgb(51, 51, 51);
     border-bottom: 1px solid rgb(230, 230, 230);
 }
-.cartM div:nth-of-type(1) {
-    width: 50px;
+.orderM div:nth-of-type(1) {
+    width: 40%;
+
 }
-.cartM div:nth-of-type(1) input{
+.orderM div:nth-of-type(1) input{
     width: 26px;
     height: 26px;
     border-radius: 4px;
 }
-.cartM div:nth-of-type(2) {
-    width: 430px;
+.orderM div:nth-of-type(2) {
+    width: 10%;
 }
-.cartM div:nth-of-type(3) {
-    width: 110px;
+.orderM div:nth-of-type(3) {
+    width: 25%;
 }
-.cartM div:nth-of-type(4) {
-    width: 230px;
+.orderM div:nth-of-type(4) {
+    width:25%;
 }
-.cartM div:nth-of-type(5) {
-    width: 88px;
-}
-.cartM div:nth-of-type(6) {
-    width: 0px;
-}
-.ticket_cart{
+
+
+.ticket_order{
     display: flex;
     flex-direction: column;
     -webkit-box-pack: start;
@@ -418,9 +415,9 @@
 
 /* 총 금액 */
 .total-amount {
-   font-size: 1.2em;
-   font-weight: bold;
-   margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
     display: flex;             /* 내부 요소를 수평으로 배치 */
     align-items: center;       /* 세로 중앙 정렬 */
 }
@@ -447,42 +444,42 @@
 
 
 .popupCheck {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
 
 .popupCheck p{
-  font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      color: rgb(51, 51, 51);
-      padding: 40px 0px 0px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(51, 51, 51);
+    padding: 40px 0px 0px;
 }
 .popup-content{
     background-color: white;
-        width: 500px;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
+    width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 .popupClose {
-       background-color: #CCFF47;
-           color: black;
-           padding: 10px 20px;
-           border: none;
-           border-radius: 4px;
-           cursor: pointer;
-           font-size: 1.1em;
-           font-weight:bold;
+    background-color: #CCFF47;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight:bold;
 }
 
 .price{width: 250px;

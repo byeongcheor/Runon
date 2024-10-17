@@ -49,4 +49,10 @@
     <update id="enableUser">
         update user_tbl set is_disabled=0 ,disabled_date=null where username=#{param1}
     </update>
+    <insert id="addpoint_change_code">
+        INSERT INTO point_change_tbl (point_code)
+        SELECT point_code FROM point_tbl WHERE usercode = #{param1}
+
+    </insert>
+
 </mapper>

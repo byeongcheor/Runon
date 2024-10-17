@@ -80,6 +80,11 @@ public class JoinServiceImpl implements JoinService {
     }
 
     @Override
+    public void addpoint_change_code(int usercode) {
+        memberDAO.addpoint_change_code(usercode);
+    }
+
+    @Override
     public MemberVO getUsers(String username) {
         return memberDAO.getUsers(username);
     }

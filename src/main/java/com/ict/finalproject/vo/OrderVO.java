@@ -20,6 +20,7 @@ public class OrderVO {
     private int cart_code;
     private int reservation_code;
     private int discount_amount;
+    private String marathon_name;
 
     private String marathon_name;
 

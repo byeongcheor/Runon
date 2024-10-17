@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointVO {
-    private int point_code;
-    private int usercode;
-    private int mypoint;
-    private int point_change_code;
-    private int point_change;
+public class AgeCountVO {
+    private String gender;
+    private String ageGroup;
+    private int groupCount;
 }

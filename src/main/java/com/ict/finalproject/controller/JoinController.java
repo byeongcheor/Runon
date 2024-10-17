@@ -49,7 +49,7 @@ public class JoinController {
             if (resultint==1) {
                int usercode= service.selectUserCode(username);
                int pointcode=service.addPointCode(usercode);
-
+               service.addpoint_change_code(usercode);
                return "login&join/joinOk";
 
 

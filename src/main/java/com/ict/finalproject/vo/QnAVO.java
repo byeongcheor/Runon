@@ -23,4 +23,7 @@ public class QnAVO {
     private String activationdate;
     private int usercode;
     private String answer_content;
+
+    //에러 터지면 지우세요
+    private String nickname;
 }
