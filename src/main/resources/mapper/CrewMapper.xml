@@ -10,6 +10,12 @@
         where  username = '${param1}'
     </select>
 
+    <select id="crew_teamEmblem" resultType="String">
+        select logo
+        from   create_crew_tbl
+        where  create_crew_code = '${param1}'
+    </select>
+
     <update id="crew_write_hit_update">
         update crew_write
         set

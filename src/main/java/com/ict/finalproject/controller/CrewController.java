@@ -672,6 +672,9 @@ public class CrewController {
                 Path path = Paths.get(uploadDir + File.separator + fileName);
                 Files.copy(file.getInputStream(), path);
             }
+            else{
+                fileName=service.crew_teamEmblem(create_crew_code);
+            }
             // 나이대 배열을 하나의 문자열로 결합 (해당 부분도 수정하지 않음)
             String age = String.join(",", arr_age);
 
@@ -690,7 +693,7 @@ public class CrewController {
         }
     }
 
-    ////////////크루 noitce 글 등록//
+    /////////// 크루 notice 글 등록 //
     @PostMapping("/createNotice")
     @ResponseBody
     public int createNotice(
@@ -698,7 +701,7 @@ public class CrewController {
             @RequestParam("noticeTitle") String subject,
             @RequestParam("noticeContent") String content,
             @RequestParam("create_crew_code") int create_crew_code,
-            @RequestParam("noticeImages[]") MultipartFile[] noticeImages) {
+            @RequestParam(value = "noticeImages[]", required = false) MultipartFile[] noticeImages) {
 
         int result = 0;
         String fileName = "";
@@ -708,15 +711,17 @@ public class CrewController {
             // JWT에서 사용자 이름을 가져오고, 사용자 코드를 조회
             user_name = jwtUtil.setTokengetUsername(token);
             user_code = service.usercodeSelect(user_name);
+
             // 공지사항 정보 삽입
-            result = service.createNotice(subject,content,user_code, create_crew_code);
+            result = service.createNotice(subject, content, user_code, create_crew_code);
 
             // 생성된 공지사항의 코드 가져오기
             int crew_notice_code = service.getNoticeCode(create_crew_code);
-            System.out.println("getNoticeCodegetNoticeCode->>>"+crew_notice_code);
+            System.out.println("getNoticeCodegetNoticeCode->>>" + crew_notice_code);
 
             // UUID를 사용한 파일 이름 생성
             UUID uuid = UUID.randomUUID();
+
             // 파일 업로드가 있는 경우 처리
             if (noticeImages != null && noticeImages.length > 0) {
                 for (MultipartFile image : noticeImages) {
@@ -724,8 +729,10 @@ public class CrewController {
                         // 파일 이름 생성 및 경로 설정
                         fileName = uuid.toString() + "_" + StringUtils.cleanPath(image.getOriginalFilename());
                         Path path = Paths.get(uploadDir + File.separator + fileName);
+
                         // 파일 저장
                         Files.copy(image.getInputStream(), path);
+
                         // 파일 정보 DB 저장
                         service.saveImage(crew_notice_code, fileName);
                     }

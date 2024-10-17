@@ -43,7 +43,6 @@
             <section class="section1">
               <div class="section_nav">
                 <ul>
-
                   <li id="overview" name=crew_select onClick="crew_manage_select(this)">오버뷰</li>
                   <li id="notice" name=crew_select onClick="crew_manage_select(this)">공지</li>
                   <li id="member" name=crew_select onClick="crew_manage_select(this)">멤버</li>
@@ -886,65 +885,62 @@ function crew_notice(response) {
 
 <!-- 공지사항 등록 -->
 
-    function submitNotice() {
-        var form = $('#updateNoticeForm')[0]; // 폼 데이터 가져오기
-        var formData = new FormData(form); // FormData 객체 생성
+function submitNotice() {
+    var form = $('#updateNoticeForm')[0]; // 폼 데이터 가져오기
+    var formData = new FormData(form); // FormData 객체 생성
 
-        // URL에서 가져온 create_crew_code와 user_code 값을 FormData에 추가
-        formData.append('create_crew_code', create_crew_code);
-        formData.append('user_code', user_code);
+    // URL에서 가져온 create_crew_code와 user_code 값을 FormData에 추가
+    formData.append('create_crew_code', create_crew_code);
+    formData.append('user_code', user_code);
 
-        // 유효성 검사: 제목과 내용을 확인
-        var title = $('#noticeTitle').val().trim();
-        var content = $('#noticeContent').val().trim();
+    // 유효성 검사: 제목과 내용을 확인
+    var title = $('#noticeTitle').val().trim();
+    var content = $('#noticeContent').val().trim();
 
-        if (title === '') {
-            alert('제목을 입력해주세요.');
-            return false;
-        }
+    if (title === '') {
+        alert('제목을 입력해주세요.');
+        return false;
+    }
 
-        if (content === '') {
-            alert('공지 내용을 입력해주세요.');
-            return false;
-        }
+    if (content === '') {
+        alert('공지 내용을 입력해주세요.');
+        return false;
+    }
 
-        // 다중 파일 처리: 각각의 파일을 FormData에 추가
-        var files = $('#noticeImage')[0].files;
-        if (files.length === 0) {
-            alert('이미지를 선택해주세요.');
-            return false;
-        }
-
+    // 다중 파일 처리: 각각의 파일을 FormData에 추가 (이미지 파일이 있을 때만 추가)
+    var files = $('#noticeImage')[0].files;
+    if (files.length > 0) { // 파일이 있을 때만 추가
         for (var i = 0; i < files.length; i++) {
             formData.append('noticeImages[]', files[i]); // 파일을 FormData에 추가
         }
+    }
 
-        // AJAX로 서버에 데이터 전송
-        $.ajax({
-            url: '/crew/createNotice', // 서버의 Controller URL
-            type: 'POST',
-            headers: {
-                Authorization: localStorage.getItem('Authorization')  // 헤더로 Authorization 전송
-            },
-            data: formData,
-            processData: false, // FormData 사용 시 false로 설정
-            contentType: false, // FormData 사용 시 false로 설정
-            success: function(response) {
-                console.log("서버 응답:", response);
-                if (response === 1) {
-                    alert('공지사항이 성공적으로 등록되었습니다.');
-                    closeNoticeModal(); // 모달 닫기
-                    resetNoticeForm();  // 폼 리셋
-                } else {
-                    alert('공지사항 등록 중 오류가 발생했습니다.');
-                }
-            },
-            error: function(error) {
-                console.error("오류 발생:", error);
+    // AJAX로 서버에 데이터 전송
+    $.ajax({
+        url: '/crew/createNotice', // 서버의 Controller URL
+        type: 'POST',
+        headers: {
+            Authorization: localStorage.getItem('Authorization')  // 헤더로 Authorization 전송
+        },
+        data: formData,
+        processData: false, // FormData 사용 시 false로 설정
+        contentType: false, // FormData 사용 시 false로 설정
+        success: function(response) {
+            console.log("서버 응답:", response);
+            if (response === 1) {
+                alert('공지사항이 성공적으로 등록되었습니다.');
+                closeNoticeModal(); // 모달 닫기
+                resetNoticeForm();  // 폼 리셋
+            } else {
                 alert('공지사항 등록 중 오류가 발생했습니다.');
             }
-        });
-    }
+        },
+        error: function(error) {
+            console.error("오류 발생:", error);
+            alert('공지사항 등록 중 오류가 발생했습니다.');
+        }
+    });
+}
 
 
 function closeNoticeModal() {

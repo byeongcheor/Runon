@@ -275,5 +275,10 @@ public class CrewServiceImpl implements CrewService{
         return dao.getCrewList();
     }
 
+    /*채팅방 크루연결 */
+    @Override
+    public String crew_teamEmblem(int create_crew_code) {
+        return dao.crew_teamEmblem(create_crew_code);
+    }
 
 }

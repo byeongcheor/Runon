@@ -24,6 +24,7 @@ public interface CrewService {
     public int update14();
     public int usercodeSelect(String user_name);
     public int crew_code_select(int user_code);
+    public String crew_teamEmblem(int create_crew_code);
     public int crew_write_hit_update(int writeCrewCode);
     public int crew_name_check(String crew_name_check);
     public int crew_name_double_check(String teamName,int create_crew_code);
