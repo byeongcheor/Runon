@@ -4,6 +4,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.*;
 import com.ict.finalproject.vo.CartVO;
 import com.ict.finalproject.vo.MateVO;
+import com.ict.finalproject.vo.OrderVO;
 import com.ict.finalproject.vo.PointVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import java.util.Map;
 
 @Slf4j
 @Controller
-@RequestMapping("/order")
+@RequestMapping("/cart")
 public class CartController {
     @Autowired
     CartService service;

@@ -35,7 +35,7 @@
     </select>
 
     <insert id="insert">
-        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code, point_change_code)
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code)
         select u.usercode,
         u.username,
         u.password,
@@ -52,8 +52,7 @@
         u.is_google,
         u.creation_date,
         p.mypoint,
-        p.point_code,
-        p.point_change_code
+        p.point_code
         from user_tbl u
         left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
     </insert>

@@ -2,6 +2,7 @@ package com.ict.finalproject.service;
 
 import com.ict.finalproject.vo.CartVO;
 import com.ict.finalproject.vo.MateVO;
+import com.ict.finalproject.vo.OrderVO;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface CartService {
     public int updatecart(String action,int cart_code);
     // cart 삭제(안보이게 업데이트)
     public void deletedcart(List<Integer> items);
+
 }

@@ -1,6 +1,7 @@
 package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.CartVO;
+import com.ict.finalproject.vo.OrderVO;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ public interface CartDAO {
 
     // cart 삭제(안보이게 업데이트)
     public void deletedcart(List<Integer> items);
+
+
+
+
 }

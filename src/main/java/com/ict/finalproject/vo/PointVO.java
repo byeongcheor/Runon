@@ -12,5 +12,5 @@ public class PointVO {
     private int usercode;
     private int mypoint;
     private int point_change_code;
-
+    private int point_change;
 }

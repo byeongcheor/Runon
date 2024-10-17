@@ -2,8 +2,10 @@ package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.CartDAO;
 import com.ict.finalproject.vo.CartVO;
+import com.ict.finalproject.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,4 +39,6 @@ public class CartServiceImpl implements CartService {
     public void deletedcart(List<Integer> items) {
          dao.deletedcart(items);
     }
+
+
 }

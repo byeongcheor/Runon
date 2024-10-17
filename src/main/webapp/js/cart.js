@@ -1,20 +1,6 @@
-
-// 장바구니에 추가된 상품 수량 변경부분
-
-// 총 금액을 전역 변수로 선언
-let totalAmount; // 총 금액 초기화
-let appliedPoints ; // 적용된 포인트 (할인으로 적용됨)
-// 사용자 포인트(예시)
-
-
 setTimeout(function(){
 
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
 
-    // 모든 항목을 기본적으로 선택
-    checkboxes.forEach((checkbox) => {
-        checkbox.checked = true;
-    });
 
     // '전체 선택' 체크박스도 선택 상태로 설정
     const selectAllCheckbox = document.getElementById('selectAll');
@@ -23,22 +9,8 @@ setTimeout(function(){
     }
 
     // 상태 업데이트
-    updateSelectAll();
+    //updateSelectAll();
 
-    // '선택 상품 주문하기' 버튼 클릭 시 동작
-    document.getElementById('orderButton').addEventListener('click', function () {
-        const checkedItems = document.querySelectorAll('input[name="itemCheckbox"]:checked');
-
-        console.log("Checked items:", checkedItems.length); // 체크된 상품 수량 로그
-
-        // 체크된 상품이 있으면 결제 진행
-        if (checkedItems.length > 0) {
-
-            requestPayment(checkedItems); // 결제 요청 함수 호출
-        } else {
-            alert("선택한 상품이 없습니다."); // 체크된 상품이 없으면 메시지 표시
-        }
-    });
     cartload();
 
 },300);
@@ -59,11 +31,10 @@ function deleteSelectedItems() {
 
     });
     // 배열에 값 들어가는거 확인console.log(CheckedItems);
-    // 총 금액 업데이트
-    // updateProductTotal(); // 총 금액을 재계산하여 업데이트
+
     // db조회후 안보이게
     $.ajax({
-        url:"/order/deleted",
+        url:"/cart/deleted",
         type:"post",
         contentType:"application/json",
         data:JSON.stringify({
@@ -119,227 +90,83 @@ function updateProductTotal() {
 function increase(test,cart_code) {
     datas={};
 
-   if (test==1){
+    if (test==1){
         datas.action="add";
-   }else{
-       datas.action = "remove";
-   }
-   datas.cart_code=cart_code;
-   $.ajax({
-       url:"/order/cartupdate",
-       type:"post",
-       data:datas,
-       success:function(r){
-           cartload();
-       }
+    }else{
+        datas.action = "remove";
+    }
+    datas.cart_code=cart_code;
+    $.ajax({
+        url:"/cart/cartupdate",
+        type:"post",
+        data:datas,
+        success:function(r){
+            cartload();
+        }
 
-   });
+    });
 
 }
 
-function removeItem(itemId, price) {
-    var item = document.getElementById(itemId);
 
-    // 부모 요소 (상품 전체 칸)을 삭제
-    if (item) {
-        item.closest('.tipoff').remove();  // 부모 클래스 tipoff 삭제
-    }
-
-    // 상품 금액 감소
-    totalAmount -= price;
-    if (totalAmount < 0) totalAmount = 0;  // 금액이 음수가 되지 않도록
-
-    // 남아있는 상품이 있는지 확인
-    const remainingItems = document.querySelectorAll('.tipoff');
-
-    // 장바구니에 남은 상품이 없을 때 총 금액을 0으로 설정
-    if (remainingItems.length === 0) {
-        resetTotalAmount();
-    } else {
-        // 남은 상품이 있을 경우, 총 금액 업데이트 함수 호출
-        updateTotalAmountWithDiscount();
-    }
-}
 
 // 총 금액을 0으로 초기화하는 함수
 function resetTotalAmount() {
-    totalAmount = 0;
-    appliedPoints = 0;
-
+    totalAmounts = 0;
     // 총 금액을 0으로 설정
-    document.getElementById('productTotal').innerText = "0원";
-    document.getElementById('discountAmount').innerText = "0원";
-    document.getElementById('totalAmount').innerText = "0원";
+    document.getElementById('totalAmounts').innerText = "0원";
 }
-// 포인트 최대 적용 함수
-function applyMaxPoints() {
-    // 사용자 포인트 가져오기
-    const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, '')); // 사용자 포인트 가져오기
-    document.getElementById('discountInput').value = userPoints; // 입력 필드에 사용자 포인트 설정
-
-    // 포인트 적용 후 총 금액 업데이트
-    applyCoupon(); // 최대 포인트를 적용한 후 총 금액 업데이트
-}
-
-// 포인트 적용하기
-function applyCoupon() {
-    // 사용자가 입력한 포인트 값 가져오기
-    let points = parseInt(document.getElementById('discountInput').value) || 0;
-
-    // 입력한 포인트가 사용자 포인트를 초과하지 않는지 확인
-    const userPoints = parseInt(document.getElementById('userPoints').innerText.replace(/[^0-9]/g, ''));
-    if (points > userPoints) {
-        alert("사용할 수 있는 포인트가 부족합니다. 최대 " + userPoints + " 원까지만 사용 가능합니다.");
-        document.getElementById('discountInput').value = userPoints; // 최대 포인트로 설정
-        points = userPoints; // 포인트를 최대값으로 설정
-    }
-
-    // 총 상품 금액보다 포인트가 클 경우 포인트를 상품 금액까지만 적용
-    let totalPrice = parseInt(document.getElementById("productTotal").innerText.replace(/[^0-9]/g, ''));
-    if (points > totalPrice) {
-        points = totalPrice;
-    }
-
-    // 포인트 적용 후, 모달 닫기
-    appliedPoints = points;
-    document.getElementById('appliedPoints').innerText = appliedPoints.toLocaleString() + '원 사용';  // 모달에 적용된 포인트 표시
-    closeModal();
-
-    // 총 금액 업데이트
-    updateTotalAmountWithDiscount();
-}
-
-// 총 금액과 할인 금액을 반영한 최종 금액 업데이트
-function updateTotalAmountWithDiscount() {
-    // productTotal에서 총 상품 금액을 가져옵니다.
-    const productTotalText = document.getElementById("productTotal").innerText;
-    let productTotal = parseInt(productTotalText.replace(/[^0-9]/g, ''));
-
-    // 최종 금액 계산
-    const finalAmount = productTotal - appliedPoints;
-
-    // 상품 금액과 총 금액을 HTML에 업데이트
-    document.getElementById('productTotal').innerText = productTotal.toLocaleString() + "원";
-    document.getElementById('discountAmount').innerText = appliedPoints.toLocaleString() + "원";
-    document.getElementById('totalAmount').innerText = (finalAmount > 0 ? finalAmount : 0).toLocaleString() + "원";
-}
-
-// 페이지가 로드될 때 총 가격을 업데이트
-document.addEventListener('DOMContentLoaded', updateProductTotal);
-
-
 // '전체 선택' 체크박스 클릭 시 모든 항목 선택/해제
 function toggleSelectAll() {
     const selectAllCheckbox = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
+    const checkboxes = document.querySelectorAll('.itemCheckbox');
 
     checkboxes.forEach((checkbox) => {
         checkbox.checked = selectAllCheckbox.checked; // 전체 선택 체크박스의 상태에 따라 체크박스 상태 설정
     });
+    if(!selectAllCheckbox.checked){
+        resetTotalAmount();
+    }else{
+        cartload();
+    }
 
-    updateSelectAll(); // 체크박스 상태 업데이트
 }
 
-// 개별 항목 선택 시 상태 업데이트
-function updateSelectAll() {
-    const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
-    const orderButton = document.getElementById('orderButton');
-
-    let isAnyChecked = false; // 하나라도 선택된 항목이 있는지 여부
-    let isAllChecked = true;  // 모든 항목이 선택되었는지 여부
-
-    // 체크박스 상태 확인
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            isAnyChecked = true; // 선택된 항목이 있으면 true
-        } else {
-            isAllChecked = false; // 선택되지 않은 항목이 있으면 false
-        }
-    });
-
-    // '전체 선택' 체크박스 상태 설정
+let totalAmounts = 0;
+// 체크박스 상태가 변경될 때 호출되는 함수
+function updateTotalAmount(cartCode, amount, isChecked) {
+    const checkboxes = document.querySelectorAll('.itemCheckbox');
     const selectAllCheckbox = document.getElementById('selectAll');
-    if (selectAllCheckbox) { // 요소가 존재하는지 확인
-        selectAllCheckbox.checked = isAllChecked; // 선택된 항목의 상태에 따라 전체 선택 체크박스 설정
+    for (let checkbox of checkboxes) {
+        if (!checkbox.checked) {
+            selectAllCheckbox.checked=false;// 체크되지 않은 체크박스가 있으면 false 반환
+        }
     }
 
-
-}
-
-// 페이지 로드 시 모든 상품을 선택된 상태로 설정
-
-
-// 토스페이먼츠 결제 요청
-const clientKey = "test_ck_ma60RZblrqKzA7jLeex63wzYWBn1";
-const customerKey = "l1lg7ARfyrAiOiFlTQ2Eu";
-const tossPayments = TossPayments(clientKey);
-
-const payment = tossPayments.payment({ customerKey });
-// 결제 요청 함수 (체크된 상품 배열을 사용하여 결제 처리)
-
-
-async function requestPayment(checkedItems) {
-
-
-    // 선택된 상품들의 가격을 합산
-    checkedItems.forEach(item => {
-        const priceElement = item.closest('.tipoff').querySelector('.ticketP span');
-        const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, '')); // 가격 숫자 추출
-        const quantity = parseInt(document.getElementById("number").textContent); // 현재 수량 추출
-        let totalPrice = price  * quantity;
-
-
-        // productTotal 요소에 상품 총 금액 업데이트
-        document.getElementById('productTotal').innerText = totalPrice.toLocaleString() + "원";
-
-        // 고객이 입력한 포인트 값 (할인 금액으로 사용)
-        let discountAmount = appliedPoints || 0;
-        document.getElementById('discountAmount').innerText = appliedPoints.toLocaleString() + "원";
-
-        // 총 금액은 상품 금액에서 포인트를 뺀 값으로 계산
-        totalAmount = totalPrice - discountAmount;
-
-        // 총 금액에 '원'을 붙여서 표시
-        document.getElementById('totalAmount').innerText = totalAmount.toLocaleString() + "원";
-
-
-    });
-
-
-    try {
-
-        console.log("Total amount for payment:", totalAmount); // 총 금액 로그
-        await payment.requestPayment({
-            method: "CARD",
-            amount: {
-                currency: "KRW",
-                value: totalAmount,
-            },
-            orderId: "tele4rvgeIO2CBSn7rYII",
-            orderName: "2024 3대 마라톤 - 여의도 나이트런",
-            successUrl: window.location.origin + "/order/ordersheet",
-            failUrl: window.location.origin + "/fail",
-            customerEmail: "goguma123@naver.com",
-            customerName: "고구마",
-            customerMobilePhone: "01012341234",
-            card: {
-                useEscrow: false,
-                flowMode: "DEFAULT",
-                useCardPoint: false,
-                useAppCardOnly: false,
-            },
-        });
-        console.log("Payment request sent.");// 결제 요청 완료 로그
-    } catch (error) {
-        //console.error("Payment failed:", error); // 결제 실패 처리
-        alert("결제 요청을 다시 시도해주세요."); // 사용자에게 알림
+    // 상품 가격을 확인하고, 체크박스가 체크된 상태인지에 따라 처리
+    console.log(isChecked);
+    console.log("정수확인"+amount);
+    amount = parseInt(amount);
+    const allamount=amount;
+    if (isChecked==true) {
+        totalAmounts = totalAmounts+amount;
+        console.log("정수확인3:"+amount);// 체크된 경우 금액을 더함
+    } else if(isChecked==false){
+        totalAmounts = totalAmounts-amount;
+        if (0>=totalAmounts){
+            totalAmounts=0;
+        }
+        console.log("정수확인4:"+amount);// 체크 해제된 경우 금액을 뺌
+    }else{
+        totalAmounts=amount;
     }
-
+    alert(totalAmounts.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' }))
+    /*document.getElementById('amount').innerText=allamount .toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });*/
+    document.getElementById('totalAmounts').innerText=totalAmounts .toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
 }
-
 function cartload(){
     $.ajax({
-        url:"/order/cart",
+        url:"/cart/cart",
         type:"POST",
         data: {
             usercode: usercode1,
@@ -347,29 +174,74 @@ function cartload(){
         success: function(r) {
             cart = r.cartItems;
 
+            var cnt=0;
             var tag="<div class='tipoff'>";
             cart.forEach(function (cart) {
-                var price=cart.price.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
-                var amount=(cart.price*cart.quantity).toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
+                var price=cart.price
+                var amount=(cart.price*cart.quantity);
+                var tagprice=price.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
+                var tagamount=amount.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' })
+                cnt+=amount;
                 tag+='<div class="oneline">' +
                     '<input type="hidden" id="productId" name="productId" value="'+cart.marathon_code+'">';
-                tag+=   '<div class="checkB"><input type="checkbox" name="itemCheckbox" id="itemCheckbox" value="'+cart.cart_code+'" onclick="updateSelectAll()"></div>';
+                tag+=   '<div class="checkB"><input type="checkbox" name="itemCheckbox" class="itemCheckbox" id="itemCheckbox" value="'+cart.cart_code+'" onclick="updateTotalAmount(\'' + cart.cart_code + '\', \'' + amount + '\', this.checked)"></div>';
                 tag+=   '<div class="ticket"><img src="'+cart.poster_img+'" alt="마라톤 포스터" class="marathonP"><span class="marathonT">'+cart.marathon_name+ '</span></div>';
-
-
                 tag+=   '<div class="marathonC">'+
                     '<div class="counter-container">' +
                     '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';
                 tag += '<span id="number">' + cart.quantity + '</span>';
                 tag += '<button onclick="increase(1, ' + cart.cart_code + ')">+</button>' ;
                 tag+=           '</div></div>' +
-                    '<div class="price">'+price+'</div>' +
-                    '<div class="amount">'+amount+'</div>' +
+                    '<div class="price">'+tagprice+'</div>' +
+                    '<div class="amount">'+tagamount+'</div>' +
                     '</div>';
 
             });
-            tag+=`</div>`;
+            tag+="</div>";
             document.getElementById('ticket_cart').innerHTML = tag;
+
+
+            const checkboxes = document.querySelectorAll('.itemCheckbox');
+            console.log(checkboxes);
+            // 모든 항목을 기본적으로 선택
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = true;
+
+            });
+
+
+            document.getElementById('amount').innerText = cnt.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
+            updateTotalAmount( cart.cart_code, cnt , this.checked)
         }
     });
+}
+function goOrder(){
+    const checkedItems = document.querySelectorAll('.itemCheckbox:checked');
+    if (checkedItems.length === 0) {
+        alert("선택한 상품이 없습니다.");
+        return;
+    }
+    let selectedItems = [];
+
+    // 체크된 항목들의 데이터를 추출
+    checkedItems.forEach((item) => {
+        const cartCode = item.value;  // cart_code 값을 가져옴 (체크박스의 value에 cart_code가 저장됨)
+        selectedItems.push(cartCode);  // 선택된 cart_code를 배열에 추가
+    });
+    console.log(selectedItems);
+    let form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/order/orderForm'; // 이동할 페이지
+
+    selectedItems.forEach(item => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'items[]';  // 서버에서 배열로 처리 가능
+        input.value = item;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();  // 폼 전송
+
 }
