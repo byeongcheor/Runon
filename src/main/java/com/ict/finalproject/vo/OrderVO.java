@@ -22,6 +22,5 @@ public class OrderVO {
     private int discount_amount;
     private String marathon_name;
 
-    private String marathon_name;
 
 }

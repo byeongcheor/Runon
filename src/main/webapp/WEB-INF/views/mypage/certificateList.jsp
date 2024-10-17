@@ -118,6 +118,7 @@
                 success:function(r){
                     var tag="";
                     $.each(r.list, function(i, vo){
+                        console.log(vo);
                         var dateresult=vo.result_date;
                         if (dateresult==null){
                             dateresult="";
@@ -165,7 +166,6 @@
 
         var content = document.getElementById('content').value;
         var proof_photo = document.getElementById('proof_photo').files[0];
-        alert(username1);
         var formData = new FormData();
         formData.append("content", content);
         formData.append("proof_photo", proof_photo);

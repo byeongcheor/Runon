@@ -10,118 +10,116 @@
     })
 </script>
 <script>
-   window.onload = function(){
-      setTimeout(function(){
-         //배너섹션
-         $.ajax({
-            url: "/bannerMarathon",
-            success: function (r){
-               $('#autoplay').slick('unslick');
-               var tag ="";
-               var today = new Date();
-               $.each(r.list, function(i, vo){
-                  var eventDate = new Date(vo.event_date);
-                  var status = (eventDate < today) ? '모집종료':'모집중';
-                  tag += `
-                     <div class="slideBox">
-                        <div class="posterrecruit"><span>`+status+`</span></div>
-                        <p class="postername">`+vo.marathon_name+`</p><br>
-                        <p class="posterdate">📅`+vo.event_date+`</p>
-                     </div>
-                  `;
-               })
-               $("#slide").html(tag);
-               $( document ).ready( function() {
-                  $('.center').slick({
-                     slidesToShow: 1,
-                     autoplay: true,
-                     autoplaySpeed : 2000,
-                     infinite: true,
-                     arrows: false,
-                     responsive: [
-                        {
-                           breakpoint: 768,
-                           settings: {
-                              arrows: false,
-                              centerMode: true,
-                              centerPadding: '40px',
-                              slidesToShow: 3
-                           }
-                        },
-                        {
-                           breakpoint:  480,
-                           settings: {
-                              arrows: false,
-                              centerMode: true,
-                              centerPadding: '40px',
-                              slidesToShow: 1
-                           }
+   setTimeout(function(){
+      //배너섹션
+      $.ajax({
+         url: "/bannerMarathon",
+         success: function (r){
+            $('#autoplay').slick('unslick');
+            var tag ="";
+            var today = new Date();
+            $.each(r.list, function(i, vo){
+               var eventDate = new Date(vo.event_date);
+               var status = (eventDate < today) ? '모집종료':'모집중';
+               tag += `
+                  <div class="slideBox">
+                     <div class="posterrecruit"><span>`+status+`</span></div>
+                     <p class="postername">`+vo.marathon_name+`</p><br>
+                     <p class="posterdate">📅`+vo.event_date+`</p>
+                  </div>
+               `;
+            })
+            $("#slide").html(tag);
+            $( document ).ready( function() {
+               $('.center').slick({
+                  slidesToShow: 1,
+                  autoplay: true,
+                  autoplaySpeed : 2000,
+                  infinite: true,
+                  arrows: false,
+                  responsive: [
+                     {
+                        breakpoint: 768,
+                        settings: {
+                           arrows: false,
+                           centerMode: true,
+                           centerPadding: '40px',
+                           slidesToShow: 3
                         }
-                     ]
-                  });
-               } );
+                     },
+                     {
+                        breakpoint:  480,
+                        settings: {
+                           arrows: false,
+                           centerMode: true,
+                           centerPadding: '40px',
+                           slidesToShow: 1
+                        }
+                     }
+                  ]
+               });
+            } );
 
-            },error: function (e){
-               console.log(e);
-            }
-         })
-         //첫번째 섹션
-         $.ajax({
-            url: "/randMarathon",
-            success: function (r){
-               var tag ="";
-               var today = new Date();
-               $.each(r.list, function(i, vo){
-                  var eventDate = new Date(vo.event_date);
-                  var status = (eventDate < today) ? '모집종료':'모집중';
-                  tag += `
-                     <div class="hit_poster">
-                        <div class="poster_img">
-                           <img src="./img/마라톤1.png">
-                           <div class="recruit"><span>`+status+`</span></div>
-                        </div>
-                        <div>
-                           <div style="margin: 10px;">📍`+vo.addr+`</div>
-                           <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
-                        </div>
+         },error: function (e){
+            console.log(e);
+         }
+      })
+      //첫번째 섹션
+      $.ajax({
+         url: "/randMarathon",
+         success: function (r){
+            var tag ="";
+            var today = new Date();
+            $.each(r.list, function(i, vo){
+               var eventDate = new Date(vo.event_date);
+               var status = (eventDate < today) ? '모집종료':'모집중';
+               tag += `
+                  <div class="hit_poster">
+                     <div class="poster_img">
+                        <img src="./img/마라톤1.png">
+                        <div class="recruit"><span>`+status+`</span></div>
                      </div>
-                  `;
-               })
-               document.getElementById("marathon1").innerHTML = tag;
-            },
-            error: function (e){
-               console.log(e);
-            }
-         })
-         //두번째섹션
-         $.ajax({
-            url:"/eventMarathon",
-            success: function(r){
-               var tag ="";
-               var today = new Date();
-               $.each(r.list, function(i, vo){
-                  var eventDate = new Date(vo.event_date);
-                  var status = (eventDate < today) ? '모집종료':'모집중';
-                  tag += `
-                     <div class="hit_poster">
-                        <div class="poster_img">
-                           <img src="./img/poster4.png">
-                           <div class="recruit"><span>`+status+`</span></div>
-                        </div>
-                        <div>
-                           <div style="margin: 10px;">📍`+vo.addr+`</div>
-                           <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
-                        </div>
+                     <div>
+                        <div style="margin: 10px;">📍`+vo.addr+`</div>
+                        <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
                      </div>
-                  `;
-               })
-               document.getElementById("event").innerHTML = tag;
-            },error: function(e){
-               console.log(e);
-            }
-         })
-      },100);
-   }
+                  </div>
+               `;
+            })
+            document.getElementById("marathon1").innerHTML = tag;
+         },
+         error: function (e){
+            console.log(e);
+         }
+      })
+      //두번째섹션
+      $.ajax({
+         url:"/eventMarathon",
+         success: function(r){
+            var tag ="";
+            var today = new Date();
+            $.each(r.list, function(i, vo){
+               var eventDate = new Date(vo.event_date);
+               var status = (eventDate < today) ? '모집종료':'모집중';
+               tag += `
+                  <div class="hit_poster">
+                     <div class="poster_img">
+                        <img src="./img/poster4.png">
+                        <div class="recruit"><span>`+status+`</span></div>
+                     </div>
+                     <div>
+                        <div style="margin: 10px;">📍`+vo.addr+`</div>
+                        <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
+                     </div>
+                  </div>
+               `;
+            })
+            document.getElementById("event").innerHTML = tag;
+         },error: function(e){
+            console.log(e);
+         }
+      })
+   },100);
 </script>
 <body>
 <div id="mainBox">

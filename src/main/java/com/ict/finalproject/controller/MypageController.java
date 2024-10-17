@@ -345,6 +345,7 @@ public class MypageController {
     @ResponseBody
     public Map<String, Object> certificateList(@RequestParam("username")String username,@RequestParam("usercode")int usercode) {
         List<CertificateVO> list = service.selectCertificateAll(username);
+        System.out.println(list);
         Map<String, Object> result = new HashMap<>();
         result.put("list", list);
         return result;

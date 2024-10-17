@@ -1,14 +1,17 @@
-
+#DashboardHead{
+    background-color: #fff;
+}
 #DashboardBody{
-    width: 80%;
     min-width: 950px;
+    height: 100vh;
+    padding-top: 30px;
+    margin: 0 auto;
 }
 
-#DashboardBody #menutitle{
+#DashboardHead #menutitle{
     font-weight: bold;
     font-size: 2em;
     margin-bottom: 5px;
-
 }
 
 #DashboardBody>div:first-child{
@@ -16,9 +19,9 @@
     /*border-bottom: 1px solid black;*/
 
 }
-#DashboardBody #maintop{
+#DashboardHead #maintop{
     margin-left: 30px;
-    margin-top: 100px;
+    margin-top: 30px;
 }
 #subtitle{
     margin-bottom: 20px;
@@ -32,18 +35,26 @@
     display: flex;
 }
 #mainmid .chart1{
-    border: 1px solid black;
-    width:33% ;
-    height: 314px;
-
+    width:530px;
+    height: 400px;
+    background-color: #fff;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
 }
 #mainmid2>.chart2{
-    border: 1px solid black;  height: 314px;
-    width: 33%;
+    height: 400px;
+    width: 530px;
+    background-color: #fff;
+    margin: 10px;
 }
-#mainmid>.chart1>.marathonchart{
-    display: flex;
 
+#mainmid .marathonchart{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
 }
 #loinchart{
     width: 100%;
@@ -61,7 +72,7 @@
      margin: auto;
  }
 .marathons {
-    width: 50%; /* 차트의 폭을 100%로 설정 */
+    width: 45%; /* 차트의 폭을 100%로 설정 */
     height: 250px; /* 높이는 자동으로 조정 */
 }
 .info {
@@ -76,26 +87,14 @@
 /*여기까지*/
 
 #Memchart2{
-    width: 100%;display: flex;
-
+    width: 90%;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 10px;
 }
 #Memchart2>#chartmem{
     width: 55%;
     height: 290px;
-    margin-right: 10px;
-    border-right: 1px solid black;
-
-}
-
-.chart2>#subject{
-    display: flex;
-
-}.chart2>#subject>div:last-child{
-    width: 45%; text-align: center;
- }
-#changetext{
-    border-right: 1px solid black;text-align: center;
-    width: 55%;
 }
  #joinsuser{
      width: 40%;
@@ -104,9 +103,7 @@
  }
  #joinsuser>div{
      margin-top: 10px;
-     height: 40%; border: 1px solid black;
-     border-radius: 15px;
-
+     height: 40%;
  }
 #joinsuser>div:hover{
     background-color: #ddd;
@@ -132,15 +129,15 @@ ul,li{
 
 }
 #buttonhidden,#qnahiddenbtn{
-   display: flex;
+    /*display: flex;*/
     margin-top: 10px;
 }
 #addlist,#addlist2{
-    width: 50%;
+    /*width: 50%;*/
     margin-left: 10px;
 }
 #buttonhidden>div:last-child,#qnahiddenbtn>div:last-child{
-    width: 50%;
+    /*width: 50%;*/
     text-align: right;
     margin-right: 10px;
 }
@@ -179,4 +176,45 @@ ul,li{
 .alink:hover{
     background-color: #ddd;
 
+}
+
+.adminContainer{
+    display: flex;
+    flex-direction: column;
+    width: 110%;
+    background-color: #F0F0F0;
+}
+.chartHead{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.chart2{
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+.chartTitle{
+    font-size: 12pt;
+    font-weight: 700;
+    vertical-align: center;
+}
+.chartBody{
+    margin-top: 10px;
+}
+#qnanewList{
+    margin-top: 30px;
+}
+
+.btnContain button{
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 9pt;
+    border: 1px solid lightgrey;
+}
+#qnahiddenbtn button{
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 9pt;
+    border: 1px solid lightgrey;
 }

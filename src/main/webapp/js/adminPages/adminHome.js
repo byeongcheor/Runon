@@ -474,7 +474,7 @@ function newPayment(){
             var Avo=r.Avo;
             //최신 결제내역
             if (Avo.role<3||Avo.admin_code==0){
-                var buttontag="<div id=\"addlist\" > 최신 결제내역 </div><div><button type=\"button\">더보기</button></div>";
+                var buttontag="<div id=\"addlist\" > </div><div><button type=\"button\">더보기</button></div>";
                 document.getElementById("buttonhidden").innerHTML=buttontag;
                 var tag="<ul><li class='oneline paymenttitle'><div class='nickname'>닉네임</div>";
                 tag += "<div class='marathon_name'>마라톤명</div><div class='real_amount'>총가격</div>";
@@ -495,7 +495,7 @@ function newPayment(){
             //답변 대기중인 Q&A 리스트
             var qnalist=r.qnalist;
             //console.log(qnalist);
-            var qnahiddenbrnTag="<div id=\"addlist2\" > 답변 대기 중인 Q&A 리스트 </div><div><button type=\"button\">더보기</button></div>";
+            var qnahiddenbrnTag="<div class='chartHead'><div class='chartTitle'><div id=\"addlist2\" > QnAList &nbsp; (답변대기중) </div></div><div><button type=\"button\">더보기</button></div></div>";
             document.getElementById("qnahiddenbtn").innerHTML=qnahiddenbrnTag;
             var qnaTag="<ul><li class='oneline qnatitle'><div class='qna_code'>고유번호</div>";
             qnaTag += "<div class='qna_subject'>QnA제목</div><div class='nickname'>작성자</div>";
