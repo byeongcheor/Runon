@@ -17,8 +17,8 @@
             <section class="section3">
                 <div class="profile_container">
                     <div class="names">
-                        <h3 id='crew_name' ></h3>
-                        <span id='addr'style="display: block;"></span>
+                        <h4 id='crew_name' ></h4>
+                        <span id='addr'style="display: block; margin-bottom:5px;"></span>
                         <span id='crew_info' style="display: block;"></span>
                     </div>
 
@@ -483,8 +483,11 @@
          }
          if (response[i].b_n == 9) {
             list += '<span class="main-text" onClick="vote_select(' + response[i].c_n + ')">' + response[i].subject + '</span> ';
-            list += '<span class="sub-text">투표 마감</span>';
+            list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
          }
+          if (response[i].b_n == 0) {
+             list += '<span class="main-text">' + response[i].subject + '</span> ';
+          }
          list += '      </div> ';
          list += '   </div> ';
          list += '</li> ';
@@ -492,33 +495,50 @@
       $('#crew_manage_list').append(list);
    }
 
-   function crew_notice(response) {
+function crew_notice(response) {
       var list = '';
       for (var i in response) {
          list += '<li class="member-item"> ';
          list += '   <div class="item-container"> ';
          list += '      <div class="icon-container"> ';
          if (response[i].a_n == 1 || response[i].a_n == 3) {
-            list += '   <img src="/img/vote.png"> ';
+            list += '   <img src="/img/vote.png" style="margin-bottom:20px;"> ';
             list += '      </div>';
             list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ')"> ';
             if (response[i].b_n == 1) {
-               list += '<span class="sub-text">투표 진행중</span>';
+               list += '<div class="text-row">';
                list += '<span class="main-text">' + response[i].subject + '</span> ';
+               list += '<span class="sub-text">투표 진행중</span>';
+               list += '</div>';
                var aa = response[i].e_n == 1 ? "참여" : "미참여";
+               list += '<div class="info-row">';
                list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
                list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
+               list += '<div>';
             }
             if (response[i].b_n == 9) {
-               list += '<span class="sub-text">투표 마감</span>';
+               list += '<div class="text-row">';
                list += '<span class="main-text">' + response[i].subject + '</span> ';
+               list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
+               list += '</div>';
                var aa = response[i].e_n == 1 ? "참여" : "미참여";
+               list += '<div class="info-row">';
                list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
                list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
+               list += '<div>';
             }
          }
          if (response[i].a_n == 2) {
-            list += '   <img src="/img/notice.png"> ';
+            list += '     <img src="/img/notice.png" style="margin-bottom:20px;"> ';
+            list += '  </div>';
+            list += '  <div class="text-container" onClick="noticeDetail(' + response[i].c_n + ')"> ';
+            list += '     <div class="text-row">';
+            list += '         <span class="main-text">' + response[i].subject + '</span> ';
+            list += '     </div>';
+            list += '     <div class="info-row">';
+            list += '         <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width:480px">' + response[i].content + '<div>';
+            list += '         <div>' + "업데이트 : "+  response[i].enddate +'<div>';
+            list += '     <div>';
          }
          list += '      </div>';
          list += '      <div class="text-container"> ';
@@ -528,6 +548,7 @@
       }
       $('#crew_manage_list').append(list);
    }
+
 
    function openCustomModal(usercode, nickname, user_pisition) {
       $('#usercode').val(usercode);
@@ -565,6 +586,12 @@
             checkedValues.push($(this).val());
          });
          reason = checkedValues.join(',');
+      }
+      if (id == 'out') {
+          var confirmation = confirm('정말 이 유저를 강퇴하시겠습니까?');
+          if (!confirmation) {
+              return; // 사용자가 취소하면 함수 종료
+          }
       }
       $.ajax({
          url: '/crew/member_manage',
@@ -640,30 +667,38 @@
    }
 
    function resignTeam() {
-      $.ajax({
-         url: '/crew/resign_team',
-         type: 'POST',
-         async: false,
-         data: {
-            Authorization: Authorization,
-            create_crew_code: create_crew_code,
-            position: position
-         },
-         success: function(response) {
-            if (response == 0) {
-               alert("크루원이 있어서 탈퇴가 불가능합니다.");
-               return false;
-            } else {
-               alert("팀에서 탈퇴되었습니다.");
-               window.location.href = '/crew/crewList';
-            }
-         },
-         error: function(e) {
-            console.error('Error: ', e);
-         }
-      });
-      closeCustomModal();
+       // 탈퇴 확인 메시지
+       var confirmation = confirm("정말 팀에서 탈퇴하시겠습니까?");
+
+       // 사용자가 확인을 누른 경우에만 탈퇴 처리
+       if (confirmation) {
+           $.ajax({
+               url: '/crew/resign_team',
+               type: 'POST',
+               async: false,
+               data: {
+                   Authorization: Authorization,
+                   create_crew_code: create_crew_code,
+                   position: position
+               },
+               success: function(response) {
+                   if (response == 0) {
+                       alert("크루원이 있어서 탈퇴가 불가능합니다.");
+                       return false;
+                   } else {
+                       alert("팀에서 탈퇴되었습니다.");
+                       window.location.href = '/crew/crewList';
+                   }
+               },
+               error: function(e) {
+                   console.error('Error: ', e);
+               }
+           });
+           closeCustomModal();
+       }
    }
+
+
 
    function openVoteModal() {
       document.getElementById('voteModal').style.display = 'block';
@@ -794,7 +829,12 @@
                var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
                var voters = response[0][key2] ? response[0][key2] : '';
 
-               list2 += '<div class="result-row" onclick="showVoterList(\'' + voters + '\')">';
+               // 클릭 가능 여부 결정
+               if (arr_length > 0) {
+                   list2 += '<div class="result-row" style="cursor: pointer;" onclick="showVoterList(\'' + voters + '\')">';
+               } else {
+                   list2 += '<div class="result-row">';
+               }
                list2 += '    <span>' + response[0][key] + '</span>';
                list2 += '    <span>' + arr_length + '명</span>';
                list2 += '</div>';
@@ -804,6 +844,7 @@
             }
             list2 += '</div>';
             $('#vote_results').html(list2);
+
             if (response[0].f_s ===null && response[0].a_n == 0) {
                document.getElementById('voteNowModal').style.display = 'block';
             } else {
@@ -842,6 +883,81 @@
       document.getElementById('voteNowModal').style.display = 'none';
       document.getElementById('voteResultModal').style.display = 'block';
    }
+
+<!-- 공지사항 등록 -->
+
+    function submitNotice() {
+        var form = $('#updateNoticeForm')[0]; // 폼 데이터 가져오기
+        var formData = new FormData(form); // FormData 객체 생성
+
+        // URL에서 가져온 create_crew_code와 user_code 값을 FormData에 추가
+        formData.append('create_crew_code', create_crew_code);
+        formData.append('user_code', user_code);
+
+        // 유효성 검사: 제목과 내용을 확인
+        var title = $('#noticeTitle').val().trim();
+        var content = $('#noticeContent').val().trim();
+
+        if (title === '') {
+            alert('제목을 입력해주세요.');
+            return false;
+        }
+
+        if (content === '') {
+            alert('공지 내용을 입력해주세요.');
+            return false;
+        }
+
+        // 다중 파일 처리: 각각의 파일을 FormData에 추가
+        var files = $('#noticeImage')[0].files;
+        if (files.length === 0) {
+            alert('이미지를 선택해주세요.');
+            return false;
+        }
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append('noticeImages[]', files[i]); // 파일을 FormData에 추가
+        }
+
+        // AJAX로 서버에 데이터 전송
+        $.ajax({
+            url: '/crew/createNotice', // 서버의 Controller URL
+            type: 'POST',
+            headers: {
+                Authorization: localStorage.getItem('Authorization')  // 헤더로 Authorization 전송
+            },
+            data: formData,
+            processData: false, // FormData 사용 시 false로 설정
+            contentType: false, // FormData 사용 시 false로 설정
+            success: function(response) {
+                console.log("서버 응답:", response);
+                if (response === 1) {
+                    alert('공지사항이 성공적으로 등록되었습니다.');
+                    closeNoticeModal(); // 모달 닫기
+                    resetNoticeForm();  // 폼 리셋
+                } else {
+                    alert('공지사항 등록 중 오류가 발생했습니다.');
+                }
+            },
+            error: function(error) {
+                console.error("오류 발생:", error);
+                alert('공지사항 등록 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+
+function closeNoticeModal() {
+    $('#noticeCreateModal').hide(); // 모달 닫기 (display: none)
+}
+
+function resetNoticeForm() {
+    // 폼 필드 초기화
+    $('#noticeTitle').val('');
+    $('#noticeContent').val('');
+    $('#noticeImage').val('');
+    $('#previewContainer').html(''); // 미리보기 이미지 리셋
+}
 
    function updateVoteResults(votes) {
       let totalVotes = votes.reduce(function(acc, vote) {
@@ -914,8 +1030,5 @@
       });
    }
 
-   function submitNotice() {
-      alert("공지사항이 등록되었습니다!");
-      closeNoticeModal();
-   }
+
 </script>

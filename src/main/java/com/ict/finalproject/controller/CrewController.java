@@ -411,7 +411,8 @@ public class CrewController {
     }
     @PostMapping("/crew_manage_select")
     @ResponseBody
-    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,                            @RequestParam(value = "flag", defaultValue = "") String flag) {
+    public List<CrewVO> crew_manage_select(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("id") String id,
+                                           @RequestParam(value = "flag", defaultValue = "") String flag) {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
@@ -490,6 +491,9 @@ public class CrewController {
         user_name=jwtUtil.setTokengetUsername(token);
         int my_user_code = service.usercodeSelect(user_name);
         int a = 0;
+        int flag =1;
+        int crew_history_code = 0; // crew_history_code 초기화
+
         try {
             if (id.equals("manage2")){
                 service.crew_member_upgrade(usercode,crewCode);
@@ -499,15 +503,19 @@ public class CrewController {
                 service.crew_member_downgrade(usercode,crewCode);
                 a=4;
             }
-            if (id.equals("report")){
-                service.crew_member_report(usercode,my_user_code,reason,reason_text);
-                a=2;
+            if (id.equals("report")) {
+
+                flag = 3;
+                service.crew_history_insert(usercode, crewCode, flag);
+
+                service.crew_member_report(usercode, my_user_code, reason, reason_text,crewCode);
+                a = 2;
             }
-            if (id.equals("out")){
-                service.crew_member_out(usercode,crewCode);
-                int flag=1;
-                service.crew_history_insert(usercode,crewCode,flag);
-                a=3;
+            if (id.equals("out")) {
+                service.crew_member_out(usercode, crewCode);
+                flag = 1;
+                service.crew_history_insert(usercode, crewCode, flag);
+                a = 3;
             }
 
         } catch (Exception e) {
@@ -681,5 +689,61 @@ public class CrewController {
             return -1; // 에러 발생 시 -1 반환
         }
     }
+
+    ////////////크루 noitce 글 등록//
+    @PostMapping("/createNotice")
+    @ResponseBody
+    public int createNotice(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestParam("noticeTitle") String subject,
+            @RequestParam("noticeContent") String content,
+            @RequestParam("create_crew_code") int create_crew_code,
+            @RequestParam("noticeImages[]") MultipartFile[] noticeImages) {
+
+        int result = 0;
+        String fileName = "";
+        token = token.substring("Bearer ".length());  // JWT 토큰에서 "Bearer " 제거
+
+        try {
+            // JWT에서 사용자 이름을 가져오고, 사용자 코드를 조회
+            user_name = jwtUtil.setTokengetUsername(token);
+            user_code = service.usercodeSelect(user_name);
+            // 공지사항 정보 삽입
+            result = service.createNotice(subject,content,user_code, create_crew_code);
+
+            // 생성된 공지사항의 코드 가져오기
+            int crew_notice_code = service.getNoticeCode(create_crew_code);
+            System.out.println("getNoticeCodegetNoticeCode->>>"+crew_notice_code);
+
+            // UUID를 사용한 파일 이름 생성
+            UUID uuid = UUID.randomUUID();
+            // 파일 업로드가 있는 경우 처리
+            if (noticeImages != null && noticeImages.length > 0) {
+                for (MultipartFile image : noticeImages) {
+                    if (!image.isEmpty()) {
+                        // 파일 이름 생성 및 경로 설정
+                        fileName = uuid.toString() + "_" + StringUtils.cleanPath(image.getOriginalFilename());
+                        Path path = Paths.get(uploadDir + File.separator + fileName);
+                        // 파일 저장
+                        Files.copy(image.getInputStream(), path);
+                        // 파일 정보 DB 저장
+                        service.saveImage(crew_notice_code, fileName);
+                    }
+                }
+            }
+
+            // 성공적으로 공지사항이 생성되었을 때
+            if (result > 0) {
+                return 1; // 성공
+            } else {
+                return 0; // 공지사항 생성 실패
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1; // 에러 발생 시 -1 반환
+        }
+    }
+
+
 }
 

@@ -173,7 +173,7 @@ body{
 .crew_info{
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .crew_infos{
@@ -657,21 +657,28 @@ body{
 .icon-container img {
   width: 30px; /* 아이콘 너비 설정 */
   height: 30px; /* 아이콘 높이 설정 */
-  margin: 0px 10px;
+  margin-right:12px;
+  margin-left:8px;
 
 }
 
+////////////////////////
 .text-container {
   display: flex;
-  align-items: center; /* 주말여행과 진행중인 투표를 수직으로 중앙 정렬 */
+  flex-direction: column; /* 텍스트를 세로로 배치 */
+}
+.text-row {
+  display: flex;
+  align-items: center;
 }
 
 .main-text {
-  font-size: 15px; /* 주말여행 텍스트 크기 */
+  font-size: 15px; /* 크루장 후보 선택 텍스트 크기 */
   color: #000; /* 검은색 텍스트 */
   font-weight: bold; /* 굵은 텍스트 */
-  margin: 0px 8px; /* 주말여행과 진행중인 투표 사이 간격 */
+  margin-right: 8px; /* 투표 진행중과의 간격 */
 }
+
 
 .sub-text {
   margin-left: 5px;
@@ -681,7 +688,17 @@ body{
   text-align: center;
   color: #1570ff;
   padding: 0px 4px;
+  border-radius: 5px;
 }
+.info-row {
+  display: flex;
+  justify-content: space-between; /* 텍스트 사이를 수평으로 배치 */
+  font-size: 12px;
+  color: #666;
+}
+////////////////////
+
+
 
 .modal-subtitle {
   font-size: 16px;
@@ -835,4 +852,9 @@ body{
 .custom-btn2:hover {
     background-color: #b8e629;
 }
+
+////////////////////////////////////////////////////////
+
+
+
 

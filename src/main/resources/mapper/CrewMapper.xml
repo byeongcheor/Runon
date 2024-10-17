@@ -125,7 +125,24 @@
         ,0
         );
     </insert>
-
+    <insert id="createNotice">
+        insert into crew_notice_tbl
+        (
+         subject
+        ,content
+        ,usercode
+        ,create_crew_code
+        ,writedate
+        )
+        values
+        (
+        '${param1}'
+        ,'${param2}'
+        , ${param3}
+        ,${param4}
+        ,now()
+        );
+    </insert>
     <select id="crew_write_detail_select" resultType="com.ict.finalproject.vo.CrewVO">
         select a.logo, a.crew_name, a.usercode, concat(a.gender,' · ',a.age) as a_s, b.teamPhoto as b_s
         , b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d %H:%i') as writedate
@@ -147,6 +164,24 @@
         and    usercode = ${param1}
         and    status   = 0
     </select>
+    <select id="getNoticeCode" resultType="int">
+        select crew_notice_code
+        from   crew_notice_tbl
+        where  create_crew_code = ${param1}
+        order by writedate  desc
+        limit 1
+    </select>
+    <insert id="saveImage" parameterType="map">
+        INSERT INTO img_tbl (
+        crew_notice_code
+        ,img_name
+        ,writedate )
+         VALUES (
+         ${param1}
+        ,'${param2}'
+         ,NOW()
+        )
+    </insert>
     <select id="join_before_select" resultType="int">
         select count(1)
         FROM user_tbl u
@@ -365,6 +400,7 @@
         ,victim_code
         ,report_reason
         ,report_content
+        ,crew_history_code
         )
         values
         (
@@ -372,6 +408,10 @@
         ,${param2}
         ,'${param3}'
         ,'${param4}'
+        ,(select crew_history_code from crew_history_tbl
+            where usercode = ${param1}
+            and create_crew_code =  ${param5}
+            order by withdrawaldate desc limit 1)
         )
     </insert>
     <delete id="crew_member_out">
@@ -462,35 +502,38 @@
 
     <select id="crew_manage_notice" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        (
-            select 1 as a_n, subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
-                   1 as b_n, a.vote_code as c_n,
-                   (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
-                   (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n
-            from vote_tbl a
-            where create_crew_code = ${param1}
-            and   enddate > now()
-            order by creationdate desc
-        )
-        union
-        (
-            select 2 as a_n, subject, writedate as enddate, 0 as b_n, crew_notice_code as c_n,9999 as d_n,99999 as e_n
-            from crew_notice_tbl
-            where create_crew_code = ${param1}
-            order by writedate desc
-        )
-        union
-        (
-            select 3 as a_n, a.subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
-                   9 as b_n, vote_code as c_n,
-                   (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
-                   (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n
-            from vote_tbl a
-            where create_crew_code = ${param1}
-            and   enddate < now()
-            order by creationdate desc
-        )
-        ]]>
+    (
+        select 1 as a_n, subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               1 as b_n, a.vote_code as c_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
+               NULL as content
+        from vote_tbl a
+        where create_crew_code = ${param1}
+        and   enddate > now()
+        order by creationdate desc
+    )
+    union
+    (
+        select 2 as a_n, subject, writedate as enddate, 0 as b_n, crew_notice_code as c_n, NULL as d_n, 99999 as e_n,
+               content
+        from crew_notice_tbl
+        where create_crew_code = ${param1}
+        order by writedate desc
+    )
+    union
+    (
+        select 3 as a_n, a.subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               9 as b_n, vote_code as c_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
+               NULL as content
+        from vote_tbl a
+        where create_crew_code = ${param1}
+        and   enddate < now()
+        order by creationdate desc
+    )
+    ]]>
     </select>
 
     <select id="vote_select" resultType="com.ict.finalproject.vo.CrewVO">

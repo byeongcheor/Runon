@@ -104,6 +104,17 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int getNoticeCode(int create_crew_code)
+    {
+        return dao.getNoticeCode(create_crew_code);
+    }
+
+    @Override
+    public void saveImage(int crew_notice_code, String img_filename) {
+        dao.saveImage(crew_notice_code, img_filename);
+    }
+
+    @Override
     public int crew_code_select(int user_code)
     {
         return dao.crew_code_select(user_code);
@@ -217,13 +228,18 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text) {
-        return dao.crew_member_report(user_code,my_user_code,reason,reason_text);
+    public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text,int crewCode){
+        return dao.crew_member_report(user_code,my_user_code,reason,reason_text,crewCode);
     }
 
     @Override
     public int crew_write_add(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_add(third_crew_code, user_code, teamPhotoInput,age,gender,content);
+    }
+
+    @Override
+    public int createNotice(String subject,String content,int user_code, int create_crew_code) {
+        return dao.createNotice(subject, content, user_code,create_crew_code);
     }
 
     @Override
