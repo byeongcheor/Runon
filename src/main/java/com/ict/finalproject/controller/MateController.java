@@ -47,6 +47,7 @@ public class MateController {
             List<MateVO> userselect = service.userselect(user_code);
             vo.setMatch_yn(service.match_yn(user_code));
             System.out.println(userselect);
+
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);

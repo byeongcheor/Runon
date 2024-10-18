@@ -35,10 +35,25 @@ public class ChatController {
     CrewService crewservice;
 
 
+//    // @ModelAttribute를 사용하여 공통 속성 추가
+//    @ModelAttribute
+//    public void addCommonAttributes(Model model) {
+//        // 크루 리스트를 가져옵니다.
+//        List<CrewVO> chatList = crewservice.getCrewList();
+//        log.info("Retrieved crew list size: {}", chatList.size()); // 로그 추가
+//        model.addAttribute("chatList", chatList);  // 모델에 추가
+//
+//        // 크루 목록의 내용을 로그로 출력
+//        for (CrewVO crew : chatList) {
+//            log.info("Crew Name: {}", crew.getCrew_name());
+//        }
+//
+//    }
 
 
     @GetMapping("/message/mate")
     public String mateChat(){
+
         return "mate/mate";
     }
 
@@ -113,11 +128,11 @@ public class ChatController {
 
             System.out.println("Received report data: " + reportVO.toString());
 
-            // 현재 날짜 및 시간을 포맷에 맞춰 설정
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            reportVO.setReport_date(now.format(formatter)); // report_date 필드에 현재 시간 설정
+            // 현재 날짜 및 시간을 문자열 형식으로 설정
+            String report_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            reportVO.setReport_date(report_date); // report_date 필드에 설정
 
+            System.out.println("Received report data: " + reportVO.toString());
             // 신고 정보를 데이터베이스에 저장
             chatservice.saveReport(reportVO); // 서비스 호출
 

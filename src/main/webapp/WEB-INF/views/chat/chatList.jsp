@@ -47,7 +47,7 @@
 			<img src="/crew_upload/${crewchat.logo}" alt="${crewchat.crew_name} 이미지" class="chat-img">
 			<div class="chat-info">
 				<div class="chat-text">${crewchat.crew_name}</div>
-				<div class="chat-date">2024-10-12</div> <!-- 크루 생성일 또는 방 생성일 -->
+				<div class="chat-date">2024-10-12</div>
 			</div>
 		</div>
 	</c:forEach>
@@ -59,15 +59,15 @@
 		<span class="chatModalClose" id="chatCloseModal">&times;</span>
 		<h1 class="reportT">신고하기</h1>
 		<div id="reportUserInfo">
-			<p>피해자 유저코드: <span id="victimUserCode"></span></p>
-			<p>피해자 닉네임: <span id="victimNickname"></span></p>
-			<p>메이트 채팅방 코드: <span id="matchingRoomCode"></span></p>
+			<p><span id="victimUserCode" style="display:none;"></span></p>
+			<p><span id="victimNickname" style="display:none;"></span></p>
+			<p><span id="matchingRoomCode" style="display:none;"></span></p>
 		</div>
 		<div id="selectedMessages">
 			<h1>선택한 메시지:</h1>
 			<textarea id="messageList" rows="3" cols="35" ></textarea>
 		</div>
-		<div>
+		<div class="reportTT">
 			<label for="reportReason" class="reportR">신고 사유:</label><br/>
 			<textarea id="reportReason" placeholder="신고 사유를 입력해 주세요" rows="3" cols="35"></textarea>
 		</div>
@@ -77,7 +77,9 @@
 	</div>
 </div>
 
-
+<script>
+	console.log("Chat List Size: ${chatList.size()}");
+</script>
 <script>
 	var usercode=$('#usercode').val();
 	var token = localStorage.getItem("Authorization");
@@ -106,20 +108,22 @@
 
 		// 로컬 저장소에서 닉네임을 가져옴
 		let nickname = localStorage.getItem("userNickname");
-		console.log("로컬 저장소에서 가져온 닉네임:", nickname); // 닉네임 확인용
+		console.log("현재 로컬 저장소에 저장된 닉네임:", nickname); // 닉네임 확인용
 
-// 닉네임이 없거나 "undefined"인 경우 hidden 필드에서 가져오기
-		if (!nickname || nickname === "undefined") {
-			nickname = $('#nickname').val(); // hidden 필드에서 닉네임 가져오기
-			console.log("닉네임 필드에서 가져온 값:", nickname); // 닉네임 필드 값 확인
+		// 닉네임이 없거나 undefined인 경우
+		if (!nickname || nickname === "undefined" || nickname === null || nickname === '') {
+			nickname = $('#nickname').val();  // hidden 필드에서 닉네임 가져오기
+			console.log("닉네임 필드에서 가져온 값: ", nickname); // 닉네임 필드 값 확인용
 
-			// 닉네임이 유효한 경우 로컬 저장소에 저장
-			if (nickname) {
-				localStorage.setItem("userNickname", nickname);
-				console.log("닉네임이 로컬 저장소에 저장되었습니다:", nickname);
-			} else {
-				console.warn("닉네임을 가져오지 못했습니다.");
-			}
+			// // 닉네임이 유효한 경우에만 로컬 저장소에 저장
+			// if (nickname && nickname !== "undefined" && nickname !== null && nickname !== '') {
+			// 	localStorage.setItem("userNickname", nickname);
+			// 	console.log("닉네임이 로컬 저장소에 저장되었습니다.");
+			// } else {
+			// 	console.warn("닉네임을 가져오지 못했습니다.");
+			// }
+		} else {
+			console.log("이미 저장된 닉네임:", nickname); // 기존 저장된 닉네임 확인
 		}
 
 // 최종적으로 확인할 닉네임
@@ -253,16 +257,18 @@
 		// 유저코드가 로컬 저장소에 저장되어 있지 않다면 저장
 		if (!currentUserCode  || currentUserCode  !== usercode) {
 			localStorage.setItem("usercode", usercode);
-			console.log("유저코드가 로컬 저장소에 저장되었습니다:", usercode);
+
 		}
 
 		// 닉네임을 수신한 데이터에서 가져오기
 		var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
 
-		console.log("닉네임:", nickname); // 닉네임 확인
-		console.log("usercode:", usercode); // 발신자 유저코드 확인
-		console.log("currentUserCode:", currentUserCode); // 현재 유저코드 확인
-
+		// 닉네임을 로컬 저장소에 저장 (조건 추가 가능)
+		let storedNickname = localStorage.getItem("userNickname");
+		if (!storedNickname || storedNickname !== nickname) {
+			localStorage.setItem("userNickname", nickname);
+			console.log("닉네임이 로컬 저장소에 저장되었습니다:", nickname);
+		}
 		//메시지를 화면에 렌더링하기 위한 HTML 태그 생성
 		var tag = '';
 
@@ -270,9 +276,10 @@
 		if (data.usercode == currentUserCode) {
 			tag += `
         <div class="chat-message">
-            <input type="checkbox" class="message-checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
+            <input type="checkbox"  style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
             <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
+				<span class="nickname" data-usercode=`+data.usercode+` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
                 <span class="nickname">`+nickname+`</span>
                 <p>`+data.content+`</p>
                 <div class="timestamp">`+data.add_date+`</div>
@@ -285,6 +292,7 @@
             <input type="checkbox" class="message-checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
             <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
+				<span class="nickname" data-usercode=`+data.usercode+` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
                 <span class="nickname">`+nickname+`</span>
                 <p>`+data.content+`</p>
                 <div class="timestamp-left">`+data.add_date+`</div>
@@ -346,6 +354,7 @@
 
 
 	function reportMessages() {
+
 		const checkedMessages = document.querySelectorAll('.message-checkbox:checked'); // 체크된 메시지들
 		const messageDetails = Array.from(checkedMessages).map(checkbox => {
 			const messageData = JSON.parse(checkbox.value); // 메시지 데이터를 가져옴
@@ -363,13 +372,20 @@
 		});
 
 		if (checkedMessages.length > 0) {
+			// 신고 모달 열기
+			reportModal.style.display = 'block';
+
+			console.log('Selected messages:', messageDetails); // 체크된 메시지 내용을 확인
+
+
 			// 첫 번째 선택된 메시지 가져오기
 			const firstCheckedMessage = checkedMessages[0];
 			const messageElement = firstCheckedMessage.closest('.chat-message, .chat-message-left');
 
+
 			// 실제 피해자 정보 설정
-			const offenderCode = messageElement.querySelector('.nickname').dataset.usercode; // 유저코드 설정
-			const victimUserCode = messageElement.querySelector('.nickname').dataset.usercode || " "; // 유저코드 설정
+			const offenderCode = messageElement.querySelector('.nickname').dataset.usercode; // 신고당한 유저코드
+			const victimUserCode = usercode; // 현재 로그인한 유저코드 설정
 			const victimNickname = messageElement.querySelector('.nickname').innerText || '알수없음'; // 닉네임 설정
 			const matchingRoomCode = match_yn; // 매칭 방 코드
 
@@ -395,105 +411,88 @@
 			const messageUserCodes = messageDetails.map(detail => detail.usercode);
 
 			// 신고 처리 로직 (textarea에 출력)
-			messageList.value = '닉네임: ' + messageNicknames.join(', ')  + '\n메시지 내용: ' + messageContents.join('\n');
+			messageList.value = '닉네임: ' + messageNicknames.join(', ') + '\n메시지 내용: ' + messageContents.join('\n');
 			// messageDetails.forEach(detail => {
 			// 	messageList.value += `닉네임:` + messageNicknames.join(', ') + '\n메시지 내용: ' + messageContents.join('\n');
 			// });
 
-			// 신고 데이터 구성
-			const reportData = {
-				offender_code: offenderCode, // 신고당한 유저코드
-				report_reason: document.getElementById('reportReason').value, // 신고 사유
-				victim_code: victimUserCode, // 피해자 유저코드
-				crew_history_code: "", // 필요한 경우 추가
-				matching_room_code: match_yn, // 매칭 방 코드
-				report_status: 0, // 초기 상태
-				report_content: JSON.stringify(messageDetails) // 선택한 메시지 내용
-			};
+			// 신고 접수 버튼 클릭 시 처리
+			submitReportBtn.onclick = function () {
+				// 신고 사유 입력 필드의 값 확인
+				const reportReasonInput = document.getElementById('reportReason');
+				const reportReason = reportReasonInput.value.trim(); // 신고 사유 가져오기
 
-			// 신고를 서버로 전송
-			console.log('Report Data:', reportData);
-			fetch('/chat/report', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(reportData)
-			})
-					.then(response => {
-						if (!response.ok) {
-							throw new Error('Network response was not ok ' + response.statusText);
-						}
-						return response.json();
-					})
-					.then(data => {
-						alert('신고가 접수되었습니다: ' + data.report_content);
-						closeModal(); // 모달 닫기
-					})
-					.catch(error => {
-						console.error('Error:', error);
-						alert('신고 접수에 실패했습니다.');
-					});
 
-			// 모달 열기
-			reportModal.style.display = 'block';
-		} else {
-			alert('신고할 메시지를 선택하세요.');
+				// 신고 데이터 구성
+				const reportData = {
+					offender_code: offenderCode, // 신고당한 유저코드
+					report_reason: reportReason, // 신고 사유
+					victim_code: victimUserCode, // 피해자 유저코드
+					crew_history_code: "", // 필요한 경우 추가
+					matching_room_code: match_yn, // 매칭 방 코드
+					report_status: 0, // 초기 상태
+					report_content: JSON.stringify(messageDetails) // 선택한 메시지 내용
+				};
+
+
+				// 신고를 서버로 전송
+				console.log('Report Data:', reportData);
+				fetch('/chat/report', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(reportData)
+				})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok ' + response.statusText);
+							}
+							return response.json();
+						})
+						.then(data => {
+							alert('신고가 완료되었습니다.');
+							closeModal(); // 모달 닫기 및 초기화
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							alert('신고 접수에 실패했습니다.');
+						});
+
+
+			}
 		}
-	}
 
-	// 모달 닫기
-	function closeModal() {
-		reportModal.style.display = 'none';
+		// 모달 닫기
+		function closeModal() {
+			reportModal.style.display = 'none';
 
-		// 체크박스 해제
-		const checkboxes = document.querySelectorAll('.message-checkbox');
-		checkboxes.forEach(checkbox => {
-			checkbox.checked = false;
-			checkbox.style.display = 'none';  // 신고 후 다시 숨기기
-		});
+			// 체크박스 해제
+			const checkboxes = document.querySelectorAll('.message-checkbox');
+			checkboxes.forEach(checkbox => {
+				checkbox.checked = false;
+				checkbox.style.display = 'none';  // 신고 후 다시 숨기기
+			});
 
-		// 신고 버튼 다시 전송 버튼으로 변경
-		document.getElementById('sendBtn').style.display = 'inline';
-		reportBtn.style.display = 'none';
-	}
+			// 신고 사유 필드 초기화
+			document.getElementById('reportReason').value = '';
 
-	// X 버튼과 신고 접수 버튼 클릭 시 모달 닫기
-	closeModalButton.onclick = closeModal;
-	submitReportBtn.onclick = function() {
-		alert("신고가 접수되었습니다.");
-		closeModal();
-	};
-
-	// 외부 클릭 시 모달 닫기
-	window.onclick = function(event) {
-		if (event.target === reportModal) {
-			closeModal();
+			// 신고 버튼 다시 전송 버튼으로 변경
+			document.getElementById('sendBtn').style.display = 'inline';
+			reportBtn.style.display = 'none';
 		}
-	};
+
+		// X 버튼과 신고 접수 버튼 클릭 시 모달 닫기
+		closeModalButton.onclick = closeModal;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		// 외부 클릭 시 모달 닫기
+		window.onclick = function (event) {
+			if (event.target === reportModal) {
+				closeModal();
+			}
+		};
+	}
 
 
 </script>

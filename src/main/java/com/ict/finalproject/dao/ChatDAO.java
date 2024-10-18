@@ -20,4 +20,6 @@ public interface ChatDAO {
 
         // 유저코드 존재 확인
         int getUserCountByCode(int userCode);
+
+
 }

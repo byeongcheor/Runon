@@ -50,19 +50,11 @@ public class CrewController {
         pvo.setTotalRecord(service.totalRecord(pvo));
 
         // 추가: chatList 가져오는 로직
-        List<CrewVO> chatList = service.getCrewList();  // 크루 리스트를 가져오는 서비스
-
-        // 로그 추가
-        log.info("mateChat 호출됨");
-
-        if (chatList != null && !chatList.isEmpty()) {
-            for (CrewVO crew : chatList) {
-                log.info("Crew Name: " + crew.getCrew_name()); // 로깅 사용
-            }
-        } else {
-            log.warn("크루 목록을 가져오지 못했습니다."); // 로깅 사용
-        }
+        List<CrewVO> chatList = service.getCrewList(); // 크루 리스트 로딩 로직
+        model.addAttribute("chatList", chatList);
+        log.info("Crew list size in crewList: {}", chatList.size()); // 로그 추가
         //
+
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
         model.addAttribute("chatList", chatList);  // 추가: chatList를 모델에 추가
@@ -580,5 +572,7 @@ public class CrewController {
         }
         return a;
     }
+
+
 
 }

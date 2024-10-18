@@ -14,10 +14,12 @@
         WHERE recipient = #{match_yn}
         ORDER BY add_date ASC
     </select>
-    <insert id="insertReport" parameterType="com.ict.finalproject.vo.ReportVO">
-        INSERT INTO report_tbl (offender_code, report_reason, report_date, victim_code, crew_history_code, matching_room_code, report_status, report_content)
-        VALUES (#{offender_code}, #{report_reason}, #{report_date}, #{victim_code}, #{crew_history_code}, #{matching_room_code}, #{report_status}, #{report_content})
+    <insert id="insertReport" parameterType="com.ict.finalproject.vo.ReportVO"  useGeneratedKeys="true" keyProperty="report_code" keyColumn="report_code">
+        insert into report_tbl
+        (offender_code, report_reason, victim_code, matching_room_code, report_content, proof_img)
+        values(#{offender_code}, #{report_reason}, #{victim_code}, #{matching_room_code}, #{report_content}, #{proof_img})
     </insert>
+
     <select id="getUserCountByCode" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM user_tbl WHERE usercode = #{userCode}
     </select>
