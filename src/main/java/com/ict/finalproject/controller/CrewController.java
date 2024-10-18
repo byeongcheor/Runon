@@ -6,6 +6,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.PagingVO;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -188,31 +190,31 @@ public class CrewController {
     //크루모집디테일
     @PostMapping("/go_crewDetail")
     @ResponseBody
-    public Map<String, Object> crewDetail(@RequestParam("Authorization") String token,
-                                          @RequestParam("create_crew_code") int createCrewCode) {
-        // 토큰 및 기타 데이터 처리
+    public String crewDetail(@RequestParam("Authorization") String token,
+                                          @RequestParam("create_crew_code") int create_crew_code,
+                                          HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
-        int userCode = service.usercodeSelect(userName);
-        int crew_write_code =service.crew_write_code_select(createCrewCode);
 
-        // 클라이언트로 리다이렉션할 URL과 필요한 데이터를 응답
-        Map<String, Object> response = new HashMap<>();
-        response.put("redirectUrl", "/crew/crewDetail");  // 리다이렉션할 URL
-        response.put("create_crew_code", createCrewCode);  // 클라이언트가 사용할 데이터
-        response.put("crew_write_code", crew_write_code);  // 클라이언트가 사용할 데이터
-
-        return response;  // JSON 형식으로 응답
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        int crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("crew_write_code", crew_write_code);
+        return "success";
     }
 
     @GetMapping("/crewDetail")
-    public String crewDetail(@RequestParam("create_crew_code") int createCrewCode,
-                             @RequestParam("crew_write_code") int crewWriteCode, Model model) {
-        // 파라미터를 처리하는 로직
-        model.addAttribute("create_crew_code", createCrewCode);
-        model.addAttribute("crew_write_code", crewWriteCode);
-        // 처리 후 화면 이동
-        return "/crew/crewDetail";
+    public String nextPage(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer crew_write_code = (Integer) session.getAttribute("crew_write_code");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("crew_write_code", crew_write_code);
+        return "crew/crewDetail"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/detail")
