@@ -347,8 +347,7 @@
            create_crew_code: create_crew_code
         },
         success: function(response) {
-           $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
-           $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
+         $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
            $('#crew_name').text(response[0].crew_name);
            $('#teamNameDisplay').text(response[0].crew_name);
            $('#addr').text(response[0].addr);
@@ -357,6 +356,7 @@
            $('#member_cnt').text(response[0].d_n + '명');
            $('#create_date').text(response[0].c_s);
            $('#member_age_avg').text(response[0].e_n + '세');
+             $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
         },
         error: function(e) {
            console.error('Error: ', e);
@@ -466,9 +466,10 @@
       }
 
       for (var i in response) {
+         var imgSrc = response[i].a_s ? response[i].a_s.trim() : 'basicimg.png';
          list += '<li class="member-item"> ';
          list += '<div class="item-flex"> ';
-         list += '   <img src="/resources/uploadfile/' + response[i].a_s + '" class="profile-img"> ';
+         list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="profile-img">';
          list += '   <div class="profile-info"> ';
          list += '     <div class="info-wrapper"> ';
          list += '      <p class="name">' + response[i].b_s + '</p> ';
@@ -491,131 +492,166 @@
       $('#crew_manage_list').append(list);
    }
 
-   function crew_overview(response) {
-      var list = '';
-      list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
-      list += '<div class="overview_title">주요 멤버</div>';
-      list += '<div class="member_more">전체 보기</div>';
-      list += '</div>';
-      for (var i = 0; i < response[0].c_n; i++) {
-         list += '<li class="member-item"> ';
-         list += '<div class="item-flex"> ';
-         list += '   <img src="/resources/uploadfile/' + response[i].subject + '" class="profile-img"> ';
-         list += '   <div class="profile-info"> ';
-         list += '     <div class="info-wrapper"> ';
-         list += '      <p class="name">' + response[i].writedate + '</p> ';
-         list += '     </div> ';
-         list += '   </div> ';
-         list += '  <div class="menu"> ';
-         list += '   <div class="dropdown"> ';
-         list += '   </div> ';
-         list += '  </div> ';
-         list += '</div> ';
-         list += '</li> ';
-      }
-      list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
-      list += '<div class="overview_title">최신 공지</div>';
-      list += '<div class="member_more">전체 보기</div>';
-      list += '</div>';
+function crew_overview(response) {
+    var list = '';
 
-      for (var i = response[0].c_n; i < response.length; i++) {
-         list += '<li class="member-item"> ';
-         list += '   <div class="item-container"> ';
-         list += '      <div class="icon-container"> ';
-         if (response[i].a_n == 1) {
-            list += '   <img src="/img/vote.png"> ';
-         }
-         if (response[i].a_n == 2) {
-            list += '   <img src="/img/notice.png"> ';
-         }
-         list += '      </div>';
-         list += '      <div class="text-container"> ';
-         if (response[i].b_n == 1) {
-            list += '<span class="main-text">' + response[i].subject + '</span> ';
-            list += '<span class="sub-text">투표 진행중</span>';
-         }
-         if (response[i].b_n == 9) {
-            list += '<span class="main-text">' + response[i].subject + '</span> ';
-            list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
-         }
-          if (response[i].b_n == 0) {
-             list += '<span class="main-text">' + response[i].subject + '</span> ';
-          }
-         list += '      </div> ';
-         list += '   </div> ';
-         list += '</li> ';
-      }
-      $('#crew_manage_list').append(list);
-   }
+    // 주요 멤버 출력
+    list += '<div class="join_info" onClick="crew_manage_select(member)" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+    list += '<div class="overview_title">주요 멤버</div>';
+    list += '<div class="member_more">전체 보기</div>';
+    list += '</div>';
 
-function crew_notice(response) {
-      var list = '';
-      for (var i in response) {
-         list += '<li class="member-item"> ';
-         list += '   <div class="item-container"> ';
-         list += '      <div class="icon-container"> ';
-         if (response[i].a_n == 1 || response[i].a_n == 3) {
-            list += '   <img src="/img/vote.png" style="margin-bottom:20px;"> ';
-            list += '      </div>';
-            if (response[i].b_n == 1) {
-               var aa;
-               if(response[i].e_n == 1){
-                   aa= "참여";
-                   list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ',1,'+response[i].usercode+')"> ';
-               }
-               else {
-                   aa= "미참여";
-                   list += '<div class="text-container" onClick="voteNow(' + response[i].c_n + ',0,'+response[i].usercode+')"> ';
-               }               list += '<div class="text-row">';
-               list += '<span class="main-text">' + response[i].subject + '</span> ';
-               list += '<span class="sub-text">투표 진행중</span>';
-               list += '</div>';
-               var aa = response[i].e_n == 1 ? "참여" : "미참여";
-               list += '<div class="info-row">';
-               list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
-               list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
-               list += '<div>';
-            }
-            if (response[i].b_n == 9) {
-               var aa;
-                if(response[i].e_n == 1){
-                    aa= "참여";
-                    list += '<div class="text-container" onClick="voteNow(' + response[i].c_n + ',9,'+response[i].usercode+')"> ';
-                }
-                else {
-                    aa= "미참여";
-                    list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ',9,'+response[i].usercode+')"> ';
-                }
-               list += '<div class="text-row">';
-               list += '<span class="main-text">' + response[i].subject + '</span> ';
-               list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
-               list += '</div>';
-               list += '<div class="info-row">';
-               list += '<div>' + response[i].d_n + "명 참여, " + aa + '<div>';
-               list += '<div>' + response[i].enddate + " 까지 마감" + '<div>';
-               list += '<div>';
-            }
-         }
-         if (response[i].a_n == 2) {
-            list += '     <img src="/img/notice.png" style="margin-bottom:20px;"> ';
-            list += '  </div>';
-            list += '  <div class="text-container" onClick="noticeDetail(' + response[i].c_n + ')"> ';
-            list += '     <div class="text-row">';
-            list += '         <span class="main-text">' + response[i].subject + '</span> ';
+    var memberCount = 0;
+    for (var i = 0; i < response.length; i++) {
+        if (response[i].a_n === 0) {  // a_n이 0인 경우는 주요 멤버
+            if (memberCount >= 4) break;  // 멤버 5명까지만 출력
+            var imgSrc = response[i].subject ? response[i].subject.trim() : 'basicimg.png';
+            list += '<li class="member-item">';
+            list += '<div class="item-flex">';
+            list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="profile-img">';
+            list += '   <div class="profile-info">';
+            list += '     <div class="info-wrapper">';
+            list += '      <p class="name">' + response[i].writedate + '</p>';
             list += '     </div>';
-            list += '     <div class="info-row">';
-            list += '         <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width:480px">' + response[i].content + '<div>';
-            list += '         <div>' + "업데이트 : "+  response[i].enddate +'<div>';
-            list += '     <div>';
-         }
-         list += '      </div>';
-         list += '      <div class="text-container"> ';
-         list += '      </div> ';
-         list += '   </div> ';
-         list += '</li> ';
+            list += '   </div>';
+            list += '  <div class="menu">';
+            list += '   <div class="dropdown"></div>';
+            list += '  </div>';
+            list += '</div>';
+            list += '</li>';
+            memberCount++;
+        }
+    }
+    // 최신 공지 및 투표 정보 출력
+    list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
+    list += '<div class="overview_title">최신 공지</div>';
+    list += '<div class="member_more">전체 보기</div>';
+    list += '</div>';
+    // 최신 투표 1개 출력
+    var voteCount = 0;
+    for (var i = 0; i < response.length; i++) {
+        if (response[i].a_n == 1) {  // a_n이 1인 경우는 투표
+            if (voteCount >= 1) break;  // 투표 1개까지만 출력
+            list += '<li class="member-item"> ';
+            list += '   <div class="item-container"> ';
+            list += '      <div class="icon-container"> ';
+            list += '   <img src="/img/vote.png"> ';
+            list += '      </div>';
+            list += '      <div class="text-container"> ';
+            list += '<span class="main-text">' + response[i].subject + '</span>';
+            if (response[i].b_n == 1) {
+                list += '<span class="sub-text">투표 진행중</span>';
+                list += '<span class="sub-text" >New</span>';
+            } else if (response[i].b_n == 9) {
+                list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
+            }
+            list += '      </div>';
+            list += '   </div>';
+            list += '</li>';
+            voteCount++;
+        }
+    }
+    // 최신 공지 3개 출력
+    var noticeCount = 0;
+    for (var i = 0; i < response.length; i++) {
+        if (response[i].a_n == 2) {  // a_n이 2인 경우는 공지
+            if (noticeCount >= 3) break;  // 공지 3개까지만 출력
+            list += '<li class="member-item"> ';
+            list += '   <div class="item-container"> ';
+            list += '      <div class="icon-container"> ';
+            list += '   <img src="/img/notice.png"> ';
+            list += '      </div>';
+            list += '      <div class="text-container"> ';
+            list += '<span class="main-text">' + response[i].subject + '</span>';
+            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
+            list += '      </div>';
+            list += '   </div>';
+            list += '</li>';
+            noticeCount++;
+        }
+    }
+    $('#crew_manage_list').append(list);
+}
+function crew_notice(response) {
+    var list = '';
+    var voteClosedCount = 0; // 투표 마감된 항목의 개수를 셀 변수
+ for (var i in response) {
+      list += '<li class="member-item"> ';
+      list += '   <div class="item-container"> ';
+      list += '      <div class="icon-container"> ';
+
+      // 진행 중인 투표
+      if (response[i].a_n == 1) {
+          list += '   <img src="/img/vote.png" style="margin-bottom:20px;"> ';
+          list += '      </div>';
+          if (response[i].b_n == 1) {
+              var aa;
+              if (response[i].e_n == 1) {
+                  aa = "참여";
+                  list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ',1,' + response[i].usercode + ')"> ';
+              } else {
+                  aa = "미참여";
+                  list += '<div class="text-container" onClick="voteNow(' + response[i].c_n + ',0,' + response[i].usercode + ')"> ';
+              }
+              list += '<div class="text-row">';
+              list += '<span class="main-text">' + response[i].subject + '</span> ';
+              list += '<span class="sub-text">투표 진행중</span>';
+              list += '</div>';
+              list += '<div class="info-row">';
+              list += '<div>' + response[i].d_n + "명 참여, " + aa + '</div>';
+              list += '</div>';
+              list += '<div class="info-row">';
+              list += '<div>' + response[i].enddate + " 까지 마감" + '</div>';
+              list += '</div>';
+          }
       }
-      $('#crew_manage_list').append(list);
-   }
+
+      // 마감된 투표, 최대 3개까지 출력
+      if (response[i].a_n == 3 && voteClosedCount < 3) {
+          voteClosedCount++;  // 마감된 투표 개수를 증가시킴
+          list += '   <img src="/img/vote.png" style="margin-bottom:20px;"> ';
+          list += '      </div>';
+          var aa;
+          if (response[i].e_n == 1) {
+              aa = "참여";
+              list += '<div class="text-container" onClick="voteNow(' + response[i].c_n + ',9,' + response[i].usercode + ')"> ';
+          } else {
+              aa = "미참여";
+              list += '      <div class="text-container" onClick="voteNow(' + response[i].c_n + ',9,' + response[i].usercode + ')"> ';
+          }
+          list += '<div class="text-row">';
+          list += '<span class="main-text">' + response[i].subject + '</span> ';
+          list += '<span class="sub-text" style="background-color:black; color:white;">투표 마감</span>';
+          list += '</div>';
+          list += '<div class="info-row">';
+          list += '<div>' + response[i].d_n + "명 참여, " + aa + '</div>';
+          list += '</div>';
+           list += '<div class="info-row">';
+          list += '<div>' + response[i].enddate + " 까지 마감" + '</div>';
+          list += '</div>';
+      }
+
+       if (response[i].a_n == 2) {
+          list += '     <img src="/img/notice.png" style="margin-bottom:20px;"> ';
+          list += '  </div>';
+          list += '  <div class="text-container" onClick="noticeDetail(' + response[i].c_n + ')"> ';
+          list += '     <div class="text-row">';
+          list += '         <span class="main-text">' + response[i].subject + '</span> ';
+          list += '     </div>';
+          list += '     <div class="info-row">';
+          list += '         <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width:480px">' + response[i].content + '<div>';
+          list += '         <div>' + "업데이트 : "+  response[i].enddate +'<div>';
+          list += '     <div>';
+       }
+       list += '      </div>';
+       list += '      <div class="text-container"> ';
+       list += '      </div> ';
+       list += '   </div> ';
+       list += '</li> ';
+    }
+    $('#crew_manage_list').append(list);
+ }
+
 
 
    function openCustomModal(usercode, nickname, user_pisition) {
@@ -1139,9 +1175,10 @@ function crew_manage_handover(element) {
                 } else {
                     // 필터링된 멤버가 있을 경우 리스트 생성
                     for (var i in filteredResponse) {
+                      var imgSrc = filteredResponse[i].a_s ? filteredResponse[i].a_s.trim() : 'basicimg.png';
                         list += '<label class="team-member"> ';
                         list += '<input type="radio" name="teamOwner" value="' + filteredResponse[i].usercode + '"> ';
-                        list += '   <img src="/resources/uploadfile/' + filteredResponse[i].a_s + '" class="team-profile"> ';
+                        list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="team-profile"> ';
                         list += '   <span class="team-name"> ' + filteredResponse[i].b_s + '</span> ';
                         if (filteredResponse[i].a_n < 3) {
                             list += '      <div class="label-operator" style="margin-bottom:4px;">운영진</div> ';

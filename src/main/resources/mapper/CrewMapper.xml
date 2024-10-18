@@ -342,22 +342,22 @@
 
     <select id="crew_app_select" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        select a.nickname,
-        case
-        when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
-        when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
-        when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
-        else concat(timestampdiff(day, b.requested_date, now()), '일 전')
-        end as a_s,
-        a.gender, c.crew_name, b.crew_request_code as c_n,
-        timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
-        timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
-        b.usercode
-        from user_tbl a, crew_request_tbl b, create_crew_tbl c
-        where b.create_crew_code = ${param1}
-        and a.usercode = b.usercode
-        and b.create_crew_code = c.create_crew_code
-        order by b.requested_date desc -- 최신순 정렬 추가
+         select a.nickname,
+            case
+            when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
+            when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
+            when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
+            else concat(timestampdiff(day, b.requested_date, now()), '일 전')
+            end as a_s,
+            a.gender, c.crew_name, b.crew_request_code as c_n,
+            timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
+            timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
+            b.usercode, a.profile_img, c.logo  -- 추가된 필드들
+         from user_tbl a
+         join crew_request_tbl b on a.usercode = b.usercode
+         join create_crew_tbl c on b.create_crew_code = c.create_crew_code
+         where b.create_crew_code = ${param1}
+         order by b.requested_date desc  -- 최신순 정렬
     ]]>
     </select>
     <update id="crew_manage_app">
@@ -477,77 +477,80 @@
 
     <select id="crew_manage_overview" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        (
-            select 0 as a_n,
-                   ifnull(a.profile_img, 'basicimg.png') as subject,
-                   a.nickname as writedate,
-                   a.usercode as b_n,
-                   (select count(1)
-                    from crew_member_tbl
-                    where create_crew_code = ${param1}) as c_n
-            from user_tbl a, crew_member_tbl b
-            where  a.usercode = b.usercode
-            and b.create_crew_code = ${param1}
-            order by b.position
-            limit 4
-        )
-        union
-        (
-            select 1 as a_n, subject, creationdate as writedate,
-                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
-            from vote_tbl
-            where create_crew_code = ${param1}
-            order by creationdate desc
-            limit 1
-        )
-        union
-        (
-            select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
-            from crew_notice_tbl
-            where create_crew_code = ${param1}
-            order by writedate desc
-            limit 3
-        )
-
-        ]]>
+     (
+         select 0 as a_n,
+                a.profile_img as subject,
+                a.nickname as writedate,
+                a.usercode as b_n,
+                (select count(1)
+                 from crew_member_tbl
+                 where create_crew_code = ${param1}) as c_n
+         from user_tbl a, crew_member_tbl b
+         where  a.usercode = b.usercode
+         and b.create_crew_code = ${param1}
+         limit 5
+     )
+     union all
+     (
+         select 1 as a_n, subject, creationdate as writedate,
+                case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
+         from vote_tbl
+         where create_crew_code = ${param1}
+         limit 100
+     )
+     union all
+     (
+         select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
+         from crew_notice_tbl
+         where create_crew_code = ${param1}
+         limit 100
+     )
+     order by writedate desc
+     ]]>
     </select>
+
 
     <select id="crew_manage_notice" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
     (
-        select 1 as a_n, subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+        select 1 as a_n, subject, a.enddate as enddate_raw, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
                1 as b_n, a.vote_code as c_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
-               NULL as content,a.usercode
+               NULL as content, a.usercode
         from vote_tbl a
         where create_crew_code = ${param1}
-        and   enddate > now()
-        order by enddate desc
+        and enddate > now()
     )
-    union
+    union all
     (
-        select 2 as a_n, subject, writedate as enddate, 0 as b_n, crew_notice_code as c_n, NULL as d_n, 99999 as e_n,
-               content,usercode
-        from crew_notice_tbl
-        where create_crew_code = ${param1}
-        order by writedate desc
-    )
-    union
-    (
-        select 3 as a_n, a.subject, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
-               9 as b_n, vote_code as c_n,
+        select 3 as a_n, a.subject, a.enddate as enddate_raw, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               9 as b_n, a.vote_code as c_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
                (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
-               NULL as content,a.usercode
+               NULL as content, a.usercode
         from vote_tbl a
         where create_crew_code = ${param1}
-        and   enddate < now()
-        order by enddate desc
+        and enddate < now()
+    )
+    union all
+    (
+        select 2 as a_n, subject, writedate as enddate_raw, DATE_FORMAT(writedate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               0 as b_n, crew_notice_code as c_n, NULL as d_n, 99999 as e_n,
+               content, usercode
+        from crew_notice_tbl
+        where create_crew_code = ${param1}
     )
     ]]>
+        order by
+        case when a_n = 1 then 1
+        when a_n = 3 then 2
+        when a_n = 2 then 3
+        end,
+        case when a_n = 1 then enddate_raw end asc,
+        case when a_n = 3 then enddate_raw end desc,
+        case when a_n = 2 then enddate_raw end desc
     </select>
-
     <select id="vote_select" resultType="com.ict.finalproject.vo.CrewVO">
         select
         a.subject,
@@ -637,6 +640,7 @@
         ,opt3    = '${param6}'
         ,opt4    = '${param7}'
         ,opt5    = '${param8}'
+        ,creationdate =now()
         where    vote_code = ${param1}
     </update>
 

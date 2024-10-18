@@ -24,7 +24,7 @@ body{
     top: 90px;
     width: 60%;
     background-color: white;
-    height: 400px;
+    height: 370px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     margin: 20px 15px 0 0;
@@ -34,7 +34,7 @@ body{
 }
 .section1{
     background-color: white;
-    min-height: 400px;
+    min-height: 370px;
     margin-bottom: 10px;
     padding-bottom:20px;
     border-radius: 10px;
@@ -42,7 +42,7 @@ body{
 }
 .section2{
     background-color: white;
-    height: 505px;
+    height: 530px;
     border-radius: 10px 10px 0 0 ;
     margin-bottom: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
