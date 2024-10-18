@@ -279,8 +279,8 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int vote_member_chek(int vote_num) {
-        return dao.vote_member_chek(vote_num);
+    public int vote_member_chek(int vote_num, int user_code) {
+        return dao.vote_member_chek(vote_num,user_code);
     }
 
     @Override
@@ -294,8 +294,13 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5) {
-        return dao.vote_update(vote_num, title, endDate, opt1, opt2,opt3,opt4,opt5);
+    public int crew_write_code_select(int crewCode) {
+        return dao.crew_write_code_select(crewCode);
+    }
+
+    @Override
+    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5,int user_code) {
+        return dao.vote_update(vote_num, title, endDate, opt1, opt2,opt3,opt4,opt5, user_code);
     }
 
 

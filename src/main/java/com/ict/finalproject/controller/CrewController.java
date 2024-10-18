@@ -186,11 +186,33 @@ public class CrewController {
     }
     ////////////////////////////////////////////////////디테일/////////////////////////////////////////////
     //크루모집디테일
+    @PostMapping("/go_crewDetail")
+    @ResponseBody
+    public Map<String, Object> crewDetail(@RequestParam("Authorization") String token,
+                                          @RequestParam("create_crew_code") int createCrewCode) {
+        // 토큰 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int userCode = service.usercodeSelect(userName);
+        int crew_write_code =service.crew_write_code_select(createCrewCode);
+
+        // 클라이언트로 리다이렉션할 URL과 필요한 데이터를 응답
+        Map<String, Object> response = new HashMap<>();
+        response.put("redirectUrl", "/crew/crewDetail");  // 리다이렉션할 URL
+        response.put("create_crew_code", createCrewCode);  // 클라이언트가 사용할 데이터
+        response.put("crew_write_code", crew_write_code);  // 클라이언트가 사용할 데이터
+
+        return response;  // JSON 형식으로 응답
+    }
+
     @GetMapping("/crewDetail")
-    public String crewDetail(int create_crew_code,int crew_write_code,  Model model){
-        model.addAttribute("create_crew_code", create_crew_code);
-        model.addAttribute("crew_write_code", crew_write_code);
-        return "crew/crewDetail";
+    public String crewDetail(@RequestParam("create_crew_code") int createCrewCode,
+                             @RequestParam("crew_write_code") int crewWriteCode, Model model) {
+        // 파라미터를 처리하는 로직
+        model.addAttribute("create_crew_code", createCrewCode);
+        model.addAttribute("crew_write_code", crewWriteCode);
+        // 처리 후 화면 이동
+        return "/crew/crewDetail";
     }
 
     @PostMapping("/detail")
@@ -602,38 +624,26 @@ public class CrewController {
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
 
-        List<CrewVO> vote_read = new ArrayList<>();;
+        List<CrewVO> vote_read = new ArrayList<>();
         try {
             if(flag.equals("R")){
                 vote_read =  service.vote_detail(vote_num);
+                int a = service.vote_member_chek(vote_num,user_code);
+                System.out.println(a);
+                // vote_read 리스트의 각 CrewVO 객체에 a_s 값 설정
+                for (CrewVO crew : vote_read) {
+                    crew.setA_n(a);
+                }
             }
             if(flag.equals("U")){
-                int a = service.vote_member_chek(vote_num);
-                // CrewVO 객체 생성
-                CrewVO crew = new CrewVO();
-                if(a>0){
-                    // a_s 필드에 "1" 설정
-                    crew.setA_s("1");
-                    // 리스트에 추가
-                    vote_read.add(crew);
-                    return vote_read;
-                }
-                else {
-                    // a_s 필드에 "0" 설정
-                    crew.setA_s("0");
-                    // 리스트에 추가
-                    vote_read.add(crew);
-                    service.vote_update(vote_num, title, endDate, opt1, opt2, opt3, opt4, opt5);
-                }
+                service.vote_update(vote_num, title, endDate, opt1, opt2, opt3, opt4, opt5, user_code);
+                service.voter_delete(vote_num);
             }
             if(flag.equals("D")){
                 service.voter_delete(vote_num);
                 service.vote_delete(vote_num);
                 return vote_read;
             }
-
-            //service.vote_create(user_code, crewCode, title, endDate, opt1, opt2,opt3,opt4,opt5);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

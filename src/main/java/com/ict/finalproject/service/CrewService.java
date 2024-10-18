@@ -36,6 +36,7 @@ public interface CrewService {
     public int updateCrewInfo(int create_crew_code, int user_code, String teamName,String teamPhotoInput, String age, String gender, String content,String city,String region);
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
+    public int crew_write_code_select(int crewCode);
     public int getNoticeCode(int create_crew_code);
     void saveImage(int crew_notice_code, String img_filename);
     public int join_before_select(int user_code, int crewWriteCode);
@@ -49,12 +50,12 @@ public interface CrewService {
     public int crew_member_upgrade(int user_code, int crewCode);
     public int crew_member_downgrade(int user_code, int crewCode);
     public int vote_create(int user_code, int crewCode, String endDate, String title, String opt1,String opt2,String opt3,String opt4,String opt5);
-    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5);
+    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5, int user_code);
     public int crew_member_out(int user_code, int crewCode);
     public int crew_history_insert(int user_code, int crewCode, int flag);
     public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text,int crewCode);
     public int vote_chek(int user_code, int vote_num);
-    public int vote_member_chek(int vote_num);
+    public int vote_member_chek(int vote_num, int user_code);
     public int vote_delete(int vote_num);
     public int voter_delete(int vote_num);
     public int vote_insert(int user_code, int vote_num, String selectedOption);
