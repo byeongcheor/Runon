@@ -51,12 +51,13 @@ confirm().then(function (data) {
     $.ajax({
        url:"/payment/saveOrder",
        type:"post",
-       data:{
-           method:method,
-           orderId:orderId,
-           total_Amount:total_Amount,
-           usercode:usercode1
-       },
+        contentType: 'application/json', // 서버에서 JSON 형식을 기대할 경우
+        data: JSON.stringify({
+            method: method,
+            orderId: orderId,
+            total_Amount: total_Amount,
+            usercode: usercode1
+        }),
         success:function(r){
             alert("확인");
         }

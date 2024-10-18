@@ -113,28 +113,67 @@
         box-sizing: border-box;
         margin-bottom: 20px;
     }
+    .pagination .page-link{
+        color: black;
+    }
+    .pagination .page-link:hover {
+        color: #fff; /* 호버 시 텍스트 색상 */
+        background-color: black; /* 호버 시 배경색 */
+    }
+    /* 활성화된 페이지 아이템 색상 변경 */
+    .pagination .page-item.active .page-link {
+        background-color: black; /* 배경색 */
+        border-color: black;     /* 테두리 색상 */
+        color: white;              /* 텍스트 색상 */
+    }
+
+    /* 활성화된 페이지 아이템 호버 시 색상 변경 */
+    .pagination .page-item.active .page-link:hover {
+        background-color: grey; /* 호버 시 배경색 */
+        border-color: grey;     /* 호버 시 테두리 색상 */
+    }
+    #paging{
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+
 </style>
 <script>
     setTimeout(function(){
+        var page;
+        reloadPage(page);
+    },100);
+    function reloadPage(page){
+        if(page==null){
+            page=1;
+        }
         $.ajax({
             url:"/mypage/myQnAList",
             type:"post",
             data:{
                 username:username1,
                 usercode:usercode1,
-                Token:ToKen
+                Token:ToKen,
+                page:page
             } ,
             success:function(r){
-
                 var tag="";
-
-                $.each(r.list, function(i, vo){
-                    if (vo.qna_status==0){
-                        vo.qna_status="처리중";
-                    }else{
-                        vo.qna_status="처리완료";
-                    }
+                var pvo= r.pvo;
+                if(r.list.length==0){
                     tag += `
+                        <div class="row" style="text-align: center; margin-top: 40px;">
+                            <p>메이트 페이지에서 매칭한 메이트 이력이 없습니다.</p>
+                        </div>
+                    `;
+                }else{
+                    $.each(r.list, function(i, vo){
+                        if (vo.qna_status==0){
+                            vo.qna_status="처리중";
+                        }else{
+                            vo.qna_status="처리완료";
+                        }
+                        tag += `
                             <div class="row">
                                 <div class="col-sm-1 p-2">`+vo.qna_code+`</div>
                                 <div class="col-sm-4 p-2"><a onclick="submitviewQnA(`+vo.qna_code+`)">`+vo.qna_subject+`</a></div>
@@ -145,13 +184,32 @@
                                 </div>
                             </div>
                         `;
-                });
+                    });
+                }
                 document.getElementById("list").innerHTML = tag;
+
+                var paginationTag="";
+
+                if (pvo.nowPage > 1) {
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                }
+                for (var p = pvo.startPageNum; p <= pvo.startPageNum + pvo.onePageNum - 1; p++) {
+                    if (p <= pvo.totalPage) {
+                        paginationTag += "<li class='page-item " + (pvo.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ");'>" + p + "</a></li>";
+                    }
+                }
+                if (pvo.nowPage < pvo.totalPage) {
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pvo.nowPage + 1) + ");'>></a></li>";
+                }
+                $(".pagination").html(paginationTag);
+
             },error:function (e){
                 alert(e);
             }
         });
-    },100);
+    }
+
+
     //모달열기
     function openModal(){
         var modal = document.getElementById("uploadQnA");
@@ -306,5 +364,6 @@
                 </form>
             </div>
         </div>
+        <div class="pagination" id="paging"></div>
     </div>
 </div>

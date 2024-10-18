@@ -27,16 +27,16 @@ public class MateController {
     public String test(@RequestParam("Authorization") String token) {
         System.out.println("테스트"+token);
         if (token!=null&&!token.isEmpty()){
-        token=token.substring("Bearer ".length());
-        System.out.println("123123123");
-        try {
-            user_name = jwtUtil.setTokengetUsername(token);
-            System.out.println("Username from Token: " + user_name);
-        } catch (Exception e) {
-            System.out.println("Error parsing token: " + e.getMessage());
-            e.printStackTrace(); // 전체 스택 트레이스 확인
-        }
-        return user_name;}
+            token=token.substring("Bearer ".length());
+            System.out.println("123123123");
+            try {
+                user_name = jwtUtil.setTokengetUsername(token);
+                System.out.println("Username from Token: " + user_name);
+            } catch (Exception e) {
+                System.out.println("Error parsing token: " + e.getMessage());
+                e.printStackTrace(); // 전체 스택 트레이스 확인
+            }
+            return user_name;}
         return null;
     }
     @GetMapping("/mate")
@@ -47,6 +47,7 @@ public class MateController {
             List<MateVO> userselect = service.userselect(user_code);
             vo.setMatch_yn(service.match_yn(user_code));
             System.out.println(userselect);
+
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);
@@ -208,6 +209,6 @@ public class MateController {
     @ResponseBody
     public Date  mate_popup_date_select(@RequestParam("Authorization")String token) {
         Date mate_popup_date= service.mate_popup_date_select(user_code);
-    return mate_popup_date;
+        return mate_popup_date;
     }
 }

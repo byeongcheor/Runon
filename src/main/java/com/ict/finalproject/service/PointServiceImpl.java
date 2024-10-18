@@ -16,18 +16,10 @@ public class PointServiceImpl implements PointService{
 
 
     @Override
-    public PointVO getUserPointsByUsername(String username) {
-        return dao.getUserPointsByUsername(username);
+    public PointVO getPointByUsercode(int usercode) {
+        return dao.getPointByUsercode(usercode);
     }
 
-    @Override
-    public void applyPointsByUsername(String username, int pointsToUse) {
-        dao.applyPointsByUsername(username, pointsToUse);
-    }
 
-    @Override
-    public void insertPointChangeHistory(PointChangeVO pointChange) {
-        dao.insertPointChangeHistory(pointChange);
-    }
 }
 

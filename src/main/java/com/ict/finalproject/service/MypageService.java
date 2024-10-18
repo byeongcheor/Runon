@@ -24,23 +24,27 @@ public interface MypageService {
 
     public MemberVO passwordChk(String username);
     //주문목록
-    public List<OrderVO> selectOrderAll(int usercode);
+    public List<OrderVO> selectOrderAll(int usercode, int offset, int limit);
     //마라톤신청서있는지조회
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성
     public void createMarathonForm(MarathonFormVO marathonVO);
     public void deleteMarathonForm(int usercode);
     public int updateMarathonForm(MarathonFormVO marathonVO);
+    public int getTotalOrder(int usercode);
     public int getOrderCode(int marathon_code, int usercode);
     public List<OrderVO> getOrderInfo(int usercode);
-    public List<CertificateVO> selectCertificateAll(String username);
+    public List<CertificateVO> selectCertificateAll(String username, int offset, int limit);
     public void updateCertificate(CertificateVO certificate);
     public int deleteCertificate(int certificate_code);
+    public int getTotalCertificate(String username);
     public CertificateVO selectCertificate(int certificate_code);
-    public List<MemberVO> selectMemberAll(int usercode);
+    public List<MemberVO> selectMemberAll(int usercode, int offset, int limit);
+    public int getTotalMate(int usercode);
     public int reportMate(ReportVO report);
     public ReportVO selectReportForm(int usercode, int matching_room_code);
-    public List<QnAVO> selectQnAAll(int usercode);
+    public int getTotalQnA(int usercode);
+    public List<QnAVO> selectQnAAll(int usercode, int offset, int limit);
     public void updateQnA(QnAVO qna);
     public QnAVO selectQnA(int qna_code);
     public int deleteQnA(int qna_code);

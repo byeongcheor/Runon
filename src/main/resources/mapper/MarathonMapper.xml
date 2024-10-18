@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MarathonDAO">
+    <select id="usercodeSelect" resultType="int">
+        select usercode
+        from   user_tbl
+        where  username = '${param1}'
+    </select>
+    <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT * FROM marathon_list_tbl
+        WHERE is_deleted = 0
+        AND event_date >= CURDATE()
+        ORDER BY
+        CASE
+        WHEN CURDATE() BETWEEN registration_start_date AND registration_end_date THEN 1  -- 접수 중인 대회는 최우선
+        ELSE 2  -- 접수 마감된 대회는 그 다음
+        END,
+        event_date ASC  -- 그 다음으로 대회 날짜를 오름차순으로 정렬
+        LIMIT #{offset}, 8
+
+    </select>
+
+    <select id="totalRecord" parameterType="PagingVO" resultType="int">
+        SELECT COUNT(*) FROM marathon_list_tbl
+    </select>
+    <!-- 마라톤 코드로 마라톤 정보 조회 -->
+    <select id="getMarathonByCode" resultType="MarathonListVO" parameterType="int">
+        SELECT
+        marathon_code,
+        marathon_name,
+        marathon_type,
+        total_distance,
+        entry_fee,
+        addr,
+        marathon_content,
+        event_date,
+        registration_start_date,
+        registration_end_date,
+        tags,
+        created_date,
+        lat,
+        lon,
+        is_updated,
+        updated_date,
+        is_active,
+        activation_date,
+        is_deleted,
+        deleted_date,
+        admin_code,
+        poster_img,
+        hit,
+        like_count
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonCode}
+    </select>
+    <select id="getMarathonById" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT marathon_code, marathon_name, lat, lon
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonId}
+    </select>
+    <!-- 장바구니 항목 추가 -->
+    <insert id="addToCart" parameterType="com.ict.finalproject.vo.CartVO">
+        INSERT INTO cart_tbl (quantity, price, marathon_code, usercode, cart_expiration_date)
+        VALUES (#{quantity}, #{price}, #{marathon_code}, #{usercode}, NOW())
+    </insert>
+    <!-- 사용자별 장바구니 항목 조회 -->
+    <select id="getCartByUserCode" resultType="com.ict.finalproject.vo.CartVO" parameterType="int">
+        SELECT * FROM cart_tbl
+        WHERE usercode = #{usercode}
+        AND is_deleted = 0
+    </select>
+    <update id="increaseHit" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET hit = hit + 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+
+    <select id="getFilteredTotalRecord" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM marathon_list_tbl
+        WHERE is_deleted = 0
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND (addr LIKE CONCAT('%', #{addr}, '%') OR mainLocation = getMainLocation(#{addr}))
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+
+    <select id="selectFilteredMarathons" parameterType="com.ict.finalproject.vo.PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE is_deleted = 0
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND (addr LIKE CONCAT('%', #{addr}, '%') OR mainLocation = getMainLocation(#{addr}))
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sort == 1">
+                like_count DESC <!-- 좋아요 순 -->
+            </when>
+            <when test="sort == 2">
+                hit DESC <!-- 조회 순 -->
+            </when>
+            <otherwise>
+                event_date ASC <!-- 기본 정렬 -->
+            </otherwise>
+        </choose>
+        LIMIT #{offset}, #{onePageRecord}
+    </select>
+
+
+
+
+</mapper>

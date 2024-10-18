@@ -140,5 +140,8 @@ function logout() {
     // 여기서 실제로 로그아웃 처리 (예: 로컬 스토리지 제거, 페이지 리다이렉트 등)
     localStorage.removeItem('Authorization');
     localStorage.removeItem('refresh');
+    localStorage.removeItem("matchedRoomCode");
+    localStorage.removeItem("userNickname");
+    localStorage.removeItem("usercode");
     window.location.href = "/"; // 로그인 페이지로 리다이렉트
 }

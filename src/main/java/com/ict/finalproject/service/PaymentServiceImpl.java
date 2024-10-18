@@ -109,7 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int orderSuccess(String method, int usercode, String orderId, int realAmount) {
-        int details=dao.updateDetails(orderId,usercode);
+    /*    int details=dao.updateDetails(orderId,usercode);
         System.out.println(details);
         if (details==1){
             int payment=dao.updatepayment(realAmount,usercode,method);
@@ -117,7 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
             int order=dao.updateOrder(usercode);
 
         }
-
+*/
         return 0;
     }
 }
