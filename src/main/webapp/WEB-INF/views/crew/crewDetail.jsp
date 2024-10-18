@@ -250,12 +250,8 @@
       </form>
 <script>
 var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const create_crew_code = urlParams.get('create_crew_code');
-const crew_write_code = urlParams.get('crew_write_code');
-var  creatCrewCode = ${create_crew_code};
-var  creatWriteCode = ${crew_write_code};
-
+var create_crew_code = ${create_crew_code};
+var crew_write_code = ${crew_write_code};
 var usercode;
 var position;
 $('#nextBtn').on('click', function() {
