@@ -18,7 +18,8 @@ public class CartVO {
     private String deleted_date;
     private String cart_expiration_date;
     private int marathon_code;
+    private String marathon_name;
     private int usercode;
-
+    private String poster_img;
 
 }

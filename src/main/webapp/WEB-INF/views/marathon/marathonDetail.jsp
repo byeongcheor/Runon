@@ -226,7 +226,7 @@
 
 
     //지도
-// "지도로" 버튼 클릭 시 길찾기 iframe 표시
+    // "지도로" 버튼 클릭 시 길찾기 iframe 표시
     // JSP/Thymeleaf에서 전달받은 위도와 경도 값을 자바스크립트 변수에 할당
     var latitude = '37.402056';  // 위도
     var longitude =  '127.108212'; // 경도
@@ -238,54 +238,56 @@
     // iframe에 길찾기 URL 적용
     document.getElementById('mapIframe').src = iframeSrc;
 
-//////////////////////
-//     // 병원 버튼 클릭 시 병원 마커 표시
-//     document.getElementById('hospitalButton').addEventListener('click', function() {
-//         searchHospitals(); // 병원 검색 함수 호출
-//     });
-//
-//     // 지도 생성 및 병원 검색 기능
-//     var mapContainer = document.getElementById('mapIframe'); // 지도를 표시할 iframe
-//     var mapOption = {
-//         center: new kakao.maps.LatLng(37.566535, 126.97796919999996), // 지도의 중심 좌표 (예시 좌표)
-//         level: 3 // 지도의 확대 레벨
-//     };
-//
-//     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-//
-//     // 장소 검색 객체 생성
-//     var ps = new kakao.maps.services.Places();
-//
-//     // 병원 검색 함수
-//     function searchHospitals() {
-//         var options = {
-//             location: map.getCenter(), // 현재 지도 중심 좌표
-//             radius: 1000 // 1km 반경 내 검색
-//         };
-//
-//         ps.categorySearch('HP8', placesSearchCB, options); // 병원 카테고리 검색 (HP8: 병원)
-//     }
-//
-//     // 장소 검색 결과 처리 함수
-//     function placesSearchCB(data, status, pagination) {
-//         if (status === kakao.maps.services.Status.OK) {
-//             for (var i = 0; i < data.length; i++) {
-//                 displayMarker(data[i]); // 마커 표시
-//             }
-//         }
-//     }
-//
-//     // 마커 표시 함수
-//     function displayMarker(place) {
-//         var marker = new kakao.maps.Marker({
-//             map: map,
-//             position: new kakao.maps.LatLng(place.y, place.x) // 장소의 좌표로 마커 설정
-//         });
-//
-//         // 마커 클릭 시 장소명 표시
-//         kakao.maps.event.addListener(marker, 'click', function() {
-//             alert(place.place_name);
-//         });
-//     }
+
+
+    //////////////////////
+    //     // 병원 버튼 클릭 시 병원 마커 표시
+    //     document.getElementById('hospitalButton').addEventListener('click', function() {
+    //         searchHospitals(); // 병원 검색 함수 호출
+    //     });
+    //
+    //     // 지도 생성 및 병원 검색 기능
+    //     var mapContainer = document.getElementById('mapIframe'); // 지도를 표시할 iframe
+    //     var mapOption = {
+    //         center: new kakao.maps.LatLng(37.566535, 126.97796919999996), // 지도의 중심 좌표 (예시 좌표)
+    //         level: 3 // 지도의 확대 레벨
+    //     };
+    //
+    //     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    //
+    //     // 장소 검색 객체 생성
+    //     var ps = new kakao.maps.services.Places();
+    //
+    //     // 병원 검색 함수
+    //     function searchHospitals() {
+    //         var options = {
+    //             location: map.getCenter(), // 현재 지도 중심 좌표
+    //             radius: 1000 // 1km 반경 내 검색
+    //         };
+    //
+    //         ps.categorySearch('HP8', placesSearchCB, options); // 병원 카테고리 검색 (HP8: 병원)
+    //     }
+    //
+    //     // 장소 검색 결과 처리 함수
+    //     function placesSearchCB(data, status, pagination) {
+    //         if (status === kakao.maps.services.Status.OK) {
+    //             for (var i = 0; i < data.length; i++) {
+    //                 displayMarker(data[i]); // 마커 표시
+    //             }
+    //         }
+    //     }
+    //
+    //     // 마커 표시 함수
+    //     function displayMarker(place) {
+    //         var marker = new kakao.maps.Marker({
+    //             map: map,
+    //             position: new kakao.maps.LatLng(place.y, place.x) // 장소의 좌표로 마커 설정
+    //         });
+    //
+    //         // 마커 클릭 시 장소명 표시
+    //         kakao.maps.event.addListener(marker, 'click', function() {
+    //             alert(place.place_name);
+    //         });
+    //     }
 
 </script>

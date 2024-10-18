@@ -2,9 +2,10 @@ package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.CartDAO;
 import com.ict.finalproject.vo.CartVO;
-import com.ict.finalproject.vo.ReportVO;
+import com.ict.finalproject.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,7 +13,6 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
     @Autowired
     private CartDAO dao;
-
 
 
     @Override
@@ -29,5 +29,16 @@ public class CartServiceImpl implements CartService {
     public List<CartVO> userselect(int usercode) {
         return dao.userselect(usercode);
     }
+
+    @Override
+    public int updatecart(String action, int cart_code) {
+        return dao.updatecart(action, cart_code);
+    }
+
+    @Override
+    public void deletedcart(List<Integer> items) {
+         dao.deletedcart(items);
+    }
+
 
 }

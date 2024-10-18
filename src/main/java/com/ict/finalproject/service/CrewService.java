@@ -17,6 +17,7 @@ public interface CrewService {
     public List<CrewVO> crew_wait_detail(int user_code, int crewCode,int request_code);
     public List<CrewVO> crew_page_write_detail(int crew_page_write_detail);
     public List<CrewVO> crew_write_detail_check(int crew_write_code);
+    public List<CrewVO> getCrewInfo(int create_crew_code);
     public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int totalRecord(PagingVO pVO);
@@ -45,7 +46,6 @@ public interface CrewService {
     public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text);
     public int vote_chek(int user_code, int vote_num);
     public int vote_insert(int user_code, int vote_num, String selectedOption);
-
     /*채팅방 크루연결 */
     public List<CrewVO> getCrewList();
 }

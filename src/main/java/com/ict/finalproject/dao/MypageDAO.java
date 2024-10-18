@@ -21,7 +21,11 @@ public interface MypageDAO {
     public int delFromPoint(int usercode);
 
     //주문목록리스트
-    public List<OrderVO> selectOrderAll(int usercode);
+    public List<OrderVO> selectOrderAll(@Param("usercode") int usercode,
+                                        @Param("offset") int offset,
+                                        @Param("limit") int limit);
+    //주문목록 count
+    public int getTotalOrder(int usercode);
     //회원정보수정 기존비밀번호 유효성검사
     public MemberVO passwordChk(String username);
     //마라톤신청서있는지조회
@@ -34,23 +38,38 @@ public interface MypageDAO {
     public int updateMarathonForm(MarathonFormVO marathonVO);
 
     //인증서리스트불러오기
-    public List<CertificateVO> selectCertificateAll(String username);
+    public List<CertificateVO> selectCertificateAll(@Param("username") String username,
+                                                    @Param("offset") int offset,
+                                                    @Param("limit") int limit);
     //인증서업로드
     public void updateCertificate(CertificateVO certificate);
     //인증서삭제
     public int deleteCertificate(int certificate_code);
     //인증서 하나만
     public CertificateVO selectCertificate(int certificate_code);
+    //order_tbl select
+    public int getOrderCode(int marathon_code, int usercode);
+    public List<OrderVO> getOrderInfo(int usercode);
+    //전체레코드
+    public int getTotalCertificate(String username);
 
     //메이트이력리스트
-    public List<MemberVO> selectMemberAll(int usercode);
+    public List<MemberVO> selectMemberAll(@Param("usercode") int usercode,
+                                          @Param("offset") int offset,
+                                          @Param("limit") int limit);
     //메이트 신고하기
     public int reportMate(ReportVO report);
     //신고내역 있는지 확인
     public ReportVO selectReportForm(int usercode, int matching_room_code);
+    //메이트개수
+    public int getTotalMate(int usercode);
 
+    //qna개수
+    public int getTotalQnA(int usercode);
     //qna리스트
-    public List<QnAVO> selectQnAAll(int usercode);
+    public List<QnAVO> selectQnAAll(@Param("usercode") int usercode,
+                                    @Param("offset") int offset,
+                                    @Param("limit") int limit);
     //qna작성
     public void updateQnA(QnAVO qna);
     //qna선택

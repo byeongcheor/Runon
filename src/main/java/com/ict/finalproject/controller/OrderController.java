@@ -1,53 +1,82 @@
 package com.ict.finalproject.controller;
 
 import com.ict.finalproject.service.MarathonService;
+import com.ict.finalproject.service.MypageService;
 import com.ict.finalproject.service.OrderService;
-import com.ict.finalproject.vo.OrderVO;
+import com.ict.finalproject.service.PaymentService;
+import com.ict.finalproject.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
+@RequestMapping("/order")
 public class OrderController {
     @Autowired
     OrderService service;
     @Autowired
-    MarathonService marathonservice;
+    MarathonService marathonService;
+    @Autowired
+    MypageService mypageService;
+    @Autowired
+    PaymentService paymentService;
 
-
-
-    // 주문 생성
-    @PostMapping("/create")
-    public OrderVO createOrder(@RequestBody OrderVO order) {
-        service.createOrder(order);
-        return order; // 생성된 주문 정보를 반환
+    @PostMapping("/orderForm")
+    public String orderForm(@RequestParam("items[]") List<Integer> items,@RequestParam("usercode")int usercode, Model model){
+        System.out.println("선택된 cart_code들: " + items);
+        List<CartVO>Cvo=service.SetOrder(items);
+        int total_amount=0;
+        for (CartVO cart : Cvo) {
+            total_amount += cart.getPrice()*cart.getQuantity();
+        }
+        PaymentVO vo=new PaymentVO();
+        vo.setTotal_amount(total_amount);
+        vo.setUsercode(usercode);
+        System.out.println("vo확인"+vo);
+        //확인완료System.out.println(total_amount);
+        int result=paymentService.createPayment(vo);
+        System.out.println(result);
+        model.addAttribute("Cvo",Cvo);
+        return "order/orderForm";
+    }
+    @PostMapping("/selectmypoint")
+    @ResponseBody
+    public Map<String,Object>selectmypoint(@RequestParam("usercode")int usercode){
+        Map<String,Object>map=new HashMap<>();
+        PointVO pvo =service.getMyPoint(usercode);
+        System.out.println(pvo);
+        map.put("pvo",pvo);
+        return map;
     }
 
-//    // 주문 내역 조회
-//    @GetMapping("order/ordersheet")
-//    public String getOrderHistory(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-//        String username = userDetails.getUsername(); // 로그인한 사용자 정보 가져오기
-//        List<OrderVO> orderHistory = service.getOrderHistoryByUsername(username); // username으로 주문 내역 조회
-//
-//        // 각 주문의 marathon_code를 사용하여 marathon_name을 추가
-//        //for (OrderVO order : orderHistory) {
-//           // MarathonListVO marathon = marathonListService.getMarathonByCode(order.getMarathon_code());
-//          //  if (marathon != null) { // Null 체크 추가
-//           //     order.setMarathon_name(marathon.getMarathon_name()); // OrderVO에 marathon_name 추가
-//          //  } else {
-//           //     order.setMarathon_name("Unknown Marathon"); // 또는 적절한 기본 값 설정
-//           // }
-//      //  }
-//
-//       // model.addAttribute("orderHistory", orderHistory); // JSP로 데이터 전달
-//
-//        return "order/ordersheet"; // JSP 경로
-//    }
+    @PostMapping("/selectMyForm")
+    @ResponseBody
+    public Map<String,Object>selectMyForm(@RequestParam("usercode")int usercode){
+        Map<String,Object>map=new HashMap<>();
+        MarathonFormVO MFvo=service.selectMyForm(usercode);
+
+        map.put("MFvo",MFvo);
+
+        return map;
+    }
 
 
-
-
+    @PostMapping("/updateForm")
+    @ResponseBody
+    public Map<String,Object>updateForm(MarathonFormVO MFvo){
+        Map<String,Object>map=new HashMap<>();
+        System.out.println(MFvo);
+        mypageService.updateMarathonForm(MFvo);
+        return map;
+    }
 }

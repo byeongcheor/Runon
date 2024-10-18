@@ -1,0 +1,221 @@
+
+#DashboardHead{
+    background-color: #fff;
+    border-bottom: 1px solid black;
+}
+#DashboardBody{
+    min-width: 950px;
+    height: 100vh;
+    padding-top: 30px;
+    margin: 0 auto;
+}
+
+#DashboardHead #menutitle{
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+#DashboardBody>div:first-child{
+
+    /*border-bottom: 1px solid black;*/
+
+}
+#DashboardHead #maintop{
+    margin-left: 30px;
+    margin-top: 30px;
+}
+#subtitle{
+    margin-bottom: 20px;
+    font-size:0.9em;
+}
+#mainmid,#mainmid2{
+    margin-bottom: 10px;
+    margin-right: 10px;
+    width: 100%;
+    height: auto;
+    display: flex;
+}
+#mainmid .chart1{
+    width:530px;
+    height: 400px;
+    background-color: #fff;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+#mainmid2>.chart2{
+    height: 400px;
+    width: 530px;
+    background-color: #fff;
+    margin: 10px;
+}
+
+#mainmid .marathonchart{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+}
+#loinchart{
+    width: 100%;
+    height: 284px;
+
+}
+#loginChart *{
+    margin:0 auto;
+}
+
+ /*차트js*/
+ .chart-container {
+     position: relative;
+     width: 50%; /* 차트의 너비를 조정 */
+     margin: auto;
+ }
+.marathons {
+    width: 45%; /* 차트의 폭을 100%로 설정 */
+    height: 250px; /* 높이는 자동으로 조정 */
+}
+.info {
+    text-align: center;
+    margin-top: 20px;
+}
+#annualSalewon{
+    text-align: center;
+    font-size: 0.8em;
+}
+
+/*여기까지*/
+
+#Memchart2{
+    width: 90%;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+#Memchart2>#chartmem{
+    width: 55%;
+    height: 290px;
+}
+ #joinsuser{
+     width: 40%;
+     text-align: center;
+     height: 290px;
+ }
+ #joinsuser>div{
+     margin-top: 10px;
+     height: 40%;
+ }
+#joinsuser>div:hover{
+    background-color: #ddd;
+}
+#joinsuser>div:first-child{
+
+}
+#lodding1,#lodding2{
+    margin-top: 25px;
+    font-weight: bold;
+}
+ul,li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+}
+#newPaymentList .paymenttitle,.qnatitle{
+    border-bottom: 1px solid #ddd; margin-top: 10px;
+}
+#newPaymentList .oneline,.oneline{
+    display: flex;
+
+}
+#buttonhidden,#qnahiddenbtn{
+    /*display: flex;*/
+    margin-top: 10px;
+}
+#addlist,#addlist2{
+    /*width: 50%;*/
+    margin-left: 10px;
+}
+#buttonhidden>div:last-child,#qnahiddenbtn>div:last-child{
+    /*width: 50%;*/
+    text-align: right;
+    margin-right: 10px;
+}
+#newPaymentList .oneline .nickname,.nickname,.qna_code{
+    width: 18%;
+}
+#newPaymentList .oneline .marathon_name,.qna_subject{
+    width: 36%;
+}
+#newPaymentList .oneline .real_amount{
+    width: 22%;
+}
+#newPaymentList .oneline .completed_date,.writedate{
+    width: 36%;
+}
+#newPaymentList .oneline *,.oneline *{
+    text-align: center;
+}
+.alink{
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    line-height: 45px;
+    height: 45px;
+}
+.alink>a{
+    width: 100%;display: flex;
+    overflow: hidden;
+    text-decoration: none;
+    color:black;
+
+
+    text-overflow: ellipsis; /* 줄임표 표시 */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+    position: relative; /* 포지션 설정 */
+}
+.alink:hover{
+    background-color: #ddd;
+}
+
+.adminContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+.chartHead{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.chart2{
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+.chartTitle{
+    font-size: 12pt;
+    font-weight: 700;
+    vertical-align: center;
+}
+.chartBody{
+    margin-top: 10px;
+}
+#qnanewList{
+    margin-top: 30px;
+}
+
+.btnContain button{
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 9pt;
+    border: 1px solid lightgrey;
+}
+#qnahiddenbtn button{
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 9pt;
+    border: 1px solid lightgrey;
+}

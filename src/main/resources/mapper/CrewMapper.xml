@@ -200,6 +200,11 @@
         from   crew_write a
         where  crew_write_code = ${param1};
     </select>
+    <select id="getCrewInfo" resultType="com.ict.finalproject.vo.CrewVO">
+        select *
+        from   create_crew_tbl a
+        where  create_crew_code = ${param1}
+    </select>
     <update id="crew_write_update">
         update crew_write
         set    teamPhoto = '${param3}'
@@ -525,9 +530,11 @@
     </insert>
 
 
+
     <select id="getCrewList" resultType="com.ict.finalproject.vo.CrewVO">
         SELECT create_crew_code, crew_name, logo
         FROM create_crew_tbl;
     </select>
+
 
 </mapper>

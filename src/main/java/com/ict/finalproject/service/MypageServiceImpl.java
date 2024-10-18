@@ -86,6 +86,7 @@ public class MypageServiceImpl implements MypageService{
         return false;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean checkPassword2(String username, String curerntPassword) {
         MemberVO member = dao.selectMember(username);
@@ -101,8 +102,8 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public List<OrderVO> selectOrderAll(int usercode) {
-        return dao.selectOrderAll(usercode);
+    public List<OrderVO> selectOrderAll(int usercode, int offset, int limit) {
+        return dao.selectOrderAll(usercode, offset, limit);
     }
 
     @Override
@@ -126,8 +127,23 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public List<CertificateVO> selectCertificateAll(String username) {
-        return dao.selectCertificateAll(username);
+    public int getTotalOrder(int usercode) {
+        return dao.getTotalOrder(usercode);
+    }
+
+    @Override
+    public int getOrderCode(int marathon_code, int usercode) {
+        return dao.getOrderCode(marathon_code, usercode);
+    }
+
+    @Override
+    public List<OrderVO> getOrderInfo(int usercode) {
+        return dao.getOrderInfo(usercode);
+    }
+
+    @Override
+    public List<CertificateVO> selectCertificateAll(String username, int offset, int limit) {
+        return dao.selectCertificateAll(username, offset, limit);
     }
 
     @Override
@@ -141,13 +157,23 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public int getTotalCertificate(String username) {
+        return dao.getTotalCertificate(username);
+    }
+
+    @Override
     public CertificateVO selectCertificate(int certificate_code) {
         return dao.selectCertificate(certificate_code);
     }
 
     @Override
-    public List<MemberVO> selectMemberAll(int usercode) {
-        return dao.selectMemberAll(usercode);
+    public List<MemberVO> selectMemberAll(int usercode, int offset, int limit) {
+        return dao.selectMemberAll(usercode, offset, limit);
+    }
+
+    @Override
+    public int getTotalMate(int usercode) {
+        return dao.getTotalMate(usercode);
     }
 
     @Override
@@ -161,8 +187,13 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public List<QnAVO> selectQnAAll(int usercode) {
-        return dao.selectQnAAll(usercode);
+    public int getTotalQnA(int usercode) {
+        return dao.getTotalQnA(usercode);
+    }
+
+    @Override
+    public List<QnAVO> selectQnAAll(int usercode, int offset, int limit) {
+        return dao.selectQnAAll(usercode, offset, limit);
     }
 
     @Override

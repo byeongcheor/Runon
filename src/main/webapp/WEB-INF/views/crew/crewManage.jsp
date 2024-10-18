@@ -188,7 +188,7 @@
 <div id="resignModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">어떤 걸 하시겠어요?</h3>
+      <h4 class="modal-title">어떤 걸 하시겠어요?</h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body">
@@ -201,20 +201,19 @@
 <!-- 공지사항 모달 -->
   <form id="updateNoticeForm" enctype="multipart/form-data">
     <div id="noticeCreateModal" class="custom-modal" style="display: none;">
-        <div class="custom-modal-content">
+        <div class="custom-modal-content2">
             <div class="custom-modal-header">
-                <h5 class="custom-modal-title" id="noticeCreateModalLabel">공지사항 작성</h5>
+                <h5 class="custom-modal-title2" id="noticeCreateModalLabel">공지사항 작성</h5>
                 <span class="custom-close" onclick="closeNoticeModal()">&times;</span>
             </div>
             <div class="custom-modal-body">
                 <div class="mb-3">
-                    <label for="noticeTitle" class="form-label">제목을 작성해 주세요</label>
-                    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" placeholder="제목 입력" required />
+                    <label for="noticeTitle" class="form-label2">제목을 작성해 주세요</label>
+                    <input type="text" class="form-control" id="noticeTitle" name="noticeTitle" style="margin-top:10px;" placeholder="제목 입력" required />
                 </div>
                 <div class="mb-3">
-                    <label for="noticeImage" class="form-label">이미지를 올려주세요</label>
-                    <p class="subtext">이미지가 없다면 기본 이미지가 제공됩니다!</p>
-                    <label class="upload-box" for="noticeImage">
+                    <label for="noticeImage" class="form-label2">이미지를 올려주세요</label>
+                    <label class="upload-box" for="noticeImage" style="margin-top:10px;">
                          사진 업로드
                          <input type="file" id="noticeImage" name="noticeImage" onchange="previewImages(event)" multiple />
                     </label>
@@ -223,12 +222,12 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <label class="form-label">공지 내용</label>
-                    <textarea id="noticeContent" name="noticeContent" class="notice-content" placeholder="여기를 누르고 공지를 등록하세요"></textarea>
+                    <label class="form-label2">공지 내용</label>
+                    <textarea id="noticeContent" name="noticeContent" class="form-control notice-content" placeholder="여기를 누르고 공지를 등록하세요"></textarea>
                 </div>
             </div>
             <div class="custom-modal-footer">
-                <button type="button" class="custom-btn" onclick="submitNotice()">등록하기</button>
+                <button type="button" class="custom-btn2" onclick="submitNotice()">등록하기</button>
             </div>
         </div>
     </div>
@@ -274,7 +273,7 @@
 <div id="voteNowModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">투표하기 </h3>
+      <h4 class="modal-title">투표 하기 </h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body2" id=vote_list>
@@ -289,16 +288,31 @@
 <div id="voteResultModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h3 class="modal-title">투표 현황</h3>
+      <h4 class="modal-title">투표 현황</h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
-    <div class="custom-modal-body2" id=vote_results>
+    <div class="custom-modal-body3" id=vote_results>
     </div>
     <div class="custom-modal-footer">
       <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
-</div><script>
+</div>
+<!-- 닉네임 리스트 모달 -->
+<div id="nicknameModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h4 class="modal-title">투표자 명단</h4>
+      <span class="custom-close" onclick="closeNicknameModal()">&times;</span>
+    </div>
+    <div class="custom-modal-body" id="nickname_list"></div>
+    <div class="custom-modal-footer">
+      <button class="handover-btn" onclick="closeNicknameModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
 var Authorization = localStorage.getItem("Authorization");
 const urlParams = new URLSearchParams(window.location.search);
 const create_crew_code = urlParams.get('create_crew_code');
@@ -445,7 +459,7 @@ clog('My user_code : '+ user_code);
               list += '</div> ';
               list += '</li> ';
           }
-          list += '<div class="join_info" onClick="" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
+          list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
           list += '<div class="overview_title">최신 공지</div>'
           list += '<div class="member_more">전체 보기</div>'
           list += '</div>';
@@ -532,8 +546,9 @@ clog('My user_code : '+ user_code);
     function go_mypage(usercode){
         window.location.href = '/mypage/myHome?usercode=' + usercode;
     }
-    function crewRevise(){
-        window.location.href = '/crew/crewRevise';
+    function crewRevise() {
+        // user_code와 create_crew_code 값을 URL에 추가하여 넘기기
+        window.location.href = '/crew/crewRevise?user_code=' + user_code + '&create_crew_code=' + create_crew_code;
     }
 
     function member_manage(element){
@@ -625,7 +640,12 @@ clog('My user_code : '+ user_code);
         document.getElementById('resignModal').style.display = 'none';
         document.getElementById('voteNowModal').style.display = 'none';
         document.getElementById('voteNowModal').style.display = 'none';
-        document.getElementById('voteResultModal').style.display = 'none';      }
+        document.getElementById('voteResultModal').style.display = 'none';
+      }
+      // 투표현황 모달 닫기
+      function closeNicknameModal() {
+          document.getElementById('nicknameModal').style.display = 'none';
+      }
 
       // 팀 탈퇴 모달 열기
       function openResignModal() {
@@ -661,6 +681,12 @@ clog('My user_code : '+ user_code);
       voteItem.remove(); // 해당 항목을 삭제
       votenum--;
       if(votenum<6)$('#addVoteBtn').show();
+    }
+
+    // 투표자 명단 모달 열기
+    function showVoterList(voters) {
+        document.getElementById('nicknameModal').style.display = 'block';
+        $('#nickname_list').html('<li>' + voters + '</li>');
     }
 
     function openVoteModal() {
@@ -712,69 +738,70 @@ clog('My user_code : '+ user_code);
     }
 
    // 투표하기 모달 열기
-    function voteNow(vote_num) {
-        document.getElementById('voteNowModal').style.display = 'block';
-        $('#vote_num').val(vote_num);
-        $.ajax({
-            url: '/crew/vote_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                vote_num         : vote_num
-            },
-            success: function(response) {
-                $('#vote_list').html('');
-                $('#vote_results').html('');
-                var list = '';
-                var list2 = '';
-                list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list += '<div class="vote-options">';
-                for (var i = 1; i < 6; i++) {
-                    var key = 'opt' + i;
-                    if (response[0][key] == '') break;
+function voteNow(vote_num) {
+    document.getElementById('voteNowModal').style.display = 'block';
+    $('#vote_num').val(vote_num);
+    $.ajax({
+        url: '/crew/vote_select',
+        type: 'post',
+        async: false,
+        data: {
+            Authorization    : Authorization,
+            create_crew_code : create_crew_code,
+            vote_num         : vote_num
+        },
+        success: function(response) {
+            $('#vote_list').html('');
+            $('#vote_results').html('');
+            var list = '';
+            var list2 = '';
+            list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+            list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+            list += '<div class="vote-options">';
 
-                    var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+            for (var i = 1; i < 6; i++) {
+                var key = 'opt' + i;
+                if (response[0][key] == '') break;
 
-                    list += '<label class="vote-option">';
-                    list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
-                    list += '    <span>' + response[0][key] + '</span>';
-                    list += '</label>';
-                }
-                list += '</div>';
-                $('#vote_list').html(list);
-                list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-                list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-                list2 += '<div class="vote-results">';
-                for (var i = 1; i < 6; i++) {
-                    var arr = ['a', 'a', 'b', 'c', 'd', 'e'];
-                    var key = 'opt' + i;
-                    var key2 = arr[i] + '_s';
-                    if (response[0][key] == '') break;
-                    if(response[0][key2]!==null){
-                        var arr_length = response[0][key2].split(',').length;
-                    }
-                    else var arr_length=0;
-                    response[0][key2] = response[0][key2]===null?'':response[0][key2];
-                    list2 += '      <div class="result-row">';
-                    list2 += '          <span>' + response[0][key] + '</span>';
-                    list2 += '          <span>' + response[0][key2] + '</span>';
-                    list2 += '          <span id="count-vote' + i + '" class="vote-count">' + arr_length + '명</span>';
-                    list2 += '      </div>';
-                    list2 += '      <div class="progress-bar">';
-                    list2 += '          <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
-                    list2 += '      </div>';
-                }
-                list2 += '</div>';
-                $('#vote_results').html(list2);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+                var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+
+                list += '<label class="vote-option">';
+                list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
+                list += '    <span>' + response[0][key] + '</span>';
+                list += '</label>';
             }
-        });
-    }
+            list += '</div>';
+            $('#vote_list').html(list);
+
+            list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+            list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+            list2 += '<div class="vote-results">';
+
+            for (var i = 1; i < 6; i++) {
+                var arr = ['a', 'b', 'c', 'd', 'e'];  // arr 배열은 여전히 0부터 시작
+                var key = 'opt' + i;
+                var key2 = arr[i - 1] + '_s';  // i가 1부터 시작하므로 i-1로 접근
+
+                if (response[0][key] == '') break;  // 옵션이 없는 경우 반복 종료
+                var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
+                var voters = response[0][key2] ? response[0][key2] : '';
+
+                list2 += '<div class="result-row" onclick="showVoterList(\'' + voters + '\')">';
+                list2 += '    <span>' + response[0][key] + '</span>';
+                list2 += '    <span>' + arr_length + '명</span>';
+                list2 += '</div>';
+                list2 += '<div class="progress-bar">';
+                list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+                list2 += '</div>';
+            }
+            list2 += '</div>';
+            $('#vote_results').html(list2);
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+}
 
     /*function vote_select(vote_num) {
         document.getElementById('voteNowModal').style.display = 'block';

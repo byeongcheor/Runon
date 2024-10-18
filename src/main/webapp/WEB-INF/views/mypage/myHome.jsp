@@ -139,7 +139,6 @@
     //마라톤 신청서 작성폼 전송
     function submitMarathonForm(){
         const formData = {
-
             name: document.getElementById("name").value,
             tel: document.getElementById("tel").value,
             addr: document.getElementById("addr").value,
@@ -157,8 +156,8 @@
             $.ajax({
                 url: "/mypage/createMarathonForm",
                 type: "post",
-
-                data: {usercode:usercode1,
+                data: {
+                    usercode:usercode1,
                     name: document.getElementById("name").value,
                     tel: document.getElementById("tel").value,
                     addr: document.getElementById("addr").value,
@@ -642,7 +641,7 @@
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input class="inputs" type="tel" id="tel" name="tel" maxlength="15" required />
+                    <input class="inputs" type="tel" id="tel" name="tel" maxlength="11" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
@@ -654,7 +653,7 @@
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="gender" name="gender" style="margin-bottom: 25px;" required>
+                    <select class="inputs" id="gender" name="gender" style="margin-bottom: 25px;" required>
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
@@ -709,7 +708,7 @@
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="rgender" name="gender" style="margin-bottom: 25px;" required >
+                    <select class="inputs" id="rgender" name="gender" style="margin-bottom: 25px;" required >
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>

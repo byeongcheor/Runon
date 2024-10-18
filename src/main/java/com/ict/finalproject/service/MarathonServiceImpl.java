@@ -60,7 +60,7 @@ public class MarathonServiceImpl implements MarathonService {
     @Override
     public List<MarathonListVO> filterMarathons(String year, String month, String addr, String search, PagingVO pvo, Integer  sort) {
         pvo.calculateOffset(); // offset 계산
-        pvo.setSort(sort); // sort 값을 PagingVO에 설정
+        pvo.setSort1(sort); // sort 값을 PagingVO에 설정
         return dao.selectFilteredMarathons(pvo); // PagingVO를 매개변수로 넘김
     }
     @Override

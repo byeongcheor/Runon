@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="/css/adminPages/sidebar.css" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="/js/adminPages/sidebar.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
 <div id="body">
     <div id="sidebar">
         <div id="testbar">
@@ -15,18 +17,19 @@
                     <a class="menus" href="/adminPages/memberlist">Members</a>
                 </div>
                 <div class="menubox"><a class="menus" href="/adminPages/adminlist">Admins</a></div>
-                <div onclick="report()" id="report" class="mouse menubox">
+                <div class="menubox"><a class="menus" href="/adminPages/ReportList">ReportList</a></div>
+             <%--   <div onclick="report()" id="report" class="mouse menubox">
                     <a class="menus" id="reportfont" >신고 관리</a>
 
                 </div>
-                <div class="submenu hidden">
-                    <div>&nbsp; &nbsp; ReportList</div>
+                <div class="submenu hidden" onclick="alink('/adminPages/ReportList')">
+                    <div>&nbsp; &nbsp; ReportList </div>
 
                 </div>
                 <div class="submenu hideen">
 
                     <div>&nbsp; &nbsp; 신고 처리</div>
-                </div>
+                </div>--%>
                 <div class="menubox"><a class="menus" href="">게시판관리</a></div>
                 <div class="menubox"><a class="menus" href="">기록인증</a></div>
                 <div class="menubox"><a class="menus" href="">결제정보</a></div>

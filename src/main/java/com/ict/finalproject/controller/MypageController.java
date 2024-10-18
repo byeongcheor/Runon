@@ -160,12 +160,25 @@ public class MypageController {
     @PostMapping("/mypage/viewOrder")
     @ResponseBody
     public Map<String, Object> orderList(@RequestParam("username")String username,
-                                         @RequestParam("usercode")int usercode){
-        List<OrderVO> list = service.selectOrderAll(usercode);
-        System.out.println(list);
+                                         @RequestParam("usercode")int usercode,
+                                         @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
-        System.out.println(result);
+        PagingVO pvo = new PagingVO();
+        int record = 2;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalOrder(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<OrderVO> list = service.selectOrderAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("list", list);
+        result.put("pvo", pvo);
         return result;
     }
     //마라톤신청서조회
@@ -190,6 +203,7 @@ public class MypageController {
     @PostMapping("/mypage/createMarathonForm")
     @ResponseBody
     public String createMarathonForm(
+            @RequestParam("usercode") int usercode,
             MarathonFormVO marathonVO){
         service.createMarathonForm(marathonVO);
         return "200";
@@ -255,13 +269,24 @@ public class MypageController {
     @PostMapping("/mypage/mymateList")
     @ResponseBody
     public Map<String, Object> mymateList(
-            @RequestParam("usercode") int usercode
+            @RequestParam("usercode") int usercode,
+            @RequestParam(value="page", defaultValue = "1") int page
     ){
-        System.out.println("메이트유저온다"+usercode);
-        List<MemberVO> membervo = service.selectMemberAll(usercode);
-        System.out.println(membervo);
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalMate(usercode);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<MemberVO> membervo = service.selectMemberAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("member", membervo);
+        result.put("pvo", pvo);
 
         return result;
     }
@@ -342,10 +367,26 @@ public class MypageController {
     //기록인증하기리스트페이지
     @PostMapping("/mypage/certificateList")
     @ResponseBody
-    public Map<String, Object> certificateList(@RequestParam("username")String username,@RequestParam("usercode")int usercode) {
-        List<CertificateVO> list = service.selectCertificateAll(username);
+    public Map<String, Object> certificateList(@RequestParam("username")String username,
+                                               @RequestParam("usercode")int usercode,
+                                               @RequestParam(value="page", defaultValue = "1") int page) {
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 5;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalCertificate(username);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<CertificateVO> list = service.selectCertificateAll(username, pvo.getOffset(), pvo.getOnePageRecord());
+        List<OrderVO> orderList = service.getOrderInfo(usercode);
+
         result.put("list", list);
+        result.put("orderList", orderList);
+        result.put("pvo", pvo);
         return result;
     }
     //기록인증하기
@@ -355,10 +396,14 @@ public class MypageController {
             @RequestParam("content") String content,
             @RequestParam("proof_photo") MultipartFile file,
             @RequestParam("username") String username,
+            @RequestParam("marathon_code") int marathon_code,
+            @RequestParam("usercode") int usercode,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
         try{
+            int order_code = service.getOrderCode(marathon_code, usercode);
+
             String saveDir = request.getServletContext().getRealPath("/resources/uploadCertificate/");
              File dir = new File(saveDir);
              if(!dir.exists()){
@@ -373,6 +418,7 @@ public class MypageController {
                  cvo.setContent(content);
                  cvo.setProof_photo(miliFilename);
                  cvo.setUsername(username);
+                 cvo.setOrder_code(order_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);
@@ -425,10 +471,26 @@ public class MypageController {
     @PostMapping("/mypage/myQnAList")
     @ResponseBody
     public Map<String, Object> myQnAList(@RequestParam("username")String username,
-                                      @RequestParam("usercode")int usercode){
-        List<QnAVO> list = service.selectQnAAll(usercode);
+                                      @RequestParam("usercode")int usercode,
+                                      @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
+
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalQnA(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<QnAVO> list = service.selectQnAAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("list", list);
+        result.put("pvo", pvo);
         return result;
     }
     //QnA작성

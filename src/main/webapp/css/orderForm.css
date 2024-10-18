@@ -1,0 +1,199 @@
+.cartFrm{
+    width: 1000px;
+    margin: 0px auto 0px;
+}
+.cartName{
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: flex-end;
+    margin-bottom:50px;
+    height:300px;
+}
+.cartName h1{
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(51, 51, 51);
+}
+.orderMain{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(102, 102, 102);
+}
+.oneline{
+    display: flex;
+}
+.orderM{
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    justify-content: start;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 54px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(51, 51, 51);
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+.orderM div:nth-of-type(1) {
+    width: 40%;
+
+}
+.orderM div:nth-of-type(1) input{
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+}
+.orderM div:nth-of-type(2) {
+    width: 10%;
+}
+.orderM div:nth-of-type(3) {
+    width: 25%;
+}
+.orderM div:nth-of-type(4) {
+    width:25%;
+}
+
+
+.ticket_order{
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    justify-content: start;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid rgb(102, 102, 102);
+}
+
+.ticket{
+
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    justify-content: start;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 17px 0px 17px 40px;
+}
+
+.marathonT{
+    width: 270px;
+    display: grid;
+    -webkit-box-pack: start;
+    justify-content: start;
+    -webkit-box-align: start;
+    align-items: start;
+    padding-left: 18px;
+}
+.marathonT span:nth-of-type(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    color: rgb(51, 51, 51);
+}
+.marathonT span:nth-of-type(2) {
+    width: 100%;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: left;
+    color: rgb(119, 119, 119);
+}
+
+
+
+.paymentC{
+
+    display: flex;
+    height: 150px;
+    margin: 0px auto;
+    padding: 0px 15px;
+    justify-content: right;
+    background-color: rgb(246, 246, 246);
+}
+.payD{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-right: 80px;
+}
+.payD li:not(:last-child) {
+    font-size: 16px;
+    color: rgb(102, 102, 102);
+}
+.payD li {
+    font-size: 22px;
+    text-align: left;
+    color: rgb(51, 51, 51);
+    font-weight: bold;
+}
+.payP{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.payP  li:not(:last-child) {
+    font-size: 16px;
+    color: rgb(102, 102, 102);
+}
+.payP li{
+    font-size: 22px;
+    font-weight: bold;
+    text-align: right;
+    color: rgb(51, 51, 51);
+}
+.orderC{
+    margin: 20px auto 140px;
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: end;
+    justify-content: end;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+
+.checkOrder button{
+    cursor: pointer;
+    width: 218px;
+    height: 50px;
+    border-radius: 6px;
+    background-color: #CCFF47;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    margin-left: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    border: none;
+    outline: none; /* 포커스 시 외곽선 제거 (선택 사항) */
+}
+.price{width: 250px;
+    margin: auto 0;
+    align-items: center;
+
+
+}
+.amount{ margin: auto 0;
+    align-items: center;
+
+}
+#hiddenbtn{
+    display: none;
+}

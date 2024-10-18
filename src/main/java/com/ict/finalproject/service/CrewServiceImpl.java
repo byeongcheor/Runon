@@ -44,6 +44,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> getCrewInfo(int create_crew_code)
+    {
+        return dao.getCrewInfo(create_crew_code);
+    }
+
+    @Override
     public List<CrewVO> crew_app_select(int crew_code)
     {
         return dao.crew_app_select(crew_code);
@@ -230,13 +236,10 @@ public class CrewServiceImpl implements CrewService{
     public int vote_insert(int user_code, int vote_num, String selectedOption) {
         return dao.vote_insert(user_code,vote_num, selectedOption);
     }
-
-
     /*채팅방 크루연결 */
     @Override
     public List<CrewVO> getCrewList() {
         return dao.getCrewList();
     }
-
 
 }

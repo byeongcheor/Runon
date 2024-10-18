@@ -3,19 +3,37 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.CartDAO">
-    <select id="usercodeSelect" resultType="int">
-        select usercode
-        from   user_tbl
-        where  username ='${param1}'
-    </select>
+
     <select id="getCartItemsByUserCode" resultType="com.ict.finalproject.vo.CartVO">
-        SELECT *
-        FROM cart_tbl
-        WHERE usercode = #{param1}
+        SELECT c.*, m.marathon_name as marathon_name, m.poster_img as poster_img
+        FROM cart_tbl c
+        JOIN marathon_list_tbl m ON c.marathon_code = m.marathon_code
+        WHERE c.usercode = #{param1} and c.is_deleted=0
     </select>
     <select id="userselect" resultType="com.ict.finalproject.vo.CartVO">
         select *
         from   user_tbl
         where  usercode =${param1}
     </select>
+    <update id="updatecart">
+        UPDATE cart_tbl
+        SET quantity =
+        <if test="action == 'add'">
+            quantity + 1
+        </if>
+        <if test="action == 'remove'">
+            CASE
+            WHEN quantity > 1 THEN quantity - 1
+            ELSE quantity
+            END
+        </if>
+        WHERE cart_code = #{param2}
+    </update>
+    <update id="deletedcart">
+        update cart_tbl set is_deleted=1 , deleted_date =now()
+        WHERE cart_code IN
+        <foreach item="item" collection="items" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

@@ -24,22 +24,6 @@ function report(){
         }
     });
 }
-// window.onload=function(){
-//     console.log(testtoken);
-//     $.ajax({
-//         url:"/adminPages/adminCheck",
-//         type:"post",
-//         data:{
-//             token:testtoken
-//         },
-//         success:function(r){
-//             var role=r.role;
-//
-//             if(role !="ADMIN"){
-//                 window.location.href="/";
-//             }
-//         }
-//     });
-//
-//
-// }
+function alink(url){
+    window.location.href=url;
+}

@@ -24,6 +24,9 @@
     flex-direction: column;
     border-top: 1px solid rgb(102, 102, 102);
 }
+.oneline{
+    display: flex;
+}
 .cartM{
     display: flex;
     flex-direction: row;
@@ -73,7 +76,7 @@
 }
 .tipoff{
     width: 100%;
-    display: flex;
+
     border-top: 1px solid rgb(230, 230, 230);
 }
 .tipoff2{
@@ -93,7 +96,7 @@
     border-radius: 4px;
 }
 .ticket{
-    width: 450px;
+
     display: flex;
     flex-direction: row;
     -webkit-box-pack: start;
@@ -111,7 +114,7 @@
     background-position: center center;
 }
 .marathonT{
-    width: 298px;
+    width: 270px;
     display: grid;
     -webkit-box-pack: start;
     justify-content: start;
@@ -136,7 +139,7 @@
     color: rgb(119, 119, 119);
 }
 .marathonC{
-    width: 100%;
+
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -482,3 +485,13 @@
            font-weight:bold;
 }
 
+.price{width: 250px;
+    margin: auto 0;
+    align-items: center;
+
+
+}
+.amount{ margin: auto 0;
+    align-items: center;
+
+}

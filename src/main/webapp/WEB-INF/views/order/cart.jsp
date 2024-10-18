@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" href="/css/cart.css" type="text/css">
+<<<<<<< HEAD
 <%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 <script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
@@ -349,6 +350,9 @@
 
 </script>
 
+=======
+<script src="/js/cart.js" type="text/javascript"></script>
+>>>>>>> 3e93938e76160ab071c52743fcb1725e3a572d94
 
 <div class="cartFrm">
     <div class="cartName">
@@ -361,11 +365,12 @@
             </div>
             <div>상품정보</div>
             <div>수량</div>
-            <div>포인트사용</div>
+            <div>상품단가</div>
             <div>상품금액</div>
             <div></div>
         </div>
 
+<<<<<<< HEAD
         <div class="ticket_cart">
             <div class="tipoff">
                 <input type="hidden" id="productId" name="productId" value="">
@@ -426,6 +431,9 @@
                     </div>
                 </div>
             </div>
+=======
+        <div id="ticket_cart" class="ticket_cart">
+>>>>>>> 3e93938e76160ab071c52743fcb1725e3a572d94
 
         </div>
     </div>
@@ -435,21 +443,27 @@
     <div class="paymentC">
         <ul class="payD">
             <li>상품 금액</li>
-            <li>할인금액</li>
-            <li>총 주문 금액</li>
+            <li>총 주문 금액 </li>
         </ul>
+<<<<<<< HEAD
         <ul class="payP">
             <li id="productTotal">0원</li>
             <li id="discountAmount">0원</li>
             <li id="totalAmount">0원</li>
+=======
+        <ul class="payP" id="totalAmountDisplay">
+            <li id="amount">00원</li>
+            <li id="totalAmounts">00원</li>
+>>>>>>> 3e93938e76160ab071c52743fcb1725e3a572d94
         </ul>
+
     </div>
     <div class="orderC">
         <div class="shoppingC">
-            <a href="/order/cart"><span>쇼핑 계속하기</span></a>
+            <a href="/order/cart"><span>돌아가기</span></a>
         </div>
         <div class="checkOrder">
-            <button class="button" id="orderButton">선택 상품 주문하기</button>
+            <button class="button" id="orderButton" onclick="goOrder()">선택 상품 주문하기</button>
         </div>
     </div>
 

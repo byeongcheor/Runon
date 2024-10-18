@@ -58,7 +58,6 @@ public class CrewController {
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
         model.addAttribute("chatList", chatList);  // 추가: chatList를 모델에 추가
-
         return "crew/crewList";
     }
 
@@ -573,6 +572,25 @@ public class CrewController {
         return a;
     }
 
+    ////////////크루정보수정/////////////////////////////////////////////////////////////
+    @PostMapping("/getCrewInfo")
+    @ResponseBody
+    public List<CrewVO> getCrewInfo(@RequestParam("Authorization")String token,@RequestParam("create_crew_code") int create_crew_code) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        List<CrewVO> getCrewInfo = null;
+        try {
+            getCrewInfo = service.getCrewInfo(create_crew_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("getCrewInfo-->>"+getCrewInfo);
+        return getCrewInfo;
+    }
+
+    ////////////크루정보 업데이트/////////////////////////////////////////////////////////////
 
 
 }
+

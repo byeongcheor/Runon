@@ -191,29 +191,29 @@ public class MarathonController {
             PagingVO pvo) {
 
 
-            // PagingVO에 필터링된 값 설정
-            pvo.setYear(year);
-            pvo.setMonth(month);
-            pvo.setRegion(addr);
-            pvo.setSearch(search); // search 값 설정
-            pvo.setSort(sort);
+        // PagingVO에 필터링된 값 설정
+        pvo.setYear(year);
+        pvo.setMonth(month);
+        pvo.setRegion(addr);
+        pvo.setSearch(search); // search 값 설정
+        pvo.setSort1(sort);
 
-            // 페이지 번호와 레코드 수 설정
-            pvo.setNowPage(1); // 기본적으로 첫 페이지로 설정, 필요 시 변경 가능
-            pvo.calculateOffset(); // 오프셋 계산
+        // 페이지 번호와 레코드 수 설정
+        pvo.setNowPage(1); // 기본적으로 첫 페이지로 설정, 필요 시 변경 가능
+        pvo.calculateOffset(); // 오프셋 계산
 
-            // 입력값 로그 출력 (디버깅 용)
-            log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort);
+        // 입력값 로그 출력 (디버깅 용)
+        log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort);
 
-            // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
-            int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
-            pvo.setTotalRecord(totalRecord);
+        // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
+        int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
+        pvo.setTotalRecord(totalRecord);
 
-            List<MarathonListVO> filteredMarathons = service.filterMarathons(year, month, addr, search, pvo, sort);
-            // 결과를 저장할 Map을 초기화합니다.
-            Map<String, Object> result = new HashMap<>();
-            result.put("totalRecord", totalRecord);
-            result.put("filteredMarathons", filteredMarathons);
+        List<MarathonListVO> filteredMarathons = service.filterMarathons(year, month, addr, search, pvo, sort);
+        // 결과를 저장할 Map을 초기화합니다.
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalRecord", totalRecord);
+        result.put("filteredMarathons", filteredMarathons);
 
 
         return result; // 필터링된 마라톤 목록과 총 레코드 수 반환

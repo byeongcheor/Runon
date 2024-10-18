@@ -170,7 +170,7 @@
         });
     });
 
-///필터 검색
+    ///필터 검색
 
     $(document).ready(function() {
         $('#mSearch-button').on('click', function() {
