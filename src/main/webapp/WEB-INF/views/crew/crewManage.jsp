@@ -326,7 +326,7 @@
       $('#vote_delete').hide();
       $('#vote_delete2').hide();
    }
-   if (position != 2) {
+   if (position > 2) {
       $('#voteMake').hide();
       $('#noticeMake').hide();
       $('#vote_update').hide();
@@ -494,7 +494,7 @@
          list += '     <div class="info-wrapper"> ';
          list += '      <p class="name">' + response[i].b_s + '</p> ';
          if (response[i].a_n == 1) {
-            list += '      <div class="label-operator">크루장</div> ';
+            list += '      <div class="label-operator" style="background-color: #e8f7ff; color: #1570ff;  font-weight: 800;">크루장</div> ';
          }
          if (response[i].a_n == 2) {
             list += '      <div class="label-operator">운영진</div> ';
@@ -1222,9 +1222,9 @@ function crew_manage_handover(element) {
             var list = '';
 
             if (id == 'handoverCrewBtn') {
-                // response에서 user_code와 동일한 user는 제외 (문자열로 변환하여 비교)
+                // user_code와 동일한 user를 제외하고 position이 2인 사용자만 필터링
                 var filteredResponse = response.filter(function(item) {
-                    return String(item.usercode).trim() !== String(user_code).trim(); // 문자열로 변환 후 비교
+                    return String(item.usercode).trim() !== String(user_code).trim() && item.a_n == 2; // usercode 다르고 position이 2인 경우만
                 });
 
                 // 필터링된 결과가 없을 경우 처리
@@ -1254,8 +1254,7 @@ function crew_manage_handover(element) {
     });
 }
 
-
-function go_crew_detail(){
+function go_crew_detail() {
     $.ajax({
         url: '/crew/go_crewDetail',  // 서버에 전송할 URL
         type: 'POST',  // POST 방식으로 전송
@@ -1264,13 +1263,7 @@ function go_crew_detail(){
             create_crew_code: create_crew_code  // 전송할 데이터
         },
         success: function(response) {
-            // 서버로부터 리다이렉션할 URL과 함께 데이터를 받음
-            var redirectUrl = response.redirectUrl;
-            var createCrewCode = response.create_crew_code;
-            var crew_write_code = response.crew_write_code;
-            clog(redirectUrl);
-            // 받은 데이터를 URL에 쿼리 파라미터로 추가하여 리다이렉션
-            window.location.href = redirectUrl + "?create_crew_code=" + createCrewCode+'&crew_write_code='+crew_write_code;
+            window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
         },
         error: function(error) {
             console.log('에러 발생:', error);

@@ -1,312 +1,80 @@
-  /* 첫 번째 모달 크기 10% 키움 */
-    #crewCreateModal .modal-content {
-        transform: scale(1.1); /* 전체적으로 10% 키움 */
-    }
-
-    /* 두 번째 모달 크기 5% 키움 */
-    #locationModal .modal-content {
-        transform: scale(1.05); /* 전체적으로 5% 키움 */
-    }
-
-    .modal-content {
-        padding: 20px;
-        border-radius: 12px;
-    }
-
-    .modal-header {
-        border-bottom: none;
-    }
-
-    .modal-title {
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .form-label {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-
-    .form-control {
-        border-radius: 12px;
-        height: 50px;
-        background-color: #F7F7F7;
-        font-size: 16px;
-    }
-
-    .upload-box {
-        background-color: #F7F7F7;
-        border-radius: 12px;
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        font-size: 16px;
-        color: #6c757d;
-        border: 1px solid #ced4da;
-        position: relative;
-    }
-
-    .upload-box input[type="file"] {
-        display: none;
-    }
-
-    #previewContainer {
-        position: relative;
-        display: none; /* 초기 상태에서는 미리보기 이미지를 숨김 */
-    }
-
-     #imagePreview {
-         width: 100%;
-         height: 200px; /* 높이를 400px로 고정 */
-         object-fit: cover; /* 이미지를 박스에 맞게 자름 */
-         border-radius: 12px;
-         margin-top: 10px;
-         object-fit: cover; /* 이미지가 지정된 크기에 맞춰 자름 */
-     }
-
-     .delete-btn {
-         position: absolute;
-         top: 10px;
-         right: 10px;
-         background-color: rgba(255, 255, 255, 0.7);
-         border: none;
-         padding: 5px 10px;
-         border-radius: 5px;
-         cursor: pointer;
-     }
-
-     .delete-btn:hover {
-         background-color: rgba(255, 255, 255, 1);
-     }
-
-    /* '다음' 및 '등록하기', '뒤로' 버튼 스타일 (연두색 적용) */
-    .custom-btn {
-        width: 100%;
-        height: 50px;
-        border-radius: 12px;
-        font-size: 18px;
-        background-color: #D1FF33;
-        border: none;
-        color: black;
-    }
-
-    .custom-btn:hover {
-        background-color: #b8e629;
-    }
-
-    .btn-back, .btn-submit {
-        width: 48%;
-        height: 50px;
-        font-size: 18px;
-        border-radius: 12px;
-        background-color: #D1FF33;
-        border: none;
-        color: black;
-    }
-
-    .btn-back:hover, .btn-submit:hover {
-        background-color: #b8e629;
-    }
-
-    /* 주요 나이대 및 성별 선택 테두리 스타일 (연두색) */
-    .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: space-between;
-    }
-
-    .checkbox-group label {
-        padding: 10px 20px;
-        background-color: #F7F7F7;
-        border: 2px solid transparent;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: border-color 0.2s ease;
-        width: 30%;
-        text-align: center;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-        display: none;
-    }
-
-    .checkbox-group input[type="checkbox"]:checked + label {
-        border-color: #D1FF33;
-    }
-
-    /* 성별 라디오 스타일 (중복 선택 불가) */
-    .radio-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;  /* 간격 추가 */
-        justify-content: space-between;  /* 요소 간의 공간을 균등하게 분배 */
-    }
-
-    .radio-group label {
-        padding: 10px 20px;
-        background-color: #F7F7F7;
-        border: 2px solid transparent;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: border-color 0.2s ease;
-        width: 30%;  /* 각 요소 너비 30%로 설정 */
-        text-align: center;
-    }
-
-    .radio-group input[type="radio"] {
-        display: none;
-    }
-
-    .radio-group input[type="radio"]:checked + label {
-        border-color: #D1FF33;
-        background-color: #E0FFE6;  /* 선택된 경우 배경색 변경 (필요시 수정 가능) */
-    }
-
-    .team-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .team-info img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .team-info h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .btn-group {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 30px;
-    }
-
-    .btn-group button {
-        flex: 1;
-        margin: 0 5px;
-    }
-
-    .btn-close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-    }
-
-    .team-intro {
-        width: 100%;
-        height: 100px;
-        margin-top: 20px;
-        border-radius: 12px;
-        padding: 10px;
-        background-color: #F7F7F7;
-        font-size: 16px;
-        border: 1px solid #ced4da;
-    }
-/* 옵션 버튼 스타일 */
-.option-btn {
+#bannerBox{
+    width:100%;
+    height:400px;
+    margin: 0 auto;
+}
+#bannerImg{
     width: 100%;
-    height: 50px;
-    border-radius: 12px;
-    font-size: 18px;
-    background-color: #F7F7F7;
-    border: 1px solid #ced4da;
-    color: #6c757d;
-    margin-bottom: 15px;
-    transition: background-color 0.3s, color 0.3s;
+    height: 100%;
+    object-fit: cover;
 }
-
-.option-btn:hover {
-    background-color: #D1FF33;
-    color: black;
+body{
+    background-color: #F8FAFB;
 }
-/* 다음 버튼 스타일 */
-.custom-btn {
+#bannerBox{
+    width:100%;
+    height:200px;
+    margin: 0 auto;
+}
+#bannerImg{
     width: 100%;
-    height: 50px;
-    border-radius: 12px;
-    font-size: 18px;
-    background-color: #D1FF33;
-    border: none;
-    color: black;
-    margin-top: 35px; /* 버튼 위에 20px 마진 추가 */
+    height: 100%;
+    object-fit: cover;
 }
 
-.custom-btn:hover {
-    background-color: #b8e629;
+.content_body{
+    display: flex;
+    flex-direction: row;
+    max-width: 1050px;
+    margin: 0 auto;
+    hight:100%;
+}
+.content_left{
+    position: relative;
+    width: 50%;
+    margin-right: 20px;
+    background-color: white;
+    margin-top: 20px;
+     border-radius: 10px; /* 테두리를 둥글게 설정 */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+}
+.content_right {
+   margin:20px 0;
+   width: 100%;
+   height: 100%; /* 높이를 내용에 맞춰 자동 조정 */
+   padding: 20px;
+   overflow: hidden; /* 내용이 넘치지 않도록 설정 */
+   background-color: white; /* 배경색을 흰색으로 설정 */
+   border-radius: 10px; /* 테두리를 둥글게 설정 */
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
 }
 
-.checkbox-group label, .radio-group label {
-    padding: 10px 20px;
-    background-color: #F7F7F7;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: border-color 0.2s ease;
-    text-align: center;
+.section1 {
+    background-color: white;
+    min-height: 350px; /* 최소 높이 설정, 내용에 따라 확장 가능 */
+    background-color: white;
+    overflow: hidden; /* 내용이 넘치지 않도록 설정 */
 }
 
-.checkbox-group input[type="checkbox"]:checked + label, .radio-group input[type="radio"]:checked + label {
-    border-color: #D1FF33;
-    background-color: #E0FFE6;
- }
- .checkbox-group {
-     margin-bottom: 30px; /* 주요 나이대와 성별 사이 간격 추가 */
- }
-
- /* 나이(중복 가능) 텍스트 위에 빈 공간 추가 */
- #thirdModal h5.form-label {
-     margin-top: 30px; /* 원하는 만큼의 공간을 설정 */
- }
-.common-btn {
-    background-color: #ccff33;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100px;
-    margin: 5px;
+.profile_container{
+    margin-top:31px;
+    margin-left:30px;
+    display: flex;
+    flex-direction: row;
 }
 
-.common-btn:hover {
-    background-color: #b2ebf2; /* 호버 시 색상 변경 */
-}
-/* 팀 리스트 스타일 */
-.team-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.team-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+.team-header {
+    display: flex;
+    margin-left:3px;
 }
 
 .team-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
 }
 
-<<<<<<< HEAD
 
 
 .emblem-wrapper {
@@ -564,23 +332,5 @@ modal-title {
     line-height: 120%;
     color: #727f88;
     margin-top:20px;
-=======
-.teamemblem {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
-}
-
-.team-name {
-  font-size: 20px;
-  color: #000;
-  margin-bottom:5px;
-}
-.custom-modal-width {
-  max-width: 400px; /* 모달 너비를 500px로 줄임 (조정 가능) */
-  width: 90%; /* 반응형으로 화면 크기에 맞게 너비가 변동될 수 있도록 설정 */
->>>>>>> b7829a040f05132bcab84ea98334e15ee3d96007
 }
 
