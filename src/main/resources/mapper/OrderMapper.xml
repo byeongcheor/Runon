@@ -38,6 +38,17 @@
         FROM order_tbl
         )
     </select>
+    <update id="updateOrder" parameterType="com.ict.finalproject.vo.CartVO">
+        UPDATE order_tbl
+        SET total_amount = (#{price} * #{quantity}),
+        quantity = #{quantity},
+        price = #{price},
+        marathon_code = #{marathon_code}
+        WHERE cart_code = #{cart_code}
+        AND usercode = #{usercode}
+    </update>
+
+
     <select id="getMyPoint" resultType="com.ict.finalproject.vo.PointVO">
         SELECT
         p.point_code as point_code,
@@ -51,6 +62,9 @@
         point_change_tbl pc ON p.point_code = pc.point_code
         WHERE
         p.usercode = #{usercode}
+    </select>
+    <select id="selectMyForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
+        select * from marathon_form_tbl where usercode =#{param1}
     </select>
 
 

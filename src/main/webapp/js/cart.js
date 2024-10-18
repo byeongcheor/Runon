@@ -233,6 +233,7 @@ function goOrder(){
     form.method = 'POST';
     form.action = '/order/orderForm'; // 이동할 페이지
 
+
     selectedItems.forEach(item => {
         let input = document.createElement('input');
         input.type = 'hidden';
@@ -240,6 +241,11 @@ function goOrder(){
         input.value = item;
         form.appendChild(input);
     });
+    let usercodeInput = document.createElement('input');
+    usercodeInput.type = 'hidden';
+    usercodeInput.name = 'usercode';  // 서버에서 usercode로 처리
+    usercodeInput.value = usercode1;   // usercode 값을 여기서 가져옴
+    form.appendChild(usercodeInput);
 
     document.body.appendChild(form);
     form.submit();  // 폼 전송

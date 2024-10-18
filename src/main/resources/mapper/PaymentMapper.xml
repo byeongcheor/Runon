@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.PaymentDAO">
+    <select id="selectPayment">
+        select count(payment_code) from payment_tbl where usercode=#{usercode} and is_completed=0
+    </select>
+    <insert id="createPayment">
+        insert into payment_tbl (usercode,total_amount) values(#{usercode},#{total_amount})
+    </insert>
+    <update id="updatePayment">
+        update payment_tbl set total_amount=#{total_amount} where usercode=#{usercode} and is_completed=0
+    </update>
+    <select id="selectOrdercode" >
+        SELECT order_code ,total_amount
+        FROM order_tbl
+        WHERE cart_code IN
+        <foreach item="cart_code" collection="cart_codes" open="(" separator="," close=")">
+            #{cart_code}
+        </foreach>
+        and usercode=#{param2}
+    </select>
+    <select id="selectPaymentCode">
+        select payment_code from payment_tbl where usercode=#{param1} and is_completed=0
+    </select>
+    <select id="selectDetails" parameterType="java.util.List" resultType="PaymentdetailVO">
+        SELECT order_code, total_amount, payment_code, orderId
+        FROM payment_detail_tbl
+        WHERE is_deleted=0 and
+        <foreach item="paymentDetail" collection="list" separator=" OR ">
+             (order_code = #{paymentDetail.order_code}
+            AND payment_code = #{paymentDetail.payment_code}
+            )
+        </foreach>
+    </select>
+
+    <insert id="insertPaymentDetails" parameterType="java.util.List">
+        INSERT INTO payment_detail_tbl (order_code, total_amount, payment_code, orderId)
+        VALUES
+        <foreach item="newDetails" collection="list" separator=",">
+            (#{newDetails.order_code}, #{newDetails.total_amount}, #{newDetails.payment_code}, #{newDetails.orderId})
+        </foreach>
+    </insert>
+    <update id="updateToDeleted" parameterType="java.util.List">
+        UPDATE payment_detail_tbl
+        SET is_deleted = 1,deleted_date=now()
+        WHERE status=0 and
+        <foreach item="paymentDetail" collection="list" separator=" OR ">
+            (order_code = #{paymentDetail.order_code}
+            AND payment_code = #{paymentDetail.payment_code}
+            AND orderId = #{paymentDetail.orderId})
+        </foreach>
+    </update>
+
+</mapper>
