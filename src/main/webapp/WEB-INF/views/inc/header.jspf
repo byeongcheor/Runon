@@ -105,7 +105,7 @@ function crew() {
                     <li><a class="menus" href="/mate/mate">MATE</a></li>
                     <li><a class="menus" href="/crew/crewList">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
-                    <li><a class="menus" href="/order/cart">CART</a></li>
+                    <li><a class="menus" href="/cart/cart">CART</a></li>
 <%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>
                     <li><a onclick="mypage()">MY</a></li>
                     <li id="login"><a onclick="openLoginPopup()">login</a></li>
