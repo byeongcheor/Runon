@@ -11,5 +11,6 @@ public interface PaymentService {
     public int createPayment(PaymentVO pvo);
 
     public int setPayment(PaymentdetailVO PDvo, int usercode, List<Integer> cart_codes);
+    public int orderSuccess(String method,int usercode,String orderId,int realAmount);
 
 }

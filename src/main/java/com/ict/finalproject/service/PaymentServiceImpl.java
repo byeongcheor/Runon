@@ -105,4 +105,19 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return 1;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int orderSuccess(String method, int usercode, String orderId, int realAmount) {
+        int details=dao.updateDetails(orderId,usercode);
+        System.out.println(details);
+        if (details==1){
+            int payment=dao.updatepayment(realAmount,usercode,method);
+            List<Integer> cart_code=dao.selectCartCode(usercode);
+            int order=dao.updateOrder(usercode);
+
+        }
+
+        return 0;
+    }
 }

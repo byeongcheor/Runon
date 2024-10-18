@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<link rel="stylesheet" href="/css/success.css" type="text/css">
+<script src="/js/success.js" type="text/javascript"></script>
 <div class="box_section" style="width: 600px">
     <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
     <h2>결제를 완료했어요</h2>
@@ -28,48 +29,3 @@
     <div id="response" style="white-space: initial"></div>
 </div>
 
-<script>
-    // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
-    // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
-    const urlParams = new URLSearchParams(window.location.search);
-
-    // 서버로 결제 승인에 필요한 결제 정보를 보내세요.
-    async function confirm() {
-        var requestData = {
-            paymentKey: urlParams.get("paymentKey"),
-            orderId: urlParams.get("orderId"),
-            amount: urlParams.get("amount"),
-        };
-
-        const response = await fetch("/confirm", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
-
-        const json = await response.json();
-
-        if (!response.ok) {
-            // TODO: 결제 실패 비즈니스 로직을 구현하세요.
-            console.log(json);
-            window.location.href = `/fail?message=${json.message}&code=${json.code}`;
-        }
-
-        // TODO: 결제 성공 비즈니스 로직을 구현하세요.
-        // console.log(json);
-        return json;
-    }
-    confirm().then(function (data) {
-        document.getElementById("response").innerHTML = `<pre>${JSON.stringify(data, null, 4)}</pre>`;
-    });
-
-    const paymentKeyElement = document.getElementById("paymentKey");
-    const orderIdElement = document.getElementById("orderId");
-    const amountElement = document.getElementById("amount");
-
-    orderIdElement.textContent = urlParams.get("orderId");
-    amountElement.textContent = urlParams.get("amount") + "원";
-    paymentKeyElement.textContent = urlParams.get("paymentKey");
-</script>

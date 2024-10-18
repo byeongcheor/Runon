@@ -46,4 +46,21 @@ public class PaymentController {
         return "order/success";
     }
 */
+
+    @PostMapping("/payment/saveOrder")
+    public Map<String, Object> saveOrder(@RequestBody Map<String, Object> requestData) {
+        String orderId = (String) requestData.get("orderId");
+        int usercode = (int) requestData.get("usercode");
+        int totalAmount = (int) requestData.get("total_Amount");
+        String method = (String) requestData.get("method");
+        System.out.println("결제방식"+method);
+        System.out.println("유저코드"+usercode);
+        System.out.println("주문번호"+orderId);
+        System.out.println("결제금액"+totalAmount);
+        service.orderSuccess(method,usercode,orderId,totalAmount);
+
+        Map<String, Object> map = new HashMap<>();
+        return map;
+
+    }
 }

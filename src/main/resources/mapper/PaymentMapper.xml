@@ -52,5 +52,27 @@
             AND orderId = #{paymentDetail.orderId})
         </foreach>
     </update>
+    <update id="updateDetails">
+        UPDATE payment_detail_tbl pd
+        JOIN payment_tbl p ON pd.payment_code = p.payment_code
+        SET pd.status = 1
+        WHERE pd.orderId = #{param1}
+        AND p.usercode = #{param2}
+        AND p.is_completed = 0;
+
+    </update>
+    <select id="selectCartCode">
+        select cart_code from order_tbl where usercode=#{param1} and order_status=0
+    </select>
+    <update id="updatepayment">
+        update payment_tbl set is_completed=1 ,completed_date=now(),real_amount=#{param1},
+        payment_method=#{param3} ,discount_amount=total_amount-#{param3}
+        where usercode=#{param2}
+        and is_completed=0
+    </update>
+    <update id="updateOrder">
+        update order_tbl set order_status=1 where usercode=#{usercode} and is_deleted=0
+    </update>
+
 
 </mapper>

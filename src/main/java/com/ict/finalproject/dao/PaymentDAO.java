@@ -19,4 +19,10 @@ public interface PaymentDAO {
     public List<PaymentdetailVO> selectDetails(List<PaymentdetailVO> paymentDetails);
     public int updateToDeleted (List<PaymentdetailVO> toDeleteDetails);
     public int insertPaymentDetails(List<PaymentdetailVO> newDetails);
+
+    public int updateDetails(String orderId,int usercode);
+    public int updatepayment(int realAmount,int usercode,String method);
+    public int updateOrder(int usercode);
+    public List<Integer>selectCartCode(int usercode);
+
 }
