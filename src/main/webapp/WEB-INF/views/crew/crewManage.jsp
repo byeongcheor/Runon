@@ -35,6 +35,9 @@
                       <img src="/img/more.png" style="width: 14px; height: 14px;">
                     </button>
                 </div>
+                <div>
+                    <button type="button" class="editCrewBtn" id="go_join" onclick="go_crew_detail()">회원가입 신청하기</button>
+                </div>
                 <div class="statis">
 
                 </div>
@@ -274,6 +277,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" style="font-size:14px;" id=vote_update onclick="vote_rud('R')">수정</button>
+      <button class="btn btn-primary" style="font-size:14px;" id=vote_delete onclick="vote_rud('D')">삭제하기</button>
       <button class="btn btn-primary" style="font-size:14px;" onclick="submitVoteNow()">투표하기</button>
       <button class="btn btn-light" style="font-size:14px;" onclick="closeCustomModal()">취소</button>
     </div>
@@ -283,13 +287,14 @@
 <div id="voteResultModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h4 class="modal-title">투표 현황</h4>
+      <h4 class="modal-title" id=vote_live></h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body3" id=vote_results>
     </div>
     <div class="custom-modal-footer">
-      <button class="handover-btn" id=vote_delete onclick="vote_rud('D')">삭제</button>
+      <button class="handover-btn" id=vote_update2 onclick="vote_rud('R')">수정</button>
+      <button class="handover-btn" id=vote_delete2 onclick="vote_rud('D')">삭제</button>
       <button class="handover-btn" onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
@@ -316,53 +321,68 @@
    const position = urlParams.get('position');
    var votenum = 4;
 
-   if (position > 1) {
+   if (position != 1) {
       $('#editCrewBtn').hide();
       $('#vote_delete').hide();
+      $('#vote_delete2').hide();
    }
-   if (position > 2) {
+   if (position != 2) {
       $('#voteMake').hide();
       $('#noticeMake').hide();
+      $('#vote_update').hide();
+      $('#vote_update2').hide();
    }
 
    clog('My position : ' + position);
    clog('My user_code : ' + user_code);
 
    $(document).ready(function() {
+      $('#go_join').hide();
       $('#member').css('color', 'black');
       crew_deatil_select();
       crew_manage_select('');
       if (position != 1) {
          $('#wait_cnt').hide();
       }
+      if(position==0)$('#go_join').show();
+     if(position==0){
+         $('#editCrewBtn').hide();
+         $('#resignCrew').hide();
+         $('#notice').css('pointer-events', 'none');
+         $('#member').css('pointer-events', 'none');
+         $('.join_info').css('pointer-events', 'none');
+         $('#chatButton').hide();
+     }
+
    });
 
   function crew_deatil_select() {
-     $.ajax({
-        url: '/crew/crew_deatil_select',
-        type: 'post',
-        async: false,
-        data: {
-           Authorization: Authorization,
-           create_crew_code: create_crew_code
-        },
-        success: function(response) {
-         $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
-           $('#crew_name').text(response[0].crew_name);
-           $('#teamNameDisplay').text(response[0].crew_name);
-           $('#addr').text(response[0].addr);
-           $('#addr2').text(response[0].addr);
-           $('#crew_info').text(response[0].a_s);
-           $('#member_cnt').text(response[0].d_n + '명');
-           $('#create_date').text(response[0].c_s);
-           $('#member_age_avg').text(response[0].e_n + '세');
-             $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
-        },
-        error: function(e) {
-           console.error('Error: ', e);
-        }
-     });
-  }
+       $.ajax({
+          url: '/crew/crew_deatil_select',
+          type: 'post',
+          async: false,
+          data: {
+             Authorization: Authorization,
+             create_crew_code: create_crew_code
+          },
+          success: function(response) {
+              $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
+              $('#crew_name').text(response[0].crew_name);
+              $('#teamNameDisplay').text(response[0].crew_name);
+              $('#crew_ranking').text(response[0].rank + '위  ( ' + response[0].total_score + 'Km )');
+              $('#addr').text(response[0].addr);
+              $('#addr2').text(response[0].addr);
+              $('#crew_info').text(response[0].a_s);
+              $('#member_cnt').text(response[0].d_n + '명');
+              $('#create_date').text(response[0].c_s);
+              $('#member_age_avg').text(response[0].e_n + '세');
+              $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
+          },
+          error: function(e) {
+             console.error('Error: ', e);
+          }
+       });
+    }
 
    function vote_rud(flag) {
       $.ajax({
@@ -384,30 +404,31 @@
          },
          success: function(response) {
             if(flag=='R'){
+                clog(response[0].a_n);
+                if(response[0].a_n>0){
+                    alert('투표한 인원이 있어서 수정이 불가능합니다.');
+                    return false;
+                }
                 $('#voteTitle').val(response[0].subject);
                 $('#voteDeadline').val(response[0].enddate);
                 $('#vote1').val(response[0].opt1);
                 $('#vote2').val(response[0].opt2);
                 $('#vote3').val(response[0].opt3);
-                if(response[0].opt4!=''){
+                if(response[0].opt4!='' && votenum<5){
                     addVoteItem();
                     $('#vote4').val(response[0].opt4);
                 }
-                if(response[0].opt5!=''){
+                if(response[0].opt5!=''&& votenum<6){
                     addVoteItem();
                     $('#vote5').val(response[0].opt5);
                 }
                 openVoteModal(flag);
             }
             if(flag=='U'){
-                if(response[0].a_s=='1'){
-                    alert('투표한 인원이 있어서 수정이 불가능합니다.');
-                    return false;
-                }
-                else if(response[0].a_s=='0') {
-                    alert('수정되었습니다.');
-                    $('#notice').click();
-                }
+                alert('수정되었습니다.');
+                closeVoteModal();
+                closeCustomModal();
+                $('#notice').click();
             }
             if(flag=='D'){
                 closeCustomModal()
@@ -461,10 +482,9 @@
          list += '   <span id="wait_cnt">';
          list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
          list += '   </span>';
-         list += '   <img src="/img/way.png" style="width: 20px; height: 20px; padding:0; margin-right:40px; margin-top:3px;">';
+         list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
          list += '</div>';
       }
-
       for (var i in response) {
          var imgSrc = response[i].a_s ? response[i].a_s.trim() : 'basicimg.png';
          list += '<li class="member-item"> ';
@@ -473,7 +493,10 @@
          list += '   <div class="profile-info"> ';
          list += '     <div class="info-wrapper"> ';
          list += '      <p class="name">' + response[i].b_s + '</p> ';
-         if (response[i].a_n < 3) {
+         if (response[i].a_n == 1) {
+            list += '      <div class="label-operator">크루장</div> ';
+         }
+         if (response[i].a_n == 2) {
             list += '      <div class="label-operator">운영진</div> ';
          }
          list += '     </div> ';
@@ -654,7 +677,7 @@ function crew_notice(response) {
 
 
 
-   function openCustomModal(usercode, nickname, user_pisition) {
+   function openCustomModal(usercode, nickname, user_position) {
       $('#usercode').val(usercode);
       $('#member_name').text(nickname);
       if (position == 1) {
@@ -666,9 +689,8 @@ function crew_notice(response) {
          $('#manage3').hide();
          $('#out').hide();
       }
-      clog(user_pisition);
-      if (user_pisition == 2) $('#manage2').hide();
-      if (user_pisition == 3) $('#manage3').hide();
+      if (user_position == 2) $('#manage2').hide();
+      if (user_position == 3) $('#manage3').hide();
 
       document.getElementById('customModal').style.display = 'block';
    }
@@ -715,7 +737,9 @@ function crew_notice(response) {
             if (response == 4) alert('일반크루로 변경되었습니다.');
             if (response == 2) alert('신고접수가 되었습니다.');
             if (response == 3) alert('유저가 강퇴되었습니다.');
-            location.reload(true);
+            closeCustomModal();
+            closeRejectModal();
+            $('#member').click();
          },
          error: function(e) {
             console.error('Error: ', e);
@@ -767,8 +791,8 @@ function crew_notice(response) {
       document.getElementById('nicknameModal').style.display = 'none';
    }
 
-   function openResignModal() {
-      document.getElementById("resignModal").style.display = "block";
+   function openResignModal(flag) {
+      if(flag!=='U')document.getElementById("resignModal").style.display = "block";
    }
 
    function resignTeam() {
@@ -818,6 +842,7 @@ function crew_notice(response) {
 
    function removeVoteItem(button) {
       const voteItem = button.parentElement;
+     clog(button);
       voteItem.remove();
       votenum--;
       if (votenum < 6) $('#addVoteBtn').show();
@@ -830,27 +855,31 @@ function crew_notice(response) {
 
    function openVoteModal(flag) {
       closeCustomModal();
+
         if(flag=='R'){
           $('#vote_insert_btn').hide();
           $('#vote_update_btn').show();
         }
         else{
+          votenum = 4;
+          $('.remove-item-button').remove();//추가된 칸 지우기
+          $('#vote4').remove();//추가된 칸 지우기
+          $('#vote5').remove();//추가된 칸 지우기
           $('#vote_insert_btn').show();
+          $('#addVoteBtn').show();
           $('#vote_update_btn').hide();
           $('#voteDeadline').val('');
           $('#voteTitle').val('');
           $('#vote1').val('');
           $('#vote2').val('');
           $('#vote3').val('');
-          $('#vote4').val('');
-          $('#vote5').val('');
         }
       document.getElementById('voteModal').style.display = 'block';
    }
 
    function closeVoteModal() {
       document.getElementById('voteModal').style.display = 'none';
-      openResignModal();
+      openResignModal('U');
    }
 
    function submitVote() {
@@ -899,8 +928,26 @@ function crew_notice(response) {
    function voteNow(vote_num, flag, vote_user_code) {
       $('#vote_num').val(vote_num);
       $('#vote_user_code').val(vote_user_code);
-      if(vote_user_code != user_code)$('#vote_update').hide()
-      else $('#vote_update').show();
+      if(vote_user_code == user_code){
+          if(position>2){
+              $('#vote_update').hide();
+              $('#vote_update2').hide();
+          }
+          else{
+              $('#vote_update').show();
+              $('#vote_update2').show();
+          }
+      }
+      else {
+          if(position==1){
+              $('#vote_update').show();
+              $('#vote_update2').show();
+          }
+          else {
+               $('#vote_update').hide();
+               $('#vote_update2').hide();
+          }
+      }
       $.ajax({
          url: '/crew/vote_select',
          type: 'post',
@@ -913,6 +960,7 @@ function crew_notice(response) {
          success: function(response) {
             $('#vote_list').html('');
             $('#vote_results').html('');
+            if(user_code != response[0].usercode && position!=1)$('#editCrewBtn').hide();
             var list = '';
             var list2 = '';
             list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
@@ -961,12 +1009,22 @@ function crew_notice(response) {
             }
             list2 += '</div>';
             $('#vote_results').html(list2);
-
-            if ((response[0].f_s ===null && response[0].a_n == 0)||flag==0) {
+            if (response[0].f_s ===null&&flag==0) {
                document.getElementById('voteNowModal').style.display = 'block';
-            } else {
+            }
+            if(flag==9){
+                $('#vote_update2').hide();
+                $('#vote_live').html('')
+                $('#vote_live').html('<strong>투표 결과</strong>');
+            }
+            else {
+                $('#vote_live').html('')
+                $('#vote_live').html('<strong>투표 현황</strong>');
+            }
+            if(flag==9||flag==1){
                document.getElementById('voteResultModal').style.display = 'block';
             }
+
          },
          error: function(e) {
             console.error('Error: ', e);
@@ -1192,6 +1250,30 @@ function crew_manage_handover(element) {
         },
         error: function(e) {
             console.error('Error: ', e);
+        }
+    });
+}
+
+
+function go_crew_detail(){
+    $.ajax({
+        url: '/crew/go_crewDetail',  // 서버에 전송할 URL
+        type: 'POST',  // POST 방식으로 전송
+        data: {
+            Authorization: Authorization,  // 토큰 또는 기타 데이터
+            create_crew_code: create_crew_code  // 전송할 데이터
+        },
+        success: function(response) {
+            // 서버로부터 리다이렉션할 URL과 함께 데이터를 받음
+            var redirectUrl = response.redirectUrl;
+            var createCrewCode = response.create_crew_code;
+            var crew_write_code = response.crew_write_code;
+            clog(redirectUrl);
+            // 받은 데이터를 URL에 쿼리 파라미터로 추가하여 리다이렉션
+            window.location.href = redirectUrl + "?create_crew_code=" + createCrewCode+'&crew_write_code='+crew_write_code;
+        },
+        error: function(error) {
+            console.log('에러 발생:', error);
         }
     });
 }
