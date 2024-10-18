@@ -19,7 +19,7 @@
     }
     .body_container{
         background-color: white;
-        width: 1400px;
+        width: 1200px;
         height: 900px;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
@@ -38,6 +38,7 @@
         border-bottom: 1px solid #ddd;
         width: 90%;
         margin: 0 auto;
+        line-height: 40px;
     }
     .modal {
         display: none;  /* 처음에는 숨겨둠 */
@@ -139,11 +140,19 @@
                         `;
                     });
                     document.getElementById("list").innerHTML = tag;
+
+                    var orderTag ="";
+                    $.each(r.orderList, function(i, order){
+                        orderTag += `
+                                <option value="`+order.marathon_code+`">`+order.marathon_name+`</option>
+                        `;
+                    });
+                    document.getElementById("marathonSelect").innerHTML += orderTag;
                 },error:function (e){
                     alert(e);
                 }
             });
-    },1000);
+    },50);
 
     function openUploadModal(){
         var modal = document.getElementById("uploadFileModal");
@@ -166,11 +175,16 @@
 
         var content = document.getElementById('content').value;
         var proof_photo = document.getElementById('proof_photo').files[0];
+        var order_code = document.getElementById('order_code').value;
+        var marathon_code = document.getElementById('marathonSelect').value;
+
         var formData = new FormData();
         formData.append("content", content);
         formData.append("proof_photo", proof_photo);
         formData.append("username", username1);
-
+        formData.append("usercode", usercode1);
+        formData.append("order_code", order_code);
+        formData.append("marathon_code", marathon_code);
             $.ajax({
                 url: "/mypage/uploadCertificate",
                 type: "post",
@@ -184,7 +198,6 @@
                 }, error: function (e) {
                     alert("파일업로드 실패..");
                     console.log(e);
-
                 }
             });
         return false;
@@ -238,8 +251,18 @@
                                 <input class="inputs" type="text" name="content" id="content" placeholder="마라톤 대회명을 입력하세요." required/>
                             </div>
                             <div>
+                                <select name="marathon_code" id="marathonSelect" class="inputs" required>
+                                    <option value="">-- 선택하세요 --</option>
+<%--                                    <!-- 여기에 마라톤 리스트를 JSP에서 동적으로 추가 -->--%>
+<%--                                    <c:forEach var="order" items="${orderList}">--%>
+<%--                                        <option value="${order.marathon_code}">${order.marathon_name}</option>--%>
+<%--                                    </c:forEach>--%>
+                                </select>
+                            </div>
+                            <div>
                                 <input type="file" name="proof_photo" id="proof_photo"/>
                             </div>
+                            <input type="hidden" name="order_code" id="order_code" value="${order_code}"/>
                             <div class="btnBox">
                                 <button type="submit" style="margin-top: 20px;" id="deleteBtn">제출하기</button>
                             </div>

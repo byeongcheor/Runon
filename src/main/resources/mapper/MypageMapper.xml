@@ -147,24 +147,50 @@
         where usercode=#{usercode
         }
     </update>
+    <select id="getOrderInfo" resultType="com.ict.finalproject.vo.OrderVO">
+        select o.*, m.marathon_name
+        from order_tbl o
+        join marathon_list_tbl m on o.marathon_code = m.marathon_code
+        where usercode = #{param1}
+    </select>
+    <select id="getOrderCode">
+        select order_code
+        from order_tbl
+        where marathon_code = #{param1} and usercode = #{param2}
+        limit 1
+    </select>
     <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
-        select
-            c.certificate_code as certificate_code,
-            c.content as content,
-            c.proof_photo as proof_photo,
-            c.updated_date as updated_date,
-            c.result_status as result_status,
-            c.result_date as result_date
-        from certificate_tbl c
-        join order_tbl o on c.order_code = o.order_code
-        join cart_tbl ct on o.cart_code = ct.cart_code
-        join marathon_list_tbl m on ct.marathon_code = m.marathon_code
-        join user_tbl u on c.username = u.username
-        where c.username = #{param1}
+<!--        select-->
+<!--            c.certificate_code as certificate_code,-->
+<!--            c.content as content,-->
+<!--            c.proof_photo as proof_photo,-->
+<!--            c.updated_date as updated_date,-->
+<!--            c.result_status as result_status,-->
+<!--            c.result_date as result_date-->
+<!--        from certificate_tbl c-->
+<!--        join order_tbl o on c.order_code = o.order_code-->
+<!--        join cart_tbl ct on o.cart_code = ct.cart_code-->
+<!--        join marathon_list_tbl m on ct.marathon_code = m.marathon_code-->
+<!--        join user_tbl u on c.username = u.username-->
+<!--        where c.username = #{param1}-->
+        SELECT
+        c.certificate_code AS certificate_code,
+        c.content AS content,
+        c.proof_photo AS proof_photo,
+        c.updated_date AS updated_date,
+        c.result_status AS result_status,
+        c.result_date AS result_date,
+        o.marathon_code AS marathon_code,
+        m.marathon_name AS marathon_name
+        FROM certificate_tbl c
+        JOIN order_tbl o ON c.order_code = o.order_code
+        JOIN user_tbl u ON c.username = u.username
+        JOIN marathon_list_tbl m ON o.marathon_code = m.marathon_code
+        WHERE c.username = #{param1};
     </select>
     <insert id="updateCertificate" parameterType="com.ict.finalproject.vo.CertificateVO">
         insert into certificate_tbl (content, proof_photo, result_status, order_code, username)
-        values (#{content}, #{proof_photo}, '처리중', 1, #{username})
+        values (#{content}, #{proof_photo}, '처리중', #{order_code}, #{username})
     </insert>
     <delete id="deleteCertificate" parameterType="int">
         delete from certificate_tbl

@@ -41,7 +41,9 @@ public interface MypageDAO {
     public int deleteCertificate(int certificate_code);
     //인증서 하나만
     public CertificateVO selectCertificate(int certificate_code);
-
+    //order_tbl select
+    public int getOrderCode(int marathon_code, int usercode);
+    public List<OrderVO> getOrderInfo(int usercode);
     //메이트이력리스트
     public List<MemberVO> selectMemberAll(int usercode);
     //메이트 신고하기

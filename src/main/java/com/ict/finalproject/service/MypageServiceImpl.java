@@ -127,6 +127,16 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public int getOrderCode(int marathon_code, int usercode) {
+        return dao.getOrderCode(marathon_code, usercode);
+    }
+
+    @Override
+    public List<OrderVO> getOrderInfo(int usercode) {
+        return dao.getOrderInfo(usercode);
+    }
+
+    @Override
     public List<CertificateVO> selectCertificateAll(String username) {
         return dao.selectCertificateAll(username);
     }

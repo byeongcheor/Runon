@@ -31,7 +31,8 @@ public interface MypageService {
     public void createMarathonForm(MarathonFormVO marathonVO);
     public void deleteMarathonForm(int usercode);
     public int updateMarathonForm(MarathonFormVO marathonVO);
-
+    public int getOrderCode(int marathon_code, int usercode);
+    public List<OrderVO> getOrderInfo(int usercode);
     public List<CertificateVO> selectCertificateAll(String username);
     public void updateCertificate(CertificateVO certificate);
     public int deleteCertificate(int certificate_code);

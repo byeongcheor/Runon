@@ -343,11 +343,15 @@ public class MypageController {
     //기록인증하기리스트페이지
     @PostMapping("/mypage/certificateList")
     @ResponseBody
-    public Map<String, Object> certificateList(@RequestParam("username")String username,@RequestParam("usercode")int usercode) {
+    public Map<String, Object> certificateList(@RequestParam("username")String username,
+                                               @RequestParam("usercode")int usercode) {
         List<CertificateVO> list = service.selectCertificateAll(username);
         System.out.println(list);
+        List<OrderVO> orderList = service.getOrderInfo(usercode);
+        System.out.println(orderList);
         Map<String, Object> result = new HashMap<>();
         result.put("list", list);
+        result.put("orderList", orderList);
         return result;
     }
     //기록인증하기
@@ -357,10 +361,14 @@ public class MypageController {
             @RequestParam("content") String content,
             @RequestParam("proof_photo") MultipartFile file,
             @RequestParam("username") String username,
+            @RequestParam("marathon_code") int marathon_code,
+            @RequestParam("usercode") int usercode,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
         try{
+            int order_code = service.getOrderCode(marathon_code, usercode);
+
             String saveDir = request.getServletContext().getRealPath("/resources/uploadCertificate/");
              File dir = new File(saveDir);
              if(!dir.exists()){
@@ -375,6 +383,7 @@ public class MypageController {
                  cvo.setContent(content);
                  cvo.setProof_photo(miliFilename);
                  cvo.setUsername(username);
+                 cvo.setOrder_code(order_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);

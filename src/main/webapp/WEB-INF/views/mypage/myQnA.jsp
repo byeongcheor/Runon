@@ -40,7 +40,7 @@
         border-bottom: 1px solid #ddd;
         width: 90%;
         margin: 0 auto;
-        line-height: 30px;
+        line-height: 40px;
     }
     .modal {
         display: none;  /* 처음에는 숨겨둠 */
@@ -151,7 +151,7 @@
                 alert(e);
             }
         });
-    },1000);
+    },100);
     //모달열기
     function openModal(){
         var modal = document.getElementById("uploadQnA");
