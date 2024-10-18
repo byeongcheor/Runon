@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <style>
     body{
         background-color: #F8FAFB;
@@ -23,7 +25,7 @@
     .body_container{
         background-color: white;
         width: 900px;
-        height: auto;
+        height: 1100px;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
     }
@@ -68,6 +70,9 @@
     }
     .orderPt span:nth-of-type(4) {
         flex: 1 1 0%;
+    }
+    .orderPt span:nth-of-type(5) {
+         flex: 1 1 0%;
     }
     .orderP{
         display: flex;
@@ -172,61 +177,131 @@
         text-align: center;
         color:rgb(51, 51, 51);
     }
+    .pagination .page-link{
+        color: black;
+    }
+    .pagination .page-link:hover {
+        color: #fff; /* 호버 시 텍스트 색상 */
+        background-color: black; /* 호버 시 배경색 */
+    }
+    /* 활성화된 페이지 아이템 색상 변경 */
+    .pagination .page-item.active .page-link {
+        background-color: black; /* 배경색 */
+        border-color: black;     /* 테두리 색상 */
+        color: white;              /* 텍스트 색상 */
+    }
+
+    /* 활성화된 페이지 아이템 호버 시 색상 변경 */
+    .pagination .page-item.active .page-link:hover {
+        background-color: grey; /* 호버 시 배경색 */
+        border-color: grey;     /* 호버 시 테두리 색상 */
+    }
+     #paging{
+         display: flex;
+         justify-content: center;
+         padding-bottom: 20px;
+     }
+     .orderStatus button{
+         font-size: 10pt;
+     }
 </style>
 <script>
     setTimeout(function(){
+        var page;
+        reloadPage(page)
+    },100)
+    function reloadPage(page) {
+        if(page==null){
+            page=1;
+        }
         $.ajax({
             url: "/mypage/viewOrder",
             type: "post",
             data: {
                 username: username1,
-                usercode: usercode1
+                usercode: usercode1,
+                page: page
             },
-            success: function(r){
-                var tag ="";
-                console.log(r);
-                $.each(r.list, function(i,vo){
-                    if(vo.order_status=='end'){
-                        vo.order_status="주문완료";
-                    }else{
-                        vo.order_status="주문취소";
-                    }
+            success: function (r) {
+                var tag = "";
+                var pvo = r.pvo;
 
+                if(r.list.length == 0){
                     tag += `
+                        <div class="row" style="margin-top: 40px;margin-bottom: 500px; margin-left: 40%;">
+                            <p>구매내역이 없습니다.</p>
+                        </div>
+                    `;
+                }else{
+                    $.each(r.list, function (i, vo) {
+                        if (vo.order_status == 1) {
+                            vo.order_status = "주문완료";
+                        } else {
+                            vo.order_status = "주문취소";
+                        }
+
+                        tag += `
                         <div class="orderP2">
                             <div class="orderP3">
-                                <span>`+vo.created_date+`</span>
+                                <span>` + vo.created_date + `</span>
                             </div>
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span>`+vo.marathon_name+`/`+vo.quantity+`</span>
+                                        <span>` + vo.marathon_name + `/` + vo.quantity + `</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="orderPdP">
-                                <span>`+vo.price+`</span>
+                                <span>` + vo.price + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span>`+vo.order_status+`</span>
+                                <span>` + vo.order_status + `</span>
+                            </div>
+                            <div class="orderStatus">
+                                <span><button type="button" class="btn btn-outline-secondary">주문취소</button></span>
                             </div>
                         </div>
                     `;
-                });
+                    });
+                }
                 document.getElementById("orderlist").innerHTML = tag;
-            },error: function(e){
+
+                // 2. 페이징 정보 렌더링
+                var paginationTag = "";
+
+                // 이전 버튼
+                if (pvo.nowPage > 1) {
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                }
+
+                // 페이지 번호 출력
+                for (var p = pvo.startPageNum; p <= pvo.startPageNum + pvo.onePageNum - 1; p++) {
+                    if (p <= pvo.totalPage) {
+                        paginationTag += "<li class='page-item " + (pvo.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ");'>" + p + "</a></li>";
+                    }
+                }
+
+                // 다음 버튼
+                if (pvo.nowPage < pvo.totalPage) {
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pvo.nowPage + 1) + ");'>></a></li>";
+                }
+
+                $(".pagination").html(paginationTag);
+
+            }, error: function (e) {
                 alert("실패")
             }
         })
-    },1000)
+    }
 </script>
 <div id="bannerBox">
     <img src="/img/러닝고화질.jpg" id="bannerImg"/>
 </div>
 <div>
-    <div class="page_title">구매내역</div>
+    <div class="page_title">구매내역💰</div>
     <div class="body_container">
-        <div class="why" style="height: 500px;">
+        <div class="why" style="margin-bottom: 50px;">
         <div class="orderStTop">
             <div class="orderStN">
                 <br>
@@ -236,10 +311,13 @@
                 <span>상품명/옵션</span>
                 <span>상품금액</span>
                 <span>주문상태</span>
+                <span>취소요청</span>
             </div>
             <div class="orderP" id="orderlist">
             </div>
         </div>
         </div>
+        <div class="pagination" id="paging"></div>
     </div>
 </div>
+

@@ -160,12 +160,25 @@ public class MypageController {
     @PostMapping("/mypage/viewOrder")
     @ResponseBody
     public Map<String, Object> orderList(@RequestParam("username")String username,
-                                         @RequestParam("usercode")int usercode){
-        List<OrderVO> list = service.selectOrderAll(usercode);
-        System.out.println(list);
+                                         @RequestParam("usercode")int usercode,
+                                         @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
-        System.out.println(result);
+        PagingVO pvo = new PagingVO();
+        int record = 2;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalOrder(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<OrderVO> list = service.selectOrderAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("list", list);
+        result.put("pvo", pvo);
         return result;
     }
     //마라톤신청서조회
@@ -256,13 +269,24 @@ public class MypageController {
     @PostMapping("/mypage/mymateList")
     @ResponseBody
     public Map<String, Object> mymateList(
-            @RequestParam("usercode") int usercode
+            @RequestParam("usercode") int usercode,
+            @RequestParam(value="page", defaultValue = "1") int page
     ){
-        System.out.println("메이트유저온다"+usercode);
-        List<MemberVO> membervo = service.selectMemberAll(usercode);
-        System.out.println(membervo);
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalMate(usercode);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<MemberVO> membervo = service.selectMemberAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("member", membervo);
+        result.put("pvo", pvo);
 
         return result;
     }
@@ -344,14 +368,25 @@ public class MypageController {
     @PostMapping("/mypage/certificateList")
     @ResponseBody
     public Map<String, Object> certificateList(@RequestParam("username")String username,
-                                               @RequestParam("usercode")int usercode) {
-        List<CertificateVO> list = service.selectCertificateAll(username);
-        System.out.println(list);
-        List<OrderVO> orderList = service.getOrderInfo(usercode);
-        System.out.println(orderList);
+                                               @RequestParam("usercode")int usercode,
+                                               @RequestParam(value="page", defaultValue = "1") int page) {
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 5;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalCertificate(username);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<CertificateVO> list = service.selectCertificateAll(username, pvo.getOffset(), pvo.getOnePageRecord());
+        List<OrderVO> orderList = service.getOrderInfo(usercode);
+
         result.put("list", list);
         result.put("orderList", orderList);
+        result.put("pvo", pvo);
         return result;
     }
     //기록인증하기
@@ -436,10 +471,26 @@ public class MypageController {
     @PostMapping("/mypage/myQnAList")
     @ResponseBody
     public Map<String, Object> myQnAList(@RequestParam("username")String username,
-                                      @RequestParam("usercode")int usercode){
-        List<QnAVO> list = service.selectQnAAll(usercode);
+                                      @RequestParam("usercode")int usercode,
+                                      @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
+
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalQnA(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<QnAVO> list = service.selectQnAAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("list", list);
+        result.put("pvo", pvo);
         return result;
     }
     //QnA작성
