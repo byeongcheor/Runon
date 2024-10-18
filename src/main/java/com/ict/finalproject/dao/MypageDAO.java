@@ -1,19 +1,29 @@
 package com.ict.finalproject.dao;
 
-import com.ict.finalproject.vo.CertificateVO;
-import com.ict.finalproject.vo.MarathonFormVO;
-import com.ict.finalproject.vo.MemberVO;
-import com.ict.finalproject.vo.QnAVO;
+import com.ict.finalproject.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface MypageDAO {
+    public MemberVO selectOne(String username);
     public int selectUsercode(String username);
-    public MemberVO selectMember(String username);
+    public MemberVO selectMember(@Param("userName") String username);
     public void updateProfile(String username, String profile_img);
     public String getProfileImg(String username);
     public int editProfile(MemberVO member);
     public int deactiveProfile(String username, int is_deleted);
+
+    //회원탈퇴시 탈퇴테이블에 insert후 point&user_tbl에서 삭제
+    public MemberVO getMember(int usercode);
+    public int insertDelUser(int usercode);
+    public int delFromUser(int usercode);
+    public int delFromPoint(int usercode);
+
+    //주문목록리스트
+    public List<OrderVO> selectOrderAll(int usercode);
+    //회원정보수정 기존비밀번호 유효성검사
+    public MemberVO passwordChk(String username);
     //마라톤신청서있는지조회
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성
@@ -31,9 +41,15 @@ public interface MypageDAO {
     public int deleteCertificate(int certificate_code);
     //인증서 하나만
     public CertificateVO selectCertificate(int certificate_code);
-
+    //order_tbl select
+    public int getOrderCode(int marathon_code, int usercode);
+    public List<OrderVO> getOrderInfo(int usercode);
     //메이트이력리스트
     public List<MemberVO> selectMemberAll(int usercode);
+    //메이트 신고하기
+    public int reportMate(ReportVO report);
+    //신고내역 있는지 확인
+    public ReportVO selectReportForm(int usercode, int matching_room_code);
 
     //qna리스트
     public List<QnAVO> selectQnAAll(int usercode);

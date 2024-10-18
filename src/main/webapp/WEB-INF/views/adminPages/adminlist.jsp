@@ -3,16 +3,14 @@
 <%@ include file="../inc/sidebar.jspf" %>
 <link rel="stylesheet" href="/css/adminPages/adminlist.css" type="text/css">
 <script src="/js/adminPages/adminlist.js" type="text/javascript"></script>
-
-
-
-    <div id="Adminlistbody">
-        <div>
-            <div id="maintop">
-                <div id="menutitle">Admins</div>
-                <div id="subtitle">관리자의 권한을 관리합니다.</div>
-            </div>
+<div class="adminContainer">
+    <div id="AdminHead">
+        <div id="maintop">
+            <div id="menutitle">Admins</div>
+            <div id="subtitle">관리자의 권한을 관리합니다.</div>
         </div>
+    </div>
+    <div id="Adminlistbody">
         <div id="mainmid">
             <div>
                 <form>
@@ -65,4 +63,8 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
 

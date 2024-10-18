@@ -26,14 +26,15 @@ body{
     background-color: #1E232E;
     width: 250px;
     color: #7A90A9;
-
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
 }
 #sidebar .menus{
     text-decoration:none;
-    line-height: 41px;
-    font-size: 14px;
-    margin-left: 10px;
+    line-height: 50px;
+    font-size: 16px;
+    margin-left: 20px;
     color:#7A90A9 ;
+    font-weight: 700;
 }
 #sidebar #menu{
     height:75%;
@@ -53,6 +54,7 @@ body{
     margin-right: 20px;
     text-decoration: none;
     color: white;
+    line-height: 30px;
 }
 
 #sidebar #menu div:hover{
@@ -66,9 +68,10 @@ body{
 
 }
 #sidebar #logo>img{
-    margin-top: 10px;
-    width: 250px;
-    margin-bottom: 9px;
+    margin-top: 20px;
+    width: 130px;
+    margin-left: 20px;
+    margin-bottom: 30px;
 }
 #sidebar .submenu{
     display: none;

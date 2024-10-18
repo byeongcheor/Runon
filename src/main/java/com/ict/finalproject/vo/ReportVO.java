@@ -16,7 +16,8 @@ public class ReportVO {
     private int victim_code;
     private String victim_nickname;
     private String crew_history_code;
-    private String matching_room_code;
+    private int matching_room_code;
     private String report_status;
-
+    private String report_content;
+    private String proof_img;
 }

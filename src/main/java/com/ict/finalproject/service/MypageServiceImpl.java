@@ -1,12 +1,11 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.MypageDAO;
-import com.ict.finalproject.vo.CertificateVO;
-import com.ict.finalproject.vo.MarathonFormVO;
-import com.ict.finalproject.vo.MemberVO;
-import com.ict.finalproject.vo.QnAVO;
+import com.ict.finalproject.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +13,15 @@ import java.util.List;
 public class MypageServiceImpl implements MypageService{
     @Autowired
     private MypageDAO dao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public MemberVO selectOne(String username) {
+        return dao.selectOne(username);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
 
     @Override
     public int selectUsercode(String username) {
@@ -46,6 +54,59 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public MemberVO getMember(int usercode) {
+        return dao.getMember(usercode);
+    }
+
+    @Override
+    public int insertDelUser(int usercode) {
+        return dao.insertDelUser(usercode);
+    }
+
+    @Override
+    public int delFromUser(int usercode) {
+        return dao.delFromUser(usercode);
+    }
+
+    @Override
+    public int delFromPoint(int usercode) {
+        return dao.delFromPoint(usercode);
+    }
+
+    @Override
+    public boolean checkPassword(int usercode, String curerntPassword) {
+        MemberVO member = dao.getMember(usercode);
+
+        if(member != null && passwordEncoder.matches(curerntPassword, member.getPassword())) {
+            dao.insertDelUser(usercode);
+            dao.delFromUser(usercode);
+            dao.delFromPoint(usercode);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean checkPassword2(String username, String curerntPassword) {
+        MemberVO member = dao.selectMember(username);
+        if(member==null){
+            return false;
+        }
+        boolean isMaTch = passwordEncoder.matches(curerntPassword, member.getPassword());
+        return isMaTch;
+    }
+    @Override
+    public MemberVO passwordChk(String username) {
+        return dao.passwordChk(username);
+    }
+
+    @Override
+    public List<OrderVO> selectOrderAll(int usercode) {
+        return dao.selectOrderAll(usercode);
+    }
+
+    @Override
     public MarathonFormVO selectMarathonForm(int usercode) {
         return dao.selectMarathonForm(usercode);
     }
@@ -63,6 +124,16 @@ public class MypageServiceImpl implements MypageService{
     @Override
     public int updateMarathonForm(MarathonFormVO marathonVO) {
         return dao.updateMarathonForm(marathonVO);
+    }
+
+    @Override
+    public int getOrderCode(int marathon_code, int usercode) {
+        return dao.getOrderCode(marathon_code, usercode);
+    }
+
+    @Override
+    public List<OrderVO> getOrderInfo(int usercode) {
+        return dao.getOrderInfo(usercode);
     }
 
     @Override
@@ -88,6 +159,16 @@ public class MypageServiceImpl implements MypageService{
     @Override
     public List<MemberVO> selectMemberAll(int usercode) {
         return dao.selectMemberAll(usercode);
+    }
+
+    @Override
+    public int reportMate(ReportVO report) {
+        return dao.reportMate(report);
+    }
+
+    @Override
+    public ReportVO selectReportForm(int usercode, int matching_room_code) {
+        return dao.selectReportForm(usercode, matching_room_code);
     }
 
     @Override

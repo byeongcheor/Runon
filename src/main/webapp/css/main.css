@@ -1,3 +1,10 @@
+a,a:visited{
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+}
+
 .slideBox{
     width: 550px;
     height: 500px;
@@ -134,6 +141,7 @@ body{
     line-height: 50px;
     background-color: #CCFF47;
     color: #121212;
+    min-width: 150px;
 }
 #more3:hover{
     background-color: #121212;
@@ -220,7 +228,7 @@ body{
 }
 
 .hitmarathon{
-    width: 70%;
+    width: 60vw;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
@@ -257,10 +265,13 @@ body{
 }
 
 #chatImgBox{
-    width: 70%;
+    width: 60vw;
     height: auto;
     margin: 0 auto;
     margin-top: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 #chatImg{
     border-radius: 15px;
@@ -269,6 +280,8 @@ body{
 }
 #crewInfo{
     text-align: right;
+    display: flex;
+    flex-direction: column;
 }
 #crewInfo p:first-child{
     font-size: 28pt;
@@ -282,7 +295,7 @@ body{
 
 }
 #chatImgBox #more3{
-    margin-top: 80px;
+    margin-top: 50px;
     margin-left: 400px;
 }
 
@@ -291,12 +304,6 @@ body{
     padding: 0;
     color: #CCFF47;
     font-size: 45pt;
-}
-#inner6 p{
-    margin-top: 30px;
-    color: beige;
-    font-size: 20pt;
-    line-height: 35px;
 }
 .autoplay div{
     width:300px;
@@ -307,30 +314,61 @@ body{
 *{
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
-/**{
-    max-width: 1920px;
-}
-
-body,html{
-    margin:0;
-    padding:0;
-    font-family:'Montserrat',sans-serif;
-}*/
-body{
-    margin:0;
-    padding:0;
-    animation: fadein 4s;
-}
-@keyframes fadein {
-    0% {
-        opacity:0;
-    }
-    100% {
-        opacity:1;
-    }
-}
-
 #div{
     width:100%;
     height:1500px;
 }
+
+.matchContainer{
+    width: 60vw;
+    margin: 0 auto;
+    margin-top: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.mateinfo{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.btnContainer{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+#more4{
+    border-radius: 50px;
+    font-size: 15pt;
+    font-weight: bold;
+    padding: 5px;
+    margin-bottom: 50px;
+    border: 2px solid #CCFF47;
+    line-height: 50px;
+    background-color: #CCFF47;
+    color: #121212;
+    min-width: 150px;
+    margin-top: 80px;
+}
+#more4:hover{
+    background-color: #121212;
+    color: #CCFF47;
+    transition: 0.5s ease-out;
+}
+
+.mateinfo p:first-child{
+    font-size: 18pt;
+    font-weight: 700;
+    margin-bottom: 60px;
+    line-height: 45px;
+    color: white;
+    line-height: 35px;
+}
+.mateimages{
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+

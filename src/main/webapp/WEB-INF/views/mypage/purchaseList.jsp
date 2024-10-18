@@ -22,13 +22,11 @@
     }
     .body_container{
         background-color: white;
-        width: 1024px;
-        height: 900px;
+        width: 900px;
+        height: auto;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
     }
-
-
     .orderStTop{
         width: 90%;
         margin: 0px auto;
@@ -175,17 +173,63 @@
         color:rgb(51, 51, 51);
     }
 </style>
+<script>
+    setTimeout(function(){
+        $.ajax({
+            url: "/mypage/viewOrder",
+            type: "post",
+            data: {
+                username: username1,
+                usercode: usercode1
+            },
+            success: function(r){
+                var tag ="";
+                console.log(r);
+                $.each(r.list, function(i,vo){
+                    if(vo.order_status=='end'){
+                        vo.order_status="주문완료";
+                    }else{
+                        vo.order_status="주문취소";
+                    }
+
+                    tag += `
+                        <div class="orderP2">
+                            <div class="orderP3">
+                                <span>`+vo.created_date+`</span>
+                            </div>
+                            <div class="orderPd">
+                                <div class="orderPdImg">
+                                    <div class="orderPdN">
+                                        <span>`+vo.marathon_name+`/`+vo.quantity+`</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="orderPdP">
+                                <span>`+vo.price+`</span>
+                            </div>
+                            <div class="orderStatus">
+                                <span>`+vo.order_status+`</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById("orderlist").innerHTML = tag;
+            },error: function(e){
+                alert("실패")
+            }
+        })
+    },1000)
+</script>
 <div id="bannerBox">
     <img src="/img/러닝고화질.jpg" id="bannerImg"/>
 </div>
 <div>
     <div class="page_title">구매내역</div>
     <div class="body_container">
+        <div class="why" style="height: 500px;">
         <div class="orderStTop">
             <div class="orderStN">
                 <br>
-                <span>주문/배송상세</span>
-                <span>주문번호: 2409281521550181</span>
             </div>
             <div class="orderPt">
                 <span>날짜</span>
@@ -193,30 +237,9 @@
                 <span>상품금액</span>
                 <span>주문상태</span>
             </div>
-            <div class="orderP">
-                <div class="orderP2">
-                    <div class="orderP3">
-                        <span>2024/09/28</span>
-                    </div>
-                    <div class="orderPd">
-                        <div class="orderPdImg">
-                            <img src="../img/cart/marathonposter1.png" alt="상품이미지">
-                            <div class="orderPdN">
-                                <span>2024 3대 마라톤 - 여의도 나이트런</span>
-                                <span>5.5Km,티셔츠(L)/1개</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="orderPdP">
-                        <span>25,000원</span>
-                    </div>
-                    <div class="orderStatus">
-                        <span>주문완료</span>
-                    </div>
-                </div>
+            <div class="orderP" id="orderlist">
             </div>
         </div>
-        <!-- 페이징 -->
-
+        </div>
     </div>
 </div>

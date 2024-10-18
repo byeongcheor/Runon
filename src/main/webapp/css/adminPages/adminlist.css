@@ -1,3 +1,12 @@
+.adminContainer{
+    display: flex;
+    flex-direction: column;
+    width: 110%;
+    height: 100vh;
+}
+#AdminHead{
+    border-bottom: 1px solid black;
+}
 #checkboxlist>.hiddenbox{
     display: none;
 }
@@ -6,11 +15,13 @@
     display: none;
 }
 #Adminlistbody{
-    width: 80%;
     min-width: 950px;
+    height: 100vh;
+    padding-top: 30px;
+    margin: 0 auto;
 }
 
-#Adminlistbody #menutitle{
+#menutitle{
     font-weight: bold;
     font-size: 2em;
     margin-bottom: 5px;
@@ -26,27 +37,37 @@
     display: flex;
     display: none;
 }
-#Adminlistbody>div:first-child{
-
-    border-bottom: 1px solid black;
-
+#checkboxlist button{
+    border-radius: 5px;
+    margin-right: 5px;
+    background-color: transparent;
+    border: 1px solid grey;
 }
-#Adminlistbody #maintop{
+#selectbutton button{
+    border-radius: 5px;
+    margin-right: 5px;
+    background-color: transparent;
+    border: 1px solid grey;
+}
+#downloadbutton input{
+    border-radius: 5px;
+    background-color: transparent;
+    border: 1px solid grey;
+}
+#maintop{
     margin-left: 30px;
-    margin-top: 100px;
+    margin-top: 30px;
 }
 #subtitle{
     margin-bottom: 20px;
     font-size:0.9em;
 }
 #mainmid{
-    background-color: #F0F0F0;
     width: 100%;
     height: auto;
 }
 #mainmid>div{
     display: flex;
-
     margin: auto 0;
 }
 #mainmid>div>input{
@@ -57,11 +78,7 @@
     height: 25px;
     border: 1px solid black;
     margin-right: 10px;
-
     width: 70px;
-
-
-
 }
 #checkboxlist{
     margin: auto 0;
@@ -69,12 +86,11 @@
 
 #mainmid>div>form{
     display: flex;
- margin :0 auto;
+    margin :0 auto;
     height: 60px;
 }
 #searchbutton{
-
-    height: 28px;
+    height: 25px;
     border: none;
     background-color: white;
     padding: 0;
@@ -86,18 +102,15 @@
 }
 #searchbar{
     display: flex;
-
     white-space: nowrap;
     overflow: hidden;
-   margin: 0 auto;
-
-
+    margin: 0 auto;
 }
 #searchbar>select{
-    height: 34px;
+    height: 30px;
     margin: auto 0;
-    width: 137px;
-
+    line-height: 20px;
+    margin-right: 10px;
 }
 #searchbar>div>input{
     width: 300px;
@@ -108,14 +121,15 @@
     display: flex;
     height: 30px;
     margin: auto 0;
-    border: 1px solid black;
-
+    border: 1px solid grey;
+    border-radius: 5px;
 }
 #searchbar>div>input:focus{
     outline: none;
 }
 .AdminFavMain{
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .AdminFavMain>#AdminList{
@@ -124,7 +138,6 @@
     margin-left: 30px;
 }
 #memlistbottom{
-    background-color:#F0F0F0;
     margin: 0;
     padding: 0;
     min-width: 1200px;
@@ -136,29 +149,41 @@ li{
     width: 100%;
     display: flex;
     line-height: 40px;
-    border-top: 1px solid   #E2E2E2;
-
+    border-top: 1px solid #E2E2E2;
+}
+#usertitle2{
+    background-color: #F0F0F0;
 }
 #AdminList .username{
     width: 20%;
 }
+#usertitle2 .username{
+    font-weight: 700;
+}
 #AdminList .name {
     width: 10%;
+}
+#usertitle2 .name{
+    font-weight: 700;
 }
 #AdminList .role {
     width: 15%;
 }
-
+#usertitle2 .role {
+    font-weight: 700;
+}
 #AdminList .permission_add,#AdminList .permission_edit, #AdminList .permission_delete{
     width: 10%;
+}
+#usertitle2 .permission_add,#usertitle2 .permission_edit, #usertitle2 .permission_delete{
+    font-weight: 700;
 }
 #AdminList .deleted_date ,#AdminList .created_date{
     width: 10%;
 }
-.usertitle3{
-    background-color: #F6F7F8;
+#usertitle2 .deleted_date ,#usertitle2 .created_date{
+    font-weight: 700;
 }
-
 .usertitle3:hover{
     background-color: #EBECEC;
 }
@@ -178,9 +203,6 @@ li{
     background-color: white;
     margin: 0 auto;
     margin-top: 50px;
-
-
-
 }
 
 .fa-3x{
@@ -240,4 +262,23 @@ li{
 }
 #selectbutton{
     margin: auto 30px;
+}
+.pagination .page-link{
+    color: black;
+}
+.pagination .page-link:hover {
+    color: #fff; /* 호버 시 텍스트 색상 */
+    background-color: black; /* 호버 시 배경색 */
+}
+/* 활성화된 페이지 아이템 색상 변경 */
+.pagination .page-item.active .page-link {
+    background-color: black; /* 배경색 */
+    border-color: black;     /* 테두리 색상 */
+    color: white;              /* 텍스트 색상 */
+}
+
+/* 활성화된 페이지 아이템 호버 시 색상 변경 */
+.pagination .page-item.active .page-link:hover {
+    background-color: grey; /* 호버 시 배경색 */
+    border-color: grey;     /* 호버 시 테두리 색상 */
 }

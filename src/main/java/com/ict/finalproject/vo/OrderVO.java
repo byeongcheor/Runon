@@ -21,5 +21,7 @@ public class OrderVO {
     private int reservation_code;
     private int discount_amount;
     private String marathon_name;
+    private int marathon_code;
+
 
 }

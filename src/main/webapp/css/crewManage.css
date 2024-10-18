@@ -1,0 +1,827 @@
+body{
+    background-color: #F8FAFB;
+}
+#bannerBox{
+    width:100%;
+    height:200px;
+    margin: 0 auto;
+}
+#bannerImg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content_body{
+    display: flex;
+    flex-direction: row;
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.content_left{
+    position: relative;
+    width: 60%;
+    background-color: white;
+    height: auto;
+    min-height: 400px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px 10px 0 0 ;
+}
+.content_right{
+    width: 100%;
+}
+.section1{
+    background-color: white;
+    min-height: 400px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.section2{
+    background-color: white;
+    height: 340px;
+    border-radius: 10px 10px 0 0 ;
+    margin-bottom: 10px;
+}
+.section_nav{
+    padding-top: 20px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+.section_nav ul, .section_nav li{
+    list-style: none;
+    text-decoration: none;
+    float: left;
+
+}
+.section_nav li{
+    margin-right: 20px;
+    color: #6c757d;
+}
+.section_title{
+        padding: 20px;
+        padding-top: 30px;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 20px;
+        margin-top: 20px;
+        margin-left: 10px;
+    }
+.menu_list{
+    list-style: none;
+}
+.menu_list li{
+    font-size: 18px;
+    list-style: none;
+}
+.menu_list li a{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-decoration: none;
+    cursor: pointer;
+    align-items: center;
+}
+.menu_list li a:link, .menu_list li a:visited{
+    list-style: none;
+    text-decoration: none;
+    color: #121212;
+}
+.menu_list li a:hover{
+    font-weight: 500;
+    color: #121212;
+}
+.list_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.icons{
+    font-size: 25px;
+    margin: 0;
+}
+.list_title{
+    margin-left: 15px;
+}
+.section3{
+    padding: 20px;
+
+}
+.profile_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.imgContainer{
+    width: 80px;
+    height: 80px;
+    border-radius: 200px;
+    margin-top: 10px;
+    margin-right: 40px;
+}
+.imgContainer>img:first-child{
+    width: 100%;
+    height: 100%;
+    border-radius: 200px;
+    object-fit: cover;
+}
+.mystatus{
+    padding-top: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+.status_items:first-child{
+    float: left;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+.status_items{
+    width: 45%;
+    background-color: #F8FAFB;
+    border-radius: 10px;
+    float: left;
+    list-style: none;
+}
+.status_label{
+    padding-left: 20px;
+}
+.status_label>p:first-child{
+    font-weight: 700;
+}
+.statis{
+    margin-top: 150px;
+}
+.names{
+    margin-left: 10px;
+    font-size: 15px;
+}
+#addr{
+    color: #1570ff;
+     font-size: 16px;
+    font-weight: bold;
+}
+
+.crew_infos{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+.crew_imogi{
+    font-size: 15pt;
+    margin-right: 5px;
+}
+.crew_addr{
+    font-weight: 500;
+    font-size: 13pt;
+}
+.crew_addr2{
+    margin-left: auto;
+    max-width: 60%;
+    white-space: nowrap;
+    font-size: 13pt;
+    color: tomato;
+}
+.info_body{
+    padding: 10px 30px 10px 30px;
+}
+.editCrewBtn{
+    margin-top: 20px;
+    margin-left: 8px;
+    height:35px;
+    text-align: center;
+    padding: 2px 6px;
+    font-weight: 500;
+    color: rgb(75, 90, 100);
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #f2f5f7;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none
+
+}
+
+.editCrew{
+    display: flex;
+    height: 36px;
+    gap: 4px;
+}
+
+  /* 프로필 이미지 */
+ .profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0px 8px;
+  }
+
+  .member{
+    margin:10px 10px;
+
+  }
+  .join_info{
+    padding-left: 30px;
+    padding-bottom:10px;
+  }
+
+  /* 기본 스타일 */
+  .member-list {
+    list-style: none; /* li의 기본 점 제거 */
+    margin: 0;
+    padding:0;
+  }
+
+
+  .item-flex {
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 좌우 요소 간 여백 자동 */
+    width: 90%;
+    padding: 5px 28px 10px 28px;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    margin-left: 10px;
+  }
+
+  .info-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .name {
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  /* 운영진 스타일 */
+  .label-operator {
+    background-color: black; /* 검정 배경 */
+    color: white; /* 흰색 텍스트 */
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 20px;
+    height:20px;
+  }
+
+  /* 루키 표시 */
+  .desc {
+    font-size: 12px;
+    color: #6c757d; /* 회색 텍스트 */
+    margin-top: 2px; /* 루키 표시 위에 약간의 간격 */
+  }
+
+  .menu {
+    margin-left: auto; /* more-icon을 오른쪽으로 밀기 */
+  }
+
+  /* 세로 3개 점 more-icon */
+  .more-icon {
+    font-size: 30px; /* 아이콘 크기 */
+    cursor: pointer;
+    display: inline-block;
+  }
+  /* 커스텀 모달 기본 설정 */
+  .custom-modal {
+    display: none; /* 처음에는 보이지 않음 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+  }
+
+  /* 커스텀 모달 창 컨텐츠 */
+  .custom-modal-content {
+    background-color: white;
+    margin: 8% auto;
+    padding: 20px;
+    border-radius: 10px;
+     width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+   .custom-modal-content2 {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 750px;
+      height:auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+  /* 커스텀 모달 헤더 */
+  .custom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+
+  .custom-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom:10px;
+}
+  .custom-modal-title2 {
+    font-size: 21px;
+    font-weight: bold;
+
+}
+.form-label2{
+    font-size: 17px;
+    font-weight: bold;
+}
+
+  .custom-close {
+    cursor: pointer;
+    font-size: 28px;
+    margin-bottom:25px;
+    top: 15px;
+    right: 15px;
+  }
+
+  /* 커스텀 모달 내용 */
+  .custom-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* 옵션 간의 간격 */
+    margin:10px 10px 25px 10px;
+  }
+
+/* 일반 옵션 버튼 */
+.custom-modal-option {
+    background-color: #f0f0f0; /* 밝고 중립적인 색상 */
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+/* 호버 상태 */
+.custom-modal-option:hover {
+    background-color: #e5e5e5; /* 조금 더 진한 중립적인 색상 */
+}
+
+  /* 위험 옵션 버튼 (강제 퇴장) */
+  .custom-modal-danger {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .custom-modal-danger:hover {
+    background-color: #ff3333;
+  }
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom:15px;
+
+}
+
+.team-info img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+
+}
+.team-info h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+  .team-member {
+    display: flex;
+    align-items: center;
+  }
+
+  .team-profile {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin: 10px 10px 0px 10px;
+    object-fit: cover;
+  }
+
+  .team-name {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+
+  .handover-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ccff33; /* 연두색 배경 */
+    color: black; ; /* 흰색 글씨 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+     font-size: 15px;
+  }
+
+  .handover-btn:hover {
+    background-color: #b2e600;
+  }
+
+.report{
+    width: 90%;
+    height: 150px;
+    margin-left:10px;
+    border-radius: 12px;
+    padding: 10px;
+    background-color: #F7F7F7;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+}
+/* 신고 사유 선택 모달 하단 버튼 스타일 */
+.modal-footer {
+    padding: 15px; /* 푸터 패딩 조정 */
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-footer button {
+    width: 48%; /* 버튼의 너비를 48%로 설정하여 두 버튼이 균등하게 배치되도록 설정 */
+    padding: 10px; /* 버튼에 패딩 추가 */
+    border-radius: 5px; /* 모서리를 둥글게 설정 */
+    font-size: 16px; /* 버튼의 폰트 크기 설정 */
+    border: none; /* 기본 테두리 제거 */
+    cursor: pointer; /* 클릭 가능한 마우스 포인터 표시 */
+}
+
+.modal-footer .btn-primary {
+    background-color: #ccff33; /* 연두색 배경 */
+    color: black; ; /* 흰색 글씨 */
+}
+
+.modal-footer .btn-primary:hover {
+     background-color: #b2e600;
+}
+
+.modal-footer .btn-light {
+    background-color: #f0f0f0; /* 취소 버튼을 항목 추가 버튼 색상으로 변경 */
+    color: black; /* 검은색 글씨 */
+}
+
+.modal-footer .btn-light:hover {
+    background-color: #e2e6ea; /* 마우스 오버 시 색상 */
+}
+.overview_title{
+    font-size: 17px;
+    padding-bottom: 0px;
+    font-weight: 700;
+    line-height: 24px;
+
+}
+.member_more{
+    color: var(--blue-blue500, #1570ff);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    cursor: pointer;
+    margin-right:40px;
+     margin-top:6px;
+
+}
+
+.input-field {
+  width: 100%; /* 항목 추가 버튼과 같은 너비 */
+  font-size:14px;
+  padding: 11px;
+  margin-bottom: 10px;
+  background-color: #F7F7F7; /* 항목 추가 버튼과 같은 배경색 */
+  border: none; /* 보더라인 제거 */
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease; /* 포커스 전환 시 부드러운 애니메이션 */
+}
+
+.input-field:focus {
+  outline: none; /* 기본 포커스 아웃라인 제거 */
+  border-color: #80bdff; /* 연한 파란색 테두리 */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 부트스트랩의 연한 파란색 포커스 효과 */
+}
+
+
+.input-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.input-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.add-item-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.remove-item-button {
+  background-color: transparent; /* 배경 투명 */
+  border: none; /* 보더라인 없음 */
+  color: #333; /* 버튼 색상 */
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: -35px; /* 삭제 버튼이 항목 끝에 붙도록 조정 */
+  margin-bottom:13px;
+}
+
+.remove-item-button:hover {
+  color: red; /* 호버 시 색상 변경 */
+}
+
+/* 투표하기 모달 내용 */
+.custom-modal-body2 {
+    display: flex;
+    flex-direction: column; /* Use column to stack elements vertically */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    gap: 5px; /* Option spacing */
+    padding: 10px;
+
+}
+
+/* 투표하기 모달 내용 */
+.custom-modal-body3 {
+    display: flex;
+    flex-direction: column; /* Use column to stack elements vertically */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    gap: 5px; /* Option spacing */
+    padding: 10px;
+    padding-bottom: 30px;
+
+
+}
+
+
+.vote-item {
+  display: flex;
+  align-items: center;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+
+.btn-light {
+  background-color: #f8f9fa;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+.add-item-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0; /* 항목 추가 버튼 배경색 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.vote-deadline{
+    margin-top:10px;
+}
+.deadline-label{
+  margin-bottom: 5px; /* 라벨을 위로 올리기 위한 마진 조정 */
+  font-size: 14px; /* 폰트 크기 조정 가능 */
+}
+
+.item-container {
+  display: flex;
+  align-items: center; /* 아이콘과 텍스트를 수직으로 중앙 정렬 */
+  width: 90%;
+  padding: 5px 28px 10px 28px;
+
+}
+
+.icon-container img {
+  width: 30px; /* 아이콘 너비 설정 */
+  height: 30px; /* 아이콘 높이 설정 */
+  margin: 0px 10px;
+
+}
+
+.text-container {
+  display: flex;
+  align-items: center; /* 주말여행과 진행중인 투표를 수직으로 중앙 정렬 */
+}
+
+.main-text {
+  font-size: 15px; /* 주말여행 텍스트 크기 */
+  color: #000; /* 검은색 텍스트 */
+  font-weight: bold; /* 굵은 텍스트 */
+  margin: 0px 8px; /* 주말여행과 진행중인 투표 사이 간격 */
+}
+
+.sub-text {
+  margin-left: 5px;
+  background-color: #e8f7ff;
+  font-weight: 500;
+  font-size: 12px;
+  text-align: center;
+  color: #1570ff;
+  padding: 0px 4px;
+}
+
+.modal-subtitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.modal-deadline {
+  font-size: 13px;
+  color: #b0b0b0;
+  margin-bottom: 20px;
+}
+
+
+.vote-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  padding-bottom:10px;
+}
+
+.vote-option input {
+  margin-right: 10px;
+}
+.vote-results {
+  width:80%;
+}
+
+.vote-result {
+  margin-bottom: 15px; /* 항목 간 간격 */
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between; /* 옵션값과 투표명수를 양쪽 끝에 배치 */
+  align-items: center;
+  margin-bottom: 5px; /* 옵션과 그래프 사이의 간격 */
+}
+
+.vote-count {
+  font-weight: bold;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  width: 100%; /* 그래프 바의 너비를 100%로 설정 */
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #FFA500;
+  height: 100%;
+}
+#previewContainer {
+  display: flex;
+    flex-wrap: wrap; /* 이미지가 여러 개일 때 줄 바꿈 */
+    gap: 10px; /* 이미지 간격 */
+    margin-top: 10px; /* 위 요소와의 간격 */
+}
+
+#previewContainer img {
+    width: 100px; /* 이미지 가로 크기 */
+    height: 100px; /* 이미지 세로 크기 */
+    object-fit: cover; /* 이미지가 영역에 맞게 자르기 */
+    border-radius: 10px; /* 이미지 모서리 둥글게 */
+    position: relative; /* 버튼 위치를 위해 설정 */
+}
+
+.delete-btn {
+    position: absolute; /* 이미지 안에서 버튼을 위치 */
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7); /* 반투명 배경 */
+    border: none; /* 버튼 테두리 제거 */
+    padding: 2px 5px; /* 버튼 안쪽 여백 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    border-radius: 3px; /* 버튼 모서리 둥글게 */
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 255, 255, 1); /* 호버 시 배경색 변경 */
+}
+
+.upload-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    height: 38px;
+    cursor: pointer;
+    text-align: center;
+    color: #6c757d;
+}
+
+.upload-box input[type="file"] {
+    display: none;
+}
+.notice-content {
+    width: 100%;
+    height: 300px;
+    margin-top: 10px;
+    border-radius: 12px;
+    padding: 10px;
+    background-color: #F7F7F7;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 2px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.custom-btn {
+    background-color: #d1ff33;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.custom-btn:hover {
+    background-color: #b8e629;
+}
+
+.custom-btn2 {
+    width: 100%;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: #D1FF33;
+    border: none;
+    color: black;
+}
+
+.custom-btn2:hover {
+    background-color: #b8e629;
+}
