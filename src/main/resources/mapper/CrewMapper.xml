@@ -10,10 +10,16 @@
         where  username = '${param1}'
     </select>
 
+    <select id="crew_teamEmblem" resultType="String">
+        select logo
+        from   create_crew_tbl
+        where  create_crew_code = '${param1}'
+    </select>
+
     <update id="crew_write_hit_update">
         update crew_write
         set
-            hits=hits+1
+        hits=hits+1
         where create_crew_code = ${param1}
     </update>
 
@@ -29,6 +35,14 @@
         where crew_name = '${param1}'
     </select>
 
+    <select id="crew_name_double_check" resultType="int">
+        select count(1)
+        from create_crew_tbl
+        where crew_name = '${param1}'
+        and create_crew_code != ${param2}
+
+    </select>
+
     <select id="crew_page_select" resultType="com.ict.finalproject.vo.CrewVO">
         select a.create_crew_code,a.crew_name,a.logo,${param1} as usercode,b.position as b_n,
         ifnull((select crew_write_code
@@ -39,6 +53,12 @@
         from   create_crew_tbl a, crew_member_tbl b
         where  b.usercode = ${param1}
         and    a.create_crew_code=b.create_crew_code
+    </select>
+
+    <select id="vote_detail" resultType="com.ict.finalproject.vo.CrewVO">
+        select subject,enddate,opt1,opt2,opt3,opt4,opt5
+        from vote_tbl
+        where vote_code = ${param1}
     </select>
 
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
@@ -72,52 +92,69 @@
     <insert id="crew_insert">
         insert into create_crew_tbl
         (
-            crew_name
-            ,logo
-            ,addr
-            ,addr_gu
-            ,gender
-            ,content
-            ,age
-            ,usercode
+        crew_name
+        ,logo
+        ,addr
+        ,addr_gu
+        ,gender
+        ,content
+        ,age
+        ,usercode
         )
         values
         (
-            '${param1}'
-            ,'${param2}'
-            ,'${param3}'
-            ,'${param4}'
-            ,'${param5}'
-            ,'${param6}'
-            ,'${param7}'
-            ,${param8}
+        '${param1}'
+        ,'${param2}'
+        ,'${param3}'
+        ,'${param4}'
+        ,'${param5}'
+        ,'${param6}'
+        ,'${param7}'
+        ,${param8}
         );
     </insert>
     <insert id="crew_write_add">
         insert into crew_write
         (
-             create_crew_code
-            ,usercode
-            ,teamPhoto
-            ,age
-            ,gender
-            ,content
-            ,writedate
-            ,hits
+        create_crew_code
+        ,usercode
+        ,teamPhoto
+        ,age
+        ,gender
+        ,content
+        ,writedate
+        ,hits
         )
         values
         (
-             ${param1}
-            ,${param2}
-            ,'${param3}'
-            ,'${param4}'
-            ,'${param5}'
-            ,'${param6}'
-            ,now()
-            ,0
+        ${param1}
+        ,${param2}
+        ,'${param3}'
+        ,'${param4}'
+        ,'${param5}'
+        ,'${param6}'
+        ,now()
+        ,0
         );
     </insert>
-
+    <insert id="createNotice">
+        insert into crew_notice_tbl
+        (
+         subject
+        ,content
+        ,usercode
+        ,create_crew_code
+        ,writedate
+        )
+        values
+        (
+        '${param1}'
+        ,'${param2}'
+        , ${param3}
+        ,${param4}
+        ,now()
+        );
+    </insert>
     <select id="crew_write_detail_select" resultType="com.ict.finalproject.vo.CrewVO">
         select a.logo, a.crew_name, a.usercode, concat(a.gender,' · ',a.age) as a_s, b.teamPhoto as b_s
         , b.age, b.gender, b.content,b.hits,DATE_FORMAT(b.writedate, '%Y.%m.%d %H:%i') as writedate
@@ -139,6 +176,24 @@
         and    usercode = ${param1}
         and    status   = 0
     </select>
+    <select id="getNoticeCode" resultType="int">
+        select crew_notice_code
+        from   crew_notice_tbl
+        where  create_crew_code = ${param1}
+        order by writedate  desc
+        limit 1
+    </select>
+    <insert id="saveImage" parameterType="map">
+        INSERT INTO img_tbl (
+        crew_notice_code
+        ,img_name
+        ,writedate )
+         VALUES (
+         ${param1}
+        ,'${param2}'
+         ,NOW()
+        )
+    </insert>
     <select id="join_before_select" resultType="int">
         select count(1)
         FROM user_tbl u
@@ -166,15 +221,15 @@
 
         insert into crew_request_tbl
         (
-            usercode
-            ,create_crew_code
-            ,content
+        usercode
+        ,create_crew_code
+        ,content
         )
         values
         (
-             ${param1}
-            ,${param2}
-            ,'${param3}'
+        ${param1}
+        ,${param2}
+        ,'${param3}'
         )
     </insert>
 
@@ -214,6 +269,19 @@
         ,writedate = now()
         where crew_write_code = ${param1}
     </update>
+    <update id="updateCrewInfo">
+        update create_crew_tbl
+        set
+        crew_name = '${param3}'
+        ,logo = '${param4}'
+        ,age = '${param5}'
+        ,addr = '${param8}'
+        ,addr_gu= '${param9}'
+        ,gender= '${param6}'
+        ,content= '${param7}'
+        ,writedate = now()
+        where create_crew_code = ${param1}
+    </update>
     <select id="crew_code_select" resultType="int">
         select create_crew_code
         from   create_crew_tbl
@@ -224,15 +292,15 @@
     <insert id="crew_member_insert">
         insert into crew_member_tbl
         (
-            usercode
-            ,create_crew_code
-            ,position
+        usercode
+        ,create_crew_code
+        ,position
         )
         values
         (
-            ${param1}
-            ,${param2}
-            ,${param3}
+        ${param1}
+        ,${param2}
+        ,${param3}
         )
     </insert>
 
@@ -255,7 +323,7 @@
     </select>
 
     <update id="update14">
-    <![CDATA[
+        <![CDATA[
         update crew_request_tbl
         set status = 9
         where requested_date <= date_add(now(), interval -14 day);
@@ -274,28 +342,28 @@
 
     <select id="crew_app_select" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        select a.nickname,
-        case
-        when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
-        when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
-        when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
-        else concat(timestampdiff(day, b.requested_date, now()), '일 전')
-        end as a_s,
-        a.gender, c.crew_name, b.crew_request_code as c_n,
-        timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
-        timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
-        b.usercode
-        from user_tbl a, crew_request_tbl b, create_crew_tbl c
-        where b.create_crew_code = ${param1}
-        and a.usercode = b.usercode
-        and b.create_crew_code = c.create_crew_code
-        order by b.requested_date desc -- 최신순 정렬 추가
+         select a.nickname,
+            case
+            when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
+            when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
+            when timestampdiff(hour, b.requested_date, now()) < 24 then concat(timestampdiff(hour, b.requested_date, now()), '시간 전')
+            else concat(timestampdiff(day, b.requested_date, now()), '일 전')
+            end as a_s,
+            a.gender, c.crew_name, b.crew_request_code as c_n,
+            timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
+            timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
+            b.usercode, a.profile_img, c.logo  -- 추가된 필드들
+         from user_tbl a
+         join crew_request_tbl b on a.usercode = b.usercode
+         join create_crew_tbl c on b.create_crew_code = c.create_crew_code
+         where b.create_crew_code = ${param1}
+         order by b.requested_date desc  -- 최신순 정렬
     ]]>
     </select>
     <update id="crew_manage_app">
         update crew_request_tbl
         set    status = ${param3},
-               reason = '${param4}'
+        reason = '${param4}'
         where  usercode = ${param1}
         and    create_crew_code  = ${param2}
         and    crew_request_code = ${param5}
@@ -303,15 +371,15 @@
     <insert id="crew_member_insert2">
         insert into crew_member_tbl
         (
-            usercode
-            ,create_crew_code
-            ,position
+        usercode
+        ,create_crew_code
+        ,position
         )
         values
         (
-            ${param1}
-            ,${param2}
-            ,3
+        ${param1}
+        ,${param2}
+        ,3
         )
     </insert>
 
@@ -344,6 +412,7 @@
         ,victim_code
         ,report_reason
         ,report_content
+        ,crew_history_code
         )
         values
         (
@@ -351,6 +420,10 @@
         ,${param2}
         ,'${param3}'
         ,'${param4}'
+        ,(select crew_history_code from crew_history_tbl
+            where usercode = ${param1}
+            and create_crew_code =  ${param5}
+            order by withdrawaldate desc limit 1)
         )
     </insert>
     <delete id="crew_member_out">
@@ -362,112 +435,122 @@
     <insert id="crew_history_insert">
         insert into crew_history_tbl
         (
-            usercode
-            ,create_crew_code
-            ,flag
-            ,withdrawaldate
+        usercode
+        ,create_crew_code
+        ,flag
+        ,withdrawaldate
         )
         values
         (
-            ${param1}
-            ,${param2}
-            ,${param3}
-            ,now()
+        ${param1}
+        ,${param2}
+        ,${param3}
+        ,now()
         );
     </insert>
     <insert id="vote_create">
         insert into vote_tbl
         (
-            usercode
-            ,create_crew_code
-            ,subject
-            ,enddate
-            ,opt1
-            ,opt2
-            ,opt3
-            ,opt4
-            ,opt5
+        usercode
+        ,create_crew_code
+        ,subject
+        ,enddate
+        ,opt1
+        ,opt2
+        ,opt3
+        ,opt4
+        ,opt5
         )
         values
         (
-            ${param1}
-            ,${param2}
-            ,'${param3}'
-            ,'${param4}'
-            ,'${param5}'
-            ,'${param6}'
-            ,'${param7}'
-            ,'${param8}'
-            ,'${param9}'
+        ${param1}
+        ,${param2}
+        ,'${param3}'
+        ,'${param4}'
+        ,'${param5}'
+        ,'${param6}'
+        ,'${param7}'
+        ,'${param8}'
+        ,'${param9}'
         );
     </insert>
 
     <select id="crew_manage_overview" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        (
-            select 0 as a_n,
-                   ifnull(a.profile_img, 'basicimg.png') as subject,
-                   a.nickname as writedate,
-                   ${param2} as b_n,
-                   (select count(1)
-                    from crew_member_tbl
-                    where create_crew_code = ${param1}) as c_n
-            from user_tbl a, crew_member_tbl b
-            where  a.usercode = b.usercode
-            and b.create_crew_code = ${param1}
-            order by b.position
-            limit 4
-        )
-        union
-        (
-            select 1 as a_n, subject, creationdate as writedate,
-                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
-            from vote_tbl
-            where create_crew_code = ${param1}
-            order by creationdate desc
-            limit 1
-        )
-        union
-        (
-            select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
-            from crew_notice_tbl
-            where create_crew_code = ${param1}
-            order by writedate desc
-            limit 3
-        )
-
-        ]]>
+     (
+         select 0 as a_n,
+                a.profile_img as subject,
+                a.nickname as writedate,
+                a.usercode as b_n,
+                (select count(1)
+                 from crew_member_tbl
+                 where create_crew_code = ${param1}) as c_n
+         from user_tbl a, crew_member_tbl b
+         where  a.usercode = b.usercode
+         and b.create_crew_code = ${param1}
+         limit 5
+     )
+     union all
+     (
+         select 1 as a_n, subject, creationdate as writedate,
+                case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
+         from vote_tbl
+         where create_crew_code = ${param1}
+         limit 100
+     )
+     union all
+     (
+         select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
+         from crew_notice_tbl
+         where create_crew_code = ${param1}
+         limit 100
+     )
+     order by writedate desc
+     ]]>
     </select>
+
 
     <select id="crew_manage_notice" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-        (
-            select 1 as a_n, subject, creationdate as writedate,
-                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
-            from vote_tbl
-            where create_crew_code = ${param1}
-            and   enddate > now()
-            order by creationdate desc
-        )
-        union
-        (
-            select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
-            from crew_notice_tbl
-            where create_crew_code = ${param1}
-            order by writedate desc
-        )
-        union
-        (
-            select 3 as a_n, subject, creationdate as writedate,
-                   case when enddate < now() then 9 else 1 end as b_n, vote_code as c_n
-            from vote_tbl
-            where create_crew_code = ${param1}
-            and   enddate < now()
-            order by creationdate desc
-        )
-        ]]>
+    (
+        select 1 as a_n, subject, a.enddate as enddate_raw, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               1 as b_n, a.vote_code as c_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
+               NULL as content, a.usercode
+        from vote_tbl a
+        where create_crew_code = ${param1}
+        and enddate > now()
+    )
+    union all
+    (
+        select 3 as a_n, a.subject, a.enddate as enddate_raw, DATE_FORMAT(a.enddate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               9 as b_n, a.vote_code as c_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code) as d_n,
+               (select count(1) from voter_tbl where vote_code=a.vote_code and usercode=${param2}) as e_n,
+               NULL as content, a.usercode
+        from vote_tbl a
+        where create_crew_code = ${param1}
+        and enddate < now()
+    )
+    union all
+    (
+        select 2 as a_n, subject, writedate as enddate_raw, DATE_FORMAT(writedate, '%Y년 %c월 %e일 (%a) %p %h:%i시') as enddate,
+               0 as b_n, crew_notice_code as c_n, NULL as d_n, 99999 as e_n,
+               content, usercode
+        from crew_notice_tbl
+        where create_crew_code = ${param1}
+    )
+    ]]>
+        order by
+        case when a_n = 1 then 1
+        when a_n = 3 then 2
+        when a_n = 2 then 3
+        end,
+        case when a_n = 1 then enddate_raw end asc,
+        case when a_n = 3 then enddate_raw end desc,
+        case when a_n = 2 then enddate_raw end desc
     </select>
-
     <select id="vote_select" resultType="com.ict.finalproject.vo.CrewVO">
         select
         a.subject,
@@ -513,19 +596,63 @@
         where vote_code =${param2}
         and   usercode =${param1}
     </select>
+
     <insert id="vote_insert">
         insert into voter_tbl
         (
-            usercode
-            ,vote_code
-            ,selected_option
+        usercode
+        ,vote_code
+        ,selected_option
         )
         values
         (
-            ${param1}
-            ,${param2}
-            ,'${param3}'
+        ${param1}
+        ,${param2}
+        ,'${param3}'
         )
 
     </insert>
+
+    <select id="getCrewList" resultType="com.ict.finalproject.vo.CrewVO">
+        SELECT create_crew_code, crew_name, logo
+        FROM create_crew_tbl;
+    </select>
+
+    <select id="resign_select" resultType="int">
+        SELECT count(1)
+        FROM crew_member_tbl
+        where create_crew_code=${param1}
+    </select>
+
+    <select id="vote_member_chek" resultType="int">
+        SELECT IFNULL(MAX(usercode), 0)
+        FROM voter_tbl
+        where vote_code =${param1}
+    </select>
+
+    <update id="vote_update">
+        update vote_tbl
+        set
+        subject = '${param2}'
+        ,enddate = '${param3}'
+        ,opt1    = '${param4}'
+        ,opt2    = '${param5}'
+        ,opt3    = '${param6}'
+        ,opt4    = '${param7}'
+        ,opt5    = '${param8}'
+        ,creationdate =now()
+        where    vote_code = ${param1}
+    </update>
+
+    <delete id="vote_delete">
+        delete
+        from vote_tbl
+        where vote_code = ${param1}
+    </delete>
+
+    <delete id="voter_delete">
+        delete
+        from voter_tbl
+        where vote_code = ${param1}
+    </delete>
 </mapper>
