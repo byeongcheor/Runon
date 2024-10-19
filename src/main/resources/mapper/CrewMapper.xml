@@ -145,6 +145,7 @@
         ,usercode
         ,create_crew_code
         ,writedate
+        ,updated_date
         )
         values
         (
@@ -152,6 +153,7 @@
         ,'${param2}'
         , ${param3}
         ,${param4}
+        ,now()
         ,now()
         );
     </insert>
@@ -188,16 +190,17 @@
         (SELECT position FROM crew_member_tbl WHERE usercode=${param1} AND create_crew_code=${param2}) AS f_n,
         (SELECT COUNT(1) FROM crew_member_tbl WHERE create_crew_code=a.create_crew_code AND usercode=${param1}) AS g_n,
         COALESCE(rs.total_score, 0) AS total_score, -- 크루의 총 점수 (없을 시 0)
-        COALESCE(rs.crew_rank, '랭킹 없음 ( 0 Km)') AS crew_rank -- 크루의 랭킹 (없을 시 '랭킹 없음')
+        COALESCE(rs.crew_rank, 0) AS crew_rank -- 크루의 랭킹 (없을 시 '랭킹 없음')
         FROM
         create_crew_tbl a
         LEFT JOIN
-        crew_write b ON a.create_crew_code = b.create_crew_code AND b.is_delete = 0 -- 이 부분을 LEFT JOIN으로 처리하여 데이터가 없는 경우에도 출력
+        crew_write b ON a.create_crew_code = b.create_crew_code AND b.is_delete = 0
         LEFT JOIN
-        RankedScores rs ON a.create_crew_code = rs.create_crew_code -- 랭킹 및 점수를 가져오기 위한 조인
+        RankedScores rs ON a.create_crew_code = rs.create_crew_code
         WHERE
         a.create_crew_code = ${param2};
     </select>
+
     <select id="crew_join_select" resultType="int">
         select count(1)
         from   crew_request_tbl
@@ -694,4 +697,54 @@
         from voter_tbl
         where vote_code = ${param1}
     </delete>
+
+    <update id="notice_hits_add">
+        update crew_notice_tbl
+        set    hits = hits+1
+        where  crew_notice_code = ${param1}
+    </update>
+
+    <select id="notice_detail" resultType="com.ict.finalproject.vo.CrewVO">
+        select subject,content, updated_date, hits as a_n, crew_notice_code as b_n
+        from   crew_notice_tbl
+        where  crew_notice_code = ${param1}
+    </select>
+
+    <select id="notice_detail_img" resultType="String">
+        SELECT img_name FROM img_tbl WHERE crew_notice_code = ${param1}
+    </select>
+    <delete id="img_delete">
+        DELETE FROM img_tbl
+        WHERE  crew_notice_code = ${param1}
+        and    img_name = '${param2}'
+    </delete>
+    <insert id="upload_images">
+        insert into img_tbl
+        (
+        crew_notice_code
+        ,img_name
+        )
+        values
+        (
+        ${param1}
+        ,'${param2}'
+        )
+    </insert>
+    <update id="update_notice">
+        update crew_notice_tbl
+        set subject = '${param2}'
+        ,content = '${param3}'
+        ,updated_date = now()
+        where crew_notice_code = ${param1}
+    </update>
+    <delete id="delete_notice">
+        delete from crew_notice_tbl
+        where crew_notice_code = ${param1}
+    </delete>
+
+    <delete id="delete_notice_img">
+        delete from img_tbl
+        where crew_notice_code = ${param1}
+    </delete>
+
 </mapper>

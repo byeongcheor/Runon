@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -556,6 +558,8 @@ public class CrewController {
         }
         return a;
     }
+
+    /////////////////////////크루관리///////////////////
     @PostMapping("/member_manage")
     @ResponseBody
     public int member_manage(@RequestParam("Authorization")String token,
@@ -601,6 +605,109 @@ public class CrewController {
         return a;
     }
 
+    @PostMapping("/getNotice")
+    @ResponseBody
+    public Map<String, Object> noticeDetail(@RequestParam("Authorization")String token,
+                                            @RequestParam("notice_num") int notice_num,
+                                            @RequestParam("YN") String YN
+    ) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        List<CrewVO> noticeDetail = null;
+        Map<String, Object> result = new HashMap<>();
+        try {
+            if(YN.equals("N")) {
+                service.notice_hits_add(notice_num);
+            }
+            noticeDetail = service.notice_detail(notice_num);
+            List<String> images = service.notice_detail_img(notice_num);
+            result.put("notice", noticeDetail);
+            result.put("images", images);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    // 이미지 파일 업로드 처리
+    @PostMapping("/upload_images")
+    public ResponseEntity<String> upload_images(@RequestParam("crew_notice_code") int crewNoticeCode,
+                                                @RequestParam("files") MultipartFile[] notice_img) {
+        UUID uuid = UUID.randomUUID();
+        String fileName = "";
+        try {
+            if (notice_img != null && notice_img.length > 0) {
+                for (MultipartFile file : notice_img) {
+                    if (file != null && !file.isEmpty()) {
+                        fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                        fileName = uuid.toString() + "_" + fileName;
+                        Path path = Paths.get(uploadDir + File.separator + fileName);
+                        Files.copy(file.getInputStream(), path);
+                        service.upload_images(crewNoticeCode, fileName);
+                    }
+                }
+                return ResponseEntity.ok("Files uploaded successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No files to upload");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
+    }
+
+    @PostMapping("/delete_image")
+    @ResponseBody
+    public int  delete_image(@RequestParam("Authorization")String token, @RequestParam("img_name") String img_name, @RequestParam("notice_num") int notice_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.img_delete(notice_num,img_name);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+    @PostMapping("/update_notice")
+    @ResponseBody
+    public int  update_notice(@RequestParam("Authorization")String token,
+                              @RequestParam("notice_num") int notice_num,
+                              @RequestParam("subject") String subject,
+                              @RequestParam("content") String content) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.update_notice(notice_num,subject,content);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+    @PostMapping("/delete_notice")
+    @ResponseBody
+    public int  delete_notice(@RequestParam("Authorization")String token,
+                              @RequestParam("notice_num") int notice_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.delete_notice(notice_num);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
 
     @PostMapping("/vote_select")
     @ResponseBody
