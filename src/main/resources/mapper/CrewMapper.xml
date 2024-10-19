@@ -160,7 +160,7 @@
         SELECT
         create_crew_code,
         SUM(score_change) AS total_score,
-        RANK() OVER (ORDER BY SUM(score_change) DESC) AS `rank`
+        RANK() OVER (ORDER BY SUM(score_change) DESC) AS `crew_rank`
         FROM
         record_tbl
         WHERE
@@ -187,17 +187,16 @@
         (SELECT AVG(FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25)) FROM user_tbl u JOIN crew_member_tbl cm ON u.usercode = cm.usercode WHERE cm.create_crew_code = ${param2}) AS e_n,
         (SELECT position FROM crew_member_tbl WHERE usercode=${param1} AND create_crew_code=${param2}) AS f_n,
         (SELECT COUNT(1) FROM crew_member_tbl WHERE create_crew_code=a.create_crew_code AND usercode=${param1}) AS g_n,
-        rs.total_score, -- 크루의 총 점수
-        rs.rank -- 크루의 랭킹
+        COALESCE(rs.total_score, 0) AS total_score, -- 크루의 총 점수 (없을 시 0)
+        COALESCE(rs.crew_rank, '랭킹 없음 ( 0 Km)') AS crew_rank -- 크루의 랭킹 (없을 시 '랭킹 없음')
         FROM
         create_crew_tbl a
-        JOIN
-        crew_write b ON a.create_crew_code = b.create_crew_code
+        LEFT JOIN
+        crew_write b ON a.create_crew_code = b.create_crew_code AND b.is_delete = 0 -- 이 부분을 LEFT JOIN으로 처리하여 데이터가 없는 경우에도 출력
         LEFT JOIN
         RankedScores rs ON a.create_crew_code = rs.create_crew_code -- 랭킹 및 점수를 가져오기 위한 조인
         WHERE
-        a.create_crew_code = ${param2}
-        AND b.is_delete = 0;
+        a.create_crew_code = ${param2};
     </select>
     <select id="crew_join_select" resultType="int">
         select count(1)
@@ -538,7 +537,7 @@
      )
      union all
      (
-         select 2 as a_n, subject, writedate, 0 as b_n, crew_notice_code as c_n
+         select 2 as a_n, subject, DATE_FORMAT(writedate, '%Y-%m-%d %H:%i') AS writedate, 0 as b_n, crew_notice_code as c_n
          from crew_notice_tbl
          where create_crew_code = ${param1}
          limit 100

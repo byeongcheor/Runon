@@ -96,9 +96,13 @@
    </div>
 </div><script>
 var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const crew_code = urlParams.get('create_crew_code');
-const position = urlParams.get('position');
+const crew_code = ${create_crew_code};
+const position = ${position};
+
+clog('crew_code : '+crew_code);
+clog('position : '+position);
+
+
 if(position!=1){
 $('#yes').hide();
 $('#no').hide();
@@ -163,7 +167,7 @@ $('#no').hide();
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
                     list += '	<a class="team-link" style="flex-grow: 1;"> ';
                     list += '	  <div class="team-emblem-wrapper"> ';
-                    list += '		<img src="/resources/uploadfile/'+response[i].profile_img+ '"class="team-emblem" onclick="crew_page_detail(36,32)"> ';
+                    list += '		<img src="/resources/uploadfile/'+response[i].profile_img+ '"class="team-emblem"> ';
                     list += '	  </div> ';
                     list += '	  <div class="team-content"> ';
                     list += '		<div class="info-name-wrapper"> ';
@@ -196,9 +200,6 @@ $('#no').hide();
                 console.error('Error: ', e);
             }
         });
-    }
-    function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
     }
     function app(element){
         var id = element.id===undefined?'member': element.id;
