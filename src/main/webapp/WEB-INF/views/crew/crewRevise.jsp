@@ -114,14 +114,12 @@
 <script>
 // URL 파라미터에서 값 가져오기
 var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const user_code = urlParams.get('user_code');  // URL에서 user_code 가져오기
-const create_crew_code = urlParams.get('create_crew_code');  // URL에서 create_crew_code 가져오기
+const user_code = ${user_code};
+const create_crew_code = ${create_crew_code};
 
 // 받은 값을 콘솔로 출력하여 확인
 console.log('user_code: ' + user_code);
 console.log('create_crew_code: ' + create_crew_code);
-console.log('Authorization: ' + Authorization);
 
 // 페이지 로드 시 도시 리스트를 불러오는 함수
 $(document).ready(function() {

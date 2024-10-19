@@ -6,9 +6,12 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.PagingVO;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -20,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -186,11 +190,33 @@ public class CrewController {
     }
     ////////////////////////////////////////////////////디테일/////////////////////////////////////////////
     //크루모집디테일
+    @PostMapping("/go_crewDetail")
+    @ResponseBody
+    public String crewDetail(@RequestParam("Authorization") String token,
+                             @RequestParam("create_crew_code") int create_crew_code,
+                             HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        int crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("crew_write_code", crew_write_code);
+        return "success";
+    }
+
     @GetMapping("/crewDetail")
-    public String crewDetail(int create_crew_code,int crew_write_code,  Model model){
+    public String nextPage(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer crew_write_code = (Integer) session.getAttribute("crew_write_code");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("crew_write_code", crew_write_code);
-        return "crew/crewDetail";
+        return "crew/crewDetail"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/detail")
@@ -387,9 +413,37 @@ public class CrewController {
 
 
     /////////////////////////크루관리///////////////////////////////////////////////
+    @PostMapping("/go_crewManage")
+    @ResponseBody
+    public String go_crewManage(@RequestParam("Authorization") String token,
+                                @RequestParam("create_crew_code") int create_crew_code,
+                                @RequestParam("position") int position,
+                                @RequestParam("user_code") int user_code,
+                                HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("user_code", user_code);
+        session.setAttribute("position", position);
+        return "success";
+    }
+
     @GetMapping("/crewManage")
-    public String crewCreate(){
-        return "crew/crewManage";
+    public String crewManage(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer user_code = (Integer) session.getAttribute("user_code");
+        Integer position = (Integer) session.getAttribute("position");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("user_code", user_code);
+        model.addAttribute("position", position);
+        return "crew/crewManage"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/crew_deatil_select")
@@ -436,9 +490,33 @@ public class CrewController {
     }
 
     /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
+    @PostMapping("/go_crewApp")
+    @ResponseBody
+    public String go_crewApp(@RequestParam("Authorization") String token,
+                             @RequestParam("create_crew_code") int create_crew_code,
+                             @RequestParam("position") int position,
+                             HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("position", position);
+        return "success";
+    }
+
     @GetMapping("/crewApp")
-    public String crewApp(){
-        return "crew/crewApp";
+    public String crewApp(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer position = (Integer) session.getAttribute("position");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("position", position);
+        return "crew/crewApp"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/crew_app_select")
@@ -480,6 +558,8 @@ public class CrewController {
         }
         return a;
     }
+
+    /////////////////////////크루관리///////////////////
     @PostMapping("/member_manage")
     @ResponseBody
     public int member_manage(@RequestParam("Authorization")String token,
@@ -525,6 +605,109 @@ public class CrewController {
         return a;
     }
 
+    @PostMapping("/getNotice")
+    @ResponseBody
+    public Map<String, Object> noticeDetail(@RequestParam("Authorization")String token,
+                                            @RequestParam("notice_num") int notice_num,
+                                            @RequestParam("YN") String YN
+    ) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        List<CrewVO> noticeDetail = null;
+        Map<String, Object> result = new HashMap<>();
+        try {
+            if(YN.equals("N")) {
+                service.notice_hits_add(notice_num);
+            }
+            noticeDetail = service.notice_detail(notice_num);
+            List<String> images = service.notice_detail_img(notice_num);
+            result.put("notice", noticeDetail);
+            result.put("images", images);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    // 이미지 파일 업로드 처리
+    @PostMapping("/upload_images")
+    public ResponseEntity<String> upload_images(@RequestParam("crew_notice_code") int crewNoticeCode,
+                                                @RequestParam("files") MultipartFile[] notice_img) {
+        UUID uuid = UUID.randomUUID();
+        String fileName = "";
+        try {
+            if (notice_img != null && notice_img.length > 0) {
+                for (MultipartFile file : notice_img) {
+                    if (file != null && !file.isEmpty()) {
+                        fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                        fileName = uuid.toString() + "_" + fileName;
+                        Path path = Paths.get(uploadDir + File.separator + fileName);
+                        Files.copy(file.getInputStream(), path);
+                        service.upload_images(crewNoticeCode, fileName);
+                    }
+                }
+                return ResponseEntity.ok("Files uploaded successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No files to upload");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
+    }
+
+    @PostMapping("/delete_image")
+    @ResponseBody
+    public int  delete_image(@RequestParam("Authorization")String token, @RequestParam("img_name") String img_name, @RequestParam("notice_num") int notice_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.img_delete(notice_num,img_name);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+    @PostMapping("/update_notice")
+    @ResponseBody
+    public int  update_notice(@RequestParam("Authorization")String token,
+                              @RequestParam("notice_num") int notice_num,
+                              @RequestParam("subject") String subject,
+                              @RequestParam("content") String content) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.update_notice(notice_num,subject,content);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+    @PostMapping("/delete_notice")
+    @ResponseBody
+    public int  delete_notice(@RequestParam("Authorization")String token,
+                              @RequestParam("notice_num") int notice_num) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a = 0;
+        try {
+            service.delete_notice(notice_num);
+            a=1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
 
     @PostMapping("/vote_select")
     @ResponseBody
@@ -602,38 +785,26 @@ public class CrewController {
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
 
-        List<CrewVO> vote_read = new ArrayList<>();;
+        List<CrewVO> vote_read = new ArrayList<>();
         try {
             if(flag.equals("R")){
                 vote_read =  service.vote_detail(vote_num);
+                int a = service.vote_member_chek(vote_num,user_code);
+                System.out.println(a);
+                // vote_read 리스트의 각 CrewVO 객체에 a_s 값 설정
+                for (CrewVO crew : vote_read) {
+                    crew.setA_n(a);
+                }
             }
             if(flag.equals("U")){
-                int a = service.vote_member_chek(vote_num);
-                // CrewVO 객체 생성
-                CrewVO crew = new CrewVO();
-                if(a>0){
-                    // a_s 필드에 "1" 설정
-                    crew.setA_s("1");
-                    // 리스트에 추가
-                    vote_read.add(crew);
-                    return vote_read;
-                }
-                else {
-                    // a_s 필드에 "0" 설정
-                    crew.setA_s("0");
-                    // 리스트에 추가
-                    vote_read.add(crew);
-                    service.vote_update(vote_num, title, endDate, opt1, opt2, opt3, opt4, opt5);
-                }
+                service.vote_update(vote_num, title, endDate, opt1, opt2, opt3, opt4, opt5, user_code);
+                service.voter_delete(vote_num);
             }
             if(flag.equals("D")){
                 service.voter_delete(vote_num);
                 service.vote_delete(vote_num);
                 return vote_read;
             }
-
-            //service.vote_create(user_code, crewCode, title, endDate, opt1, opt2,opt3,opt4,opt5);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -664,12 +835,34 @@ public class CrewController {
 
 
     /////////////////////////// 크루정보수정 페이지////////////////////////////////////////
+    @PostMapping("/go_crewRevise")
+    @ResponseBody
+    public String go_crewRevise(@RequestParam("Authorization") String token,
+                                @RequestParam("create_crew_code") int create_crew_code,
+                                @RequestParam("user_code") int user_code,
+                                HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
 
-    @GetMapping("/crewRevise")
-    public String crewRevise(){
-        return "crew/crewRevise";
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("user_code", user_code);
+        return "success";
     }
 
+    @GetMapping("/crewRevise")
+    public String crewRevise(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer user_code = (Integer) session.getAttribute("user_code");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("user_code", user_code);
+        return "crew/crewRevise"; // 이동할 JSP 페이지
+    }
     //////////////////////크루 정보 불러오기//////////////////////////////////
     @PostMapping("/getCrewInfo")
     @ResponseBody

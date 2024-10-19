@@ -315,8 +315,9 @@
 }
 
 .team-name {
-  font-size: 18px;
+  font-size: 20px;
   color: #000;
+  margin-bottom:5px;
 }
 .custom-modal-width {
   max-width: 400px; /* 모달 너비를 500px로 줄임 (조정 가능) */

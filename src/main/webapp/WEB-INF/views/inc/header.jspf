@@ -120,10 +120,8 @@ function crew() {
                 </div>
                 <ul>
                     <li><a href="/marathon/marathonList">MARATHON</a></li>
-                    <li><a class="menus" onclick="mate()">MATE</a></li>
-                    <li><a class="menus" onclick="crew()">CREW</a></li>
-                    <%-- <li><a class="menus" href="/mate/mate">MATE</a></li>
-                    <li><a class="menus" href="/crew/crewList">CREW</a></li>--%>
+                    <li><a class="menus" href="/mate/mate">MATE</a></li>
+                    <li><a class="menus" href="/crew/crewList">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/cart/cart">CART</a></li>
 <%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>
