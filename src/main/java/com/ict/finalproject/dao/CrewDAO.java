@@ -20,7 +20,13 @@ public interface CrewDAO {
     public List<CrewVO> getCrewInfo(int create_crew_code );
     public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> vote_detail(int vote_num);
+    public List<CrewVO> notice_detail(int notice_num);
     public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
+    public String crew_teamEmblem(int create_crew_code);
+    public List<String> notice_detail_img(int notice_num);
+    public int img_delete(int notice_num, String img_name);
+    public int upload_images(int notice_num, String img_name);
+    public int update_notice(int notice_num, String subject, String content);
     public int totalRecord(PagingVO pVO);
     public int update14();
     public int usercodeSelect(String user_name);
@@ -36,7 +42,6 @@ public interface CrewDAO {
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
     public int getNoticeCode(int create_crew_code);
-    public String crew_teamEmblem(int create_crew_code);
     void saveImage(int crew_notice_code, String img_filename);
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
@@ -59,6 +64,10 @@ public interface CrewDAO {
     public int vote_delete(int vote_num);
     public int voter_delete(int vote_num);
     public int crew_write_code_select(int crewCode);
+    public int notice_hits_add(int notice_num);
+    public int delete_notice(int notice_num);
+    public int delete_notice_img(int notice_num);
+
 
     /*채팅방 크루연결 */
     public List<CrewVO> getCrewList();

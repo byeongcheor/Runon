@@ -6,6 +6,7 @@ import com.ict.finalproject.vo.PagingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -98,6 +99,12 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> notice_detail( int notice_num)
+    {
+        return dao.notice_detail(notice_num);
+    }
+
+    @Override
     public List<CrewVO> vote_select( int user_code, int vote_num)
     {
         return dao.vote_select(user_code, vote_num);
@@ -127,8 +134,42 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int img_delete(int notice_num, String img_name)
+    {
+        File file = new File("/crew_upload/" + img_name);
+        if (file.exists()) {
+            file.delete();
+        }
+        return dao.img_delete(notice_num,img_name);
+    }
+
+    @Override
+    public int upload_images(int notice_num, String img_name)
+    {
+        return dao.upload_images(notice_num,img_name);
+    }
+
+    @Override
+    public int update_notice(int notice_num, String subject, String content)
+    {
+        return dao.update_notice(notice_num,subject,content);
+    }
+
+    @Override
+    public int delete_notice(int notice_num)
+    {
+        dao.delete_notice_img(notice_num);
+        return dao.delete_notice(notice_num);
+    }
+
+    @Override
     public String crew_teamEmblem(int create_crew_code) {
         return dao.crew_teamEmblem(create_crew_code);
+    }
+
+    @Override
+    public List<String> notice_detail_img(int notice_num) {
+        return dao.notice_detail_img(notice_num);
     }
 
     @Override
@@ -301,6 +342,11 @@ public class CrewServiceImpl implements CrewService{
     @Override
     public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5,int user_code) {
         return dao.vote_update(vote_num, title, endDate, opt1, opt2,opt3,opt4,opt5, user_code);
+    }
+
+    @Override
+    public int notice_hits_add(int notice_num) {
+        return dao.notice_hits_add(notice_num);
     }
 
 
