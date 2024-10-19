@@ -314,25 +314,23 @@
 </div>
 
 <script>
-   var Authorization = localStorage.getItem("Authorization");
-   const urlParams = new URLSearchParams(window.location.search);
-   const create_crew_code = urlParams.get('create_crew_code');
-   const user_code = urlParams.get('user_code');
-   const position = urlParams.get('position');
-   console.log("create_crew_code",create_crew_code);
-   var votenum = 4;
+const Authorization = localStorage.getItem("Authorization");
+const create_crew_code = ${create_crew_code};
+const user_code = ${user_code};
+const position = ${position};
+var votenum = 4;
 
-   if (position != 1) {
-      $('#editCrewBtn').hide();
-      $('#vote_delete').hide();
-      $('#vote_delete2').hide();
-   }
-   if (position > 2) {
-      $('#voteMake').hide();
-      $('#noticeMake').hide();
-      $('#vote_update').hide();
-      $('#vote_update2').hide();
-   }
+if (position != 1) {
+  $('#editCrewBtn').hide();
+  $('#vote_delete').hide();
+  $('#vote_delete2').hide();
+}
+if (position > 2) {
+  $('#voteMake').hide();
+  $('#noticeMake').hide();
+  $('#vote_update').hide();
+  $('#vote_update2').hide();
+}
 
    clog('My position : ' + position);
    clog('My user_code : ' + user_code);
@@ -345,8 +343,8 @@
       if (position != 1) {
          $('#wait_cnt').hide();
       }
-      if(position==0)$('#go_join').show();
      if(position==0){
+         $('#go_join').show();
          $('#editCrewBtn').hide();
          $('#resignCrew').hide();
          $('#notice').css('pointer-events', 'none');
@@ -367,7 +365,6 @@
              create_crew_code: create_crew_code
           },
           success: function(response) {
-              console.log("response", response)
               $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
               $('#crew_name').text(response[0].crew_name);
               $('#teamNameDisplay').text(response[0].crew_name);
@@ -588,7 +585,7 @@ function crew_overview(response) {
             list += '      </div>';
             list += '      <div class="text-container"> ';
             list += '<span class="main-text">' + response[i].subject + '</span>';
-            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:11px;">' +  response[i].writedate + '</span>';
+            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
             list += '      </div>';
             list += '   </div>';
             list += '</li>';
@@ -698,11 +695,40 @@ function crew_notice(response) {
    }
 
    function go_request_wait() {
-      window.location.href = '/crew/crewApp?create_crew_code=' + create_crew_code + '&position=' + position;
+       $.ajax({
+           url: '/crew/go_crewApp',  // 서버에 전송할 URL
+           type: 'POST',  // POST 방식으로 전송
+           data: {
+               Authorization     : Authorization,
+               create_crew_code  : create_crew_code,
+               position          : position
+           },
+           success: function(response) {
+               window.location.href = '/crew/crewApp'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+           },
+           error: function(error) {
+               console.log('에러 발생:', error);
+           }
+       });
+
    }
 
    function crewRevise() {
-      window.location.href = '/crew/crewRevise?user_code=' + user_code + '&create_crew_code=' + create_crew_code;
+        $.ajax({
+            url: '/crew/go_crewRevise',
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                user_code        : user_code,
+            },
+            success: function(response) {
+                window.location.href = '/crew/crewRevise';
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
    }
 
    function member_manage(element, flag) {
