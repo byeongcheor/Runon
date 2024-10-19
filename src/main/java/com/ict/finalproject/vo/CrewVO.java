@@ -51,7 +51,7 @@ public class CrewVO {
     private int total_record;
     private int usercode;
     private int total_score;
-    private int rank;
+    private int crew_rank;
 
     private String deleted_date;
     private String writedate;
