@@ -80,5 +80,7 @@ $(document).ready(function() {
     //         });
     //     }
     // });
+    /*console.log(usercode1);
+    alert(usercode1);*/
 });
 

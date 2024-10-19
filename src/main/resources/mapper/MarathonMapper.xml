@@ -3,10 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.MarathonDAO">
-    <select id="usercodeSelect" resultType="int">
+    <select id="userselect" resultType="com.ict.finalproject.vo.MarathonListVO">
+        select *
+        from   user_tbl
+        where  usercode =${param1}
+    </select>
+    <select id="usercodeSelect"  resultType="int">
         select usercode
         from   user_tbl
-        where  username = '${param1}'
+        where  username ='${param1}'
     </select>
     <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
         SELECT * FROM marathon_list_tbl
@@ -61,7 +66,7 @@
         WHERE marathon_code = #{marathonId}
     </select>
     <!-- 장바구니 항목 추가 -->
-    <insert id="addToCart" parameterType="com.ict.finalproject.vo.CartVO">
+    <insert id="addToCart" >
         INSERT INTO cart_tbl (quantity, price, marathon_code, usercode, cart_expiration_date)
         VALUES (#{quantity}, #{price}, #{marathon_code}, #{usercode}, NOW())
     </insert>
@@ -88,7 +93,7 @@
             AND MONTH(event_date) = #{month}
         </if>
         <if test="addr != null and addr != ''">
-            AND (addr LIKE CONCAT('%', #{addr}, '%') OR mainLocation = getMainLocation(#{addr}))
+            AND addr LIKE CONCAT('%', #{addr}, '%')
         </if>
         <if test="search != null and search != ''">
             AND marathon_name LIKE CONCAT('%', #{search}, '%')
@@ -106,17 +111,17 @@
             AND MONTH(event_date) = #{month}
         </if>
         <if test="addr != null and addr != ''">
-            AND (addr LIKE CONCAT('%', #{addr}, '%') OR mainLocation = getMainLocation(#{addr}))
+            AND addr LIKE CONCAT('%', #{addr}, '%')
         </if>
         <if test="search != null and search != ''">
             AND marathon_name LIKE CONCAT('%', #{search}, '%')
         </if>
         ORDER BY
         <choose>
-            <when test="sort == 1">
+            <when test="sort1 == 1">
                 like_count DESC <!-- 좋아요 순 -->
             </when>
-            <when test="sort == 2">
+            <when test="sort1 == 2">
                 hit DESC <!-- 조회 순 -->
             </when>
             <otherwise>
@@ -125,7 +130,6 @@
         </choose>
         LIMIT #{offset}, #{onePageRecord}
     </select>
-
 
 
 

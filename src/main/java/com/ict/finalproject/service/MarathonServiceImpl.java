@@ -3,6 +3,7 @@ package com.ict.finalproject.service;
 import com.ict.finalproject.dao.MarathonDAO;
 import com.ict.finalproject.vo.CartVO;
 import com.ict.finalproject.vo.MarathonListVO;
+import com.ict.finalproject.vo.MateVO;
 import com.ict.finalproject.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class MarathonServiceImpl implements MarathonService {
     }
 
     @Override
-    public void addToCart(CartVO cartVO) {
-        dao.addToCart(cartVO);
+    public int addToCart(CartVO cartVO) {
+        return dao.addToCart(cartVO);
     }
 
     @Override
@@ -58,14 +59,19 @@ public class MarathonServiceImpl implements MarathonService {
     }
 
     @Override
-    public List<MarathonListVO> filterMarathons(String year, String month, String addr, String search, PagingVO pvo, Integer  sort) {
+    public List<MarathonListVO> filterMarathons(String year, String month, String addr, String search, PagingVO pvo, Integer  sort1) {
         pvo.calculateOffset(); // offset 계산
-        pvo.setSort1(sort); // sort 값을 PagingVO에 설정
+        pvo.setSort1(sort1); // sort 값을 PagingVO에 설정
         return dao.selectFilteredMarathons(pvo); // PagingVO를 매개변수로 넘김
     }
     @Override
     public int usercodeSelect(String user_name) {
         return dao.usercodeSelect(user_name);
+    }
+
+    @Override
+    public List<MarathonListVO> userselect(int user_code) {
+        return dao.userselect(user_code);
     }
 
 }
