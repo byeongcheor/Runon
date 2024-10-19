@@ -79,11 +79,11 @@ body{
 
 .emblem-wrapper {
     display: inline-block;
-    width: 62px;
-    height: 62px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right:15px;
+    margin-right:20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -134,7 +134,7 @@ body{
 
 /* 멤버 모집 조건 박스 스타일 */
 .recruitment-box {
-    margin: 20px 20px;
+    margin: 20px 30px;
     padding: 33px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -154,16 +154,17 @@ body{
 }
 
 .feature-item {
-    flex: 0 0 50%;
     align-items: center;
     padding: 5px;
 }
-
+.icon-emoji {
+    font-size: 20px;
+    margin-right: 10px; /* 별과 텍스트 사이에 간격을 줌 */
+}
 .feature-text {
     font-size: 15px;
-    margin-left: 10px;
-}
 
+}
 .button-container {
     display: flex;
     flex-direction: column;

@@ -249,10 +249,9 @@
           </div>
       </form>
 <script>
-var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const create_crew_code = urlParams.get('create_crew_code');
-const crew_write_code = urlParams.get('crew_write_code');
+const Authorization = localStorage.getItem("Authorization");
+const create_crew_code = ${create_crew_code};
+const crew_write_code = ${crew_write_code};
 var usercode;
 var position;
 $('#nextBtn').on('click', function() {
@@ -557,7 +556,22 @@ $('#prevBtnInCreateModal').on('click', function() {
         });
     }
     function go_crew_manage(){
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + usercode + '&position=' + position;
+        $.ajax({
+            url: '/crew/go_crewManage',
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization    : Authorization,
+                create_crew_code : create_crew_code,
+                user_code        : usercode,
+                position         : position
+            },
+            success: function(response) {
+                window.location.href = '/crew/crewManage';
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
     }
 
 </script>

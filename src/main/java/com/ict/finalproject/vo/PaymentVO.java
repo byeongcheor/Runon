@@ -13,4 +13,6 @@ public class PaymentVO {
 
     private int usercode;
     private int total_amount;
+    private int discount_amount;
+    private int real_amount;
 }

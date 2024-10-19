@@ -1,6 +1,7 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.PaymentDAO;
+import com.ict.finalproject.vo.CompleteVO;
 import com.ict.finalproject.vo.OrderVO;
 import com.ict.finalproject.vo.PaymentVO;
 import com.ict.finalproject.vo.PaymentdetailVO;
@@ -35,8 +36,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int setPayment(PaymentdetailVO PDvo, int usercode,List<Integer> cart_codes) {
+        System.out.println(cart_codes);
+        System.out.println("카트에 있는 값 구하기"+cart_codes.size());
         List<OrderVO> Ovos=dao.selectOrdercode(cart_codes,usercode);
+        System.out.println("ovos현재리스트"+Ovos);
+        System.out.println("ovos현재갯수"+Ovos.size());
         int paymentCode= dao.selectPaymentCode(usercode);
+        System.out.println("paymentCode코드"+paymentCode);
         String orderId= PDvo.getOrderId();
         List<PaymentdetailVO> paymentDetails = new ArrayList<>();
         for (OrderVO ovo : Ovos) {
@@ -53,6 +59,8 @@ public class PaymentServiceImpl implements PaymentService {
             // PaymentdetailVO 리스트에 추가
             paymentDetails.add(paymentDetail);
         }
+        System.out.println("지금현재3개"+paymentDetails);
+        System.out.println("실제갯수"+paymentDetails.size());
         // DB에서 이미 존재하는 PaymentdetailVO 조회
         List<PaymentdetailVO> existingDetails = dao.selectDetails(paymentDetails);
 
@@ -104,5 +112,44 @@ public class PaymentServiceImpl implements PaymentService {
             dao.updateToDeleted(toDeleteDetails);  // DB에서 더 많았던 항목은 삭제 표시
         }
         return 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int orderSuccess(String method, int usercode, String orderId, int realAmount) {
+        int details=dao.updateDetails(orderId,usercode);
+        System.out.println(details);
+        if (details>0){
+            //int updatepoint=dao.updateMypoint(realAmount,usercode,orderId);
+            int payment=dao.updatepayment(realAmount,usercode,method);
+            System.out.println("1번째확인");
+            if (payment!=0) {
+                System.out.println("2번째확인");
+                List<Integer> cart_codes = dao.selectCartCode(usercode);
+                System.out.println(cart_codes);
+                int cart_deleted = dao.deletedCart_code(cart_codes);
+                if (cart_deleted!=0){
+                    int order=dao.updateOrder(usercode);
+                    System.out.println("마지막확인");
+                    return 1;
+                }
+            }
+
+        }
+        return 0;
+    }
+
+    @Override
+    public List<CompleteVO> selectCvoList(String orderId) {
+        return dao.selectCvoList(orderId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatepoint(int usercode, String orderId) {
+        PaymentVO pvo =dao.selectdiscount(orderId,usercode);
+        dao.updateMypoint(pvo);
+        dao.updateChangePoint(pvo);
+        System.out.println("포인트체인지");
     }
 }

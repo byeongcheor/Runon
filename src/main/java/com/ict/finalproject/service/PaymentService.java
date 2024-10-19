@@ -1,5 +1,6 @@
 package com.ict.finalproject.service;
 
+import com.ict.finalproject.vo.CompleteVO;
 import com.ict.finalproject.vo.PaymentVO;
 import com.ict.finalproject.vo.PaymentdetailVO;
 
@@ -11,5 +12,7 @@ public interface PaymentService {
     public int createPayment(PaymentVO pvo);
 
     public int setPayment(PaymentdetailVO PDvo, int usercode, List<Integer> cart_codes);
-
+    public int orderSuccess(String method,int usercode,String orderId,int realAmount);
+    public List<CompleteVO> selectCvoList(String orderId);
+    public void updatepoint( int usercode,String orderId);
 }

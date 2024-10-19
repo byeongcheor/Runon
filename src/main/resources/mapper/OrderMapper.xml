@@ -12,6 +12,30 @@
             #{cartCode}
         </foreach>
     </select>
+    <!--
+확정x
+-->
+   <!-- <select id="selectExistingOrders" parameterType="list" resultType="int">
+        SELECT cart_code
+        FROM order_tbl
+        WHERE cart_code IN
+        <foreach collection="list" item="cartCode" open="(" separator="," close=")">
+            #{cartCode}
+        </foreach>
+        AND is_deleted = 0
+    </select>-->
+    <update id="deleteOrder">
+        UPDATE order_tbl
+        SET is_deleted = 1,
+        deleted_date = NOW()
+        WHERE cart_code NOT IN
+        <foreach item="cartCode" collection="list" open="(" separator="," close=")">
+            #{cartCode}
+        </foreach>
+        AND is_deleted = 0 and order_status=0
+    </update>
+    <!--  여기까지 -->
+
     <insert id="SetOrder" parameterType="list">
         INSERT INTO order_tbl (
         total_amount, quantity, price, cart_code, usercode, marathon_code
@@ -35,10 +59,10 @@
         ) AS codes
         WHERE cart_code NOT IN (
         SELECT cart_code
-        FROM order_tbl
+        FROM order_tbl where is_deleted=0
         )
     </select>
-    <update id="updateOrder" parameterType="com.ict.finalproject.vo.CartVO">
+   <!-- <update id="updateOrder" parameterType="com.ict.finalproject.vo.CartVO">
         UPDATE order_tbl
         SET total_amount = (#{price} * #{quantity}),
         quantity = #{quantity},
@@ -46,20 +70,20 @@
         marathon_code = #{marathon_code}
         WHERE cart_code = #{cart_code}
         AND usercode = #{usercode}
-    </update>
+    </update>-->
 
 
     <select id="getMyPoint" resultType="com.ict.finalproject.vo.PointVO">
         SELECT
         p.point_code as point_code,
         p.usercode as usercode,
-        p.mypoint as mypoint,
-        pc.point_change_code as point_change_code,
-        pc.point_change as point_change
+        p.mypoint as mypoint
+      <!--  pc.point_change_code as point_change_code,
+        pc.point_change as point_change-->
         FROM
         point_tbl p
-        JOIN
-        point_change_tbl pc ON p.point_code = pc.point_code
+      <!--  JOIN
+        point_change_tbl pc ON p.point_code = pc.point_code-->
         WHERE
         p.usercode = #{usercode}
     </select>
