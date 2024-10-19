@@ -191,8 +191,8 @@ public class CrewController {
     @PostMapping("/go_crewDetail")
     @ResponseBody
     public String crewDetail(@RequestParam("Authorization") String token,
-                                          @RequestParam("create_crew_code") int create_crew_code,
-                                          HttpSession session) {
+                             @RequestParam("create_crew_code") int create_crew_code,
+                             HttpSession session) {
         // 토큰 처리 및 기타 데이터 처리
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
@@ -411,9 +411,37 @@ public class CrewController {
 
 
     /////////////////////////크루관리///////////////////////////////////////////////
+    @PostMapping("/go_crewManage")
+    @ResponseBody
+    public String go_crewManage(@RequestParam("Authorization") String token,
+                                @RequestParam("create_crew_code") int create_crew_code,
+                                @RequestParam("position") int position,
+                                @RequestParam("user_code") int user_code,
+                                HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("user_code", user_code);
+        session.setAttribute("position", position);
+        return "success";
+    }
+
     @GetMapping("/crewManage")
-    public String crewCreate(){
-        return "crew/crewManage";
+    public String crewManage(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer user_code = (Integer) session.getAttribute("user_code");
+        Integer position = (Integer) session.getAttribute("position");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("user_code", user_code);
+        model.addAttribute("position", position);
+        return "crew/crewManage"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/crew_deatil_select")
@@ -460,9 +488,33 @@ public class CrewController {
     }
 
     /////////////////////////// 크루가입승인 페이지////////////////////////////////////////
+    @PostMapping("/go_crewApp")
+    @ResponseBody
+    public String go_crewApp(@RequestParam("Authorization") String token,
+                             @RequestParam("create_crew_code") int create_crew_code,
+                             @RequestParam("position") int position,
+                             HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("position", position);
+        return "success";
+    }
+
     @GetMapping("/crewApp")
-    public String crewApp(){
-        return "crew/crewApp";
+    public String crewApp(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer position = (Integer) session.getAttribute("position");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("position", position);
+        return "crew/crewApp"; // 이동할 JSP 페이지
     }
 
     @PostMapping("/crew_app_select")
@@ -479,7 +531,6 @@ public class CrewController {
         }
         return crew_app_select;
     }
-
     @PostMapping("/app")
     @ResponseBody
     public int app(@RequestParam("Authorization")String token,
@@ -677,12 +728,34 @@ public class CrewController {
 
 
     /////////////////////////// 크루정보수정 페이지////////////////////////////////////////
+    @PostMapping("/go_crewRevise")
+    @ResponseBody
+    public String go_crewRevise(@RequestParam("Authorization") String token,
+                                @RequestParam("create_crew_code") int create_crew_code,
+                                @RequestParam("user_code") int user_code,
+                                HttpSession session) {
+        // 토큰 처리 및 기타 데이터 처리
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
 
-    @GetMapping("/crewRevise")
-    public String crewRevise(){
-        return "crew/crewRevise";
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("create_crew_code", create_crew_code);
+        session.setAttribute("user_code", user_code);
+        return "success";
     }
 
+    @GetMapping("/crewRevise")
+    public String crewRevise(HttpSession session, Model model) {
+        // 세션에서 데이터 가져오기
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer user_code = (Integer) session.getAttribute("user_code");
+
+        // 모델에 데이터 추가 (JSP에 전달하기 위해)
+        model.addAttribute("create_crew_code", create_crew_code);
+        model.addAttribute("user_code", user_code);
+        return "crew/crewRevise"; // 이동할 JSP 페이지
+    }
     //////////////////////크루 정보 불러오기//////////////////////////////////
     @PostMapping("/getCrewInfo")
     @ResponseBody

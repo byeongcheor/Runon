@@ -319,6 +319,7 @@
    const create_crew_code = urlParams.get('create_crew_code');
    const user_code = urlParams.get('user_code');
    const position = urlParams.get('position');
+   console.log("create_crew_code",create_crew_code);
    var votenum = 4;
 
    if (position != 1) {
@@ -366,6 +367,7 @@
              create_crew_code: create_crew_code
           },
           success: function(response) {
+              console.log("response", response)
               $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
               $('#crew_name').text(response[0].crew_name);
               $('#teamNameDisplay').text(response[0].crew_name);
@@ -586,7 +588,7 @@ function crew_overview(response) {
             list += '      </div>';
             list += '      <div class="text-container"> ';
             list += '<span class="main-text">' + response[i].subject + '</span>';
-            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
+            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:11px;">' +  response[i].writedate + '</span>';
             list += '      </div>';
             list += '   </div>';
             list += '</li>';
