@@ -1,6 +1,7 @@
 package com.ict.finalproject.controller;
 
 import com.ict.finalproject.service.PaymentService;
+import com.ict.finalproject.vo.CompleteVO;
 import com.ict.finalproject.vo.OrderVO;
 import com.ict.finalproject.vo.PaymentVO;
 import com.ict.finalproject.vo.PaymentdetailVO;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +51,8 @@ public class PaymentController {
 */
 
     @PostMapping("/payment/saveOrder")
-    public Map<String, Object> saveOrder(@RequestBody Map<String, Object> requestData) {
+    @ResponseBody
+    public int saveOrder(@RequestBody Map<String, Object> requestData) {
         String orderId = (String) requestData.get("orderId");
         int usercode = (int) requestData.get("usercode");
         int totalAmount = (int) requestData.get("total_Amount");
@@ -57,10 +61,39 @@ public class PaymentController {
         System.out.println("유저코드"+usercode);
         System.out.println("주문번호"+orderId);
         System.out.println("결제금액"+totalAmount);
-        service.orderSuccess(method,usercode,orderId,totalAmount);
+        int result=service.orderSuccess(method,usercode,orderId,totalAmount);
 
-        Map<String, Object> map = new HashMap<>();
+
+        return result ;
+    }
+    @PostMapping("/payment/complete")
+    public ModelAndView complete(@RequestParam("orderId")String orderId,
+                                 @RequestParam("totalAmount")int totalAmount,
+                                 @RequestParam("method")String method,
+                                 @RequestParam("usercode")int usercode) {
+
+       /* System.out.println("결제방식"+method);
+        System.out.println("유저코드"+usercode);
+        System.out.println("주문번호"+orderId);
+        System.out.println("결제금액"+totalAmount);*/
+        service.updatepoint(usercode,orderId);
+        ModelAndView mav=new ModelAndView();
+        mav.addObject("orderId",orderId);
+        mav.addObject("totalAmount",totalAmount);
+        mav.addObject("method",method);
+        mav.addObject("usercode",usercode);
+        mav.setViewName("order/complete");
+
+        return  mav;
+    }
+    @PostMapping("/payment/completed")
+    @ResponseBody
+    public Map<String,Object>complete(@RequestParam("orderId")String orderId){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println(orderId);
+        List<CompleteVO>Cvo=new ArrayList<>();
+        Cvo=service.selectCvoList(orderId);
+        map.put("Cvo",Cvo);
         return map;
-
     }
 }

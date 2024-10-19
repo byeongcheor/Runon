@@ -17,4 +17,6 @@ public interface OrderDAO {
     public PointVO getMyPoint(int usercode);
     //마라톤신청폼있는지 확인겸 vo받아오기
     public MarathonFormVO selectMyForm(int usercode);
+    public void deleteOrder(List<Integer> items);
+    public List<Integer> selectExistingOrders(List<Integer> cart_codes);
 }

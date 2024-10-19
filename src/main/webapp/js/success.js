@@ -59,10 +59,48 @@ confirm().then(function (data) {
             usercode: usercode1
         }),
         success:function(r){
-            alert("확인");
+            // 동적으로 폼 생성
+            let form = document.createElement("form");
+            form.method = "post";
+            form.action = "/payment/complete";  // 이동할 페이지 설정
+
+            // 전달할 값을 폼에 숨겨진 필드로 추가
+            let orderIdInput = document.createElement("input");
+            orderIdInput.type = "hidden";
+            orderIdInput.name = "orderId";
+            orderIdInput.value = orderId;
+            form.appendChild(orderIdInput);
+
+            let totalAmountInput = document.createElement("input");
+            totalAmountInput.type = "hidden";
+            totalAmountInput.name = "totalAmount";
+            totalAmountInput.value = total_Amount;
+            form.appendChild(totalAmountInput);
+
+            let methodInput = document.createElement("input");
+            methodInput.type = "hidden";
+            methodInput.name = "method";
+            methodInput.value = method;
+            form.appendChild(methodInput);
+
+            let usercodeInput = document.createElement("input");
+            usercodeInput.type = "hidden";
+            usercodeInput.name = "usercode";
+            usercodeInput.value = usercode1;
+            form.appendChild(usercodeInput);
+
+            // 동적으로 생성한 폼을 문서에 추가하고 제출
+            document.body.appendChild(form);
+            form.submit();
+        },
+        error: function(xhr, status, error) {
+            console.error("결제 실패: " + error);
+            console.log(error);
+            console.log(status);
+            console.log(xhr);
+            alert("결제 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     });
-
 
 
   /*  console.log(total_Amount);
