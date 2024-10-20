@@ -43,8 +43,8 @@ public class MateController {
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
             user_code = service.usercodeSelect(user_name);
-            List<MateVO> ranking = service.ranking();
             List<MateVO> userselect = service.userselect(user_code);
+            List<MateVO> ranking = service.ranking();
             vo.setMatch_yn(service.match_yn(user_code));
             System.out.println(userselect);
 

@@ -195,6 +195,7 @@
 
     $(document).ready(function() {
         document.getElementById('mateMatchModal').style.display = 'none';
+        mate_popup_date_select();
         marathon_code();//내가 결제한 대회리스트 불러오기
         setTimeout(function() {
             if(match_yn>0){
@@ -203,7 +204,7 @@
             }
             else start_view();
             popup_yn();//팝업 여부
-        }, 200);
+        }, 1000);
         $('.menu_select').text('');
         $('.menu_select').text(' \u25BC');
         setTimeout(function() {
