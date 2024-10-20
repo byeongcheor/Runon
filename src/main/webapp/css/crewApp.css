@@ -63,7 +63,7 @@ body{
     margin-bottom: 20px;
     border-bottom: 1px solid #ccc; /* 밑에 보더라인 추가 */
     padding:30px 30px 20px 50px;
-    margin:0px 30px 30px 0px;
+    margin:0px 30px 20px 0px;
 
 
 }
@@ -124,8 +124,8 @@ body{
     font-size: 16px;
 }
 .profileBox{
-    width: 63px;
-    height: 63px;
+    width: 81px;
+    height: 81px;
     border-radius: 200px;
     margin-right: 5px;
     padding: 5px;

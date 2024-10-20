@@ -114,14 +114,12 @@
 <script>
 // URL 파라미터에서 값 가져오기
 var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const user_code = urlParams.get('user_code');  // URL에서 user_code 가져오기
-const create_crew_code = urlParams.get('create_crew_code');  // URL에서 create_crew_code 가져오기
+const user_code = ${user_code};
+const create_crew_code = ${create_crew_code};
 
 // 받은 값을 콘솔로 출력하여 확인
 console.log('user_code: ' + user_code);
 console.log('create_crew_code: ' + create_crew_code);
-console.log('Authorization: ' + Authorization);
 
 // 페이지 로드 시 도시 리스트를 불러오는 함수
 $(document).ready(function() {
@@ -196,17 +194,20 @@ function loadCrewInfo() {
 }
 
 function submitCrewInfo() {
-    var form = $('#crewCreateForm')[0];  // 폼 데이터 가져오기
-    var formData = new FormData(form);  // 폼 데이터를 FormData로 전송 준비
+    var form = $('#crewCreateForm')[0];
+    var formData = new FormData(form);
+
+    // URL에서 가져온 create_crew_code 값을 FormData에 추가
+    formData.append('create_crew_code', create_crew_code);
 
     // 성별과 나이 선택 여부 확인
     var ageChecked = $('input[name="age[]"]:checked').length > 0;
     var genderChecked = $('input[name="gender"]:checked').length > 0;
 
     // 크루명, 도시, 지역 값 가져오기
-    var teamName = $('#teamName').val().trim();  // 크루명
-    var city = $('#city').val().trim();  // 도시
-    var region = $('#region').val().trim();  // 지역
+    var teamName = $('#teamName').val().trim();
+    var city = $('#city').val().trim();
+    var region = $('#region').val().trim();
 
     // 유효성 검사: 크루명, 도시, 지역, 나이대, 성별
     if (teamName === '') {
@@ -232,7 +233,7 @@ function submitCrewInfo() {
 
     // AJAX로 서버에 수정된 정보 전송
     $.ajax({
-        url: '/crew/updateCrewInfo',  // 크루 정보를 업데이트할 서버 URL
+        url: '/crew/updateCrewInfo',
         type: 'POST',
         headers: {
             Authorization: localStorage.getItem('Authorization')  // 헤더로 Authorization 전송
@@ -241,8 +242,14 @@ function submitCrewInfo() {
         processData: false,  // FormData 사용 시 false로 설정
         contentType: false,  // FormData 사용 시 false로 설정
         success: function(response) {
-            alert('크루 정보가 성공적으로 수정되었습니다!');
-            window.location.reload();  // 수정 후 페이지 새로고침 또는 이동
+         console.log("responseresponse->>", response)
+        if (response === 1) {
+            alert('이미 사용중인 크루가 있습니다. 다른 이름을 선택하세요.');
+            } else if (response === 0) {
+                alert('크루 정보가 성공적으로 수정되었습니다.');
+            } else {
+                alert('크루 정보 수정 중 오류가 발생했습니다.');
+            }
         },
         error: function(error) {
             console.log(error);

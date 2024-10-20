@@ -13,7 +13,6 @@
       crossorigin="anonymous"
     ></script>
 <link rel="stylesheet" href="/css/crewApp.css" type="text/css">
-<link rel="stylesheet" href="/css/crewApp.css" type="text/css">
 <div>
     <div id="bannerBox">
         <img src="/img/러닝고화질.jpg" id="bannerImg" />
@@ -25,7 +24,7 @@
                     <div class="menu-title">
                         <div class="crew_profileimage">
                             <div class="profileBox">
-                                <img src="/crew_upload/crewlog43.png" class="profileImg">
+                                <img src="" class="profileImg" id=crew_logo>
                             </div>
                         </div>
                         <p class="menu-title-name" id=crew_name></p>
@@ -33,7 +32,8 @@
                 </section>
                 <section class="team-container">
                    <ul class="team-list" id='app_list'>
-                   </ul>                </section>
+                   </ul>
+                </section>
             </div>
         </div>
     </div>
@@ -96,9 +96,13 @@
    </div>
 </div><script>
 var Authorization = localStorage.getItem("Authorization");
-const urlParams = new URLSearchParams(window.location.search);
-const crew_code = urlParams.get('create_crew_code');
-const position = urlParams.get('position');
+const crew_code = ${create_crew_code};
+const position = ${position};
+
+clog('crew_code : '+crew_code);
+clog('position : '+position);
+
+
 if(position!=1){
 $('#yes').hide();
 $('#no').hide();
@@ -155,13 +159,15 @@ $('#no').hide();
                 create_crew_code : crew_code
             },
             success: function(response) {
-            $('#crew_name').text(response[0].crew_name+'/멤버관리');
+                console.log("response--->>",response)
+             $('#crew_logo').attr('src', '/crew_upload/' + response[0].logo);
+             $('#crew_name').text(response[0].crew_name+'/멤버관리');
                 for (var i in response) {
                     var font_color = response[i].b_n > 1? "red":"#0d6efd";
                     list += '<li class="team-item" style="display: flex; justify-content: space-between; width: 100%;"> ';
                     list += '	<a class="team-link" style="flex-grow: 1;"> ';
                     list += '	  <div class="team-emblem-wrapper"> ';
-                    list += '		<img src="/crew_upload/51b0be7d-0bfa-47d0-897a-40740b212cf6_a8.png" class="team-emblem" onclick="crew_page_detail(36,32)"> ';
+                    list += '		<img src="/resources/uploadfile/'+response[i].profile_img+ '"class="team-emblem"> ';
                     list += '	  </div> ';
                     list += '	  <div class="team-content"> ';
                     list += '		<div class="info-name-wrapper"> ';
@@ -194,9 +200,6 @@ $('#no').hide();
                 console.error('Error: ', e);
             }
         });
-    }
-    function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code;
     }
     function app(element){
         var id = element.id===undefined?'member': element.id;

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class CrewVO {
     private String crew_name;
     private String logo;
+    private String profile_img;
     private String subject;
     private String content;
     private String addr;
@@ -49,6 +50,8 @@ public class CrewVO {
     private int hits;
     private int total_record;
     private int usercode;
+    private int total_score;
+    private int crew_rank;
 
     private String deleted_date;
     private String writedate;

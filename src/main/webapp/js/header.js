@@ -12,10 +12,10 @@ $(window).on('scroll',function(){
 function openLoginPopup() {
     window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }
-$(document).ready(function() {
+window.onload=function(){
 
 
-
+console.log("1");
 
  ToKen=localStorage.getItem("Authorization");
     if (ToKen!=null &&ToKen!="" ){
@@ -32,7 +32,7 @@ $(document).ready(function() {
             // 유저정보 담기
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
-
+            console.log('h1');
         }
 
     });
@@ -80,5 +80,5 @@ $(document).ready(function() {
     //         });
     //     }
     // });
-});
+};
 

@@ -11,6 +11,11 @@ public class PagingVO {
     private String searchKey;
     private String searchWord;
     private String addr;
+    private String year; // 필터링할 년도
+    private String month; // 필터링할 월
+    private String region; // 필터링할 지역
+    private String search; // 필터링할 검색어 추가
+    private Integer  sort1;
 
     private String searchKey2;
     private String searchWord2;
@@ -30,11 +35,26 @@ public class PagingVO {
                 ", searchKey='" + searchKey + '\'' +
                 ", searchWord='" + searchWord + '\'' +
                 ", addr='" + addr + '\'' +
+                ", year='" + year + '\'' +
+                ", month='" + month + '\'' +
+                ", region='" + region + '\'' +
+                ", search='" + search + '\'' +
+                ", sort1=" + sort1 +
                 ", searchKey2='" + searchKey2 + '\'' +
                 ", searchWord2='" + searchWord2 + '\'' +
                 ", sort='" + sort + '\'' +
                 ", schedule='" + schedule + '\'' +
                 '}';
+    }
+
+
+
+    public Integer getSort1() {
+        return sort1;
+    }
+
+    public void setSort1(Integer sort1) {
+        this.sort1 = sort1;
     }
 
     public String getSort() {
@@ -142,4 +162,60 @@ public class PagingVO {
     public void setAddr(String addr) {
         this.addr = addr;
     }
+
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
+
+    // offset 계산 메서드 추가
+    public void calculateOffset() {
+        this.offset = (this.nowPage - 1) * this.onePageRecord;
+    }
+    // 대표 지역 추출 메서드
+    public String getMainLocation() {
+        if (addr == null || addr.isEmpty()) {
+            return "지역 미상";
+        }
+
+        String[] locations = {"서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"};
+
+        for (String location : locations) {
+            if (addr.contains(location)) {
+                return location;
+            }
+        }
+
+        return "기타"; // 해당하는 지역명이 없을 경우 "기타"로 표시
+    }
+
+
 }

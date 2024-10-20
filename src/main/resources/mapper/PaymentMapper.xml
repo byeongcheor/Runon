@@ -19,7 +19,7 @@
         <foreach item="cart_code" collection="cart_codes" open="(" separator="," close=")">
             #{cart_code}
         </foreach>
-        and usercode=#{param2}
+        and usercode=#{param2} and order_status=0 and is_deleted=0
     </select>
     <select id="selectPaymentCode">
         select payment_code from payment_tbl where usercode=#{param1} and is_completed=0
@@ -52,5 +52,82 @@
             AND orderId = #{paymentDetail.orderId})
         </foreach>
     </update>
+    <update id="updateDetails">
+        UPDATE payment_detail_tbl pd
+        JOIN payment_tbl p ON pd.payment_code = p.payment_code
+        SET pd.status = 1
+        WHERE pd.orderId = #{param1}
+        AND p.usercode = #{param2}
+        AND p.is_completed = 0;
 
+    </update>
+    <select id="selectCartCode">
+        select cart_code from order_tbl where usercode=#{param1} and order_status=0 and is_deleted=0
+    </select>
+    <update id="updatepayment">
+        update payment_tbl set is_completed=1 ,completed_date=now(),real_amount=#{param1},
+        payment_method=#{param3} ,discount_amount=total_amount-#{param1}
+        where usercode=#{param2}
+        and is_completed=0
+    </update>
+    <update id="updateOrder">
+        update order_tbl set order_status=1 where usercode=#{usercode} and is_deleted=0
+    </update>
+
+    <update id="deletedCart_code">
+        UPDATE cart_tbl
+        SET is_deleted = 1,
+        deleted_date = NOW()
+        <choose>
+            <!-- cart_code가 하나일 경우 -->
+            <when test="cart_codes != null and cart_codes.size() ==1">
+                WHERE cart_code = #{cart_codes[0]}
+            </when>
+            <!-- cart_code가 여러 개일 경우 -->
+            <otherwise>
+                WHERE cart_code IN
+                <foreach item="cart_code" collection="cart_codes" open="(" separator="," close=")">
+                    #{cart_code}
+                </foreach>
+            </otherwise>
+        </choose>
+    </update>
+    <select id="selectCvoList" resultType="com.ict.finalproject.vo.CompleteVO">
+        SELECT
+        pd.payment_detail_id,
+        pd.orderId,
+        pd.total_amount AS amount,
+        o.total_amount AS total_amount,
+        p.discount_amount,
+        p.real_amount,
+        m.marathon_name,
+        pd.status,
+        pd.created_date AS create_time
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN payment_tbl p ON pd.payment_code = p.payment_code
+        JOIN marathon_list_tbl m ON o.marathon_code = m.marathon_code
+        WHERE pd.orderId = #{param1};
+    </select>
+    <select id="selectdiscount" resultType="com.ict.finalproject.vo.PaymentVO">
+        SELECT discount_amount, real_amount,usercode
+        FROM payment_tbl
+        WHERE payment_code = (
+        SELECT payment_code
+        FROM payment_detail_tbl
+        WHERE orderId = #{param1}
+        LIMIT 1
+        ) and usercode = #{param2}
+    </select>
+    <update id="updateMypoint">
+        UPDATE point_tbl
+        SET mypoint = mypoint - #{discount_amount}
+        WHERE usercode = #{usercode}
+    </update>
+    <update id="updateChangePoint">
+        INSERT INTO point_change_tbl (point_code, point_change, point_change_date)
+        SELECT p.point_code, #{real_amount} - #{total_amount}, NOW()
+        FROM point_tbl p
+        WHERE p.usercode = #{usercode};
+    </update>
 </mapper>

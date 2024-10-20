@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="${pageContext.request.contextPath}/js/crew.js" type="text/javascript"></script>
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -1056,14 +1057,42 @@ function submitCrewInfo() {
     }
 
     function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;
+        $.ajax({
+            url: '/crew/go_crewDetail',  // 서버에 전송할 URL
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization: Authorization,  // 토큰 또는 기타 데이터
+                create_crew_code: create_crew_code  // 전송할 데이터
+            },
+            success: function(response) {
+                window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
         $('#createNewTeamModal').modal('hide');
     }
 
     function go_my_crew(create_crew_code,user_code,position) {
         $('#myCrewModal').modal('hide');
-        window.location.href = '/crew/crewManage?create_crew_code=' + create_crew_code + '&user_code=' + user_code+ '&position=' + position;
-;    }
+            $.ajax({
+                url: '/crew/go_crewManage',
+                type: 'POST',  // POST 방식으로 전송
+                data: {
+                    Authorization    : Authorization,
+                    create_crew_code : create_crew_code,
+                    user_code        : user_code,
+                    position         : position
+                },
+                success: function(response) {
+                    window.location.href = '/crew/crewManage'; // 페이지 이동 (URL에 파라미터 노출되지 않음)
+                },
+                error: function(error) {
+                    console.log('에러 발생:', error);
+                }
+            });
+   }
 
     function join_wait() {
         $('#myCrewModal').modal('hide');
@@ -1118,6 +1147,5 @@ function crew_write_add() {
            }
        });
    }
-
 </script>
 

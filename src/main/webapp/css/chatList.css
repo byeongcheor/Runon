@@ -1,0 +1,301 @@
+/* 오른쪽 채팅창 */
+#taMsg {
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+    overflow-y: auto;
+}
+#chatbox {
+    display: none;
+    height: 600px;
+    width: 400px;
+    background-color: #1e1e1e;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 20px;
+    bottom: 50px; /* 화면 하단에서 20px 띄움 */
+    right: 90px; /* 화면 오른쪽에서 20px 띄움 */
+    max-height: 600px; /* 원하는 고정된 높이로 변경 */
+
+    position: fixed;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+
+}
+/* 채팅창 상단 헤더 부분 */
+.chatbox-header {
+    padding: 0px;
+    color: white;
+    display: flex;
+    position: sticky; /* 스크롤 시에도 고정 */
+    top: 0;
+    z-index: 10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+/* 닫기 버튼 스타일 */
+.close-chat-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+.close-chat-btn:hover {
+    color: #CCFF47;
+}
+#taMsg::-webkit-scrollbar {
+    width: 6px;
+
+}
+#taMsg::-webkit-scrollbar-thumb {
+    background-color: #fcf6f6; /* 스크롤바 색상 */
+    border-radius: 10px;
+}
+#taMsg::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+.chat-message {
+    display: flex;
+    flex-direction: row-reverse;  /* 오른쪽 정렬 */
+    margin-bottom: 10px; /* 각 메시지 간격 */
+    align-items: flex-start;
+}
+.chat-message .message-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* 오른쪽으로 정렬 */
+}
+
+
+.chat-message p {
+    margin: 0;
+    padding: 10px;
+    background-color: #333;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    color: white;
+    text-align: right;  /* 텍스트 오른쪽 정렬 */
+}
+
+#chatbox .chat-input {
+    display: flex;
+    justify-content: space-between;
+    background-color: #2e2e2e;
+    position: sticky; /* 고정된 위치에 있게 설정 */
+    bottom: 0; /* 하단에 고정 */
+    z-index: 10;
+}
+
+
+#chatbox .chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left:5px;
+}
+
+.message-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.nickname {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 2px;
+    color:white;
+}
+#reportBtn {
+    padding: 10px 20px;
+    background-color: red;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#sendBtn {
+    padding: 10px 20px;
+    background-color: #CCFF47;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+#chatbox .chat-input button:hover {
+    background-color: black;
+    color: white;
+}
+.chat-message .timestamp {
+    font-size: 0.8em;
+    color: gray;
+    margin-top: 5px; /* 시간과 메시지 사이에 간격 추가 */
+    text-align: right; /* 시간을 오른쪽에 정렬 */
+}
+.chat-message-left {
+    display: flex;
+    flex-direction: row;  /* 왼쪽 정렬 */
+    margin-bottom: 10px;
+    align-items: flex-start;
+}
+
+.chat-message-left .message-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.nickname-left {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.chat-message-left p {
+    margin: 0;
+    padding: 10px;
+    background-color: #333;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    color: white;
+    text-align: left;  /* 텍스트 왼쪽 정렬 */
+}
+
+.timestamp-left {
+    font-size: 0.8em;
+    color: gray;
+    margin-top: 5px;
+    text-align: left;
+}
+/*신고버튼*/
+.header-icons {
+    display: flex;
+    align-items: center;
+}
+
+.bell-icon {
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+button#reportBtn {
+    background-color: #f44336; /* 신고 버튼 색상 */
+}
+
+/* 모달 기본 스타일 */
+.ChatReportModal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1000; /* 가장 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 전체 화면 */
+    height: 100%; /* 전체 화면 */
+    overflow: auto; /* 필요시 스크롤 가능 */
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+
+}
+
+.ChatReport_modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 가운데 정렬 */
+    padding: 40px;
+    border: 1px solid #888;
+    width: 400px; /* 너비 조정 */
+    height: 500px;
+    border-radius: 10px;
+}
+
+.chatModalClose {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.chatModalClose:hover,
+.chatModalClose:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+#reportUserInfo p{
+    margin-bottom: 2px;
+    color:black;
+}
+.reportButton-container{
+    display: flex;              /* Flexbox를 사용하여 중앙 정렬 */
+    justify-content: center;    /* 가로 방향으로 중앙 정렬 */
+    margin-top: 20px;          /* 버튼 위쪽에 여백 추가 (필요에 따라 조절) */
+}
+.reportButton-container button{
+    padding: 10px 20px;       /* 버튼 크기 조절 */
+    font-size: 16px;          /* 버튼 텍스트 크기 조절 */
+    cursor: pointer;           /* 커서 스타일 변경 */
+    background-color: #CCFF47;/* 버튼 배경색 */
+    color: black; /* 버튼 텍스트 색 */
+    font-weight: bold;
+    border-radius: 5px; /* 버튼 둥글게 */
+    border: none; /* 테두리 제거 */
+}
+.reportT{
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: black;
+}
+#selectedMessages h1{
+    margin-top: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black;
+}
+#selectedMessages textarea{
+    border: 1px solid #d9e0e6;
+    background-color: #f8fafb;
+    border-radius: 16px;
+    padding: 14px 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+
+}
+
+.reportR{
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+}
+.reportTT textarea{
+
+    border: 1px solid #d9e0e6;
+    background-color: #f8fafb;
+    border-radius: 16px;
+    padding: 14px 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+
+}

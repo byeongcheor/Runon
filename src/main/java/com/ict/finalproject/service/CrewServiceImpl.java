@@ -6,6 +6,7 @@ import com.ict.finalproject.vo.PagingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -92,6 +93,18 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public List<CrewVO> vote_detail( int vote_num)
+    {
+        return dao.vote_detail(vote_num);
+    }
+
+    @Override
+    public List<CrewVO> notice_detail( int notice_num)
+    {
+        return dao.notice_detail(notice_num);
+    }
+
+    @Override
     public List<CrewVO> vote_select( int user_code, int vote_num)
     {
         return dao.vote_select(user_code, vote_num);
@@ -104,9 +117,59 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int getNoticeCode(int create_crew_code)
+    {
+        return dao.getNoticeCode(create_crew_code);
+    }
+
+    @Override
+    public void saveImage(int crew_notice_code, String img_filename) {
+        dao.saveImage(crew_notice_code, img_filename);
+    }
+
+    @Override
     public int crew_code_select(int user_code)
     {
         return dao.crew_code_select(user_code);
+    }
+
+    @Override
+    public int img_delete(int notice_num, String img_name)
+    {
+        File file = new File("/crew_upload/" + img_name);
+        if (file.exists()) {
+            file.delete();
+        }
+        return dao.img_delete(notice_num,img_name);
+    }
+
+    @Override
+    public int upload_images(int notice_num, String img_name)
+    {
+        return dao.upload_images(notice_num,img_name);
+    }
+
+    @Override
+    public int update_notice(int notice_num, String subject, String content)
+    {
+        return dao.update_notice(notice_num,subject,content);
+    }
+
+    @Override
+    public int delete_notice(int notice_num)
+    {
+        dao.delete_notice_img(notice_num);
+        return dao.delete_notice(notice_num);
+    }
+
+    @Override
+    public String crew_teamEmblem(int create_crew_code) {
+        return dao.crew_teamEmblem(create_crew_code);
+    }
+
+    @Override
+    public List<String> notice_detail_img(int notice_num) {
+        return dao.notice_detail_img(notice_num);
     }
 
     @Override
@@ -183,6 +246,10 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int crew_name_double_check(String teamName,int create_crew_code) {
+        return dao.crew_name_double_check(teamName,create_crew_code);
+    }
+    @Override
     public int crew_insert(String crew_name, String fileName, String addr, String addr_gu, String gender, String content, String age, int user_code) {
         return dao.crew_insert(crew_name,fileName,addr,addr_gu,gender,content,age,user_code);
     }
@@ -213,8 +280,8 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text) {
-        return dao.crew_member_report(user_code,my_user_code,reason,reason_text);
+    public int crew_member_report(int user_code, int my_user_code, String reason, String reason_text,int crewCode){
+        return dao.crew_member_report(user_code,my_user_code,reason,reason_text,crewCode);
     }
 
     @Override
@@ -223,9 +290,19 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public int createNotice(String subject,String content,int user_code, int create_crew_code) {
+        return dao.createNotice(subject, content, user_code,create_crew_code);
+    }
+
+    @Override
     public int crew_write_update(int third_crew_code, int user_code, String teamPhotoInput, String age, String gender, String content) {
         return dao.crew_write_update(third_crew_code, user_code, teamPhotoInput,age,gender,content);
     }
+    @Override
+    public int updateCrewInfo(int create_crew_code, int user_code, String teamName,String teamPhotoInput, String age, String gender, String content,String city,String region) {
+        return dao.updateCrewInfo(create_crew_code, user_code, teamName,teamPhotoInput,age,gender,content,city,region);
+    }
+
 
     @Override
     public int vote_chek(int user_code, int vote_num) {
@@ -236,6 +313,50 @@ public class CrewServiceImpl implements CrewService{
     public int vote_insert(int user_code, int vote_num, String selectedOption) {
         return dao.vote_insert(user_code,vote_num, selectedOption);
     }
+
+    @Override
+    public int resign_select(int crewCode,int position) {
+        return dao.resign_select(crewCode,position);
+    }
+
+    @Override
+    public int vote_member_chek(int vote_num, int user_code) {
+        return dao.vote_member_chek(vote_num,user_code);
+    }
+
+    @Override
+    public int vote_delete(int vote_num) {
+        return dao.vote_delete(vote_num);
+    }
+
+    @Override
+    public int voter_delete(int vote_num) {
+        return dao.voter_delete(vote_num);
+    }
+
+    @Override
+    public int crew_write_code_select(int crewCode) {
+        return dao.crew_write_code_select(crewCode);
+    }
+
+    @Override
+    public int vote_update(int vote_num, String title, String endDate, String opt1,String opt2,String opt3,String opt4,String opt5,int user_code) {
+        return dao.vote_update(vote_num, title, endDate, opt1, opt2,opt3,opt4,opt5, user_code);
+    }
+
+    @Override
+    public int notice_hits_add(int notice_num) {
+        return dao.notice_hits_add(notice_num);
+    }
+
+
+
+    /*채팅방 크루연결 */
+    @Override
+    public List<CrewVO> getCrewList() {
+        return dao.getCrewList();
+    }
+
 
 
 }

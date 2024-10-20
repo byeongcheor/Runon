@@ -1,6 +1,6 @@
 package com.ict.finalproject.controller;
 
-import com.ict.finalproject.service.MarathonListService;
+import com.ict.finalproject.service.MarathonService;
 import com.ict.finalproject.service.MypageService;
 import com.ict.finalproject.service.OrderService;
 import com.ict.finalproject.service.PaymentService;
@@ -25,7 +25,7 @@ public class OrderController {
     @Autowired
     OrderService service;
     @Autowired
-    MarathonListService marathonListService;
+    MarathonService marathonService;
     @Autowired
     MypageService mypageService;
     @Autowired

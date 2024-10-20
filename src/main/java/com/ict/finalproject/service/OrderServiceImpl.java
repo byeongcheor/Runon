@@ -19,24 +19,28 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<CartVO> SetOrder(List<Integer> items) {
-        List<Integer> selectOvo = dao.selectOvo(items);  // 기존에 주문이 없는 항목만 조회
 
-        // 2. INSERT 처리: 기존에 주문이 없는 항목만 선택해서 새로 주문 추가
+    /*   // 기존에 주문이 없는 항목만 조회
+        List<Integer> existingOrders = dao.selectExistingOrders(items);
+        System.out.println(existingOrders);
+        // 1. 기존 주문 삭제
+        if (existingOrders.size() > 0) {*/
+            System.out.println("확인1");
+            dao.deleteOrder(items);  // 기존 주문 비활성화
+       /* }*/
+// 2. INSERT 처리: 새로운 주문 추가
+        List<Integer> selectOvo = dao.selectOvo(items);
         if (selectOvo.size() > 0) {
             List<CartVO> cvoToInsert = dao.selectCvo(selectOvo);  // INSERT할 항목들 조회
-            System.out.println("INSERT 처리할 항목 확인: " + selectOvo);
-            dao.SetOrder(cvoToInsert);  // INSERT 처리
-            System.out.println("INSERT된 항목: " + cvoToInsert);
+            dao.SetOrder(cvoToInsert);  // 새로운 주문 추가
         }
 
-        // 3. UPDATE 처리: 기존에 이미 주문된 항목들에 대해 업데이트
-        List<CartVO> existingCvo = dao.selectCvo(items);  // 모든 항목 조회 (기존에 있는 항목 포함)
-        System.out.println("UPDATE 처리할 항목 확인: " + existingCvo);
-        for (CartVO cart : existingCvo) {
-            dao.updateOrder(cart);  // 개별 항목 업데이트
-            System.out.println("UPDATE된 항목: " + cart);
-        }
 
+        List<CartVO> existingCvo = dao.selectCvo(items);
+     /*   for (CartVO cart : existingCvo) {
+            dao.updateOrder(cart);  // 기존 주문 항목 업데이트
+        }
+*/
         return existingCvo;  // 모든 주문된 항목 반환
     }
 

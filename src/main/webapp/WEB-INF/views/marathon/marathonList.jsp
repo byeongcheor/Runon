@@ -1,397 +1,300 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <!-- 메타 데이터 설정 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>2024 용인마라톤 대회</title>
-
-    <!-- Bootstrap JS 및 추가 스크립트 연결 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Bootstrap CSS 연결 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- FontAwesome 아이콘 라이브러리 연결 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-    <style>
-        /* 페이지 전체 스타일 */
-        body {
-            background-color: black;
-            color: white;
-            margin: 0;
-        }
-
-        /* 테이블 형식의 배경 이미지 설정 */
-        .header-table {
-            width: 100%;
-            height: 400px;
-            background-image: url('../img/런닝배경사진.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 테이블 위에 텍스트 스타일 */
-        .header-text {
-            font-size: 3rem;
-            font-weight: bold;
-            color: white;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-
-        #listmain {
-            width: 100%;
-            height: auto;
-            padding: 20px 0;
-            background-color: #121212;
-        }
-
-        /* 카드 높이 설정 */
-        .card {
-            height: 100%;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.1);
-            margin-bottom: 0;
-        }
-
-        /* 카드 텍스트 색상을 흰색으로 */
-        .card-body {
-            color: white;
-            padding: 10px;
-        }
-
-        /* SOLD OUT 텍스트 빨간색 */
-        .text-danger {
-            color: red;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* 좋아요와 찜 아이콘 스타일 */
-        .icon-group {
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .icon-group i {
-            margin-right: 8px;
-            color: white; /* 아이콘 기본 색상을 화이트로 변경 */
-            cursor: pointer;
-        }
-
-        .icon-group i:hover {
-            color: #ff4757;
-        }
-
-        /* 클릭된 좋아요 및 찜 아이콘의 색상 설정 */
-        .icon-group i.clicked {
-            color: red; /* 좋아요 클릭 시 색상 */
-        }
-
-        .icon-group i.bookmarked {
-            color: yellow; /* 찜 클릭 시 색상 */
-        }
-
-        /* 카드 내 텍스트 정렬 */
-        .card-body .text-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .heart{
-            position: absolute;
-            bottom: 15px;
-            right:110px;
-            z-index: 130;
-        }
-        .box{
-        position: relative;
-        }
-    </style>
-</head>
-<body>
+<!-- Bootstrap JS 및 추가 스크립트 연결 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap CSS 연결 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<%--    <!-- FontAwesome 아이콘 라이브러리 연결 -->--%>
+<%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">--%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="/css/marathonList.css" type="text/css">
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 
 
-<div class="header-table">
-    <div class="header-text">
-        <!-- 런닝 마라톤 이벤트 -->
+<!-- 상단이미지 -->
+<div class="marathonFrm">
+    <div class="marathonFrmImg">
+        <img src="/img/marathonListImg.jpg"/>
     </div>
-</div>
+    <!-- 상단부분 -->
+    <div class="marathonListTop">
+        <h2 id="courseName">마라톤 대회</h2>
+        <div class="marathonF" style="text-align: right; margin-right: 70px; margin-bottom: 100px;">
+            <span id="sort-view" style="cursor:pointer;">조회순</span> |
+            <span id="sort-like" style="cursor:pointer;">좋아요순</span>
+        </div>
+        <!--필터 검색 -->
+        <div class="mFilter-search">
+            <!-- 전체년도 필터 -->
+            <select id="year-filter">
+                <option value="" selected>전체년도</option>
+                <option value="2024">2024년</option>
+                <option value="2025">2025년</option>
+            </select>
 
-<div id="listmain">
-    <div class="container mt-5">
-        <h1 class="text-center">마라톤 목록</h1>
+            <!-- 전체월 필터 -->
+            <select id="month-filter">
+                <option value="" selected>전체월</option>
+                <option value="1">1월</option>
+                <option value="2">2월</option>
+                <option value="3">3월</option>
+                <option value="4">4월</option>
+                <option value="5">5월</option>
+                <option value="6">6월</option>
+                <option value="7">7월</option>
+                <option value="8">8월</option>
+                <option value="9">9월</option>
+                <option value="10">10월</option>
+                <option value="11">11월</option>
+                <option value="12">12월</option>
+            </select>
 
-        <!-- 마라톤 섹션들 -->
-        <h2 class="mt-5">2024년 9월 마라톤</h2>
-        <div class="row">
-            <div class="col-md-3 mb-4 box">
-            <i class="fas fa-heart heart" id="likeIcon1" ></i>
-                <a href="/marathon/marathonDetail" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/마라톤1.png" class="card-img-top" alt="마라톤 이미지 1">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 1</h5>
-                            <p class="card-text">가격: 25,000원</p>
-                            <p class="card-text">날짜: 2024-09-27</p>
-                            <p class="card-text">장소: 성수동</p>
-                            <div class="text-container">
-                                <p class="text-danger">SOLD OUT</p>
-                                <div class="icon-group">
-                                    <span class="icon-text">좋아요</span>
-                                     <!-- 좋아요 아이콘 -->
-                                    <span class="icon-text">찜</span>
-                                    <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
+            <!-- 지역 필터 -->
+            <select id="mRegion-filter">
+                <option value="" selected>지역</option> <!-- 기본으로 선택 -->
+                <option value="전체">전체</option>
+                <option value="서울">서울</option>
+                <option value="경기">경기</option>
+                <option value="부산">부산</option>
+                <option value="대구">대구</option>
+                <option value="인천">인천</option>
+                <option value="광주">광주</option>
+                <option value="대전">대전</option>
+                <option value="울산">울산</option>
+                <option value="세종">세종</option>
+                <option value="강원">강원</option>
+                <option value="충북">충북</option>
+                <option value="충남">충남</option>
+                <option value="전북">전북</option>
+                <option value="전남">전남</option>
+                <option value="경북">경북</option>
+                <option value="경남">경남</option>
+                <option value="제주">제주</option>
+            </select>
+
+            <!-- 검색 입력 필드 -->
+            <input type="text" id="search-input" placeholder="검색어를 입력하세요">
+
+            <!-- 검색 버튼 -->
+            <button id="mSearch-button" class="btn btn-outline-secondary">Search</button>
+        </div>
+
+        <!-- 대회 일정 -->
+        <div class="marathon-container" id="marathon-list">
+            <c:forEach var="marathon" items="${list}">
+                <div class="marathon-card">
+                    <div class="marathon-card2">
+                        <div class="marathonC">
+                            <!-- 카드 한 개 -->
+                            <div class="marathonC2" onclick="goToDetailPage(${marathon.marathon_code})">
+                                <div class="marathonListI">
+                                    <img src="/img/defaultimg.png" alt="마라톤 이미지">
+                                    <div class="receiptType">
+                                        <span style="<c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>">
+                                                ${marathon.registration_status}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="marathonListContent">
+                                    <span>📍 ${marathon.mainLocation}</span>
+                                    <div class="mTitle">${marathon.marathon_name}</div>
+                                    <div class="mPrice">${marathon.entry_fee}</div>
+                                    <div class="mSubject">
+                                        <div class="mH">
+                                            <span>👀 ${marathon.hit}&nbsp;❤️ ${marathon.like_count}</span>
+                                        </div>
+                                        <div class="mDate">📅 ${marathon.event_date}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
+                </div>
+            </c:forEach>
         </div>
 
-        <h2 class="mt-5">2024년 10월 마라톤</h2>
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=2" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/마라톤2.png" class="card-img-top" alt="마라톤 이미지 2">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 2</h5>
-                            <p class="card-text">가격: 30,000원</p>
-                            <p class="card-text">날짜: 2024-10-10</p>
-                            <p class="card-text">장소: 강남구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+        <!-- 페이징 UI 추가 -->
+        <!-- 페이징 -->
+        <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
+            <!-- 이전 페이지 -->
+            <c:if test="${pvo.nowPage == 1}">
+                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">&lt;</a></li>
+            </c:if>
 
-        <h2 class="mt-5">2024년 11월 마라톤</h2>
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=3" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/마라톤3.png" class="card-img-top" alt="마라톤 이미지 3">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 3</h5>
-                            <p class="card-text">가격: 35,000원</p>
-                            <p class="card-text">날짜: 2024-11-15</p>
-                            <p class="card-text">장소: 종로구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+            <c:if test="${pvo.nowPage > 1}">
+                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage - 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">Previous</a></li>
+            </c:if>
 
-        <h2 class="mt-5">2024년 12월 마라톤</h2>
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=4" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/마라톤4.png" class="card-img-top" alt="마라톤 이미지 4">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 4</h5>
-                            <p class="card-text">가격: 40,000원</p>
-                            <p class="card-text">날짜: 2024-12-01</p>
-                            <p class="card-text">장소: 송파구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+            <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
+                <c:if test="${p <= pvo.totalPage}">
+                    <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
+                        <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
+                    </li>
+                </c:if>
+            </c:forEach>
 
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=5" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/마라톤4.png" class="card-img-top" alt="마라톤 이미지 5">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 5</h5>
-                            <p class="card-text">가격: 20,000원</p>
-                            <p class="card-text">날짜: 2024-12-15</p>
-                            <p class="card-text">장소: 서초구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+            <!-- 다음 페이지 -->
+            <c:if test="${pvo.nowPage == pvo.totalPage}">
+                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">Next</a></li>
+            </c:if>
+            <c:if test="${pvo.nowPage < pvo.totalPage}">
+                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">></a></li>
+            </c:if>
+        </ul>
+    </div>
+</div>
+<script>
+    function goToDetailPage(marathonCode) {
+       // URL 인코딩
+        window.location.href = '/marathon/marathonDetail/' + marathonCode;
+    }
 
-        <h2 class="mt-5">2025년 1월 마라톤</h2>
-        <div class="row mt-4">
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=6" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/채팅.png" class="card-img-top" alt="마라톤 이미지 6">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 6</h5>
-                            <p class="card-text">가격: 50,000원</p>
-                            <p class="card-text">날짜: 2025-01-10</p>
-                            <p class="card-text">장소: 용산구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+    // 페이지 링크 클릭 시 AJAX로 페이지 전환
+    $(document).on('click', '.page-link', function(event) {
+        event.preventDefault();  // 링크의 기본 동작(새로고침)을 막음
 
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=6" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/채팅.png" class="card-img-top" alt="마라톤 이미지 6">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 6</h5>
-                            <p class="card-text">가격: 50,000원</p>
-                            <p class="card-text">날짜: 2025-01-10</p>
-                            <p class="card-text">장소: 용산구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+        const url = $(this).attr('href');  // 링크에서 URL 가져오기
 
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=6" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/채팅.png" class="card-img-top" alt="마라톤 이미지 6">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 6</h5>
-                            <p class="card-text">가격: 50,000원</p>
-                            <p class="card-text">날짜: 2025-01-10</p>
-                            <p class="card-text">장소: 용산구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                // 서버에서 받아온 데이터를 특정 div에 업데이트
+                $('#marathon-list').html($(response).find('#marathon-list').html());
 
-            <div class="col-md-3 mb-4">
-                <a href="detail.jsp?id=6" style="text-decoration: none; color: inherit;">
-                    <div class="card">
-                        <img src="../img/채팅.png" class="card-img-top" alt="마라톤 이미지 6">
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 6</h5>
-                            <p class="card-text">가격: 50,000원</p>
-                            <p class="card-text">날짜: 2025-01-10</p>
-                            <p class="card-text">장소: 용산구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+                // 페이징도 업데이트
+                $('#paging').html($(response).find('#paging').html());
+            },
+            error: function() {
+                alert('페이지 로딩 중 오류가 발생했습니다.');
+            }
+        });
+    });
 
-            <div class="col-md-3 mb-4">
-                    <div class="card">
-                <a href="detail.jsp?id=6" style="text-decoration: none; color: inherit;">
-                        <img src="../img/채팅.png" class="card-img-top" alt="마라톤 이미지 6">
-                </a>
-                        <div class="card-body">
-                            <h5 class="card-title">마라톤 6</h5>
-                            <p class="card-text">가격: 50,000원</p>
-                            <p class="card-text">날짜: 2025-01-10</p>
-                            <p class="card-text">장소: 용산구</p>
-                            <div class="text-container">
-                            <p class="text-danger">SOLD OUT</p>
-                            <div class="icon-group">
-                            <span class="icon-text">좋아요</span>
-                            <i class="fas fa-heart" id="likeIcon1"></i> <!-- 좋아요 아이콘 -->
-                            <span class="icon-text">찜</span>
-                            <i class="fas fa-bookmark" id="bookmarkIcon1"></i> <!-- 찜 아이콘 -->
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </div>
+    ///필터 검색
 
-    <script>
-        // 좋아요 아이콘 클릭 이벤트 처리
-        document.getElementById('likeIcon1').addEventListener('click', function () {
-            this.classList.toggle('clicked'); // 클릭 시 좋아요 색상 변경
+    $(document).ready(function() {
+        $('#mSearch-button').on('click', function() {
+            const year = $('#year-filter').val() || ""; // 기본값 설정
+            const month = $('#month-filter').val() || ""; // 기본값 설정
+            const addr = $('#mRegion-filter').val() || ""; // 기본값 설정
+            const searchTerm = $('#search-input').val().trim() || ""; // 기본값 설정
+
+            // 검색어 출력
+            console.log('검색어:', searchTerm); // 여기에 추가합니다.
+
+            // 아무것도 선택하지 않았을 경우
+            if (!year && !month && !addr && !searchTerm) {
+                alert("옵션 또는 검색어를 입력하세요.");
+                return;
+            }
+
+            // 필터링된 데이터를 가져오는 AJAX 요청
+            fetchFilteredData(year, month, addr, searchTerm);
+
+        });
+        // 조회순 클릭 이벤트
+        $('#sort-view').on('click', function() {
+            fetchFilteredData(null, null, null, null, '2');
         });
 
-        document.getElementById('bookmarkIcon1').addEventListener('click', function () {
-            this.classList.toggle('bookmarked'); // 클릭 시 찜 색상 변경
+        // 좋아요순 클릭 이벤트
+        $('#sort-like').on('click', function() {
+            fetchFilteredData(null, null, null, null, '1');
         });
+    });
 
-        document.getElementById('likeIcon2').addEventListener('click', function () {
-            this.classList.toggle('clicked'); // 클릭 시 좋아요 색상 변경
+    function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {
+        // 검색어 출력
+        console.log(addr+"----------------")
+        console.log('검색어:', searchTerm); // 여기에 추가합니다.
+        console.log('전송할 데이터:', {
+            year: year || null,
+            month: month || null,
+            region: addr || null,
+            search: searchTerm || null,
+            sort1: sortOrder || null
         });
-
-        document.getElementById('bookmarkIcon2').addEventListener('click', function () {
-            this.classList.toggle('bookmarked'); // 클릭 시 찜 색상 변경
+        $.ajax({
+            url: '/marathon/filter', // 필터링된 데이터를 요청할 엔드포인트
+            method: 'GET',
+            data: {
+                year: year || null,         // 선택한 연도
+                month: month || null,       // 선택한 월
+                addr: addr || null,     // 선택한 지역
+                search: searchTerm || null,  // 검색어
+                sort1: sortOrder || null      // 정렬 기준
+            },
+            success: function(response) {
+                console.log("AJAX 응답:", response); // 응답 데이터 확인
+                updateMarathonList(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX 요청 오류:", status, error);
+                alert("상태: " + status + "\n오류 메시지: " + error);
+            }
         });
-    </script>
+    }
 
-    </body>
-    </html>
+    function updateMarathonList(data) {
+        console.log('서버에서 받은 데이터:', data); // 서버 응답 확인
+        // 필터링된 데이터와 총 레코드 수를 처리하는 UI 업데이트 로직을 작성합니다.
+        // const totalRecord = data.totalRecord;
+        const marathons = data.filteredMarathons || []; // 기본값으로 빈 배열 설정
+
+        // UI에 마라톤 리스트 업데이트 로직 추가
+        // 예: 리스트를 비우고 새로 추가
+        $('#marathon-list').empty(); // 마라톤 리스트가 있는 DOM 요소의 ID에 맞게 변경
+
+        if (!Array.isArray(marathons) || marathons.length === 0) {
+            $('#marathon-list').append('<p>검색 결과가 없습니다.</p>');
+        } else {
+            // 마라톤 카드를 추가할 HTML 문자열 생성
+            let marathonHTML = '';
+            marathons.forEach(marathon => {
+                console.log(marathon);
+                marathonHTML += `
+                    <div class="marathon-card">
+                        <div class="marathon-card2">
+                            <div class="marathonC">
+                                <div class="marathonC2" onclick="goToDetailPage(` + marathon.marathon_code + `)">
+                                    <div class="marathonListI">
+                                        <img src="/img/defaultimg.png" alt="마라톤 이미지">
+                                        <div class="receiptType">
+                                            <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : '') + `">
+                                                ` + marathon.registration_status + `
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="marathonListContent">
+                                        <span>📍 ` + marathon.mainLocation + `</span>
+                                        <div class="mTitle">` + marathon.marathon_name + `</div>
+                                        <div class="mPrice">` + marathon.entry_fee + `원</div>
+                                        <div class="mSubject">
+                                            <div class="mH">
+                                                <span>👀 ` + marathon.hit + `&nbsp;❤️ ` + marathon.like_count + `</span>
+                                            </div>
+                                            <div class="mDate">📅 ` + marathon.event_date + `</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $('#marathon-list').append(marathonHTML);
+        }
+    }
+
+
+
+
+
+
+
+
+
+</script>
+

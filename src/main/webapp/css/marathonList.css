@@ -1,0 +1,231 @@
+
+/* 테이블 형식의 배경 이미지 설정 */
+.marathonFrmImg img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.marathonListTop {
+    /*background-color: black;*/
+    width: 100%;
+    padding: 70px 250px;
+}
+.marathonListTop h2{
+    text-align: center;
+}
+.marathon-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 가로로 4개 */
+    gap: 0px; /* 카드 간의 간격 */
+    margin: 40px auto;
+}
+
+.marathon-card {
+
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    z-index: 1;
+    box-sizing: border-box;
+
+}
+.marathon-container p{
+text-align: center;
+font-size: 1.5em;
+font-weight: bold;
+}
+
+.marathon-card2 {
+    width: 100%;
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.marathonC {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px;
+}
+
+.marathonC2 {
+    width: 300px; /* 카드의 너비 */
+    overflow: hidden;
+    height: auto;
+
+    cursor: pointer;
+    border-radius: 16px;
+}
+
+.marathonListI img {
+    width: 100%;
+    height: 300px; /* 이미지 높이를 더 크게 설정 */
+    border-radius: 16px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+}
+.soldout-banner {
+    position: absolute; /* 이미지 위에 덮어지도록 절대 위치 설정 */
+    bottom: 3px;
+    top: 0; /* 이미지의 상단에 배치 */
+    left: 0;
+    width: 100%; /* 전체 너비를 차지하게 설정 */
+    height: 100%; /* 전체 높이를 차지하게 설정 */
+
+    align-items: center;
+    justify-content: center;
+}
+
+.receiptType {
+    position: absolute;
+
+    top: 40px;
+    left: 40px;
+    height: 25px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.receiptType span {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(17, 103, 237);
+    padding: 0px 6px;
+}
+
+
+.receiptType2 {
+    position: absolute;
+
+    top: 40px;
+    left: 40px;
+    height: 25px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.receiptType2 span{
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: red;
+    padding: 0px 6px;
+}
+
+
+
+.marathonListContent {
+    width: 100%;
+    padding: 10px 0px;
+    max-width: 300px;
+}
+
+.marathonListContent span {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(119, 119, 119);
+}
+
+.mTitle {
+    font-size: 18px;
+    line-height: normal;
+    text-align: left;
+    color: rgb(85, 85, 85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 3px auto;
+    font-weight: bold;
+}
+
+.mPrice {
+    font-size: 17px;
+    text-align: left;
+    color: rgb(34, 34, 34);
+}
+
+.mSubject {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 4px;
+}
+
+.mDate,
+.mH {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(119, 119, 119);
+    gap: 4px;
+}
+
+.mH span {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: black;
+    color: white;
+    border-color: #ddd;
+}
+
+.pagination .page-item .page-link {
+    background-color: white;
+    color: black;
+    border-color: #ddd;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: white;
+    color: gray;
+    border-color: #ddd;
+}
+/*필터부분*/
+.mFilter-search {
+    display: flex;
+    gap: 10px; /* 각 요소 간 간격 설정 */
+    margin-top: 20px;
+    justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.mFilter-search select, .mFilter-search input, .mFilter-search button {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-input {
+    width: 300px;
+}
+
+.btn-outline-secondary{
+width: 100px;
+}
+/* 지도 iframe 스타일 (지도의 너비와 높이 설정) */
+.iframe1 {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    overflow: hidden; /* 지도 위에 불필요한 오버레이가 나오지 않도록 설정 */
+    margin-bottom: 60px;
+
+}
