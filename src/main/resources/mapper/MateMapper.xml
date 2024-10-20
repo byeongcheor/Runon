@@ -147,7 +147,7 @@
         b.nickname,
         sum(c.score_change) as tbuf_n,
         coalesce(
-        (select group_concat(e.crew_name order by e.crew_name asc separator ', ')
+        (select group_concat(e.crew_name order by e.crew_name asc separator '·')
         from create_crew_tbl e
         join crew_member_tbl d on e.create_crew_code = d.create_crew_code
         where d.usercode = a.usercode), 'no crew') as crew_name,

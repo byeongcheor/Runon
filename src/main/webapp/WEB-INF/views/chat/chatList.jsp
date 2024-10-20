@@ -250,7 +250,6 @@
 
 	// 서버에서 받은 메시지를 화면에 표시하는 함수
 	function showCatMessage(data) {
-		console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
 		var currentUserCode = localStorage.getItem("usercode"); // 현재 사용자의 유저코드 가져오기
 		var usercode = data.usercode; // 메시지를 보낸 사용자의 유저코드 가져오기
 
