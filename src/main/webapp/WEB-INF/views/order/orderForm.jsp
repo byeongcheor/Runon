@@ -41,7 +41,7 @@
                     <div class="price">${order.price}</div>
                     <div class="amount">${order.price*order.quantity}</div>
                 </div>
-             <c:set var="totalAmount" value="${totalAmount + (order.price * order.quantity)}" />
+                <c:set var="totalAmount" value="${totalAmount + (order.price * order.quantity)}" />
 
             </c:forEach>
 

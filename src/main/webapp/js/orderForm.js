@@ -270,12 +270,13 @@ async function main() {
         var discount_amount=document.getElementById("pointInput").value;
         discount_amount = discount_amount.replace(/[^0-9]/g, ''); // 숫자가 아닌 문자를 제거 (쉼표와 "P" 제거)
         discount_amount = parseInt(discount_amount, 10); // 문자열을 숫자로 변환
+        const orderId = generateRandomString();
         $.ajax({
             url:"/payment/insertpayment",
             type:"post",
             contentType: "application/json",
             data: JSON.stringify({
-                orderId: generateRandomString(),     // 주문 ID
+                orderId: orderId,     // 주문 ID
                 usercode: usercode1,                 // 사용자 코드
                 total_amount: totalAmount,
                 discount_amount:discount_amount,
@@ -288,11 +289,10 @@ async function main() {
         console.log(count);
 
         await widgets.requestPayment({
-            orderId: generateRandomString(),
+            orderId: orderId,
             orderName: marathon_namesString,
             successUrl: window.location.origin + "/success",
-            failUrl: window.location.origin + "/fail"
-
+            failUrl: window.location.origin + "/fail",
         });
 
 
@@ -302,4 +302,3 @@ async function main() {
 function generateRandomString() {
     return window.btoa(Math.random()).slice(0, 20);
 }
-
