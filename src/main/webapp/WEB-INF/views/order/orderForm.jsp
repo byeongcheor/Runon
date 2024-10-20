@@ -44,7 +44,8 @@
                 <c:set var="totalAmount" value="${totalAmount + (order.price * order.quantity)}" />
 
             </c:forEach>
-
+        </div>
+        <div>
             <h1>할인정보</h1>
             <div>포인트사용</div>
             <div id="pointTable">

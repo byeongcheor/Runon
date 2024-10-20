@@ -26,6 +26,10 @@
 }
 .oneline{
     display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
 }
 .orderM{
     display: flex;
@@ -72,7 +76,6 @@
 }
 
 .ticket{
-
     display: flex;
     flex-direction: row;
     -webkit-box-pack: start;
@@ -80,8 +83,17 @@
     -webkit-box-align: center;
     align-items: center;
     padding: 17px 0px 17px 40px;
+    width: 35%;
 }
-
+.num{
+    width: 13%;
+}
+.price{
+    width: 25%;
+}
+.amount{
+    width: 25%;
+}
 .marathonT{
     width: 270px;
     display: grid;
