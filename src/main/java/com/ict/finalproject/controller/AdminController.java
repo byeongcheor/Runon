@@ -200,18 +200,20 @@ public class AdminController {
 
         if (searchWord != null && !searchWord.isEmpty()) {
             if (searchKey.equals("role")){
-                if (searchWord.equals("SUPER_ADMIN")) {
+                if (searchWord.equals("SUPER_ADMIN")||searchWord.equals("0")||searchWord.equals("SUPER")) {
                     searchWord="0";
                     System.out.println(searchWord);
-                }else if (searchWord.equals("ADMIN")) {
+                }else if (searchWord.equals("ADMIN")||searchWord.equals("1")) {
                     searchWord="1";
                     System.out.println(searchWord);
-                }else if (searchWord.equals("MODERATOR")) {
+                }else if (searchWord.equals("MODERATOR")||searchWord.equals("2")||searchWord.equals("MD")) {
                     searchWord="2";
                     System.out.println(searchWord);
-                }else if(searchWord.equals("SUPPORT")){
+                }else if(searchWord.equals("SUPPORT")||searchWord.equals("3")||searchWord.equals("SUP")) {
                     searchWord="3";
                     System.out.println(searchWord);
+                }else{
+                    searchWord="4";
                 }
             }else if (searchKey.equals("permission_edit") ||
                     searchKey.equals("permission_add") ||
@@ -221,6 +223,8 @@ public class AdminController {
                     searchWord = "1";
                 } else if (searchWord.equals("N")||searchWord.equals("n")) {
                     searchWord = "0";
+                }else{
+                    searchWord="3";
                 }
             }
             pvo.setSearchWord(searchWord);
