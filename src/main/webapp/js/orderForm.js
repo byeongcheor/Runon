@@ -36,9 +36,10 @@ setTimeout(function () {
             mypoint = pvo.mypoint;
             console.log("포인트: " + r);
             var tag = `
-                <div><div>보유 포인트<div/> <span id="userPoints">` + pvo.mypoint.toLocaleString('ko-KR') + `P</span></div>
-                사용<input type="text" id="pointInput" value="0p" placeholder="100p부터 사용가능" onfocusout="usePoints()" onfocus="test()" />
+                <div><b>보유 포인트:</b> <span id="userPoints">` + pvo.mypoint.toLocaleString('ko-KR') + `P</span></div><br>
+                <b>사용 포인트:</b><input type="text" id="pointInput" value="0p" placeholder="100p부터 사용가능" onfocusout="usePoints()" onfocus="test()" />
                 <button type="button" onclick="useAllPoints()">전액 사용</button>
+                
                `;
             document.getElementById("pointTable").innerHTML = tag;
             document.getElementById("totalamount").innerText = totalAmount.toLocaleString('ko-KR') + "원";
@@ -77,51 +78,77 @@ function selectMarathonForm() {
             MFvo = r.MFvo;
             if (MFvo != null && MFvo != "") {
                 var tag = `
-             <h2 style="text-align: center">기존 마라톤 신청서</h2>
-                  
-    
-                    <div>
-                        <label for="name">이름:</label>
-                        <input type="text" id="name" name="name" value="` + MFvo.name + `" maxlength="30" disabled />
+                    <div class="marathonTable">
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="name">이름</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="text" id="name" name="name" value="` + MFvo.name + `" maxlength="30" disabled />
+                        </div>
                     </div>
-                    <div>
-                        <label for="tel">전화번호:</label>
-                        <input type="tel" id="tel" name="tel"  value="` + MFvo.tel + `" maxlength="15" disabled />
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="tel">전화번호</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="tel" id="tel" name="tel"  value="` + MFvo.tel + `" maxlength="15" disabled />
+                        </div>
                     </div>
-                    <div>
-                        <label for="addr">주소:</label>
-                        <input type="text" id="addr" value="` + MFvo.addr + `" name="addr" maxlength="100" disabled />
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="addr">주소</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="text" id="addr" value="` + MFvo.addr + `" name="addr" maxlength="100" disabled />    
+                        </div>
                     </div>
-                    <div>
-                        <label for="addr_details">상세 주소:</label>
-                        <input type="text" id="addr_details" value="` + MFvo.addr_details + `" name="addr_details" maxlength="300" disabled />
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="addr_details">상세 주소</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="text" id="addr_details" value="` + MFvo.addr_details + `" name="addr_details" maxlength="300" disabled />
+                        </div>
                     </div>
-                    <div>
-                        <label for="gender">성별:</label>
-                        
-                        <select id="gender" name="gender" disabled>
-                            <option value="M" ` + (MFvo.gender === 'M' ? 'selected' : '') + `>남성</option>
-                            <option value="F" ` + (MFvo.gender === 'F' ? 'selected' : '') + `>여성</option>
-                        </select>
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="gender">성별</label>
+                        </div>
+                        <div class="maraR">
+                            <select id="gender" name="gender" disabled>
+                                <option value="M" ` + (MFvo.gender === 'M' ? 'selected' : '') + `>남성</option>
+                                <option value="F" ` + (MFvo.gender === 'F' ? 'selected' : '') + `>여성</option>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="birth_date">생년월일:</label>
-                        <input type="date" id="birth_date" name="birth_date" value="` + MFvo.birth_date + `" disabled />
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="birth_date">생년월일</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="date" id="birth_date" name="birth_date" value="` + MFvo.birth_date + `" disabled />
+                        </div>
                     </div>
-                    <div>
-                        <label for="size">사이즈:</label>
-                        <input type="text" id="size" name="size" value="` + MFvo.size + `" maxlength="30" disabled />
+                    <div class="maraT">
+                        <div class="maraL">
+                            <label for="size">사이즈</label>
+                        </div>
+                        <div class="maraR">
+                            <input type="text" id="size" name="size" value="` + MFvo.size + `" maxlength="30" disabled />
+                        </div>
+                    </div>
                     </div>
                    <div>
-                       <label for="terms_agreement">이용약관 동의:</label>
+                       <label for="terms_agreement">이용약관 동의</label>
                        <input type="checkbox" id="terms_agreement" name="terms_agreement"  value="1" disabled ` + (MFvo.terms_agreement == 1 ? 'checked' : '') + ` />
                    </div>
                     <div>
-                        <label for="privacy_consent">개인정보 수집 동의:</label>
+                        <label for="privacy_consent">개인정보 수집 동의</label>
                         <input type="checkbox" id="privacy_consent" name="privacy_consent"  value="1" disabled ` + (MFvo.privacy_consent == 1 ? 'checked' : '') + ` />
                     </div>
                     <div>
-                        <label for="media_consent">미디어 사용 동의:</label>
+                        <label for="media_consent">미디어 사용 동의</label>
                         <input type="checkbox" id="media_consent" name="media_consent"  value="1" disabled ` + (MFvo.media_consent == 1 ? 'checked' : '') + ` />
                     </div>
               <button type="button" id="bolckbtn" onclick="blockbutton()">수정하기</button>
