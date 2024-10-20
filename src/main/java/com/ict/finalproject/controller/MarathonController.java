@@ -6,6 +6,7 @@ import com.ict.finalproject.service.CartService;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.service.MarathonService;
 import com.ict.finalproject.vo.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,30 +32,27 @@ public class MarathonController {
 
     @PostMapping("/test")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
-
-        System.out.println(user_code);
-        return user_name;
+    public String test(@RequestParam("Authorization") String token) {
+        System.out.println("테스트111"+token);
+        if (token!=null&&!token.isEmpty()){
+            token=token.substring("Bearer ".length());
+            System.out.println("1111111");
+            try {
+                user_name = jwtUtil.setTokengetUsername(token);
+                System.out.println("Username from Token: " + user_name);
+            } catch (Exception e) {
+                System.out.println("Error parsing token: " + e.getMessage());
+                e.printStackTrace(); // 전체 스택 트레이스 확인
+            }
+            return user_name;}
+        return null;
     }
 
     @GetMapping("/marathonList")
-    public String marathonList(MarathonListVO mvo, PagingVO pvo, Model model, @RequestHeader(value = "Authorization", required = false) String token){
-        int user_code = 0; // 기본값 설정
+    public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
 
-        // Bearer 토큰에서 실제 토큰 추출
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring("Bearer ".length());
 
-            // 토큰으로부터 사용자 이름 추출
-            String user_name = jwtUtil.setTokengetUsername(token);
-            user_code = service.usercodeSelect(user_name); // 유저 코드 조회
 
-        } else {
-            System.out.println("No valid token provided");
-        }
 
         // 전체 레코드 수를 세고, 페이징 정보를 설정
         int totalRecord = service.totalRecord(pvo);
@@ -70,15 +68,19 @@ public class MarathonController {
         // 모델에 데이터 추가
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
-        model.addAttribute("user_code", user_code); // 유저 코드를 모델에 추가
 
         return "marathon/marathonList";
     }
 
 
 
-    @GetMapping("/marathonDetail")
-    public String marathonDetail(@RequestParam("code") int marathonCode, Model model){
+    @GetMapping("/marathonDetail/{marathonCode}")
+    public String marathonDetail(@PathVariable("marathonCode") int marathonCode, Model model, HttpServletRequest request){
+        System.out.println("test");
+   /*     user_code = service.usercodeSelect(user_name);
+        List<MarathonListVO> userselect = service.userselect(user_code);
+        System.out.println(userselect);*/
+
         // 마라톤 코드에 따라 마라톤 정보를 가져오는 로직
         MarathonListVO marathon = service.getMarathonByCode(marathonCode);
 
@@ -130,37 +132,42 @@ public class MarathonController {
         // 모델에 데이터 추가
         model.addAttribute("marathon", marathon);
         model.addAttribute("distancePriceMap", distancePriceMap); // 거리와 가격 맵 추가
+       /* model.addAttribute("userselect",userselect);*/
+
 
         return "marathon/marathonDetail";
     }
 
-    @GetMapping("/marathonDetail/{id}")
-    public String getMarathonDetail(@PathVariable("id") int marathonId, Model model,MarathonListVO mvo) {
-        // 조회수 증가
-        service.increaseHit(marathonId);
-
-        // DB에서 마라톤 정보를 가져옴 (마라톤 이름, 위도, 경도)
-        MarathonListVO marathon  = service.getMarathonById(marathonId);
-
-        // 모델에 마라톤 정보 추가
-        // 모델에 마라톤 정보 추가
-        model.addAttribute("marathon", marathon);
-        model.addAttribute("marathonName", marathon.getMarathon_name()); // 마라톤 이름
-        model.addAttribute("latitude", marathon.getLat()); // 위도
-        model.addAttribute("longitude", marathon.getLon()); // 경도
-        model.addAttribute("totalDistance", marathon.getTotal_distance()); // 총 거리
-        model.addAttribute("entryFee", marathon.getEntry_fee()); // 참가비 추가
-
-        // JSP 또는 Thymeleaf로 데이터를 전달하여 화면에 출력
-        return "marathon/marathonDetail";
-    }
+//    @GetMapping("/marathonDetail/{id}")
+//    public String getMarathonDetail(@PathVariable("id") int marathonId, Model model,MarathonListVO mvo) {
+//        // 조회수 증가
+//        service.increaseHit(marathonId);
+//
+//        // DB에서 마라톤 정보를 가져옴 (마라톤 이름, 위도, 경도)
+//        MarathonListVO marathon  = service.getMarathonById(marathonId);
+//
+//        // 모델에 마라톤 정보 추가
+//        // 모델에 마라톤 정보 추가
+//        model.addAttribute("marathon", marathon);
+//        model.addAttribute("marathonName", marathon.getMarathon_name()); // 마라톤 이름
+//        model.addAttribute("latitude", marathon.getLat()); // 위도
+//        model.addAttribute("longitude", marathon.getLon()); // 경도
+//        model.addAttribute("totalDistance", marathon.getTotal_distance()); // 총 거리
+//        model.addAttribute("entryFee", marathon.getEntry_fee()); // 참가비 추가
+//
+//        // JSP 또는 Thymeleaf로 데이터를 전달하여 화면에 출력
+//        return "marathon/marathonDetail";
+//    }
     @PostMapping("/addToCart")
     @ResponseBody
-    public Map<String, Object> addToCart(CartVO cartVO) {
+    public Map<String, Object> addToCart(@RequestBody CartVO cartVO) {
         Map<String, Object> result = new HashMap<>();
         try {
+            System.out.println("cartVO확인"+cartVO);
+             // CartVO에 usercode 설정
             // 장바구니에 추가
-            service.addToCart(cartVO);
+            int b=service.addToCart(cartVO);
+            System.out.println(b);
             result.put("success", true);
             result.put("message", "장바구니에 담겼습니다.");
         } catch (Exception e) {
@@ -170,14 +177,15 @@ public class MarathonController {
         return result; // JSON 형태로 응답
     }
 
-    // 장바구니 페이지 이동
+
     @GetMapping("/cart")
-    public String viewCart(Model model, @SessionAttribute("usercode") int usercode) {
+    public String viewCart(Model model, @RequestParam("usercode") int usercode) {
         // 장바구니 조회
         List<CartVO> cartList = service.getCartByUserCode(usercode);
         model.addAttribute("cartList", cartList);
         return "order/cart"; // 장바구니 JSP 페이지 경로
     }
+
 
     //핕터
     @GetMapping("/filter")
@@ -187,29 +195,30 @@ public class MarathonController {
             @RequestParam(required = false, defaultValue = "") String month,
             @RequestParam(required = false, defaultValue = "") String addr,
             @RequestParam(required = false, defaultValue = "") String search,
-            @RequestParam(required = false, defaultValue = "0") Integer sort, // Integer로 변경
+            @RequestParam(required = false, defaultValue = "0") Integer sort1, // Integer로 변경
             PagingVO pvo) {
 
 
+        System.out.println(addr);
         // PagingVO에 필터링된 값 설정
         pvo.setYear(year);
         pvo.setMonth(month);
         pvo.setRegion(addr);
         pvo.setSearch(search); // search 값 설정
-        pvo.setSort1(sort);
+        pvo.setSort1(sort1);
 
         // 페이지 번호와 레코드 수 설정
         pvo.setNowPage(1); // 기본적으로 첫 페이지로 설정, 필요 시 변경 가능
         pvo.calculateOffset(); // 오프셋 계산
 
         // 입력값 로그 출력 (디버깅 용)
-        log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort);
+        log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort1);
 
         // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
         int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
         pvo.setTotalRecord(totalRecord);
 
-        List<MarathonListVO> filteredMarathons = service.filterMarathons(year, month, addr, search, pvo, sort);
+        List<MarathonListVO> filteredMarathons = service.filterMarathons(year, month, addr, search, pvo, sort1);
         // 결과를 저장할 Map을 초기화합니다.
         Map<String, Object> result = new HashMap<>();
         result.put("totalRecord", totalRecord);

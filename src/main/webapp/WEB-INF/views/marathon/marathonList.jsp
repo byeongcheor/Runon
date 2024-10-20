@@ -145,7 +145,8 @@
 </div>
 <script>
     function goToDetailPage(marathonCode) {
-        window.location.href = '/marathon/marathonDetail?code=' + marathonCode; // 컨트롤러로 코드 전달
+       // URL 인코딩
+        window.location.href = '/marathon/marathonDetail/' + marathonCode;
     }
 
     // 페이지 링크 클릭 시 AJAX로 페이지 전환
@@ -205,13 +206,14 @@
 
     function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {
         // 검색어 출력
+        console.log(addr+"----------------")
         console.log('검색어:', searchTerm); // 여기에 추가합니다.
         console.log('전송할 데이터:', {
             year: year || null,
             month: month || null,
             region: addr || null,
             search: searchTerm || null,
-            sort: sortOrder || null
+            sort1: sortOrder || null
         });
         $.ajax({
             url: '/marathon/filter', // 필터링된 데이터를 요청할 엔드포인트
@@ -219,9 +221,9 @@
             data: {
                 year: year || null,         // 선택한 연도
                 month: month || null,       // 선택한 월
-                region: addr || null,     // 선택한 지역
+                addr: addr || null,     // 선택한 지역
                 search: searchTerm || null,  // 검색어
-                sort: sortOrder || null      // 정렬 기준
+                sort1: sortOrder || null      // 정렬 기준
             },
             success: function(response) {
                 console.log("AJAX 응답:", response); // 응답 데이터 확인

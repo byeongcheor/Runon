@@ -163,7 +163,7 @@
                 if(r.list.length==0){
                     tag += `
                         <div class="row" style="text-align: center; margin-top: 40px;">
-                            <p>메이트 페이지에서 매칭한 메이트 이력이 없습니다.</p>
+                            <p>1:1문의한 내역이 없습니다.</p>
                         </div>
                     `;
                 }else{

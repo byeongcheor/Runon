@@ -164,7 +164,7 @@ public class MypageController {
                                          @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
         PagingVO pvo = new PagingVO();
-        int record = 2;
+        int record = 8;
         pvo.setOnePageRecord(record);
 
         int totalRecord = service.getTotalOrder(usercode);

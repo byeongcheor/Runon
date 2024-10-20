@@ -3,7 +3,6 @@
 <!-- 메타 데이터 설정 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bootstrap JS 및 추가 스크립트 연결 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- 카카오 지도 API 연결 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2c0dd7bd78a44e2891255c1e5f1403da"></script>
 <!-- Bootstrap CSS 연결 -->
@@ -13,7 +12,9 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <!-- 커스텀 스타일 시트 연결 -->
 <link rel="stylesheet" href="/css/marathonDetail.css" type="text/css">
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+<%--<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>--%>
+
+
 
 
 
@@ -126,102 +127,125 @@
 
 
 <script>
-    //db불러오고 다시 주석 풀기
-    <%--var marathonId = ${marathon.marathon_code};--%>
-
-
-    <!-- 좋아요 버튼 클릭 이벤트 처리 -->
-    const likeButton = document.getElementById('likeButton'); // 좋아요 버튼
-    const heartIcon = document.getElementById('heartIcon'); // 하트 아이콘
-    const likeCount = document.getElementById('likeCount'); // 좋아요 카운트 표시
-    let liked = false; // 좋아요 상태 플래그
-    let count = 0; // 초기 좋아요 카운트
-
-    // 좋아요 버튼 클릭 이벤트
-    likeButton.addEventListener('click', function () {
-        liked = !liked; // 좋아요 상태 토글
-        if (liked) {
-            heartIcon.classList.remove('far'); // 비어있는 하트 제거
-            heartIcon.classList.add('fas'); // 채워진 하트로 변경
-            likeButton.classList.add('clicked'); // 하트 색상 빨간색으로 변경
-            count++; // 좋아요 카운트 증가
-        } else {
-            heartIcon.classList.remove('fas'); // 채워진 하트 제거
-            heartIcon.classList.add('far'); // 비어있는 하트로 변경
-            likeButton.classList.remove('clicked'); // 하트 색상 원래대로
-            count--; // 좋아요 카운트 감소
-        }
-
-        likeCount.textContent = count; // 좋아요 카운트 업데이트
-    });
-
-    //마라톤 거리 옵션 선택
     const marathonItem = document.getElementById('marathonDItem');
-    const marathonSize = document.getElementById('marathonDSize');
-    const totalPriceDisplay = document.querySelector('.DP');
-    const cartButton = document.querySelector('.MC'); // 장바구니 버튼
+    const marathonId = ${marathon.marathon_code}; // 선택한 마라톤의 ID
 
-    // 함수: 두 가지 선택 옵션이 모두 선택되었는지 확인 후 총 금액 표시
-    function updateTotalPrice() {
-        const itemPrice = parseInt(marathonItem.value);
-        const sizeSelected = marathonSize.value !== '0'; // 사이즈가 선택되었는지 확인
 
-        if (itemPrice > 0 && sizeSelected) {
-            totalPriceDisplay.textContent = itemPrice + "원";
-        } else {
-            totalPriceDisplay.textContent = "0원"; // 하나라도 선택되지 않으면 0원 표시
+
+
+
+    setTimeout(function(){
+         usercode=usercode1;// 실제 사용자 코드 가져오기
+      /*  username=username1;*/
+        console.log('User Code:', usercode); // 디버깅용 로그 추가
+
+        // 좋아요 버튼 클릭 이벤트 처리
+        const likeButton = document.getElementById('likeButton'); // 좋아요 버튼
+        const heartIcon = document.getElementById('heartIcon'); // 하트 아이콘
+        const likeCount = document.getElementById('likeCount'); // 좋아요 카운트 표시
+        let liked = false; // 좋아요 상태 플래그
+        let count = 0; // 초기 좋아요 카운트
+
+        // 좋아요 버튼 클릭 이벤트
+        likeButton.addEventListener('click', function () {
+            liked = !liked; // 좋아요 상태 토글
+            if (liked) {
+                heartIcon.classList.remove('far'); // 비어있는 하트 제거
+                heartIcon.classList.add('fas'); // 채워진 하트로 변경
+                likeButton.classList.add('clicked'); // 하트 색상 빨간색으로 변경
+                count++; // 좋아요 카운트 증가
+            } else {
+                heartIcon.classList.remove('fas'); // 채워진 하트 제거
+                heartIcon.classList.add('far'); // 비어있는 하트로 변경
+                likeButton.classList.remove('clicked'); // 하트 색상 원래대로
+                count--; // 좋아요 카운트 감소
+            }
+
+            likeCount.textContent = count; // 좋아요 카운트 업데이트
+        });
+
+        // 마라톤 거리 옵션 선택
+        const marathonItem = document.getElementById('marathonDItem'); // 마라톤 거리 선택 요소
+        const marathonSize = document.getElementById('marathonDSize');
+        const totalPriceDisplay = document.querySelector('.DP');
+        const cartButton = document.querySelector('.MC'); // 장바구니 버튼
+
+        // 함수: 두 가지 선택 옵션이 모두 선택되었는지 확인 후 총 금액 표시
+        function updateTotalPrice() {
+            const itemPrice = parseInt(marathonItem.value);
+            const sizeSelected = marathonSize.value !== '0'; // 사이즈가 선택되었는지 확인
+
+            if (itemPrice > 0 && sizeSelected) {
+                totalPriceDisplay.textContent = itemPrice + "원";
+            } else {
+                totalPriceDisplay.textContent = "0원"; // 하나라도 선택되지 않으면 0원 표시
+            }
         }
-    }
+        // 옵션 변경 시 총 금액 업데이트
+        marathonItem.addEventListener('change', updateTotalPrice);
+        marathonSize.addEventListener('change', updateTotalPrice);
 
-    // 장바구니 버튼 클릭 시
-    document.querySelector('.MC').addEventListener('click', function() {
-        const itemPrice = parseInt(document.getElementById('marathonDItem').value); // 선택한 상품 가격
-        // 마라톤 ID를 선택한 상품의 select 요소에서 가져오는 예시
-        const marathonItem = document.getElementById('marathonDItem');
-        const marathonId = marathonItem.value; // 선택한 마라톤의 ID
+        // 장바구니 버튼 클릭 시
+        cartButton.addEventListener('click', function() {
+            const itemPrice = parseInt(marathonItem.value); // 선택한 상품 가격
+           // 선택한 마라톤의 ID
+            const sizeSelected = marathonSize.value !== '0'; // 사이즈 선택 여부 확인
 
-        const usercode = "YOUR_USER_CODE"; // 실제 사용자 코드로 교체해야 합니다.
-        const sizeSelected = document.getElementById('marathonDSize').value !== '0'; // 사이즈 선택 여부 확인
+            // 필수 항목 모두 선택 확인
+            if (itemPrice > 0 && sizeSelected && usercode) {
+                // 장바구니에 담을 데이터를 서버로 전송
 
-        if (itemPrice > 0 && sizeSelected) {
-            // 장바구니에 담을 데이터를 서버로 전송
-            const cartData = {
-                price: itemPrice,
-                marathon_code: marathonId,
-                usercode: usercode,
-                quantity: 1
-            };
+                const cartData = {
+                    price: itemPrice,
+                    marathon_code: marathonId,
+                    usercode: usercode1,
+                    quantity: 1
+                };
 
-            fetch('/marathon/addToCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(cartData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // 모달 띄우기
-                        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'), {});
-                        cartModal.show(); // 장바구니에 성공적으로 담기면 모달 띄움
-                    } else {
-                        alert(data.message); // 실패 메시지 출력
-                    }
+                fetch('/marathon/addToCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cartData)
                 })
-                .catch(error => {
-                    console.error('Error adding to cart:', error);
-                    alert('장바구니에 담기 실패!');
-                });
-        } else {
-            alert('상품과 사이즈를 모두 선택해주세요.');
-        }
-    });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 모달 띄우기
+                            const cartModal = new bootstrap.Modal(document.getElementById('cartModal'), {});
+                            cartModal.show(); // 장바구니에 성공적으로 담기면 모달 띄움
+                        } else {
+                            alert(data.message); // 실패 메시지 출력
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding to cart:', error);
+                        alert('장바구니에 담기 실패!');
+                    });
+            } else {
+                // 상품, 사이즈, 사용자 코드 선택 여부 확인 후 메시지 출력
+                if (!usercode) {
+                    alert('로그인 후 다시 시도해주세요.'); // 로그인 미비 메시지
+                } else {
+                    alert('상품과 사이즈를 모두 선택해주세요.'); // 필수 항목 미선택 메시지
+                }
+            }
+        });
 
-    // 장바구니로 이동 버튼 클릭 시
-    document.getElementById('goToCartBtn').addEventListener('click', function() {
-        window.location.href = '/marathon/cart'; // 장바구니 페이지로 이동
-    });
+        // 장바구니로 이동 버튼 클릭 시
+        document.getElementById('goToCartBtn').addEventListener('click', function() {
+            window.location.href = '/cart/cart'; // 장바구니 페이지로 이동
+        });
+
+        // 계속 쇼핑하기 버튼 클릭 시
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            const cartModal = bootstrap.Modal.getInstance(document.getElementById('cartModal')); // 모달 인스턴스 가져오기
+            cartModal.hide(); // 모달 닫기
+            // 마라톤 리스트 페이지로 이동
+            window.location.href = '/marathon/marathonList'; // 또는 사용자가 원래 있던 페이지로 이동
+        });
+    },300);
 
 
 
