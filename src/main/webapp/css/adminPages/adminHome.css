@@ -219,3 +219,7 @@ ul,li{
     font-size: 9pt;
     border: 1px solid lightgrey;
 }
+#changetext{
+    font-weight: bold;
+    font-size: 0.8em;
+}

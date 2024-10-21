@@ -13,8 +13,10 @@ public class AdminPaymentVO {
     private int price;
     private int quantity;
     private int real_amount;
+    private int total_amount;
     private String completed_date;//check
     private String nickname;
+    private String orderId;
 
 
 }

@@ -477,11 +477,11 @@ function newPayment(){
                 var buttontag="<div id=\"addlist\" > </div><div><button type=\"button\">더보기</button></div>";
                 document.getElementById("buttonhidden").innerHTML=buttontag;
                 var tag="<ul><li class='oneline paymenttitle'><div class='nickname'>닉네임</div>";
-                tag += "<div class='marathon_name'>마라톤명</div><div class='real_amount'>총가격</div>";
+                tag += "<div class='marathon_name'>주문번호</div><div class='real_amount'>총가격</div>";
                 tag += "<div class='completed_date'>결제완료일</div></li>";
                 apaylist.forEach(function(apay){
                     tag+="<li class='oneline alink'><a href='#'><div class='nickname'>"+apay.nickname+"</div>";
-                    tag+="<div class='marathon_name'>"+apay.marathon_name+"</div>";
+                    tag+="<div class='marathon_name'>"+apay.orderId+"</div>";
                     tag+="<div class='real_amount'>"+apay.real_amount+"</div>";
                     tag+="<div class='completed_date'>"+apay.completed_date+"</div></a></li>";
                 });

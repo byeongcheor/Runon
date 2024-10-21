@@ -78,4 +78,11 @@ public interface AdminPagesService {
     public List<QnAVO> getQnaList();
     //연간 매출top5
     public List<YearsTop5MarathonVO>getYearsTop5list(int year);
+
+    //신고번호보내서 신고디테일받기
+    public ReportVO getReportDetail(int report_code);
+
+    //신고처리과정 impl확인하세요
+    public ReportReplyVO updateReport(ReportVO vo,int loginUserCode);
+    public ReportReplyVO getReportReplys(int report_code);
 }

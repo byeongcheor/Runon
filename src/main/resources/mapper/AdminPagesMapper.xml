@@ -25,9 +25,9 @@
         select * from record_tbl where usercode = #{param1}
     </select>
     <select id="selectInPay" resultType="com.ict.finalproject.vo.AdminPaymentVO">
-        select o.order_code,p.completed_date,m.marathon_name,o.price,o.quantity,o.real_amount
+        select o.order_code,p.completed_date,m.marathon_name,o.price,o.quantity,o.total_amount
         from payment_tbl p
-        join order_tbl o on p.order_code = o.order_code
+        join order_tbl o on p.usercode = o.usercode
         join marathon_list_tbl m on o.marathon_code = m.marathon_code
         where o.usercode=#{param1}
         and p.is_completed=1
@@ -63,20 +63,30 @@
         delete from point_tbl where usercode=#{param1}
     </delete>
     <update id="setDisableUserTime">
-        update user_tbl
-        set is_disabled = 1,
-        disabled_start_date=now(),
+        UPDATE user_tbl
+        SET is_disabled = 1,
+        disabled_start_date =     CASE
+        WHEN disabled_date IS NULL THEN NOW()
+        ELSE disabled_start_date
+        END,
         disabled_date =
         <choose>
             <when test="disableday == 999">
-                now() + INTERVAL 300 YEAR
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL 300 YEAR
+                ELSE NOW() + INTERVAL 300 YEAR
+                END
             </when>
             <otherwise>
-                NOW() + INTERVAL #{disableday} DAY
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL #{disableday} DAY
+                ELSE NOW() + INTERVAL #{disableday} DAY
+                END
             </otherwise>
         </choose>
-        where usercode = #{usercode}
+        WHERE usercode = #{usercode}
     </update>
+
     <update id="setEnableUser">
         update user_tbl set is_disabled=0,
         disabled_date=null where usercode=#{param1}
@@ -400,7 +410,7 @@
         marathon_list_tbl;
     </select>
     <select id="getCountAPlist" resultType="com.ict.finalproject.vo.AdminPaymentVO">
-        select
+     <!--   select
         year(created_date) as completed_date,
         sum(real_amount) as real_amount
         from order_tbl
@@ -410,7 +420,18 @@
         group by
         year(created_date)
         order by
-        year(created_date) desc;
+        year(created_date) desc;-->
+        select
+        year(completed_date) as completed_date,
+        sum(total_amount) as real_amount
+        from payment_tbl
+        where
+        is_completed = 1
+        and completed_date >= date_format(date_sub(now(),INTERVAL 2 year),"%Y-01-01")
+        group by
+        year(completed_date)
+        order by
+        year(completed_date) desc;
     </select>
     <select id="getCountMemlist" resultType="com.ict.finalproject.vo.MemCountVO">
         select
@@ -441,7 +462,7 @@
         FROM user_tbl;
     </select>
     <select id="getNewPayment" resultType="com.ict.finalproject.vo.AdminPaymentVO">
-        select o.order_code as order_code,
+    <!--    select o.order_code as order_code,
             m.marathon_name as marathon_name,
             o.real_amount as real_amount,
             u.nickname as nickname,
@@ -453,8 +474,19 @@
         join user_tbl u on o.usercode=u.usercode
         where p.is_completed=1
         order by p.completed_date desc
-        limit 5;
-    </select>
+        limit 5;-->
+        SELECT
+        pd.orderId,
+        p.real_amount,
+        p.completed_date,
+        u.nickname as nickname,
+        p.usercode,
+        pd.order_code
+        FROM payment_tbl p
+        join user_tbl u on p.usercode=u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        ORDER BY p.payment_code
+        LIMIT 5    </select>
     <select id="getQnaList" resultType="com.ict.finalproject.vo.QnAVO">
         select q.qna_code,u.nickname,q.qna_subject,q.writedate from
         qna_tbl q
@@ -464,17 +496,58 @@
     <select id="getYearsTop5list" resultType="com.ict.finalproject.vo.YearsTop5MarathonVO">
         SELECT
         m.marathon_name AS marathon_name,
-        SUM(o.real_amount) AS total_real_amount
+        SUM(o.total_amount) AS total_real_amount
         FROM
         order_tbl o
         JOIN
         marathon_list_tbl m ON o.marathon_code = m.marathon_code
         WHERE
-        YEAR(o.created_date) = #{param1}
+        YEAR(o.created_date) = #{param1} and o.order_status=1
         GROUP BY
         m.marathon_name
         ORDER BY
         total_real_amount DESC
         LIMIT 3;
+    </select>
+    <select id="getReportDetail" resultType="com.ict.finalproject.vo.ReportVO">
+        SELECT
+        r.report_code,
+        r.offender_code,
+        r.report_reason,
+        r.report_content,
+        r.report_date,
+        r.victim_code,
+        r.report_status,
+        o.nickname AS offender_nickname,
+        v.nickname AS victim_nickname,
+        (SELECT COUNT(*) FROM report_tbl WHERE offender_code = r.offender_code) AS report_count
+        FROM
+        report_tbl r
+        LEFT JOIN
+        user_tbl o ON r.offender_code = o.usercode
+        LEFT JOIN
+        user_tbl v ON r.victim_code = v.usercode
+        WHERE
+        r.report_code = #{param1}
+    </select>
+    <insert id="setReportReply">
+        insert into report_reply_tbl(content,report_result,process_date,report_code,admin_code) values(#{content},#{report_result},now(),
+        #{report_code},#{admin_code})
+    </insert>
+    <update id="updateReport">
+        update report_tbl set report_status=1 where report_code = #{report_code}
+    </update>
+    <select id="getReportReply">
+        SELECT
+        r.*,
+        u.nickname AS admin_nickname
+        FROM
+        report_reply_tbl r
+        JOIN
+        admin_tbl a ON r.admin_code = a.admin_code
+        JOIN
+        user_tbl u ON a.usercode = u.usercode
+        WHERE
+        r.report_code =#{report_code}
     </select>
 </mapper>

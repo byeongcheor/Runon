@@ -71,8 +71,6 @@ function mate() {
         type: "post",
         data: { Authorization:Authorization },
         success: function (r) {
-          console.log('mate : '+r);
-          alert("r:"+r);
           window.location.href = '/mate/mate';
         }
     });
@@ -120,7 +118,7 @@ function crew() {
                 </div>
                 <ul>
                     <li><a href="/marathon/marathonList">MARATHON</a></li>
-                    <li><a class="menus" href="/mate/mate">MATE</a></li>
+                    <li><a class="menus" onclick="mate()">MATE</a></li>
                     <li><a class="menus" href="/crew/crewList">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/cart/cart">CART</a></li>

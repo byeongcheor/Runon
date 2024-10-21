@@ -34,9 +34,9 @@
                             <option value="permission_delete">
                                 삭제권한
                             </option>
-                            <option value="is_deleted">
+                         <%--   <option value="is_deleted">
                                 정지된 운영자
-                            </option>
+                            </option>--%>
 
                         </select>
                         <div>

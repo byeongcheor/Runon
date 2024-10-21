@@ -1,5 +1,6 @@
 package com.ict.finalproject.controller;
 
+import com.ict.finalproject.dao.AdminPagesDAO;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.AdminPagesService;
 import com.ict.finalproject.vo.*;
@@ -19,6 +20,8 @@ public class AdminController {
     AdminPagesService service;
     @Autowired
     JWTUtil jwtUtil;
+    @Autowired
+    private AdminPagesDAO adminPagesDAO;
 
     @GetMapping("/adminHome")
     public String admin(Model model){
@@ -200,18 +203,20 @@ public class AdminController {
 
         if (searchWord != null && !searchWord.isEmpty()) {
             if (searchKey.equals("role")){
-                if (searchWord.equals("SUPER_ADMIN")) {
+                if (searchWord.equals("SUPER_ADMIN")||searchWord.equals("0")||searchWord.equals("SUPER")) {
                     searchWord="0";
                     System.out.println(searchWord);
-                }else if (searchWord.equals("ADMIN")) {
+                }else if (searchWord.equals("ADMIN")||searchWord.equals("1")) {
                     searchWord="1";
                     System.out.println(searchWord);
-                }else if (searchWord.equals("MODERATOR")) {
+                }else if (searchWord.equals("MODERATOR")||searchWord.equals("2")||searchWord.equals("MD")) {
                     searchWord="2";
                     System.out.println(searchWord);
-                }else if(searchWord.equals("SUPPORT")){
+                }else if(searchWord.equals("SUPPORT")||searchWord.equals("3")||searchWord.equals("SUP")) {
                     searchWord="3";
                     System.out.println(searchWord);
+                }else{
+                    searchWord="4";
                 }
             }else if (searchKey.equals("permission_edit") ||
                     searchKey.equals("permission_add") ||
@@ -221,6 +226,8 @@ public class AdminController {
                     searchWord = "1";
                 } else if (searchWord.equals("N")||searchWord.equals("n")) {
                     searchWord = "0";
+                }else{
+                    searchWord="3";
                 }
             }
             pvo.setSearchWord(searchWord);
@@ -462,5 +469,27 @@ public class AdminController {
 
         return map;
 
+    }
+
+    @PostMapping("/reportDetail")
+    @ResponseBody
+    public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code){
+        Map<String,Object> map=new HashMap<>();
+        ReportVO rvo=service.getReportDetail(report_code);
+        ReportReplyVO RRvo=service.getReportReplys(report_code);
+        System.out.println(RRvo);
+        map.put("rvo",rvo);
+        map.put("reply",RRvo);
+        return map;
+    }
+    @PostMapping("/ReportReply")
+    @ResponseBody
+    public Map<String,Object>ReportReply(ReportVO rvo,@RequestParam("loginCode")int usercode){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println(rvo);
+        System.out.println(usercode);
+        ReportReplyVO result = service.updateReport(rvo,usercode);
+        map.put("rvo",result);
+        return map;
     }
 }
