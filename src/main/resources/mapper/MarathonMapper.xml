@@ -130,7 +130,15 @@
         </choose>
         LIMIT #{offset}, #{onePageRecord}
     </select>
+    <insert id="insertLike" parameterType="com.ict.finalproject.vo.LikeVO">
+        INSERT INTO marathon_likes (usercode, marathon_code, created_at) VALUES (#{usercode}, #{marathon_code}, NOW())
+    </insert>
 
+    <select id="checkLike" parameterType="map" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </select>
 
 
 </mapper>

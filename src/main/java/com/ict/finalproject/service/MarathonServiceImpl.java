@@ -1,15 +1,14 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.MarathonDAO;
-import com.ict.finalproject.vo.CartVO;
-import com.ict.finalproject.vo.MarathonListVO;
-import com.ict.finalproject.vo.MateVO;
-import com.ict.finalproject.vo.PagingVO;
+import com.ict.finalproject.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -73,5 +72,19 @@ public class MarathonServiceImpl implements MarathonService {
     public List<MarathonListVO> userselect(int user_code) {
         return dao.userselect(user_code);
     }
+
+    @Override
+    public void addLike(LikeVO likeVO) {
+        dao.addLike(likeVO);
+    }
+
+    @Override
+    public boolean checkLike(int usercode, int marathonCode) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("usercode", usercode);
+        params.put("marathonCode", marathonCode);
+        return dao.checkLike(params); // DAO 호출
+    }
+
 
 }

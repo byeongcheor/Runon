@@ -227,6 +227,32 @@ public class MarathonController {
 
         return result; // 필터링된 마라톤 목록과 총 레코드 수 반환
     }
+    @PostMapping("/addLike")
+    @ResponseBody
+    public Map<String, Object> addLike(@RequestBody LikeVO likeVO) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // 좋아요 여부 확인
+            boolean alreadyLiked = service.checkLike(likeVO.getUsercode(), likeVO.getMarathon_code());
+
+            if (!alreadyLiked) {
+                // 좋아요 추가
+                service.addLike(likeVO);
+                result.put("success", true);
+                result.put("message", "좋아요가 추가되었습니다.");
+            } else {
+                // 이미 좋아요를 눌렀다면
+                result.put("success", false);
+                result.put("message", "이미 좋아요를 눌렀습니다.");
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            result.put("success", false);
+            result.put("message", "좋아요 추가 실패: " + e.getMessage());
+            e.printStackTrace(); // 전체 스택 트레이스를 로그에 출력
+        }
+        return result; // JSON 형태로 응답
+    }
 
 
 

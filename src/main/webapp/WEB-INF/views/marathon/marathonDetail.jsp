@@ -12,7 +12,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <!-- 커스텀 스타일 시트 연결 -->
 <link rel="stylesheet" href="/css/marathonDetail.css" type="text/css">
-<%--<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>--%>
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 
 
 
@@ -60,7 +60,7 @@
                             <button class="btn-like" id="likeButton">
                                 <i class="far fa-heart" id="heartIcon"></i> <!-- 비어있는 하트 -->
                             </button>
-                            <span id="likeCount" class="like-count">0</span> <!-- 좋아요 수 -->
+                            <span id="likeCount" class="like-count">${marathon.like_count}</span> <!-- 좋아요 수 -->
                         </div>
                         <button class="MC">장바구니</button>
                         <button class="MP">바로구매</button>
@@ -133,35 +133,63 @@
 
 
 
-
     setTimeout(function(){
          usercode=usercode1;// 실제 사용자 코드 가져오기
       /*  username=username1;*/
         console.log('User Code:', usercode); // 디버깅용 로그 추가
 
+
+
         // 좋아요 버튼 클릭 이벤트 처리
         const likeButton = document.getElementById('likeButton'); // 좋아요 버튼
         const heartIcon = document.getElementById('heartIcon'); // 하트 아이콘
         const likeCount = document.getElementById('likeCount'); // 좋아요 카운트 표시
+        let count = parseInt(likeCount.textContent); // 현재 좋아요 수 가져오기
         let liked = false; // 좋아요 상태 플래그
-        let count = 0; // 초기 좋아요 카운트
 
-        // 좋아요 버튼 클릭 이벤트
+
         likeButton.addEventListener('click', function () {
-            liked = !liked; // 좋아요 상태 토글
-            if (liked) {
-                heartIcon.classList.remove('far'); // 비어있는 하트 제거
-                heartIcon.classList.add('fas'); // 채워진 하트로 변경
-                likeButton.classList.add('clicked'); // 하트 색상 빨간색으로 변경
-                count++; // 좋아요 카운트 증가
-            } else {
-                heartIcon.classList.remove('fas'); // 채워진 하트 제거
-                heartIcon.classList.add('far'); // 비어있는 하트로 변경
-                likeButton.classList.remove('clicked'); // 하트 색상 원래대로
-                count--; // 좋아요 카운트 감소
-            }
-
-            likeCount.textContent = count; // 좋아요 카운트 업데이트
+            console.log('좋아요 버튼 클릭됨', usercode, marathonId); // 추가 로그
+            // 서버에 좋아요 추가 요청
+            fetch('/marathon/addLike', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    usercode: usercode1,
+                    marathon_code: marathonId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) { // 응답이 200번대가 아닐 경우
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('서버에서 받은 데이터', data); // 데이터 로그
+                    if (data && data.success) { // 데이터가 존재하고 성공한 경우
+                        liked = !liked; // 좋아요 상태 토글
+                        if (liked) {
+                            heartIcon.classList.remove('far');
+                            heartIcon.classList.add('fas');
+                            likeButton.classList.add('clicked');
+                            count++;
+                        } else {
+                            heartIcon.classList.remove('fas');
+                            heartIcon.classList.add('far');
+                            likeButton.classList.remove('clicked');
+                            count--;
+                        }
+                        likeCount.textContent = count; // 좋아요 카운트 업데이트
+                    } else {
+                        alert(data.message || '좋아요 추가 실패'); // 메시지 출력
+                    }
+                })
+                .catch(error => {
+                    console.error('좋아요 추가에 실패했습니다:', error);
+                });
         });
 
         // 마라톤 거리 옵션 선택
