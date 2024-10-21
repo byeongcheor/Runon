@@ -63,20 +63,30 @@
         delete from point_tbl where usercode=#{param1}
     </delete>
     <update id="setDisableUserTime">
-        update user_tbl
-        set is_disabled = 1,
-        disabled_start_date=now(),
+        UPDATE user_tbl
+        SET is_disabled = 1,
+        disabled_start_date =     CASE
+        WHEN disabled_date IS NULL THEN NOW()
+        ELSE disabled_start_date
+        END,
         disabled_date =
         <choose>
             <when test="disableday == 999">
-                now() + INTERVAL 300 YEAR
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL 300 YEAR
+                ELSE NOW() + INTERVAL 300 YEAR
+                END
             </when>
             <otherwise>
-                NOW() + INTERVAL #{disableday} DAY
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL #{disableday} DAY
+                ELSE NOW() + INTERVAL #{disableday} DAY
+                END
             </otherwise>
         </choose>
-        where usercode = #{usercode}
+        WHERE usercode = #{usercode}
     </update>
+
     <update id="setEnableUser">
         update user_tbl set is_disabled=0,
         disabled_date=null where usercode=#{param1}
@@ -498,5 +508,46 @@
         ORDER BY
         total_real_amount DESC
         LIMIT 3;
+    </select>
+    <select id="getReportDetail" resultType="com.ict.finalproject.vo.ReportVO">
+        SELECT
+        r.report_code,
+        r.offender_code,
+        r.report_reason,
+        r.report_content,
+        r.report_date,
+        r.victim_code,
+        r.report_status,
+        o.nickname AS offender_nickname,
+        v.nickname AS victim_nickname,
+        (SELECT COUNT(*) FROM report_tbl WHERE offender_code = r.offender_code) AS report_count
+        FROM
+        report_tbl r
+        LEFT JOIN
+        user_tbl o ON r.offender_code = o.usercode
+        LEFT JOIN
+        user_tbl v ON r.victim_code = v.usercode
+        WHERE
+        r.report_code = #{param1}
+    </select>
+    <insert id="setReportReply">
+        insert into report_reply_tbl(content,report_result,process_date,report_code,admin_code) values(#{content},#{report_result},now(),
+        #{report_code},#{admin_code})
+    </insert>
+    <update id="updateReport">
+        update report_tbl set report_status=1 where report_code = #{report_code}
+    </update>
+    <select id="getReportReply">
+        SELECT
+        r.*,
+        u.nickname AS admin_nickname
+        FROM
+        report_reply_tbl r
+        JOIN
+        admin_tbl a ON r.admin_code = a.admin_code
+        JOIN
+        user_tbl u ON a.usercode = u.usercode
+        WHERE
+        r.report_code =#{report_code}
     </select>
 </mapper>

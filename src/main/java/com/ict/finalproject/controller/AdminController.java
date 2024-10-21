@@ -1,5 +1,6 @@
 package com.ict.finalproject.controller;
 
+import com.ict.finalproject.dao.AdminPagesDAO;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.AdminPagesService;
 import com.ict.finalproject.vo.*;
@@ -19,6 +20,8 @@ public class AdminController {
     AdminPagesService service;
     @Autowired
     JWTUtil jwtUtil;
+    @Autowired
+    private AdminPagesDAO adminPagesDAO;
 
     @GetMapping("/adminHome")
     public String admin(Model model){
@@ -472,6 +475,21 @@ public class AdminController {
     @ResponseBody
     public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code){
         Map<String,Object> map=new HashMap<>();
+        ReportVO rvo=service.getReportDetail(report_code);
+        ReportReplyVO RRvo=service.getReportReplys(report_code);
+        System.out.println(RRvo);
+        map.put("rvo",rvo);
+        map.put("reply",RRvo);
+        return map;
+    }
+    @PostMapping("/ReportReply")
+    @ResponseBody
+    public Map<String,Object>ReportReply(ReportVO rvo,@RequestParam("loginCode")int usercode){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println(rvo);
+        System.out.println(usercode);
+        ReportReplyVO result = service.updateReport(rvo,usercode);
+        map.put("rvo",result);
         return map;
     }
 }

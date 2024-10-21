@@ -70,22 +70,32 @@
         </div>
 
         <div id="reportcontent">
-            <div id="pay">
-                <div><b>신고내역</b></div>
-                <div id="userpay">
-                    <h1>lodding</h1>
+            <div id="reportDetails">
+                <div><h3>상세내역</h3></div>
+                <div id="report">
+                    <div>신고이유:더미 신고 사유 1</div>
+                    <div>접수일:</div>
+                    <div>
+                        <div>신고자:admin</div>
+                        <div>가해자:test3</div>
+                    </div>
+                    <div>신고내용:<div> ㅁㄴㅇㄹㄴㅁㅇㄹㄴㅁㅇㄹ</div></div>
+                    <div>첨부사진:</div>
+                    <div style="width:150px;height: 150px"><img style="width:150px;height: 150px" src="../img/mokoko2.jpeg"></div>
+                </div>
 
-                </div>
             </div>
-            <div id="myRunning">
-                <div><b>점수변동</b></div>
-                <div id="userrecord">
-                    <h1>lodding</h1>
-                </div>
-            </div>
+        </div>
+        <div id="addreply">
+
+        </div>
+        <div id="reportreply">
+
         </div>
     </div>
 </div>
+
+
 </div>
 
 

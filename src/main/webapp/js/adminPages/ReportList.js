@@ -1,15 +1,16 @@
 var reportSearchType=null;
 var reportSearchValue=null;
 var reportSearchType2=null;
-
+var page=0;
+var now;
 setTimeout(function(){
-   var page;
+
     loadReportPage(page);
 
 },300);
 function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValue){
 
-    if(page==null){
+    if(page==0){
         page=1;
     }
     var ReportData={
@@ -23,7 +24,8 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
         ReportData.searchKey2=reportSearchType2;
 
     }
-
+    now=page;
+    console.log(page);
     if (usercode1){
         ReportData.usercode=usercode1;
     }
@@ -83,6 +85,8 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
 
                 document.getElementById("ReportList").innerHTML = tag;
                 var paginationTag="";
+
+
                 if (pVO.nowpage>1){
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadReportPage(" + (pVO.nowPage - 1) +
                         ", reportSearchType,reportSearchType2,reportSearchValue);'>Previous</a></li>";
@@ -94,6 +98,7 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
                     }
                 }
                 if (pVO.nowPage < pVO.totalPage) {
+
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadReportPage(" + (pVO.nowPage + 1) +
                         ", reportSearchType,reportSearchType2,reportSearchValue);'>Next</a></li>";
                 }
@@ -139,38 +144,11 @@ function changeOption(){
     }
     document.getElementById("searchtext").focus();
 }
-//닉네임 클릭시 함수 호출
-// var viccount=0;
-// var offcount=0;
-// function hideenboxs(type,usercode){
-//
-//
-//     if (type === "victim") {
-//         viccount++;
-//         console.log(viccount);
-//         if (viccount%2==1){
-//             var hiddenDiv = document.querySelector(".hiddendiv"); // hiddendiv 요소 선택
-//             hiddenDiv.style.display = "block"; // 요소를 표시 (display: block)
-//         }else{
-//             var hiddenDiv = document.querySelector(".hiddendiv"); // hiddendiv 요소 선택
-//             hiddenDiv.style.display = "none";
-//         }
-//     } else if (type === "offender") {
-//         offcount++;
-//         if (offcount%2==1){
-//
-//             var hiddenDiv = document.querySelector(".hiddendiv"); // hiddendiv 요소 선택
-//             hiddenDiv.style.display = "block"; // 요소를 표시 (display: block)
-//         }else{
-//             var hiddenDiv = document.querySelector(".hiddendiv"); // hiddendiv 요소 선택
-//             hiddenDiv.style.display = "none";
-//
-//         }
-//     }
-// }
+
 function reset(){
     loadReportPage(1);
 }
+var reports;
 function detail(report_code){
     alert(report_code);
     $.ajax({
@@ -179,11 +157,134 @@ function detail(report_code){
         data:{
             report_code:report_code
         },
-        success:function(r){
+        success:function(r) {
+            document.getElementById("reportreply").innerHTML="";
+            reports = r.rvo;
+            var replys=r.reply;
+
+            var tag ="  <div id=\"reportDetails\"><div><h3>상세내역</h3></div>";
+            tag+="<div>신고이유:"+reports.report_reason+"</div>";
+            tag+=" <div>접수일:"+reports.report_date+"</div>";
+            tag+="  <div>" +
+                "<div>신고자:"+reports.victim_nickname+"</div>" +
+                "<div>가해자:"+reports.offender_nickname+"</div>" +
+                "</div>";
+            tag+="<div>신고내용:<div>"+reports.report_content+"</div></div>";
+            if (reports.proof_img!=null){
+                tag+=` <div>첨부사진:</div><div style="width:150px;height: 150px">
+                <img style="width:150px;height: 150px" src="../resources/uploadReport/`+reports.proof_img+`"></div>`
+            }else{
+                tag+="<div>첨부사진:없음</div>";
+            }
+            if (reports.report_status!=1){
+                tag+="</div><div onclick='reportReply()'>처리하기</div></div>"
+            }
+            document.getElementById("reportdetailbackground").style.display="block";
+            document.getElementById("addreply").style.display="none";
+            document.getElementById("reportcontent").innerHTML=tag;
+            if (reports.report_status!=1){
+            var addreplyTag=` 
+            <div>
+                <div>신고당한횟수:<div>`+reports.report_count+`</div></div>
+                <div>정지:
+                   <select id="is_disabled" name="is_disabled">
+                        <option value="0">무죄</option>
+                        <option value="1">7일</option>
+                        <option value="2">14일</option>
+                        <option value="3">30일</option>
+                        <option value="4">영구정지</option>
+                    </select>
+                </div>
+                <div>
+                <textarea id="content" name="content"></textarea>
+                </div>
+                 <div><button onclick="addreply()">확인</button><button>취소</button></div>
+            </div>
+            `;}
+            if (reports.report_status==1){
+                var tag=`
+                  <div><h3>신고결과</h3></div>
+           
+                    <div>신고 결과:`+replys.report_result+`</div>
+                    <div>답변:<div>`+replys.content+`<br/>지금까지 운영자 `+replys.admin_nickname+`었습니다</div></div>
+                    <div>답변작성일:`+replys.process_date+`</div>
+                  <!--  <div><div id="updateReply" ><button>확인</button><button>취소</button>
+                   </div><button id="updatebutton" onclick="updateReply()">수정</button></div>-->`;
+
+                document.getElementById("reportreply").innerHTML=tag;
+            }
+            document.getElementById("addreply").innerHTML=addreplyTag;
+
 
         }
     });
 }
+
 function closedetail(){
     document.getElementById("reportdetailbackground").style.display="none";
 }
+function reportReply(){
+
+    document.getElementById("addreply").style.display="block";
+
+}
+//리플 달기
+function addreply(){
+
+    var is_disabled = document.getElementById("is_disabled").value
+    var content = document.getElementById("content").value
+    console.log("테스트:"+is_disabled);
+    console.log("테스트2:"+content);
+    var reply={}
+    reply=reports;
+    reply.is_disabled=is_disabled;
+    reply.content=content;
+    reply.loginCode=usercode1
+    $.ajax({
+        url:"/adminPages/ReportReply",
+        type:"post",
+        data:reply,
+        success:function(r){
+            console.log("성공");
+            var rvo=r.rvo;
+            var tag=`
+            <div><h3>신고결과</h3></div>
+            
+            <div>신고 결과:`+rvo.report_result+`</div>
+            <div>답변:<div>`+rvo.content+`<br/>지금까지 운영자 `+rvo.admin_nickname+`었습니다</div></div>
+            <div>답변작성일:`+rvo.process_date+`</div>
+           <!-- <div><div id="updateReply" ><button>확인</button><button>취소</button></div><button id="updatebutton" onclick="updateReply()">수정</button></div>-->`;
+            document.getElementById("reportreply").innerHTML=tag;
+            document.getElementById("addreply").style.display="none";
+            console.log("왜 null이야"+now);
+            loadReportPage(now,reportSearchType,reportSearchType2,reportSearchValue);
+        }
+    });
+}
+/*
+function updateReply(){
+    document.getElementById("updateReply").style.display="block";
+    document.getElementById("updatebutton").style.display="none";
+    var tag=`<div>
+        <div>신고당한횟수:<div>`+reports.report_count+`</div></div>
+        <div>정지:
+            <select id="is_disabled" name="is_disabled">
+                <option value="0">무죄</option>
+                <option value="1">7일</option>
+                <option value="2">14일</option>
+                <option value="3">30일</option>
+                <option value="4">영구정지</option>
+            </select>
+        </div>
+        <div>
+            <textarea id="content" name="content"></textarea>
+        </div>
+       <!-- <div><button onclick="addreply()">확인</button><button>취소</button></div>-->
+    </div>
+        `;
+
+}
+
+
+
+*/

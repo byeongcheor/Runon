@@ -363,4 +363,53 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public List<YearsTop5MarathonVO> getYearsTop5list(int year) {
         return dao.getYearsTop5list(year);
     }
+
+    @Override
+    public ReportVO getReportDetail(int report_code) {
+        return dao.getReportDetail(report_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ReportReplyVO updateReport(ReportVO vo,int LoginUserCode) {
+        AdminsVO loginAdmin=dao.selectAdminRole(LoginUserCode);
+        vo.setAdmin_code(loginAdmin.getAdmin_code());
+        System.out.println("신고코드"+vo.getReport_code());
+        int disableday=vo.getIs_disabled();
+        if (disableday!=0) {
+
+            if (disableday==1){
+                disableday=7;
+                vo.setReport_result("7일 정지조치");
+            }else if (disableday==2){
+                disableday=14;
+                vo.setReport_result("14일 정지조치");
+            }else if (disableday==3){
+                disableday=30;
+                vo.setReport_result("30일 정지조치");
+            }else if(disableday==4){
+                disableday=999;
+                vo.setReport_result("영구 정지조치");
+            }
+            //정지 실행
+            dao.setDisableUserTime(vo.getOffender_code(),disableday);
+            System.out.println("정지성공");
+        }else{
+
+            vo.setReport_result("경고 조치");
+        }
+            dao.setReportReply(vo);
+        System.out.println("신고리플달기");
+            dao.updateReport(vo);
+        System.out.println("신고업데이트");
+            //업데이한것 가져오기
+
+
+        return dao.getReportReply(vo.getReport_code());
+    }
+
+    @Override
+    public ReportReplyVO getReportReplys(int report_code) {
+        return dao.getReportReply(report_code);
+    }
 }
