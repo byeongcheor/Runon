@@ -127,6 +127,11 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public PaymentdetailVO getOrderId(String orderId) {
+        return dao.getOrderId(orderId);
+    }
+
+    @Override
     public int getTotalOrder(int usercode) {
         return dao.getTotalOrder(usercode);
     }

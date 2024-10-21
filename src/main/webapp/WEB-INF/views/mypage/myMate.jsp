@@ -165,7 +165,7 @@
             },success: function(r){
                 var tag="";
                 var pvo=r.pvo;
-
+                console.log(r);
                 if(r.member.length == 0){
                     tag += `
                         <div class="row" style="text-align: center; margin-top: 40px;">
@@ -181,7 +181,7 @@
                             </div>
                             <div class="col-sm-3 p-2" id="nicknameReport">`+vo.nickname+`</div>
                             <div class="col-sm-1 p-2">`+vo.gender+`</div>
-                            <div class="col-sm-3 p-2">`+vo.mate_popup_date+`</div>
+                            <div class="col-sm-3 p-2">`+vo.creation_date+`</div>
                             <div class="col-sm-3 p-2"><button type="button" class="btn btn-outline-danger" onclick="checkReport(`+vo.usercode+`, `+vo.matching_room_code+`)">신고하기</button></div>
                         </div>
                     `;

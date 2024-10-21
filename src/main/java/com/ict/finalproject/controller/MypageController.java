@@ -6,6 +6,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.service.MypageService;
 
+import com.ict.finalproject.service.PaymentService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -35,7 +36,7 @@ public class MypageController {
     @Autowired
     MypageService service;
     @Autowired
-    MemberService memberservice;
+    PaymentService paymentService;
     @Autowired
     JWTUtil jwtUtil;
     @Autowired
@@ -181,6 +182,30 @@ public class MypageController {
         result.put("pvo", pvo);
         return result;
     }
+    //구매내역->구매목록상세보기
+    @PostMapping("/mypage/viewOrderDetails")
+    @ResponseBody
+    public String viewOrderDetails(@RequestParam("usercode")int usercode,
+                                   @RequestParam("username")String username){
+        System.out.println("usercode"+usercode);
+        return "success";
+    }
+    @GetMapping("mypage/viewOrderDetail")
+    public String viewOrderDetail(){
+        return "mypage/viewOrderDetail";
+    }
+    //구매내역 뿌려주기
+    @PostMapping("/mypage/completed")
+    @ResponseBody
+    public Map<String,Object>complete(@RequestParam("orderId")String orderId){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println("orderId:"+orderId);
+        List<CompleteVO>Cvo=new ArrayList<>();
+        Cvo=paymentService.selectCvoList(orderId);
+        map.put("Cvo",Cvo);
+        return map;
+    }
+
     //마라톤신청서조회
     @GetMapping("mypage/marathonFormCheck")
     @ResponseBody

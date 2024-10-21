@@ -1,6 +1,7 @@
 package com.ict.finalproject.dao;
 
 import com.ict.finalproject.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ public interface AdminPagesDAO {
     //여기까지 한serviceImpl에서 실행
 
     //유저정지
-    public int setDisableUserTime(int usercode,int disableday);
+    /*public int setDisableUserTime(int usercode,int disableday);*/
+    public int setDisableUserTime(@Param("usercode") int usercode, @Param("disableday") int disableday);
 
     //정지풀기
     public int setEnableUser(int usercode);
@@ -92,4 +94,12 @@ public interface AdminPagesDAO {
     public List<QnAVO> getQnaList();
     //연간 매출top5
     public List<YearsTop5MarathonVO>getYearsTop5list(int year);
+    //신고번호보내서 신고디테일받기
+    public ReportVO getReportDetail(int report_code);
+
+    //신고리플달기
+    public void setReportReply(ReportVO vo);
+    public void updateReport(ReportVO vo);
+    //신고리플받기
+    public ReportReplyVO getReportReply(int report_code);
 }
