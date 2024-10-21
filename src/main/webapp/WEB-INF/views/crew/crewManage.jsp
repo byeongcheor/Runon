@@ -156,7 +156,7 @@
         <img id="teamImage" src="" alt="크루 이미지" />
         <h2 id="teamNameDisplay"></h2>
       </div>
-      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+      <span class="custom-close" onclick="closeCustomModal('informationModal')">&times;</span>
     </div>
     <div class="custom-modal-body">
      <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
@@ -1038,7 +1038,13 @@ function noticeDetail(notice_num, flag, YN) {
       document.getElementById("handoverModal").style.display = "none";
       document.getElementById("informationModal").style.display = "block";
    }
-
+   function closeCustomModal() {
+      document.getElementById("customModal").style.display = "none";
+      document.getElementById("informationModal").style.display = "none";
+      document.getElementById("resignModal").style.display = "none";
+      document.getElementById("voteNowModal").style.display = "none";
+      document.getElementById("voteResultModal").style.display = "none";
+   }
    function handoverOwnership() {
       var selectedRadio = $('input[name="teamOwner"]:checked'); // 체크된 라디오 버튼
       var usercode = selectedRadio.val(); // 라디오 버튼의 value 값
@@ -1055,21 +1061,17 @@ function noticeDetail(notice_num, flag, YN) {
                },
                success: function(response) {
                   alert("팀 소유자가 위임되었습니다.");
-                  location.reload(true);
+                   // location.reload(true);
+                     $('#editCrewBtn').hide();  // 추가 동작
+                     $('#member').click();
                },
                error: function(e) {
                    console.error('Error: ', e);
                }
            });
       closeHandoverModal();
-   }
+      closeCustomModal();
 
-   function closeCustomModal() {
-      document.getElementById("customModal").style.display = "none";
-      document.getElementById("informationModal").style.display = "none";
-      document.getElementById("resignModal").style.display = "none";
-      document.getElementById("voteNowModal").style.display = "none";
-      document.getElementById("voteResultModal").style.display = "none";
    }
 
    function closeNicknameModal() {

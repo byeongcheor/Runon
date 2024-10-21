@@ -212,6 +212,7 @@ public class CrewController {
         // 세션에서 데이터 가져오기
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer crew_write_code = (Integer) session.getAttribute("crew_write_code");
+       // int position = service.position_select(user_code,create_crew_code);
 
         // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
@@ -987,7 +988,6 @@ public class CrewController {
                     }
                 }
             }
-
             // 성공적으로 공지사항이 생성되었을 때
             if (result > 0) {
                 return 1; // 성공
@@ -1000,6 +1000,28 @@ public class CrewController {
         }
     }
 
+    /////////////////크루장 위임//////////////
+    @PostMapping("/entrust")
+    @ResponseBody
+    public int entrust(@RequestParam("Authorization")String token,
+                       @RequestParam("create_crew_code") int create_crew_code,
+                       @RequestParam("usercode") int usercode
+    ) {
+        token=token.substring("Bearer ".length());
+        user_name=jwtUtil.setTokengetUsername(token);
+        user_code = service.usercodeSelect(user_name);
+        int a=0;
+        try {
+            service.entrust(user_code, create_crew_code, usercode);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
+
 
 }
+
 

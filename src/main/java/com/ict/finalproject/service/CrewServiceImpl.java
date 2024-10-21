@@ -116,6 +116,21 @@ public class CrewServiceImpl implements CrewService{
         return dao.crew_join_select(user_code, crewCode);
     }
 
+
+    @Override
+    public int position_select(int user_code, int crewCode)
+    {
+        return dao.position_select(user_code, crewCode);
+    }
+    @Override
+    public int entrust(int user_code, int crewCode, int usercode) {
+        dao.entrust1( usercode, crewCode);//create_crew_tbl usercode 업데이트
+        dao.entrust2( user_code, crewCode);//크루장을 운영진으로 수정
+        dao.entrust3( usercode, crewCode);//운영진을  크루장으로 수정
+        dao.entrust4( usercode, crewCode);//history에 업데이트
+        return dao.entrust3(usercode, crewCode);//운영진을 크루장으로 수정
+    }
+
     @Override
     public int getNoticeCode(int create_crew_code)
     {
