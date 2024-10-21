@@ -550,4 +550,93 @@
         WHERE
         r.report_code =#{report_code}
     </select>
+    <select id="getCertificaterecode">
+        select count(certificate_code)
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <!-- 처리중일 때 -->
+                <if test="searchKey2 == '처리중'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+
+                <!-- 처리완료일 때 -->
+                <if test="searchKey2 == '처리완료'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+            </if>
+            <!-- result_status 조건 추가 -->
+            and c.result_status = #{searchKey2}
+        </where>
+    </select>
+
+
+    <select id="getCertificateTotalRecord">
+        select count(certificate_code)
+        from certificate_tbl
+    </select>
+    <select id="selectWithSearchCertificateList" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        <where>
+            <!-- searchWord가 있을 경우에만 검색 조건 추가 -->
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <!-- 처리 상태에 따른 검색 -->
+                <if test="searchKey2 == '처리중'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+
+                <if test="searchKey2 == '처리완료'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+            </if>
+                and c.result_status = #{searchKey2}
+        </where>
+        order by c.certificate_code desc
+        LIMIT #{onePageRecord} offset #{offset}
+    </select>
+
+    <select id="selectAllCertificateList" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        order by certificate_code desc
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="getCertificateDetail" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        where c.certificate_code = #{param1}
+    </select>
 </mapper>

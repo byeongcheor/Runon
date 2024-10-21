@@ -102,4 +102,14 @@ public interface AdminPagesDAO {
     public void updateReport(ReportVO vo);
     //신고리플받기
     public ReportReplyVO getReportReply(int report_code);
+    //기록인증
+    public int getCertificaterecode(PagingVO pvo);
+    //전체 레코드수
+    public int getCertificateTotalRecord (PagingVO pvo);
+    //검색된 기록인증리스트
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo);
+    //전체 기록인증 리스트
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo);
+    //한코드의 기록디테일
+    public CertificateVO getCertificateDetail(int certificate_code);
 }

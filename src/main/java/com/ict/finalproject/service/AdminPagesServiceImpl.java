@@ -412,4 +412,29 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public ReportReplyVO getReportReplys(int report_code) {
         return dao.getReportReply(report_code);
     }
+
+    @Override
+    public int getCertificaterecode(PagingVO pvo) {
+        return dao.getCertificaterecode(pvo);
+    }
+
+    @Override
+    public int getCertificateTotalRecord(PagingVO pvo) {
+        return dao.getCertificateTotalRecord(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo) {
+        return dao.selectWithSearchCertificateList(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo) {
+        return dao.selectAllCertificateList(pvo);
+    }
+
+    @Override
+    public CertificateVO getCertificateDetail(int certificate_code) {
+        return dao.getCertificateDetail(certificate_code);
+    }
 }

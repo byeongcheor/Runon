@@ -348,9 +348,7 @@ public class AdminController {
     public Map<String,Object> ReportLists(
         PagingVO pvo,@RequestParam(value = "usercode",required = false) Integer usercode,
         @RequestParam(value = "page",defaultValue = "1")int page){
-        System.out.println("K1"+pvo.getSearchKey2());
-        System.out.println("K2"+pvo.getSearchKey());
-        System.out.println("V"+pvo.getSearchWord());
+
         Map<String,Object> map=new HashMap<>();
         if (usercode !=null){
             int usercodevlaue=usercode.intValue();
@@ -490,6 +488,65 @@ public class AdminController {
         System.out.println(usercode);
         ReportReplyVO result = service.updateReport(rvo,usercode);
         map.put("rvo",result);
+        return map;
+    }
+    @GetMapping("/CertificateList")
+    public String CertificateList(){
+        return "adminPages/CertificateList";
+    }
+    @PostMapping("/loadCertificateList")
+    @ResponseBody
+    public Map<String,Object> loadCertificateList(PagingVO pvo,
+                                                  @RequestParam(value="usercode",required = false)Integer usercodeValue,
+                                                  @RequestParam(value="page",defaultValue = "1")int page){
+        System.out.println("K1"+pvo.getSearchKey2());
+        System.out.println("K2"+pvo.getSearchKey());
+        System.out.println("V"+pvo.getSearchWord());
+        Map<String,Object> map=new HashMap<>();
+        if(usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+            System.out.println("관리자확인"+Avo);
+        }
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getCertificaterecode(pvo);
+        }else if(pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            totalRecord=service.getCertificaterecode(pvo);
+        }else{
+            totalRecord=service.getCertificateTotalRecord(pvo);
+        }
+        pvo.setTotalRecord(totalRecord);
+        int totalPage=(int) Math.ceil((double)totalRecord/Record);
+        pvo.setTotalPage(totalPage);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        List<CertificateVO> Cvo;
+        if(pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            Cvo=service.selectWithSearchCertificateList(pvo);
+        }else if(pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            Cvo=service.selectWithSearchCertificateList(pvo);
+        }else{
+            Cvo=service.selectAllCertificateList(pvo);
+        }
+        map.put("Cvo",Cvo);
+        map.put("pvo",pvo);
+        System.out.println("기록인증VO:"+Cvo);
+        System.out.println("페이징:"+pvo);
+
+        return map;
+    }
+    @PostMapping("/certificateDetail")
+    @ResponseBody
+    public Map<String,Object> certificateDetail(@RequestParam("certificate_code")int certificate_code){
+        Map<String,Object> map=new HashMap<>();
+        CertificateVO Cvo=service.getCertificateDetail(certificate_code);
+
+        map.put("Cvo",Cvo);
+
         return map;
     }
 }

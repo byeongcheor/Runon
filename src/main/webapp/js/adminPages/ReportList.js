@@ -20,7 +20,7 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
         ReportData.searchKey=reportSearchType;
         ReportData.searchWord=reportSearchValue;
     }
-    if(reportSearchType2 && reportSearchValue2){
+    if(reportSearchType2){
         ReportData.searchKey2=reportSearchType2;
 
     }
@@ -49,8 +49,6 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
                 tag += "<div class='report_reason'>신고사유</div><div class='report_date'>신고일</div>";
                 tag += "<div class='report_status'>처리상태</div><div class='process_date'>처리완료일</div>";
                 tag += "</div></li>";
-
-
                 ReportList.forEach(function(report){
                     tag +="<li  onclick='detail(\""+report.report_code+"\")'><div class='report_title3'><div class='report_code'>"+report.report_code+"</div>";
                     tag += "<div class='victim_username username'><div onclick='hideenboxs(\"victim\",\""+report.victim_code+"\")'>"+report.victim_nickname+"</div></div>";
