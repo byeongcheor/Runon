@@ -185,16 +185,38 @@
     var update_cnt = 0;
     var day7_check='N';
     var match_yn="${vo.match_yn}";
-    var usercode=$('#usercode').val();
-    var gender=$('#gender').val();
+    var usercode =${user_code};
+    var gender;
     var token = localStorage.getItem("Authorization");
     var nickname=$('#nickname').val();
 
-
+    function user_select(){
+    $.ajax({
+        url: '/mate/user_select',
+        type: 'POST',
+        data: {Authorization : token},
+        processData: false,
+        contentType: false,
+        success: function(response) {
+           usercode=response;
+        },
+        error: function(xhr, status, error) {
+            alert("파일 업로드 실패: " + error);
+        }
+    });
+    }
 
 
     $(document).ready(function() {
+
         document.getElementById('mateMatchModal').style.display = 'none';
+        usercode=$('#usercode').val();
+        if(usercode>0) $('#login').hide();
+        gender=$('#gender').val();
+             clog('usercode : '+usercode)
+             clog('gender : '+gender)
+       popup_yn();//팝업 여부
+        mate_popup_date_select();
         marathon_code();//내가 결제한 대회리스트 불러오기
         setTimeout(function() {
             if(match_yn>0){
@@ -202,8 +224,8 @@
                 match_view_start(match_yn);
             }
             else start_view();
-            popup_yn();//팝업 여부
-        }, 200);
+
+        }, 100);
         $('.menu_select').text('');
         $('.menu_select').text(' \u25BC');
         setTimeout(function() {
@@ -340,14 +362,27 @@
         // 현재 화면의 중앙에 팝업을 배치하기 위한 계산
         var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
         var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
+        $.ajax({
+           url: '/mate/go_profileList',  // 서버에 전송할 URL
+           type: 'POST',  // POST 방식으로 전송
+           data: {
+               Authorization  : token,
+               usercode       : usercode,
+               gender         : gender,
+               match_yn       : match_yn,
+               num            : num
+           },
+           success: function(response) {
+             var popupUrl = '/mate/profileList';
+             window.open(popupUrl, 'ProfileList',
+                'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');           },
+           error: function(error) {
+               console.log('에러 발생:', error);
+           }
+       });
 
-        // 팝업에 gender와 usercode 값을 쿼리 파라미터로 전달 match_yn
 
-        var popupUrl = '/mate/profileList?gender=' + encodeURIComponent(gender) + '&usercode=' + encodeURIComponent(usercode)+'&match_yn=' + encodeURIComponent(match_yn)+'&num=' + encodeURIComponent(num);
 
-        // 팝업 창을 화면 중앙에 크기 고정으로 엽니다.
-        window.open(popupUrl, 'ProfileList',
-            'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');
 
     }
 
@@ -621,13 +656,8 @@
         window.location.href = '/mate/mate';  //
     };
 
-    // 마이페이지로 이동 버튼 클릭 시 마이페이지로 이동
-    document.getElementById('goToMyPage').onclick = function() {
-        window.location.href = '/mypage/myHome';  // 마이페이지로 이동
-    };
-
     // 모달 열기
-    window.onload = function test3() {
+   window.onload = function test3() {
         var Authorization = localStorage.getItem("Authorization");
         if (token !== "" && token !== null) {
             $.ajax({
@@ -640,6 +670,7 @@
             });
         }
     }
+
 
     // 모달 닫기 버튼
     document.querySelector('.mate-close-btn').onclick = function() {
@@ -730,10 +761,6 @@
     }
 
     //////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 
 

@@ -30,30 +30,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="editCrew" id="editCrew">
+                <div class="editCrew">
                     <button type="button" class="editCrewBtn" id="editCrewBtn">크루정보변경</button>
                     <button type="button" class="editCrewBtn" id="resignCrew" onclick="openResignModal()">
                       <img src="/img/more.png" style="width: 14px; height: 14px;">
                     </button>
                 </div>
                 <div>
-                    <button type="button" class="editCrewBtn" id="go_join" onclick="go_crew_detail()">크루 가입하기</button>
+                    <button type="button" class="editCrewBtn" id="go_join" onclick="go_crew_detail()">회원가입 신청하기</button>
                 </div>
                 <div class="statis">
+
                 </div>
             </section>
         </div>
-        <div class="content_right" id="content_right">
-            <section class="section1"id="section1">
-              <div class="section_nav" id="section_nav">
-                <ul>
+        <div class="content_right">
+            <section class="section1">
+              <div class="section_nav">
+                <ul id=menu_bar>
                   <li id="overview" name=crew_select onClick="crew_manage_select(this)">오버뷰</li>
                   <li id="notice" name=crew_select onClick="crew_manage_select(this)">공지</li>
                   <li id="member" name=crew_select onClick="crew_manage_select(this)">멤버</li>
                 </ul>
               </div>
                   <div class="member">
-                    <ul class="member-list" id=crew_manage_list >
+                    <ul class="member-list" id=crew_manage_list>
                     </ul>
                 </div>
             </section>
@@ -338,28 +339,30 @@ if (position > 2) {
    clog('My position : ' + position);
    clog('My user_code : ' + user_code);
 
-$(document).ready(function() {
-    $('#go_join').hide();
-    $('#member').css('color', 'black');
-    crew_deatil_select();
-    crew_manage_select('');
-    if (position != 1) {
-        $('#wait_cnt').hide();
-    }
-    if (position == 0) {
-        $('#go_join').show();
-        $('#editCrew').hide();
-        $('#editCrewBtn').hide();
-        $('#resignCrew').hide();
-        $('#notice').css('pointer-events', 'none');
-        $('#member').css('pointer-events', 'none');
-        $('.join_info').css('pointer-events', 'none');
-        $('#chatButton').hide();
-        $('.section1').on('click', function() {
-            alert('맴버만 볼 수 있어요 가입신청해 주세요');
-        });
-    }
-});
+    $(document).ready(function() {
+        $('#go_join').hide();
+        $('#member').css('color', 'black');
+        crew_deatil_select();
+        crew_manage_select('');
+        if (position != 1) {
+            $('#wait_cnt').hide();
+        }
+        if (position == 0) {
+            $('#go_join').show();
+            $('#editCrew').hide();
+            $('#editCrewBtn').hide();
+            $('#resignCrew').hide();
+            $('#notice').css('pointer-events', 'none');
+            $('#member').css('pointer-events', 'none');
+            $('.join_info').css('pointer-events', 'none');
+            $('#chatButton').hide();
+
+            // content_right 클릭 시 alert
+            $('.content_right').on('click', function() {
+                alert('맴버만 볼 수 있어요 가입신청해 주세요');
+            });
+        }
+    });
 
   function crew_deatil_select() {
        $.ajax({
@@ -701,91 +704,90 @@ function crew_notice(response) {
     $('#crew_manage_list').append(list);
 }
 
-function noticeDetail(notice_num, flag, YN) {
-    //flag 1:조회 2:업데이트 조회
-    if (position != 0) {
-        $.ajax({
-            url: '/crew/getNotice',  // 서버에 전송할 URL
-            type: 'POST',  // POST 방식으로 전송
-            data: {
-                Authorization: Authorization,
-                notice_num: notice_num,
-                YN: YN
-            },
-            success: function(response) {
-              $('#content_right').html('');
-                var detail_form = '';
-                detail_form += '   <input type=hidden id=crew_notice_code> ';
-                detail_form += '   <section class="section1"> ';
-                detail_form += '      <div class="section_nav"> ';
-                detail_form += '         <span onclick="close_notice_detail()"><</span> ';
-                detail_form += '      </div> ';
-                detail_form += '   <div class="image-text-container"> ';
-                detail_form += '         <div class=""> ';
-                if (flag == 1)
-                    detail_form += '            <span class="" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;"></span> ';
-                if (flag == 2)
-                    detail_form += '            <input type="text" class="form-control" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;" required /> ';
-                detail_form += '         </div> ';
-                detail_form += '         <div  class="image-wrapper"> ';
-                if (flag == 2) {
-                    detail_form += '<form id="noticeForm" enctype="multipart/form-data">';
-                    detail_form += '            <label class="upload-box" for="notice_detail_image" style="margin-top:10px;">';
-                    detail_form += '                파일 올리기<input type="file" id="notice_detail_image" name="notice_detail_image" onchange="uploadImages(event)" multiple /> ';
-                    detail_form += '            </label> ';
-                    detail_form += '</form> ';
-                }
-                detail_form += '            <div id="previewContainer2" style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"> ';
-                detail_form += '            </div> ';
-                detail_form += '         </div> ';
-                detail_form += '         <div class="mt-3"> ';
-                if (flag == 1)
-                    detail_form += '            <span id="notice_detail_content" name="noticeContent" class="form-control notice-content"></span> ';
-                detail_form += '         <span id="hits">조회 ' + response.notice[0].a_n + '</span> ';
-                detail_form += '         <span style="float: right;" id="write_date">업데이트' + response.notice[0].updated_date + '</span> ';
-                if (flag == 2)
-                    detail_form += '            <textarea id="notice_detail_content" name="noticeContent" class="form-control notice-content"></textarea> ';
-                detail_form += '         </div> ';
-                detail_form += '      </div> ';
-                detail_form += '      <div class="custom-modal-footer">';
-
+    function noticeDetail(notice_num, flag, YN){
+        //flag 1:조회 2:업데이트 조회
+       $('#crew_manage_list').html('');
+       $('#menu_bar').hide();
+        if(position!=0){
+            $.ajax({
+               url: '/crew/getNotice',  // 서버에 전송할 URL
+               type: 'POST',  // POST 방식으로 전송
+               data: {
+                   Authorization     : Authorization,
+                   notice_num        : notice_num,
+                   YN                : YN
+               },
+               success: function(response) {
+                   var detail_form = '';
+                   detail_form += '   <input type=hidden id=crew_notice_code> ';
+                   detail_form += '   <div> ';
+                   detail_form += '      <div class="custom-modal-header"> ';
+                   detail_form += '         <span class="custom-close" onclick="close_notice_detail()"><</span> ';
+                   detail_form += '      </div> ';
+                   detail_form += '      <div class="custom-modal-body"> ';
+                   detail_form += '         <div class="mb-3"> ';
+                   if(flag==1)
+                       detail_form += '            <pre class="text-wrapper" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;"></pre> ';
+                   if(flag==2)
+                       detail_form += '            <input type="text" class="form-control" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;" required /> ';
+                   detail_form += '         </div> ';
+                   detail_form += '         <div class="mb-3"> ';
+                   if(flag==2){
+                       detail_form += '<form id="noticeForm" enctype="multipart/form-data">';
+                       detail_form += '            <label class="upload-box" for="notice_detail_image" style="margin-top:10px;">';
+                       detail_form += '                파일 올리기<input type="file" id="notice_detail_image" name="notice_detail_image" onchange="uploadImages(event)" multiple /> ';
+                       detail_form += '            </label> ';
+                       detail_form += '</form> ';
+                   }
+                   detail_form += '            <div id="previewContainer2" style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"> ';
+                   detail_form += '            </div> ';
+                   detail_form += '         </div> ';
+                   detail_form += '         <div class="mt-3"> ';
+                   if(flag==1)
+                       detail_form += '         <pre id="notice_detail_content" name="noticeContent" class="text-wrapper"></pre> ';
+                       detail_form += '         <span id="hits">조회 '+response.notice[0].a_n +'</span> ';
+                       detail_form += '         <span style="float: right;" id="write_date">업데이트'+response.notice[0].updated_date+'</span> ';
+                   if(flag==2)
+                       detail_form += '            <textarea id="notice_detail_content" name="noticeContent" class="form-control notice-content"></textarea> ';
+                   detail_form += '         </div> ';
+                   detail_form += '      </div> ';
+                   detail_form += '      <div class="custom-modal-footer">';
                 if (response.notice[0].usercode === user_code) {
                     detail_form += '         <button type="button" class="custom-btn2" id=notice_update_btn onclick="noticeDetail(' + response.notice[0].b_n + ',2,\'Y\')">수정</button> ';
                     detail_form += '         <button type="button" class="custom-btn2" id=notice_delete_btn onclick="notice_delete(' + response.notice[0].b_n + ')">삭제하기</button> ';
                     detail_form += '         <button type="button" class="custom-btn2" id=go_notice_update onclick="notice_update(' + response.notice[0].b_n + ')">수정하기</button> ';
                 }
 
-                detail_form += '      </div> ';
-                detail_form += '     </section> ';
-                detail_form += '   </div> ';
-                $('#content_right').append(detail_form);
-                $('#crew_notice_code').val(response.notice[0].b_n);
-                if (flag == 1) {
-                    $('#notice_detail_title').text(response.notice[0].subject);
-                    $('#notice_detail_content').text(response.notice[0].content);
-                    $('#go_notice_update').hide();
-                }
-                if (flag == 2) {
-                    $('#notice_detail_title').val(response.notice[0].subject);
-                    $('#notice_detail_content').val(response.notice[0].content);
-                    $('#notice_update_btn').hide();
-                    $('#notice_delete_btn').hide();
-                }
+                   detail_form += '      </div> ';
+                   detail_form += '   </div> ';
+                   $('#crew_manage_list').append(detail_form);
+                   $('#crew_notice_code').val(response.notice[0].b_n);
+                   if(flag==1){
+                       $('#notice_detail_title').text(response.notice[0].subject);
+                       $('#notice_detail_content').text(response.notice[0].content);
+                       $('#go_notice_update').hide()
+                   }
+                   if(flag==2){
+                       $('#notice_detail_title').val(response.notice[0].subject);
+                       $('#notice_detail_content').val(response.notice[0].content);
+                       $('#notice_update_btn').hide();
+                       $('#notice_delete_btn').hide();
+                   }
 
-                response.images.forEach(function(image) {
-                    var imgTag = '<div class="image-container" data-image-name="'+image+'">';
-                    if (flag == 2) imgTag += '<div><span type="button" class="update-btn" onclick="delete_image(' + response.notice[0].b_n + ', \'' + image + '\')">X</span></div>';
-                    imgTag += '<img src="/crew_upload/' + image + '" alt="' + image + '" width="100">';
-                    imgTag += '</div>';
-                    $('#previewContainer2').append(imgTag);
-                });
-            },
-            error: function(error) {
-                console.log('에러 발생:', error);
-            }
-        });
+                   response.images.forEach(function(image) {
+                       var imgTag = '<div class="image-container" data-image-name="'+image+'">';
+                       if(flag==2)imgTag +='<div><span type="button" class="update-btn" onclick="delete_image(' + response.notice[0].b_n + ', \'' + image + '\')">X</span></div>';
+                       imgTag += '<img src="/crew_upload/' + image + '" alt="' + image + '" width="100">';
+                       imgTag+='</div>'
+                       $('#previewContainer2').append(imgTag);
+                   });
+               },
+               error: function(error) {
+                   console.log('에러 발생:', error);
+               }
+           });
+        }
     }
-}
 
     function uploadImages(event) {
         var files = event.target.files; // 선택된 파일들
@@ -872,6 +874,7 @@ function noticeDetail(notice_num, flag, YN) {
 
     function close_notice_detail(){
         $('#crew_manage_list').html('');
+        $('#menu_bar').show();
         $('#notice').click();
     }
    function openCustomModal(usercode, nickname, user_position , imgSrc) {
@@ -1003,7 +1006,27 @@ function noticeDetail(notice_num, flag, YN) {
    }
 
    function handoverOwnership() {
-      alert("팀 소유자가 위임되었습니다.");
+      var selectedRadio = $('input[name="teamOwner"]:checked'); // 체크된 라디오 버튼
+      var usercode = selectedRadio.val(); // 라디오 버튼의 value 값
+      var bsValue = selectedRadio.data('bs'); // 라디오 버튼의 data-bs 값
+      if(!confirm(bsValue+"님께 위임하시겠습니까?"))return false;
+        $.ajax({
+               url: '/crew/entrust',
+               type: 'POST',
+               async: false,
+               data: {
+                   Authorization: Authorization,
+                   create_crew_code: create_crew_code,
+                   usercode: usercode
+               },
+               success: function(response) {
+                  alert("팀 소유자가 위임되었습니다.");
+                  location.reload(true);
+               },
+               error: function(e) {
+                   console.error('Error: ', e);
+               }
+           });
       closeHandoverModal();
    }
 
@@ -1475,7 +1498,7 @@ function resetNoticeForm() {
                         for (var i in filteredResponse) {
                           var imgSrc = filteredResponse[i].a_s ? filteredResponse[i].a_s.trim() : 'basicimg.png';
                             list += '<label class="team-member"> ';
-                            list += '<input type="radio" name="teamOwner" value="' + filteredResponse[i].usercode + '"> ';
+                            list += '<input type="radio" name="teamOwner" value="' + filteredResponse[i].usercode + '" data-bs="' + filteredResponse[i].b_s + '"> ';
                             list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="team-profile"> ';
                             list += '   <span class="team-name"> ' + filteredResponse[i].b_s + '</span> ';
                             if (filteredResponse[i].a_n < 3) {
