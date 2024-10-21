@@ -50,7 +50,7 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
 
 
                 ReportList.forEach(function(report){
-                    tag +="<li><div class='report_title3'><div class='report_code'>"+report.report_code+"</div>";
+                    tag +="<li  onclick='detail(\""+report.report_code+"\")'><div class='report_title3'><div class='report_code'>"+report.report_code+"</div>";
                     tag += "<div class='victim_username username'><div onclick='hideenboxs(\"victim\",\""+report.victim_code+"\")'>"+report.victim_nickname+"</div></div>";
 
                     tag += "<div class='offender_username username' onclick='hideenboxs(\"offender\",\""+report.offender_code+"\")'>"+report.offender_nickname+"</div>";
@@ -170,4 +170,20 @@ function changeOption(){
 // }
 function reset(){
     loadReportPage(1);
+}
+function detail(report_code){
+    alert(report_code);
+    $.ajax({
+        url:"/adminPages/reportDetail",
+        type:"post",
+        data:{
+            report_code:report_code
+        },
+        success:function(r){
+
+        }
+    });
+}
+function closedetail(){
+    document.getElementById("reportdetailbackground").style.display="none";
 }

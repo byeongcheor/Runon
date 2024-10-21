@@ -467,4 +467,11 @@ public class AdminController {
         return map;
 
     }
+
+    @PostMapping("/reportDetail")
+    @ResponseBody
+    public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code){
+        Map<String,Object> map=new HashMap<>();
+        return map;
+    }
 }

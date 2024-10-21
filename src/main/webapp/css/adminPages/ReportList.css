@@ -166,19 +166,19 @@ li{
 .usertitle3:hover{
     background-color: #EBECEC;
 }
-#userdetailbackground{
+#reportdetailbackground{
     background-color: rgba(128, 128, 128, 0.8);
     position: fixed;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    display: none;
+    /*display: none;*/
     z-index:999;
 }
-#userdetail{
-    width: 80%;
-    height: 90%;
+#reportdetail{
+    width: 600px;
+    height: 80%;
     background-color: white;
     margin: 0 auto;
     margin-top: 50px;

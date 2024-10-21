@@ -63,6 +63,30 @@
     </div>
 </div>
 
+<div id="reportdetailbackground">
+    <div id="reportdetail">
+        <div  id="closedetail"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
+        <div id="usermain">
+        </div>
+
+        <div id="reportcontent">
+            <div id="pay">
+                <div><b>신고내역</b></div>
+                <div id="userpay">
+                    <h1>lodding</h1>
+
+                </div>
+            </div>
+            <div id="myRunning">
+                <div><b>점수변동</b></div>
+                <div id="userrecord">
+                    <h1>lodding</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 
 
