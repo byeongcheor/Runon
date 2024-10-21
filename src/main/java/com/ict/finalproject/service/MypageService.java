@@ -31,6 +31,7 @@ public interface MypageService {
     public void createMarathonForm(MarathonFormVO marathonVO);
     public void deleteMarathonForm(int usercode);
     public int updateMarathonForm(MarathonFormVO marathonVO);
+    public PaymentdetailVO getOrderId(String orderId);
     public int getTotalOrder(int usercode);
     public int getOrderCode(int marathon_code, int usercode);
     public List<OrderVO> getOrderInfo(int usercode);

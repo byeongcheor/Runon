@@ -85,12 +85,11 @@
                     <c:forEach var="rank" items="${ranking}">
                         <li>
                             <span class="grade" id="grade">${rank.ranking}등</span>
-                            <img src="/img/${rank.profile_img}" alt="프로필 이미지" class="profile-img">
+                            <img src="/resources/uploadfile/${rank.profile_img}" alt="프로필 이미지" class="profile_img">
                             <div class="rank-info">
                                 <span class="rank-name">${rank.nickname}</span>
                                 <div class="rank-details">
-                                    <span class="runkm">${rank.point_code}</span>
-
+                                    <span class="runkm">${rank.point_code}Km</span>
                                     <span class="crew-name">${rank.crew_name}</span>
                                 </div>
                             </div>
@@ -337,11 +336,10 @@
                 for (var i in result) {
                     list+='<li>';
                     list+='<span class="grade" id="grade">'+result[i].ranking+'등</span>';
-                    list+='<img src="/img/'+result[i].profile_img+'" alt="프로필 이미지" class="profile-img">';
+                    list+='<img src="/img/'+result[i].profile_img+'" alt="프로필 이미지" class="profile_img">';
                     list+='<div class="rank-info">';
                     list+='<span class="rank-name">'+result[i].nickname+'</span>';
                     list+='<span class="runkm">'+result[i].point_code+'</span>';
-
                     list+='<span class="crew-name">'+result[i].crew_name+'</span>';
                     list+='</div>';
                     list+='</li>';
@@ -405,11 +403,11 @@
                 participationCountValue:participationCountValue,
                 mateCountValue:mateCountValue
             },success:function(result){
-                match_yn=result; // 방 코드 받아옴
-                match_view(result); // 방에 대한 정보 조회
+                 match_yn=result; // 방 코드 받아옴
+                 match_view(result); // 방에 대한 정보 조회
 
                 // // 채팅방 연결
-                // chatConnection(match_yn); // 방 코드에 맞는 채팅방 연결
+                chatConnection(match_yn); // 방 코드에 맞는 채팅방 연결
             },
             error:function(e){
             }
@@ -450,7 +448,8 @@
                 localStorage.removeItem('marathonSelect');
                 localStorage.removeItem('participationCountSelect');
                 localStorage.removeItem('mateCountSelect');
-                localStorage.clear();// 이거 지워야 이용방법 모달안뜸
+                localStorage.removeItem("userNickname");
+                localStorage.removeItem("usercode");
                 location.reload();  // 페이지 새로고침 추가
 
             },
@@ -471,6 +470,8 @@
                 localStorage.removeItem('marathonSelect');
                 localStorage.removeItem('participationCountSelect');
                 localStorage.removeItem('mateCountSelect');
+                localStorage.removeItem("userNickname");
+                localStorage.removeItem("usercode");
 
 
             },
@@ -492,6 +493,11 @@
                 match_view(match_yn);
                 $('#accept').hide();
                 $('#accept_n').show();
+
+
+
+
+
             },
             error: function(e) {
                 console.error('Error: ', e);
@@ -526,107 +532,102 @@
         $('#accept').hide();
         $('#accept_n').hide();
         $('#out').hide();
-        for (var i=0; i<8; i++) {
+        for (var i=0; i<9; i++) {
             list+='<div class="profile-box">';
             list+='<div id="profile_img">';
             list+='<img src="/img/user.png" "alt="프로필 1 이미지">';
             list+='</div>';
-            list+='<span class="rank-name">&nbsp; </span>';
-            list+='<span class="runkm">&nbsp;</span>';
+            list+='<span class="rank_name">&nbsp; </span>';
+            list+='<span class="run_km">&nbsp;</span>';
             list+='<span class="crew_name">&nbsp;</span>';
             list+='</div>';
         }
         $('.profile-container').append(list);
+    } ;
+
+function grid_draw(length, result) {
+    var list = '';
+
+    // 선택한 메이트 인원 + 3의 배수로 맞춘 방 개수 계산
+    var total_mates = length;
+    var remainder = total_mates % 3;
+
+    // 선택한 메이트 인원 + 3의 배수로 맞추기
+    if (remainder !== 0) total_mates += 3 - remainder;
+    total_mates = Math.max(9, total_mates); // 최소 9개의 방은 무조건 보여주기
+
+    for (var i = 0; i < result.length; i++) {
+        var on = result[i].usercode == usercode ? 'onclick="profile_update(' + i + ');"' : '';
+        var gender = result[i].gender == "여" ? 'woman' : 'man';
+        var no = result[i].b_s == "0" ? '0' : result[i].b_s; // profile 값 가져옴
+        var img = gender + no;
+        // 나이 가져오기
+        var today = new Date();
+        var birthDate = new Date(result[i].birthdate);
+        var age = (today.getFullYear() - birthDate.getFullYear()) + '';
+        age = age < 10 ? '잼민이' : age[0] + '0대';
+
+        var style = '';
+        if (result[i].a_s === 'Y') {  // 스타일 및 버튼 제어
+            style = "transform: scale(1.05);border-color: #CCFF47;";
+            $('#accept').hide();
+            $('#accept_n').show();
+        } else {
+            style = '';
+            $('#accept').show();
+            $('#accept_n').hide();
+        }
+
+        list += '<div class="profile-box" ' + on + ' style="' + style + '">';
+        list += '<div id="profile_img">';
+        list += '<img id="img' + i + '" src="/img/' + img + '.png" alt="프로필 1 이미지">';
+        list += '</div>';
+        list += '<span class="rank_name">' + result[i].nickname + '</span>';
+        list += '<span class="age">' + age + '</span>';
+        list += '<span class="run_km">' + result[i].tbuf_n + 'Km</span>';
+        list += '<span class="crew_name">' + result[i].crew_name + '</span>';
+        list += '</div>';
     }
-    ;
-    function grid_draw(length, result) {
-        var list = '';
 
-        // 선택한 메이트 인원 + 4의 배수로 맞춘 방 개수 계산
-        var total_mates = length;
-        var remainder = total_mates % 4;
-
-        // 선택한 메이트 인원 + 4의 배수로 맞추기
-        if (remainder !== 0) total_mates += 4 - remainder;
-        total_mates = Math.max(8, total_mates); // 최소 8개의 방은 무조건 보여주기
-
-        for (var i = 0; i < result.length; i++) {
-
-            var on = result[i].usercode==usercode? 'onclick="profile_update('+i+');"' : '';
-            var gender = result[i].gender=="여"? 'woman':'man' ;
-            var no = result[i].b_s=="0"?'0':result[i].b_s;//profile값가저옴
-            var img = gender+no;
-            //나이 가져오기
-            var today = new Date();
-            var birthDate = new Date(result[i].birthdate);
-            clog('birthDate : '+birthDate);
-            var age = (today.getFullYear() - birthDate.getFullYear())+'';
-            clog('age : '+age);
-            age = age<10? '잼민이' : age[0]+'0대';
-
-            var style = '';
-            if(result[i].a_s === 'Y'){  //스타일 및 버튼 제어
-                style ="transform: scale(1.05);border-color: #CCFF47;";
-                $('#accept').hide();
-                $('#accept_n').show();
-            }
-            else{
-                style = '';
-                $('#accept').show();
-                $('#accept_n').hide();
-            }
-
-            list += '<div class="profile-box" '+ on +' style="' + style + '">';
-            list += '<div id="profile_img">';
-
-            list += '<img id="img'+i+'" src="/img/' + img + '.png" alt="프로필 1 이미지">';
-            list += '</div>';
-            list += '<span class="rank-name">' + result[i].nickname + '</span>';
-            list += '<span class="age">' + age + '</span>';
-            list += '<span class="runkm">' + result[i].tbuf_n + 'Km</span>';
-            list += '<span class="crew_name">' + result[i].crew_name + '</span>';
-            list += '</div>';
-        }
-
-        // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
-        for (var i = result.length; i < length; i++) {
-            list += '<div class="profile-box" style="">';
-            list += '<div id="profile_img">';
-            list += '<img src="/img/user.png" alt="프로필 1 이미지">';
-            list += '</div>';
-            list += '<span class="rank-name">&nbsp;</span>';
-            list += '<span class="runkm">&nbsp;</span>';
-            list += '<span class="crew_name">&nbsp;</span>';
-            list += '</div>';
-        }
-
-        // 나머지 비활성화된 방은 이미지 없이 처리
-        for (var i = length; i < total_mates; i++) {
-            list += '<div class="profile-box" style="pointer-events: none;">';
-            list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
-            list += '</div>';
-            list += '<span class="rank-name">&nbsp;</span>';
-            list += '<span class="runkm">&nbsp;</span>';
-            list += '<span class="crew_name">&nbsp;</span>';
-            list += '</div>';
-        }
-
-        // 프로필 컨테이너에 결과 반영
-        $('.profile-container').empty();
-        $('.profile-container').append(list);
-
-        // 매칭 버튼을 누르면 select 박스 비활성화
-        $('.select-box').each(function() {
-            // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
-            $(this).css('pointer-events', 'none');
-        });
-
-        // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
-        $('#matching').hide();
-        $('#accept').show();
-        $('#accept_n').hide();
-        $('#out').show();
+    // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
+    for (var i = result.length; i < length; i++) {
+        list += '<div class="profile-box" style="">';
+        list += '<div id="profile_img">';
+        list += '<img src="/img/user.png" alt="프로필 1 이미지">';
+        list += '</div>';
+        list += '<span class="rank_name">&nbsp;</span>';
+        list += '<span class="run_km">&nbsp;</span>';
+        list += '<span class="crew_name">&nbsp;</span>';
+        list += '</div>';
     }
+
+    // 나머지 비활성화된 방은 이미지 없이 처리
+    for (var i = length; i < total_mates; i++) {
+        list += '<div class="profile-box" style="pointer-events: none;">';
+        list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
+        list += '</div>';
+        list += '<span class="rank_name">&nbsp;</span>';
+        list += '<span class="run_km">&nbsp;</span>';
+        list += '<span class="crew_name">&nbsp;</span>';
+        list += '</div>';
+    }
+
+    // 프로필 컨테이너에 결과 반영
+    $('.profile-container').empty();
+    $('.profile-container').append(list);
+
+    // 매칭 버튼을 누르면 select 박스 비활성화
+    $('.select-box').each(function() {
+        // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
+        $(this).css('pointer-events', 'none');
+    });
+
+    // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
+    $('#matching').hide();
+    $('#accept').show();
+    $('#accept_n').hide();
+    $('#out').show();
+}
 
     // 옵션 선택 안내 모달 열기
     function showOptionSelectModal() {
@@ -759,9 +760,5 @@
             }
         });
     }
-
-    //////////////////////////////////////////////////////////////////////////////////
-
-
 
 </script>

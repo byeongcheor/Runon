@@ -26,6 +26,9 @@ public interface MypageDAO {
                                         @Param("limit") int limit);
     //주문목록 count
     public int getTotalOrder(int usercode);
+    //주문상세 불러오기
+    public PaymentdetailVO getOrderId(String orderId);
+
     //회원정보수정 기존비밀번호 유효성검사
     public MemberVO passwordChk(String username);
     //마라톤신청서있는지조회
