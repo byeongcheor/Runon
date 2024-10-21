@@ -705,7 +705,7 @@
     </update>
 
     <select id="notice_detail" resultType="com.ict.finalproject.vo.CrewVO">
-        select subject,content, updated_date, hits as a_n, crew_notice_code as b_n ,usercode
+        select subject,content, DATE_FORMAT(updated_date, '%Y-%m-%d %H:%i') as updated_date, hits as a_n, crew_notice_code as b_n ,usercode
         from   crew_notice_tbl
         where  crew_notice_code = ${param1}
     </select>

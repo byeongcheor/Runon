@@ -35,6 +35,7 @@ body{
 .section1{
     background-color: white;
     min-height: 370px;
+    margin-top: 20px;
     margin-bottom: 10px;
     padding: 0px 20px 20px 20px;
     border-radius: 10px;
@@ -53,7 +54,6 @@ body{
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    margin-top: 20px;
     display: flex;
     flex-direction: row;
 }
@@ -362,6 +362,16 @@ body{
     font-weight: bold;
 }
 
+.left_img{
+   cursor: pointer;
+   font-size: 28px;
+   margin-bottom:25px;
+   margin-top:25px;
+   top: 15px;
+   right: 15px;
+}
+
+
   .custom-close {
     cursor: pointer;
     font-size: 28px;
@@ -466,7 +476,7 @@ body{
   }
 
 .vote-btn {
-    width: 48%; /* 버튼의 너비를 48%로 설정하여 두 버튼이 균등하게 배치되도록 설정 */
+    width: 49%; /* 버튼의 너비를 48%로 설정하여 두 버튼이 균등하게 배치되도록 설정 */
     padding: 10px; /* 버튼에 패딩 추가 */
     border-radius: 5px; /* 모서리를 둥글게 설정 */
     font-size: 15px; /* 버튼의 폰트 크기 설정 */
@@ -815,6 +825,7 @@ body{
     width: 100%;
     height: 300px;
     margin-top: 10px;
+    margin-bottom: 20px;
     border-radius: 12px;
     padding: 10px;
     background-color: #F7F7F7;
@@ -865,7 +876,76 @@ body{
     background-color: #b8e629;
 }
 
-////////////////////////////////////////////////////////
+
+.image-text-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 부모 요소의 전체 너비 */
+    padding:10px;/* 높이를 내용에 맞게 자동 조절 */
+
+}
+
+.image-wrapper {
+    width: 100%; /* 부모 컨테이너의 너비를 100%로 설정 */
+    display: flex;
+    flex-direction: column; /* 각 이미지를 세로로 배치 (한 줄에 하나씩) */
+    align-items: center; /* 자식 요소인 이미지 컨테이너를 중앙에 배치 */
+    gap: 20px; /* 이미지 간의 간격 추가 */
+    margin-bottom: 20px;
+}
+
+.image-container {
+    width: 80%; /* 각 이미지 컨테이너가 부모의 80% 너비를 차지 */
+    margin: 0 auto; /* 이미지 컨테이너를 중앙에 정렬 */
+    display: flex;
+    justify-content: center; /* 이미지 자체도 중앙에 배치 */
+}
+
+.responsive-image {
+    width: 100%; /* 이미지가 컨테이너의 100% 너비를 차지 */
+    height: auto;
+    object-fit: cover; /* 이미지 비율 유지하면서 컨테이너에 맞춤 */
+    display: block;
+}
+
+.text-wrapper {
+    width: 95%; /* 전체 너비로 설정 */
+    margin-left:20px;
+    background-color: #fff; /* 배경색 */
+    color: #333;
+    font-size: 16px;
+    line-height: 26px;
+    min-height: 350px;
+    overflow: hidden;
+    font-family: inherit !important;
+    white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
+}
+
+.extra-info {
+    font-size: 14px;
+    line-height: 120%;
+    color: #727f88;
+    margin: 50px 0px 30px 0px
+}
+.title-container {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    align-items: center; /* 수직 정렬 */
+}
+
+.notice_detail_title {
+    font-size: 22px; /* 제목 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    text-align: center; /* 제목 중앙 정렬 */
+    width: 100%;
+}
+
+
+
+
+
+
 
 
 
