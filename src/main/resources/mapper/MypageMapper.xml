@@ -140,8 +140,8 @@
         where username=#{username}
     </select>
     <insert id="createMarathonForm" parameterType="com.ict.finalproject.vo.MarathonFormVO">
-        INSERT INTO marathon_form_tbl (name, tel, addr, addr_details, gender, birth_date, size, terms_agreement, privacy_consent, media_consent, usercode)
-        VALUES (#{name}, #{tel}, #{addr}, #{addr_details}, #{gender}, #{birth_date}, #{size}, #{terms_agreement}, #{privacy_consent}, #{media_consent}, #{usercode})
+        INSERT INTO marathon_form_tbl (name, tel, addr, addr_details, gender, birth_date, size, terms_agreement, privacy_consent, media_consent, usercode, run_option)
+        VALUES (#{name}, #{tel}, #{addr}, #{addr_details}, #{gender}, #{birth_date}, #{size}, #{terms_agreement}, #{privacy_consent}, #{media_consent}, #{usercode}, #{run_option})
     </insert>
     <delete id="deleteMarathonForm">
         delete from marathon_form_tbl
@@ -150,9 +150,8 @@
     <update id="updateMarathonForm">
         update marathon_form_tbl
         set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
-        gender=#{gender}, birth_date=#{birth_date}, size=#{size}
-        where usercode=#{usercode
-        }
+        gender=#{gender}, birth_date=#{birth_date}, size=#{size}, run_option=#{run_option}
+        where usercode=#{usercode}
     </update>
     <select id="getOrderId" resultType="com.ict.finalproject.vo.PaymentdetailVO">
         select *
@@ -218,7 +217,7 @@
         and u.usercode != #{usercode}
     </select>
     <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
-        select u.*, a.matching_room_code
+        select u.*, a.matching_room_code, a.writedate
         from user_tbl u
         join applicant_tbl a on u.usercode = a.usercode
         where a.matching_room_code in (

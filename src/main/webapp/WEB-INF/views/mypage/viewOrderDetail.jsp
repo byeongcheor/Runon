@@ -11,7 +11,6 @@
     if(!orderId){
         console.log("orderId가 정의되지 않았습니다.")
     }
-
     setTimeout(function(){
         console.log(usercode1);
         console.log(orderId);

@@ -205,6 +205,15 @@ public class MypageController {
         map.put("Cvo",Cvo);
         return map;
     }
+//    @PostMapping("/mypage/completed")
+//    public List<CompleteVO> completed(@RequestParam("orderId") String orderId,
+//                                      @RequestParam("usercode") int usercode,
+//                                      Model model){
+//        List<CompleteVO> Cvo = paymentService.selectCvoList(orderId);
+//        model.addAttribute("Cvo", Cvo);
+//        model.addAttribute("orderId", orderId);
+//        return Cvo;
+//    }
 
     //마라톤신청서조회
     @GetMapping("mypage/marathonFormCheck")
@@ -243,7 +252,8 @@ public class MypageController {
                                      @RequestParam("addr_details") String addrDetails,
                                      @RequestParam("gender") String gender,
                                      @RequestParam("birth_date") String birthDate,
-                                     @RequestParam("size") String size
+                                     @RequestParam("size") String size,
+                                     @RequestParam("run_option")int run_option
                                      ){
         MarathonFormVO mvo = service.selectMarathonForm(usercode);
         if(mvo != null){

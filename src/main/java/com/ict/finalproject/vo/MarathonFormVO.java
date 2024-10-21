@@ -26,4 +26,5 @@ public class MarathonFormVO {
     private int is_deleted; // 삭제 여부
     private int deleted_date; // 삭제일
     private int usercode; // 사용자 코드
+    private int run_option;
 }

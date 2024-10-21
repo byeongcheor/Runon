@@ -123,6 +123,7 @@
                         document.getElementById("rterms_agreement").value = datas.terms_agreement;
                         document.getElementById("rprivacy_consent").value = datas.privacy_consent;
                         document.getElementById("rmedia_consent").value = datas.media_consent;
+                        document.getElementById("rrun_option").value = datas.run_option;
                         modal.style.display = "block";
                     }
 
@@ -146,6 +147,7 @@
             gender: document.getElementById("gender").value,
             birth_date: document.getElementById("birth_date").value,
             size: document.getElementById("size").value,
+            run_option: document.getElementById("run_option").value,
             terms_agreement: document.getElementById("terms_agreement").checked ? 1 : 0,  // boolean을 int로 변환
             privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
             media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
@@ -165,6 +167,7 @@
                     gender: document.getElementById("gender").value,
                     birth_date: document.getElementById("birth_date").value,
                     size: document.getElementById("size").value,
+                    run_option: document.getElementById("run_option").value,
                     terms_agreement: document.getElementById("terms_agreement").checked ? 1 : 0,  // boolean을 int로 변환
                     privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
                     media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
@@ -192,6 +195,7 @@
         var gender= document.getElementById("rgender").value;
         var birth_date= document.getElementById("rbirth_date").value;
         var size= document.getElementById("rsize").value;
+        var run_option= document.getElementById("rrun_option").value;
         $.ajax({
             url: "/mypage/updateMarathonForm",
             type: "post",
@@ -203,7 +207,8 @@
                 addr_details: addr_details,
                 gender: gender,
                 birth_date: birth_date,
-                size: size
+                size: size,
+                run_option: run_option
             },
             success: function(r){
                 alert("신청서가 수정되었습니다.");
@@ -225,6 +230,7 @@
         var gender= document.getElementById("rgender").value;
         var birth_date= document.getElementById("rbirth_date").value;
         var size= document.getElementById("rsize").value;
+        var run_option= document.getElementById("rrun_option").value;
         $.ajax({
             url: "/mypage/deleteMarathonForm",
             type: "post",
@@ -236,7 +242,8 @@
                 addr_details: addr_details,
                 gender: gender,
                 birth_date: birth_date,
-                size: size
+                size: size,
+                run_option: run_option
             },
             success: function(r){
                 alert("신청서가 삭제되었습니다.");
@@ -667,6 +674,13 @@
                     <input class="inputs" type="text" id="size" name="size" maxlength="30" required />
                 </div>
                 <div>
+                    <label for="run_option">옵션:</label>
+                    <select class="inputs" id="run_option" name="run_option" style="margin-bottom: 25px;" required>
+                        <option value="0">개인참가</option>
+                        <option value="1">크루참가</option>
+                    </select>
+                </div>
+                <div>
                     <label for="terms_agreement">이용약관 동의:</label>
                     <input type="checkbox" id="terms_agreement" name="terms_agreement" required />
                 </div>
@@ -720,6 +734,13 @@
                 <div>
                     <label for="size">사이즈:</label>
                     <input class="inputs" type="text" id="rsize" name="size" maxlength="30" required />
+                </div>
+                <div>
+                    <label for="run_option">옵션:</label>
+                    <select class="inputs" id="rrun_option" name="run_option" style="margin-bottom: 25px;" required>
+                        <option value="0">개인참가</option>
+                        <option value="1">크루참가</option>
+                    </select>
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>

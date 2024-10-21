@@ -313,7 +313,7 @@
             success: function(r){
                 alert("성공");
                 if(r=="success"){
-                    location.href="/mypage/viewOrderDetail";
+                    window.location.href="/mypage/viewOrderDetail";
                 }
             },error: function(e){
                 alert("실패");
