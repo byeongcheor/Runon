@@ -204,6 +204,12 @@
      .orderStatus button{
          font-size: 10pt;
      }
+     .proName{
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         width: 200px;
+     }
 </style>
 <script>
     setTimeout(function(){
@@ -248,7 +254,7 @@
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span>` + vo.marathon_name + `/` + vo.quantity + `</span>
+                                        <span class="proName">` + vo.marathon_name + `/` + vo.quantity + `</span>
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +265,7 @@
                                 <span>` + vo.order_status + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span><button type="button" class="btn btn-outline-secondary">주문취소</button></span>
+                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails()">주문상세보기</button></span>
                             </div>
                         </div>
                     `;
@@ -272,7 +278,7 @@
 
                 // 이전 버튼
                 if (pvo.nowPage > 1) {
-                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+");'><</a></li>";
                 }
 
                 // 페이지 번호 출력
@@ -295,6 +301,28 @@
         })
     }
 </script>
+<script>
+    function orderDetails(){
+        $.ajax({
+            url: "/mypage/viewOrderDetails",
+            type: "post",
+            data:{
+                usercode: usercode1,
+                username: username1,
+            },
+            success: function(r){
+                alert("성공");
+                if(r=="success"){
+                    location.href="/mypage/viewOrderDetail";
+                }
+            },error: function(e){
+                alert("실패");
+                console.log(e);
+            }
+        })
+    }
+</script>
+
 <div id="bannerBox">
     <img src="/img/러닝고화질.jpg" id="bannerImg"/>
 </div>
@@ -311,7 +339,7 @@
                 <span>상품명/옵션</span>
                 <span>상품금액</span>
                 <span>주문상태</span>
-                <span>취소요청</span>
+                <span></span>
             </div>
             <div class="orderP" id="orderlist">
             </div>

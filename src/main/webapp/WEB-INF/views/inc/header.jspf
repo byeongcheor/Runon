@@ -126,10 +126,10 @@ function crew() {
                     <li><a class="menus" href="/cart/cart">CART</a></li>
 <%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>
                     <li><a onclick="mypage()">MY</a></li>
-                    <li id="login"><a onclick="openLoginPopup()">login</a></li>
+                    <li id="login"><a onclick="openLoginPopup()" style="color: #d1ff33">LOGIN</a></li>
 
-                    <li id="logout"><a onclick="logout()">logout</a></li>
-                    <li><a class="menus" href="/adminPages/adminHome">관리자</a></li>
+                    <li id="logout"><a onclick="logout()" style="color: #d1ff33">LOGOUT</a></li>
+                    <li><a class="menus" href="/adminPages/adminHome">ADMIN</a></li>
 
                 </ul>
             </nav>

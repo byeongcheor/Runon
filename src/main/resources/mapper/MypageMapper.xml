@@ -154,6 +154,11 @@
         where usercode=#{usercode
         }
     </update>
+    <select id="getOrderId" resultType="com.ict.finalproject.vo.PaymentdetailVO">
+        select *
+        from payment_detail_tbl
+        where orderId=#{param1}
+    </select>
     <select id="getOrderInfo" resultType="com.ict.finalproject.vo.OrderVO">
         select o.*, m.marathon_name
         from order_tbl o
