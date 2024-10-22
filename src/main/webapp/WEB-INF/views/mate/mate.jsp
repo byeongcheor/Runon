@@ -668,7 +668,6 @@ function grid_draw(length, result) {
                 type: "post",
                 data: { Authorization: Authorization },
                 success: function (r) {
-                    console.log("mate에서 username을 보낸다: " + r);
                 }
             });
         }

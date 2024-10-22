@@ -27,8 +27,14 @@
         <div id="crew_nav" >
             <ul>
                 <li id="crewFind"><a href="/crew/crewList">크루모집</a></li>
-                <li id="crewMake"><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li id="myCrew"><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
+                    <c:if test="${user_code != 0}">
+                        <li ><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
+                        <li id="myCrew"><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
+                    </c:if>
+                    <c:if test="${user_code == 0}">
+                        <li onclick="login()">크루생성</li>
+                        <li onclick="login()">나의 크루</li>
+                    </c:if>
             </ul>
         </div>
     </div>
@@ -462,8 +468,9 @@
 //}, 2000);
 
 
-    var Authorization = localStorage.getItem("Authorization");
-    var clog=console.log;
+var Authorization = localStorage.getItem("Authorization");
+var clog=console.log;
+var usercode=${user_code};
     var seoulDistricts = [
         "강남구", "강동구", "강북구", "강서구", "관악구", "광진구",
         "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구",
@@ -719,7 +726,14 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
-       crew_page(1);
+       if(usercode!=0){
+          crew_page(1);
+          $('#login').hide();
+       }
+       else{
+          $('#logout').hide();
+          $('.list_item').removeAttr('onclick');
+       }
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {
@@ -1148,5 +1162,20 @@ function crew_write_add() {
            }
        });
    }
+      window.onload = function test3() {
+           var Authorization = localStorage.getItem("Authorization");
+           if (token !== "" && token !== null) {
+               $.ajax({
+                   url: "/crew/test",
+                   type: "post",
+                   data: { Authorization: Authorization },
+                   success: function (r) {
+                   }
+               });
+           }
+       }
+    function login(){
+        alert('로그인해주세요.')
+    }
 </script>
 

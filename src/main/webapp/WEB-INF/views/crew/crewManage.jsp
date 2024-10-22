@@ -298,7 +298,7 @@
     <div class="custom-modal-footer">
       <button class="vote-btn" id=vote_update2 onclick="vote_rud('R')">수정</button>
       <button class="vote-btn" id=vote_delete2 onclick="vote_rud('D')">삭제</button>
-      <button class="handover-btn" id=vote_close2 onclick="closeCustomModal()">닫기</button>
+      <button class="handover-btn2" id=vote_close2 onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -323,11 +323,14 @@ const create_crew_code = ${create_crew_code};
 const user_code = ${user_code};
 const position = ${position};
 var votenum = 4;
+var notice_num;
 
 if (position != 1) {
   $('#editCrewBtn').hide();
   $('#vote_delete').hide();
   $('#vote_delete2').hide();
+
+
 }
 if (position > 2) {
   $('#voteMake').hide();
@@ -721,7 +724,9 @@ function noticeDetail(notice_num, flag, YN) {
             },
             success: function(response) {
                 var detail_form = '';
+                notice_num = response.notice[0].b_n;
                 detail_form += '   <input type="hidden" id="crew_notice_code"> ';
+                detail_form += '   <input type="hidden" id="notice_num" value='+response.notice[0].b_n+'> ';
                 detail_form += '   <div> ';
                 // 제목 (flag 1, flag 2 공통)
                 if (flag == 1){
@@ -729,8 +734,7 @@ function noticeDetail(notice_num, flag, YN) {
                     detail_form += '       <span class="left_img" onclick="close_notice_detail()"><img src="/img/left.png" style="width: 25px; height: 25px;"></span> ';
                     detail_form += '       <div class="notice_detail_title" id="notice_detail_title" name="notice_detail_title"></div> ';
                     detail_form += '   </div> ';
-                    detail_form += '       <div class="notice_detail_name" id="notice_detail_name" name="notice_detail_name">글쓴이: 크루장</div>';
-
+                    detail_form += '       <div class="notice_detail_name" id="notice_detail_name" name="notice_detail_name">글쓴이: '+response.notice[0].nickname+'</div>';
                 }
                 if (flag == 2) {
                     detail_form += '       <span class="left_img" onclick="close_notice_detail()"><img src="/img/left.png" style="width: 25px; height: 25px; "></span> ';
@@ -810,7 +814,7 @@ function noticeDetail(notice_num, flag, YN) {
                 }
                 // 이미지 처리
                 response.images.forEach(function(image) {
-                    var imgTag = '<div class="image-container" data-image-name="' + image + '" style="position: relative;">';
+                    var imgTag = '<div class="image-container"  data-image-name="' + image + '" style="position: relative;">';
 
                     if (flag == 2) {
                         // 삭제 버튼이 이미지 오른쪽 상단에 위치하게끔 수정
@@ -823,7 +827,6 @@ function noticeDetail(notice_num, flag, YN) {
 
                     $('#previewContainer2').append(imgTag);
                 });
-
             },
             error: function(error) {
                 console.log('에러 발생:', error);
@@ -832,29 +835,45 @@ function noticeDetail(notice_num, flag, YN) {
     }
 }
 
-    function uploadImages(event) {
-        var files = event.target.files; // 선택된 파일들
-        var formData = new FormData();
-        for (var i = 0; i < files.length; i++) {
-            formData.append("files", files[i]);
-        }
-        var crewNoticeCode = $('#crew_notice_code').val();
+function uploadImages(event) {
+    var files = event.target.files; // 선택된 파일들
+    var formData = new FormData();
 
-        formData.append("crew_notice_code", crewNoticeCode);
-        $.ajax({
-            url: '/crew/upload_images',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                noticeDetail(crewNoticeCode, 2, 'Y')
-            },
-            error: function(xhr, status, error) {
-                alert("파일 업로드 실패: " + error);
-            }
-        });
+    for (var i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
     }
+
+    var crewNoticeCode = $('#crew_notice_code').val();
+    formData.append("crew_notice_code", crewNoticeCode);
+
+    $.ajax({
+        url: '/crew/upload_images',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+        clog(response);
+            var img_arr = response.split(',');
+            for (var i = 0; i < img_arr.length-1; i++) {
+                (function(i) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var imgTag = '<div class="image-container"  data-image-name="' + img_arr[i] + '" style="position: relative;">';
+                        imgTag += '<div class="delete-btn" style="position: absolute; top: 5px; right: 5px; background-color: white; color: black; padding: 5px; cursor: pointer; border-radius: 3px;" onclick="delete_image(' + $('#notice_num').val() + ', \'' + img_arr[i] + '\')">지우기</div>';
+                        imgTag += '<img src="/crew_upload/' + img_arr[i] + '" alt="Uploaded Image" style="width: 80%;">';
+                        imgTag += '</div>';
+                        $('#previewContainer2').append(imgTag);
+                    };
+                    reader.readAsDataURL(files[i]);  // 개별 파일 읽기
+                })(i);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert("파일 업로드 실패: " + error);
+        }
+    });
+}
     // 이미지 삭제
     function delete_image(notice_num,imageName) {
         var crewNoticeCode = $('#crew_notice_code').val();
@@ -868,8 +887,9 @@ function noticeDetail(notice_num, flag, YN) {
             },
             success: function(response) {
                 if (response === 1) {
-                    noticeDetail(crewNoticeCode, 2,'Y')
-                } else {
+                    $('.image-container').filter(function() {
+                      return $(this).data('image-name') === imageName;
+                    }).remove();                } else {
                     alert('이미지 삭제에 실패했습니다.');
                 }
             },
@@ -1075,9 +1095,7 @@ function noticeDetail(notice_num, flag, YN) {
                },
                success: function(response) {
                   alert("팀 소유자가 위임되었습니다.");
-                     position = response;
-                     $('#editCrewBtn').hide();  // 추가 동작
-                     $('#member').click();
+                  location.reload(true);
                },
                error: function(e) {
                    console.error('Error: ', e);
@@ -1100,39 +1118,30 @@ function resignTeam() {
     // 팀탈퇴 확인 메시지
     var confirmation = confirm("정말 팀을 탈퇴 하시겠습니까?");
 
-    // 사용자가 확인을 누른 경우에만 탈퇴 처리
-    if (confirmation) {
-        // 팀장(position == 1)인 경우, 탈퇴 불가
-        if (position == 1) {
-            alert("크루장 권한을 위임하지 않고는 탈퇴할 수 없습니다.");
-            return false; // 탈퇴 중지
-        }
-
-        // 팀장이 아닌 경우에만 탈퇴 가능
-        $.ajax({
-            url: '/crew/resign_team',
-            type: 'POST',
-            async: false,
-            data: {
-                Authorization: Authorization,
-                create_crew_code: create_crew_code,
-                position: position
-            },
-            success: function(response) {
-                if (response == 0) {
-                    alert("탈퇴할 수 없습니다.");
-                    return false;
-                } else {
-                    alert("팀에서 탈퇴되었습니다.");
-                    window.location.href = '/crew/crewList';
-                }
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+    // 팀장이 아닌 경우에만 탈퇴 가능
+    $.ajax({
+        url: '/crew/resign_team',
+        type: 'POST',
+        async: false,
+        data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            position: position
+        },
+        success: function(response) {
+            if (response == 0) {
+                alert("크루장을 위임해야 탈퇴할수있습니다.");
+                return false;
+            } else {
+                alert("팀에서 탈퇴되었습니다.");
+                window.location.href = '/crew/crewList';
             }
-        });
-        closeCustomModal();
-    }
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+    closeCustomModal();
 }
 
 
@@ -1387,7 +1396,7 @@ function deleteTeam() {
                     $('#vote_update2').hide();
                     $('#vote_live').html('');
                     $('#vote_live').html('<strong>투표 결과</strong>');
-                    $('#vote_close2').removeClass().addClass('handover-btn');
+                    $('#vote_close2').removeClass().addClass('handover-btn2');
                     $('#vote_delete2').removeClass().addClass('handover-btn');
                 } else if (flag == 2 && vote_user_code == user_code) {
                          $('#vote_update2').show();
@@ -1396,7 +1405,7 @@ function deleteTeam() {
                 } else {
                     $('#vote_live').html('');
                     $('#vote_live').html('<strong>투표 현황</strong>');
-                    $('#vote_close2').removeClass().addClass('handover-btn');
+                    $('#vote_close2').removeClass().addClass('handover-btn2');
                 }
                if(flag==9||flag==1){
                   document.getElementById('voteResultModal').style.display = 'block';

@@ -87,6 +87,7 @@ function mate() {
 }
 function crew() {
     var Authorization=localStorage.getItem("Authorization");
+    if(Authorization===null)Authorization='A';
     $.ajax({
         url: "/crew/test", // 원하는 URL을 지정
         type: "post",
@@ -128,7 +129,7 @@ function crew() {
                 <ul>
                     <li><a href="/marathon/marathonList">MARATHON</a></li>
                     <li><a class="menus" onclick="mate()">MATE</a></li>
-                    <li><a class="menus" href="/crew/crewList">CREW</a></li>
+                    <li><a class="menus" onclick="crew()">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/cart/cart">CART</a></li>
 <%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>

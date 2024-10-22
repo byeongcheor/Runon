@@ -5,9 +5,11 @@
 <mapper namespace="com.ict.finalproject.dao.CrewDAO">
 
     <select id="usercodeSelect" resultType="int">
-        select usercode
-        from   user_tbl
-        where  username = '${param1}'
+        SELECT IFNULL(
+        (SELECT usercode
+        FROM user_tbl
+        WHERE username = '${param1}'
+        ), 0) AS usercode;
     </select>
 
     <select id="crew_teamEmblem" resultType="String">
@@ -715,7 +717,8 @@
 
     <select id="notice_detail" resultType="com.ict.finalproject.vo.CrewVO">
         select subject,content, DATE_FORMAT(updated_date, '%Y-%m-%d %H:%i') as updated_date, hits as a_n, crew_notice_code as b_n ,usercode
-        from   crew_notice_tbl
+        ,(select nickname from user_tbl where usercode=a.usercode) as nickname
+        from   crew_notice_tbl a
         where  crew_notice_code = ${param1}
     </select>
 
