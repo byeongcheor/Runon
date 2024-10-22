@@ -366,7 +366,7 @@ body{
    cursor: pointer;
    font-size: 28px;
    margin-bottom:25px;
-   margin-top:25px;
+   margin-top:28px;
    top: 15px;
    right: 15px;
 }
@@ -915,7 +915,7 @@ body{
     color: #333;
     font-size: 16px;
     line-height: 26px;
-    min-height: 230px;
+    min-height: 170px;
     overflow: hidden;
     font-family: inherit !important;
     white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */
@@ -939,6 +939,15 @@ body{
     font-weight: bold; /* 굵은 글씨 */
     text-align: center; /* 제목 중앙 정렬 */
     width: 100%;
+}
+
+.notice_detail_name {
+    font-weight: 400; /* 굵은 글씨 */
+    text-align: center; /* 제목 중앙 정렬 */
+    width: 100%;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
 }
 
 

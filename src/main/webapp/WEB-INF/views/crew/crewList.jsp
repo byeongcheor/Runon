@@ -24,11 +24,11 @@
     </div>
 
     <div id="crew_body">
-        <div id="crew_nav">
+        <div id="crew_nav" >
             <ul>
-                <li><a href="/crew/crewList">크루모집</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
+                <li id="crewFind"><a href="/crew/crewList">크루모집</a></li>
+                <li id="crewMake"><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
+                <li id="myCrew"><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
             </ul>
         </div>
     </div>
@@ -452,6 +452,8 @@
     </div>
 
 <script>
+
+// 공통 로그인 확인 함수
 //setTimeout(function(){
 //                 alert(username1);
 // }, 1500);
@@ -717,8 +719,7 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
-
-        crew_page(1);
+       crew_page(1);
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {

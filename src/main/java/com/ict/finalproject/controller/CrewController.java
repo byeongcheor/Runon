@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -201,7 +203,7 @@ public class CrewController {
 
         // 서비스 호출 (int 값을 파라미터로 전달)
         int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
-        int crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
+        Integer  crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("crew_write_code", crew_write_code);
         return "success";
@@ -680,13 +682,15 @@ public class CrewController {
                               @RequestParam("notice_num") int notice_num,
                               @RequestParam("subject") String subject,
                               @RequestParam("content") String content) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
+
         int a = 0;
         try {
-            service.update_notice(notice_num,subject,content);
-            a=1;
+            token = token.substring("Bearer ".length());
+            String user_name = jwtUtil.setTokengetUsername(token); // user_name은 String
+            int user_code = service.usercodeSelect(user_name);  // user_code는 int로 선언
+            service.update_notice(notice_num, subject, content, user_code);  // int user_code 사용
+
+            a = 1;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -822,7 +826,7 @@ public class CrewController {
         int cnt=0;
         try {
             cnt = service.resign_select(crewCode,position);
-            if(position==1 && cnt>1) return 0;
+            if(position==1 ) return 0;
             service.crew_member_out(user_code,crewCode);
             int flag = 2;
             service.crew_history_insert(user_code,crewCode,flag);
@@ -832,6 +836,46 @@ public class CrewController {
         }
         return a;
     }
+    @Transactional(propagation = Propagation.REQUIRED)
+    @PostMapping("/deleteTeam")
+    @ResponseBody
+    public int deleteTeam(@RequestParam("Authorization") String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("position") int position) {
+        token = token.substring("Bearer ".length());
+        String user_name = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(user_name);
+        int result = 0; // 기본값은 0으로 설정
+        int cnt = 0;
+
+            try {
+                cnt = service.resign_select(crewCode, position);
+                // 팀장이면서 팀원이 2명 이상이면 삭제 불가
+                if (position == 1 && cnt > 1) {
+                    return 0; // 바로 반환
+                }
+                // 모집글이 존재하면 result = 1 리턴
+                Integer crewWriteCode = service.crew_write_code_select(crewCode);
+                if (crewWriteCode != null) {
+                    return 1; // 모집글이 존재하는 경우 바로 리턴
+                }
+                // 크루 히스토리 추가 및 팀 삭제
+                int flag = 2;
+                service.crew_history_insert(user_code, crewCode, flag);
+                System.out.println( ":::::resultresult::"+user_code+crewCode);
+                result = 2;
+                service.deleteTeam(user_code, crewCode);
+                result = 3;
+                service.crew_member_out(user_code, crewCode);
+                result = 4; // 성공적으로 삭제된 경우
+
+
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println( ":::::resultresult::"+result);
+        return result; // 최종적으로 result 값을 반환
+    }
+
+
 
 
 
@@ -1010,7 +1054,7 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        int a=0;
+        int a=2;
         try {
             service.entrust(user_code, create_crew_code, usercode);
 

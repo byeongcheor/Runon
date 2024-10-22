@@ -28,7 +28,7 @@ public interface CrewService {
     public int img_delete(int notice_num, String img_name);
     public int upload_images(int notice_num, String img_name);
     public int delete_notice(int notice_num);
-    public int update_notice(int notice_num, String subject, String content);
+    public int update_notice(int notice_num, String subject, String content, int user_code);
     public int update14();
     public int usercodeSelect(String user_name);
     public int crew_code_select(int user_code);
@@ -45,11 +45,12 @@ public interface CrewService {
     public int crew_join_select(int user_code, int crewCode);
     public int position_select(int user_code, int crewCode);
     public int entrust(int user_code, int crewCode, int usercode);
-    public int crew_write_code_select(int crewCode);
+    public Integer  crew_write_code_select(int crewCode);
     public int getNoticeCode(int create_crew_code);
     void saveImage(int crew_notice_code, String img_filename);
     public int join_before_select(int user_code, int crewWriteCode);
     public int crew_write_delete(int user_code, int crewWriteCode);
+    public int deleteTeam(int user_code, int crewCode);
     public int resign_select(int crewCode,int position);
     public int crew_join_delete(int user_code, int crewCode);
     public int crew_member_insert2(int user_code, int crewCode);
