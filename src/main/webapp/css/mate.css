@@ -18,7 +18,7 @@ body {
     }
     /* 전체 레이아웃 */
     .layout {
-        max-width: 1500px;
+        max-width: 1400px;
         justify-content: space-between;
         padding-top: 50px; /* 헤더 아래에 충분한 공간 */
         padding-left: 30px; /* 사이드바와의 간격 */
@@ -31,7 +31,7 @@ body {
 
     /* 중앙 메인 콘텐츠 */
     .main-content {
-        width: 100%;
+        width: 90%;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -40,10 +40,10 @@ body {
     /* 프로필 박스 컨테이너 */
     .profile-container {
         margin: 30px 0;
-        width: 100%;
+        width: 80%;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 35px;
     }
 
     /* 개별 프로필 박스 */
@@ -195,7 +195,7 @@ body {
         border: 2px solid #fff;
         border-radius: 10px;
         background-color: #CCFF47;
-        width: 130px;
+        width: 140px;
         color: black;
         font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
         font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
@@ -215,43 +215,27 @@ body {
         position: sticky;
         top: 100px; /* 헤더 아래로 100px 고정 */
         z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-left:100px;
-
-
-
     }
     .ranking {
         top: 100px;
         width: 300px;
         background-color: #1e1e1e;
         color: #fff;
-        margin: 15px 0;
+        margin-top: 39px;
         padding: 10px 20px;
         border-radius: 10px;
-        max-height: 210px;
-        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
+        max-height: 900px;
+        overflow-y: auto;
+        margin-left:30px;
     }
 
-    .ranking::-webkit-scrollbar {
-        width: 8px;
-        margin-top: 10px;
-    }
-
-    .ranking::-webkit-scrollbar-thumb {
-        background-color: #899cb5;
-        border-radius: 10px;
-    }
-
-    .ranking::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
     .ranking .menu-title {
         position: sticky; /* 스크롤에 따라 고정되게 설정 */
         top: 0; /* 상단에 고정 */
         background-color: #1e1e1e; /* 배경색 고정 */
         z-index: 100; /* 다른 요소보다 위에 있도록 설정 */
         padding: 10px 10px; /* select-box와 동일한 패딩 */
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         margin-top: 15px;
         font-size: 16px; /* select-box와 동일한 텍스트 크기 */
         font-weight: 500; /* select-box와 동일한 텍스트 굵기 */
@@ -267,11 +251,11 @@ body {
     }
 
     .ranking ul li {
-        padding: 5px 5px;
+        padding: 1px 5px;
         cursor: pointer;
         color: white;
         transition: 0.3s;
-        margin-left: 15px;
+        margin-left: 10px;
     }
 
     .ranking ul li:hover {
@@ -290,14 +274,14 @@ body {
         align-items: center;
         padding: 10px 0;
     }
-    .profile-img {
+    .profile_img {
         width: 40px;
         height: 40px;
         border-radius: 50%; /* 이미지를 둥글게 */
 
 
     }
-    .rank-list li:hover .profile-img {
+    .rank-list li:hover .profile_img {
         border-color: #CCFF47; /* 마우스 오버 시 연두색 테두리 */
         box-shadow: 0 0 8px #CCFF47; /* 마우스 오버 시 부각되는 효과 */
     }
@@ -324,7 +308,33 @@ body {
     .crew-name {
         font-size: 12px;
         color: #CCFF47;
-        margin-left: 10px; /* .runkm 옆에 배치 */
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 130px;
+    }
+    .rank_name {
+
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    .age{
+       font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .run_km { /* 매칭프로필 */
+        font-size: 13px;
+        color: #ff4d4d;
+        margin-bottom: 3px;
+    }
+
+    .crew_name { /* 매칭프로필 */
+        font-size: 13px;
+        color: #CCFF47;
+        margin-left: 10px;
+        margin-bottom: 3px;
     }
     .more {
         margin-top: 12px;
@@ -434,11 +444,11 @@ body {
     border-radius: 5px;
     margin-right: 10px;
 }
-.profile-img {
+.profile_img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-left:5px;
+   margin:5px 15px 10px 10px
 }
 
 .message-info {

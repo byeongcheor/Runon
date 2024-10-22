@@ -46,14 +46,14 @@
         </div>
         <div class="content_right">
             <section class="section1">
-              <div class="section_nav">
+              <div class="section_nav"  id=menu_bar >
                 <ul id=menu_bar>
                   <li id="overview" name=crew_select onClick="crew_manage_select(this)">오버뷰</li>
                   <li id="notice" name=crew_select onClick="crew_manage_select(this)">공지</li>
                   <li id="member" name=crew_select onClick="crew_manage_select(this)">멤버</li>
                 </ul>
               </div>
-                  <div class="member">
+                  <div class="member" >
                     <ul class="member-list" id=crew_manage_list>
                     </ul>
                 </div>
@@ -119,23 +119,23 @@
     </div>
     <div class="custom-modal-body">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name=report_reason id="reason1" value="1">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason1" value="무단으로 불참했어요.">
         <label class="form-check-label" for="reason1">무단으로 불참했어요 </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name=report_reason id="reason2" value="2">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason2" value="시간 약속을 지키지 않아요.">
         <label class="form-check-label" for="reason2">시간 약속을 지키지 않아요 </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name=report_reason id="reason3" value="3">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason3" value="크루 참여를 위해 속였어요">
         <label class="form-check-label" for="reason3">크루 참여를 위해 속였어요</label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name=report_reason id="reason4" value="4">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason4" value="매너가 없어요">
         <label class="form-check-label" for="reason4">매너가 없어요</label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name=report_reason id="reason5" value="5">
+        <input class="form-check-input" type="checkbox" name=report_reason id="reason5" value="광고성 메세지를 보내요">
         <label class="form-check-label" for="reason5">광고성 메세지를 보내요</label>
       </div>
     </div>
@@ -156,7 +156,7 @@
         <img id="teamImage" src="" alt="크루 이미지" />
         <h2 id="teamNameDisplay"></h2>
       </div>
-      <span class="custom-close" onclick="closeCustomModal()">&times;</span>
+      <span class="custom-close" onclick="closeCustomModal('informationModal')">&times;</span>
     </div>
     <div class="custom-modal-body">
      <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
@@ -274,13 +274,13 @@
 <div id="voteNowModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
-      <h4 class="modal-title">투표하기 </h4>
+      <h4 class="modal-title">투표 하기 </h4>
       <span class="custom-close" onclick="closeCustomModal()">&times;</span>
     </div>
     <div class="custom-modal-body2" id=vote_list>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" style="font-size:14px; width:100%;" onclick="submitVoteNow()">투표하기</button>
+      <button class="btn btn-primary" style="font-size:14px; width:100%;" id="vote_submit" onclick="submitVoteNow()">투표하기</button>
       <button class="btn btn-primary" style="font-size:14px;" id="vote_update" onclick="vote_rud('R')">수정</button>
       <button class="btn btn-primary" style="font-size:14px;" id="vote_delete" onclick="vote_rud('D')">삭제하기</button>
     </div>
@@ -309,7 +309,7 @@
       <h4 class="modal-title">투표자 명단</h4>
       <span class="custom-close" onclick="closeNicknameModal()">&times;</span>
     </div>
-    <div class="custom-modal-body" id="nickname_list"></div>
+    <div class="custom-modal-body" id="nickname_list" ></div>
     <div class="custom-modal-footer">
       <button class="handover-btn" onclick="closeNicknameModal()">닫기</button>
     </div>
@@ -704,90 +704,122 @@ function crew_notice(response) {
     $('#crew_manage_list').append(list);
 }
 
-    function noticeDetail(notice_num, flag, YN){
-        //flag 1:조회 2:업데이트 조회
-       $('#crew_manage_list').html('');
-       $('#menu_bar').hide();
-        if(position!=0){
-            $.ajax({
-               url: '/crew/getNotice',  // 서버에 전송할 URL
-               type: 'POST',  // POST 방식으로 전송
-               data: {
-                   Authorization     : Authorization,
-                   notice_num        : notice_num,
-                   YN                : YN
-               },
-               success: function(response) {
-                   var detail_form = '';
-                   detail_form += '   <input type=hidden id=crew_notice_code> ';
-                   detail_form += '   <div> ';
-                   detail_form += '      <div class="custom-modal-header"> ';
-                   detail_form += '         <span class="custom-close" onclick="close_notice_detail()"><</span> ';
-                   detail_form += '      </div> ';
-                   detail_form += '      <div class="custom-modal-body"> ';
-                   detail_form += '         <div class="mb-3"> ';
-                   if(flag==1)
-                       detail_form += '            <pre class="text-wrapper" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;"></pre> ';
-                   if(flag==2)
-                       detail_form += '            <input type="text" class="form-control" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;" required /> ';
-                   detail_form += '         </div> ';
-                   detail_form += '         <div class="mb-3"> ';
-                   if(flag==2){
-                       detail_form += '<form id="noticeForm" enctype="multipart/form-data">';
-                       detail_form += '            <label class="upload-box" for="notice_detail_image" style="margin-top:10px;">';
-                       detail_form += '                파일 올리기<input type="file" id="notice_detail_image" name="notice_detail_image" onchange="uploadImages(event)" multiple /> ';
-                       detail_form += '            </label> ';
-                       detail_form += '</form> ';
-                   }
-                   detail_form += '            <div id="previewContainer2" style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"> ';
-                   detail_form += '            </div> ';
-                   detail_form += '         </div> ';
-                   detail_form += '         <div class="mt-3"> ';
-                   if(flag==1)
-                       detail_form += '         <pre id="notice_detail_content" name="noticeContent" class="text-wrapper"></pre> ';
-                       detail_form += '         <span id="hits">조회 '+response.notice[0].a_n +'</span> ';
-                       detail_form += '         <span style="float: right;" id="write_date">업데이트'+response.notice[0].updated_date+'</span> ';
-                   if(flag==2)
-                       detail_form += '            <textarea id="notice_detail_content" name="noticeContent" class="form-control notice-content"></textarea> ';
-                   detail_form += '         </div> ';
-                   detail_form += '      </div> ';
-                   detail_form += '      <div class="custom-modal-footer">';
-                if (response.notice[0].usercode === user_code) {
-                    detail_form += '         <button type="button" class="custom-btn2" id=notice_update_btn onclick="noticeDetail(' + response.notice[0].b_n + ',2,\'Y\')">수정</button> ';
-                    detail_form += '         <button type="button" class="custom-btn2" id=notice_delete_btn onclick="notice_delete(' + response.notice[0].b_n + ')">삭제하기</button> ';
-                    detail_form += '         <button type="button" class="custom-btn2" id=go_notice_update onclick="notice_update(' + response.notice[0].b_n + ')">수정하기</button> ';
+function noticeDetail(notice_num, flag, YN) {
+    // flag 1: 조회, flag 2: 업데이트 조회
+    $('#crew_manage_list').html('');
+    $('#menu_bar').hide();
+
+    if (position != 0) {
+        $.ajax({
+            url: '/crew/getNotice',  // 서버에 전송할 URL
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization: Authorization,
+                notice_num: notice_num,
+                YN: YN
+            },
+            success: function(response) {
+                var detail_form = '';
+                detail_form += '   <input type="hidden" id="crew_notice_code"> ';
+                detail_form += '   <div> ';
+                // 제목 (flag 1, flag 2 공통)
+                if (flag == 1){
+                    detail_form += '   <div class="title-container" style="display: flex; align-items: center;"> ';
+                    detail_form += '       <span class="left_img" onclick="close_notice_detail()"><img src="/img/left.png" style="width: 25px; height: 25px; margin:15px 0px 15px;"></span> ';
+                    detail_form += '        <div class="notice_detail_title" id="notice_detail_title" name="notice_detail_title"></div> ';
+                    detail_form += '   </div> ';
+                }
+                if (flag == 2) {
+                    detail_form += '       <span class="left_img" onclick="close_notice_detail()"><img src="/img/left.png" style="width: 25px; height: 25px; margin:15px 0px 15px;"></span> ';
+                    detail_form += '         <div class="mb-3"> ';
+                    detail_form += '            <input type="text" class="form-control" id="notice_detail_title" name="notice_detail_title" style="margin-top:10px;" required /> ';
+                    detail_form += '         </div> ';
+                }
+                // 파일 업로드 (flag == 2)
+                if (flag == 2) {
+                    detail_form += '<form id="noticeForm" enctype="multipart/form-data">';
+                    detail_form += '            <label class="upload-box" for="notice_detail_image" style="margin-top:10px;">';
+                    detail_form += '                파일 올리기<input type="file" id="notice_detail_image" name="notice_detail_image" onchange="uploadImages(event)" multiple /> ';
+                    detail_form += '            </label> ';
+                    detail_form += '</form> ';
                 }
 
-                   detail_form += '      </div> ';
-                   detail_form += '   </div> ';
-                   $('#crew_manage_list').append(detail_form);
-                   $('#crew_notice_code').val(response.notice[0].b_n);
-                   if(flag==1){
-                       $('#notice_detail_title').text(response.notice[0].subject);
-                       $('#notice_detail_content').text(response.notice[0].content);
-                       $('#go_notice_update').hide()
-                   }
-                   if(flag==2){
-                       $('#notice_detail_title').val(response.notice[0].subject);
-                       $('#notice_detail_content').val(response.notice[0].content);
-                       $('#notice_update_btn').hide();
-                       $('#notice_delete_btn').hide();
-                   }
+                // 미리보기 컨테이너 (flag 1, flag 2 공통)
+                detail_form += '         <div class="mb-3"> ';
+                detail_form += '            <div id="previewContainer2" class="image-wrapper" ></div> ';
+                detail_form += '         </div> ';
 
-                   response.images.forEach(function(image) {
-                       var imgTag = '<div class="image-container" data-image-name="'+image+'">';
-                       if(flag==2)imgTag +='<div><span type="button" class="update-btn" onclick="delete_image(' + response.notice[0].b_n + ', \'' + image + '\')">X</span></div>';
-                       imgTag += '<img src="/crew_upload/' + image + '" alt="' + image + '" width="100">';
-                       imgTag+='</div>'
-                       $('#previewContainer2').append(imgTag);
-                   });
-               },
-               error: function(error) {
-                   console.log('에러 발생:', error);
-               }
-           });
-        }
+                // 내용 (flag 1, flag 2 공통)
+                detail_form += '         <div class="mt-3"> ';
+                if (flag == 1) {
+                    detail_form += '      <pre id="notice_detail_content" name="noticeContent" class="text-wrapper"></pre> ';
+                    detail_form += '      <div class="extra-info">';
+                    detail_form += '         <span id="hits">조회 ' + response.notice[0].a_n + '</span> ';
+                    detail_form += '         <span style="float: right;" id="write_date">업데이트 : ' + response.notice[0].updated_date + '</span> ';
+                    detail_form += '      </div>';
+                }
+
+                if (flag == 2) {
+                    detail_form += '            <textarea id="notice_detail_content" name="noticeContent" class="form-control notice-content"></textarea> ';
+                }
+
+                detail_form += '         </div> ';
+
+                // 사용자 코드 일치 시 수정/삭제 버튼 표시
+                detail_form += '      <div class="custom-modal-footer">';
+                if (response.notice[0].usercode === user_code) {
+                    if (flag == 2) {
+                        detail_form += '     <button type="button" class="custom-btn2" id="notice_update_btn" onclick="noticeDetail(' + response.notice[0].b_n + ', 2, \'Y\')">수정</button> ';
+                    } else {
+                        detail_form += '     <button type="button" class="vote-btn" id="notice_update_btn" onclick="noticeDetail(' + response.notice[0].b_n + ', 2, \'Y\')">수정</button> ';
+                    }
+                    detail_form += '         <button type="button" class="vote-btn" id="notice_delete_btn" onclick="notice_delete(' + response.notice[0].b_n + ')">삭제하기</button> ';
+                    detail_form += '         <button type="button" class="custom-btn2" id="go_notice_update" onclick="notice_update(' + response.notice[0].b_n + ')">수정하기</button> ';
+                }
+                detail_form += '      </div> ';
+                detail_form += '   </div> ';
+
+                // 폼을 DOM에 추가
+                $('#crew_manage_list').append(detail_form);
+                $('#crew_notice_code').val(response.notice[0].b_n);
+
+                // 조회 모드에서 제목과 내용 설정
+                if (flag == 1) {
+                    $('#notice_detail_title').text(response.notice[0].subject);
+                    $('#notice_detail_content').text(response.notice[0].content);
+                    $('#go_notice_update').hide();
+                }
+
+                // 업데이트 모드에서 제목과 내용 입력
+                if (flag == 2) {
+                    $('#notice_detail_title').val(response.notice[0].subject);
+                    $('#notice_detail_content').val(response.notice[0].content);
+                    $('#notice_update_btn').hide();
+                    $('#notice_delete_btn').hide();
+                }
+                // 이미지 처리
+                response.images.forEach(function(image) {
+                    var imgTag = '<div class="image-container" data-image-name="' + image + '" style="position: relative;">';
+
+                    if (flag == 2) {
+                        // 삭제 버튼이 이미지 오른쪽 상단에 위치하게끔 수정
+                        imgTag += '<div class="delete-btn" style="position: absolute; top: 5px; right: 5px; background-color: white; color: black; padding: 5px; cursor: pointer; border-radius: 3px;" onclick="delete_image(' + response.notice[0].b_n + ', \'' + image + '\')">';
+                        imgTag += '지우기</div>';
+                    }
+
+                    imgTag += '<img class="responsive-image" src="/crew_upload/' + image + '" alt="' + image + '">';
+                    imgTag += '</div>';
+
+                    $('#previewContainer2').append(imgTag);
+                });
+
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
     }
+}
 
     function uploadImages(event) {
         var files = event.target.files; // 선택된 파일들
@@ -863,7 +895,9 @@ function crew_notice(response) {
               notice_num   : notice_num,
           },
           success: function(response) {
+               $('#crew_manage_list').html('');
                 alert('삭제 되었습니다.')
+                $('#menu_bar').show();
                 $('#notice').click();
           },
           error: function(xhr, status, error) {
@@ -1004,7 +1038,13 @@ function crew_notice(response) {
       document.getElementById("handoverModal").style.display = "none";
       document.getElementById("informationModal").style.display = "block";
    }
-
+   function closeCustomModal() {
+      document.getElementById("customModal").style.display = "none";
+      document.getElementById("informationModal").style.display = "none";
+      document.getElementById("resignModal").style.display = "none";
+      document.getElementById("voteNowModal").style.display = "none";
+      document.getElementById("voteResultModal").style.display = "none";
+   }
    function handoverOwnership() {
       var selectedRadio = $('input[name="teamOwner"]:checked'); // 체크된 라디오 버튼
       var usercode = selectedRadio.val(); // 라디오 버튼의 value 값
@@ -1021,21 +1061,17 @@ function crew_notice(response) {
                },
                success: function(response) {
                   alert("팀 소유자가 위임되었습니다.");
-                  location.reload(true);
+                   // location.reload(true);
+                     $('#editCrewBtn').hide();  // 추가 동작
+                     $('#member').click();
                },
                error: function(e) {
                    console.error('Error: ', e);
                }
            });
       closeHandoverModal();
-   }
+      closeCustomModal();
 
-   function closeCustomModal() {
-      document.getElementById("customModal").style.display = "none";
-      document.getElementById("informationModal").style.display = "none";
-      document.getElementById("resignModal").style.display = "none";
-      document.getElementById("voteNowModal").style.display = "none";
-      document.getElementById("voteResultModal").style.display = "none";
    }
 
    function closeNicknameModal() {
@@ -1099,10 +1135,20 @@ function crew_notice(response) {
       if (votenum < 6) $('#addVoteBtn').show();
    }
 
-   function showVoterList(voters) {
-      document.getElementById('nicknameModal').style.display = 'block';
-      $('#nickname_list').html('<li>' + voters + '</li>');
-   }
+    function showVoterList(voters) {
+        // voters를 콤마(,)로 나누어 배열로 변환
+        var voterArray = voters.split(',');
+
+        // li 태그로 각 투표자를 나열
+        var listItems = '';
+        voterArray.forEach(function(voter) {
+            listItems += '<li style="margin-left:60px;">' + voter.trim() + '</li>';  // trim()으로 공백 제거
+        });
+
+        // 모달을 보여주고 리스트에 추가
+        document.getElementById('nicknameModal').style.display = 'block';
+        $('#nickname_list').html(listItems);  // nickname_list에 li 태그로 추가
+    }
 
    function openVoteModal(flag) {
       closeCustomModal();
@@ -1196,9 +1242,12 @@ function crew_notice(response) {
            if (vote_user_code == user_code) {
                $('#vote_update').show();  // 수정 버튼 보이기
                $('#vote_update2').show(); // 추가 수정 버튼 보이기
+               $('#vote_close2').removeClass().addClass('vote-btn');
+               $('#vote_submit').css('width', ''); // width 값을 빈 문자열로 설정하여 제거
            } else {
                $('#vote_update').hide();  // 수정 버튼 숨기기
                $('#vote_update2').hide(); // 추가 수정 버튼 숨기기
+               $('#vote_submit').css('width', '100%'); // width 값을 빈 문자열로 설정하여 제거
            }
        }
        // 다른 사용자인 경우, position이 3인 경우
@@ -1271,18 +1320,29 @@ function crew_notice(response) {
                }
                list2 += '</div>';
                $('#vote_results').html(list2);
+
                if (response[0].f_s ===null&&flag==0) {
                   document.getElementById('voteNowModal').style.display = 'block';
                }
-               if(flag==9){
-                   $('#vote_update2').hide();
-                   $('#vote_live').html('')
-                   $('#vote_live').html('<strong>투표 결과</strong>');
-               }
-               else {
-                   $('#vote_live').html('')
-                   $('#vote_live').html('<strong>투표 현황</strong>');
-               }
+                if (flag == 9) {
+                    $('#vote_update2').hide();
+                    $('#vote_live').html('');
+                    $('#vote_live').html('<strong>투표 결과</strong>');
+                    $('#vote_close2').removeClass().addClass('handover-btn');
+                    $('#vote_delete2').removeClass().addClass('handover-btn');
+                } else if (flag == 2) {
+                    if (vote_user_code != user_code) {
+                        // 본인이 아니면 닫기 버튼의 클래스를 변경
+                        $('#vote_close2').removeClass().addClass('handover-btn');
+                    } else {
+                        // 본인이면 기존 클래스 유지 (vote-btn)
+                        $('#vote_close2').removeClass().addClass('vote-btn');
+                    }
+                } else {
+                    $('#vote_live').html('');
+                    $('#vote_live').html('<strong>투표 현황</strong>');
+                   // $('#vote_close2').removeClass().addClass('handover-btn');
+                }
                if(flag==9||flag==1){
                   document.getElementById('voteResultModal').style.display = 'block';
                }
@@ -1296,6 +1356,13 @@ function crew_notice(response) {
 
    function submitVoteNow() {
       var selectedOption = $('input[name="voteOption"]:checked').val();
+
+      // 선택된 옵션이 없을 경우 경고창을 띄움
+      if (!selectedOption) {
+         alert('투표할 항목을 선택해주세요.');
+         return false; // 함수 종료, 서버에 요청하지 않음
+      }
+
       $.ajax({
          url: '/crew/vote_insert',
          type: 'post',
@@ -1370,7 +1437,12 @@ function submitNotice() {
             if (response === 1) {
                 alert('공지사항이 성공적으로 등록되었습니다.');
                 closeNoticeModal(); // 모달 닫기
+                closeCustomModal();
+                $('#notice').click();
+
                 resetNoticeForm();  // 폼 리셋
+
+
             } else {
                 alert('공지사항 등록 중 오류가 발생했습니다.');
             }

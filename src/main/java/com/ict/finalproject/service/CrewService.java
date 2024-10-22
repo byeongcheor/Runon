@@ -43,6 +43,8 @@ public interface CrewService {
     public int updateCrewInfo(int create_crew_code, int user_code, String teamName,String teamPhotoInput, String age, String gender, String content,String city,String region);
     public int crew_join_write(int user_code, int crewCode, String join_content);
     public int crew_join_select(int user_code, int crewCode);
+    public int position_select(int user_code, int crewCode);
+    public int entrust(int user_code, int crewCode, int usercode);
     public int crew_write_code_select(int crewCode);
     public int getNoticeCode(int create_crew_code);
     void saveImage(int crew_notice_code, String img_filename);

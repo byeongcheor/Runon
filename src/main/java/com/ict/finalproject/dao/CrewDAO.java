@@ -67,6 +67,15 @@ public interface CrewDAO {
     public int notice_hits_add(int notice_num);
     public int delete_notice(int notice_num);
     public int delete_notice_img(int notice_num);
+    public int position_select(int user_code, int crewCode);
+    public int entrust1(int user_code, int crewCode);
+    public int entrust2(int user_code, int crewCode);
+    public int entrust3(int user_code, int crewCode);
+    public int entrust4(int user_code, int crewCode);
+   // public int entrust4(int user_code, int crewCode);
+
+
+
 
 
     /*채팅방 크루연결 */

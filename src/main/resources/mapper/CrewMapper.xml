@@ -705,7 +705,7 @@
     </update>
 
     <select id="notice_detail" resultType="com.ict.finalproject.vo.CrewVO">
-        select subject,content, updated_date, hits as a_n, crew_notice_code as b_n ,usercode
+        select subject,content, DATE_FORMAT(updated_date, '%Y-%m-%d %H:%i') as updated_date, hits as a_n, crew_notice_code as b_n ,usercode
         from   crew_notice_tbl
         where  crew_notice_code = ${param1}
     </select>
@@ -746,5 +746,49 @@
         delete from img_tbl
         where crew_notice_code = ${param1}
     </delete>
+    <select id="position_select" resultType="int">
+        select position
+        from   crew_member_tbl
+        where  create_crew_code = ${param2}
+        and    usercode = ${param1}
+    </select>
+    <update id="entrust1">
+        update create_crew_tbl
+        set  usercode = ${param1}
+        where  create_crew_code = ${param2}
+    </update>
+    <update id="entrust2">
+        update crew_member_tbl
+        set
+         position = 2
+        ,updatedate = now()
+        where  create_crew_code = ${param2}
+        and    usercode = ${param1}
+    </update>
+
+    <update id="entrust3">
+        update crew_member_tbl
+        set
+          position = 1
+          ,updatedate = now()
+        where  create_crew_code = ${param2}
+        and    usercode = ${param1}
+    </update>
+    <insert id="entrust4">
+        insert into crew_history_tbl
+        (
+        usercode
+        ,create_crew_code
+        ,flag
+        ,withdrawaldate
+        )
+        values
+        (
+        ${param1}
+        ,${param2}
+        , 4
+        ,now()
+        );
+    </insert>
 
 </mapper>
