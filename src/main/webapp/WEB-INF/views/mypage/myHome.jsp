@@ -564,10 +564,10 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="">
+                                                <a class="menus" href="/cart/cart">
                                                     <div class="list_container">
-                                                        <p class="icons">💳</p>
-                                                        <p class="list_title">결제수단추가</p>
+                                                        <p class="icons">🛒</p>
+                                                        <p class="list_title">장바구니</p>
                                                     </div>
                                                 </a>
                                             </li>

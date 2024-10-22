@@ -81,18 +81,21 @@
 	console.log("Chat List Size: ${chatList.size()}");
 </script>
 <script>
-	var usercode=$('#usercode').val();
-	var token = localStorage.getItem("Authorization");
 	var match_yn="${vo.match_yn}";
-	var nickname=$('#nickname').val();
 	let socket; // socket 객체
 	let stompClient; // stomp를 이용하여 서버와 메시지를 주고 받는다.
-
+	var nickname=$('#nickname').val();
+	var token = localStorage.getItem("Authorization");
+	var usercode=usercode1;
+/*	var usercode=usercode1;*/
 
 	//채팅연결공통
 
-	$(document).ready(function() {
+	setTimeout(function() {
 
+		console.log('User Code:', usercode); // 디버깅용 로그 추가
+
+		// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
 		if (!match_yn || match_yn === "undefined") {
 			let storedRoomCode = localStorage.getItem("matchedRoomCode");
 			if (storedRoomCode && storedRoomCode !== "undefined") {
@@ -106,36 +109,13 @@
 			localStorage.setItem("matchedRoomCode", match_yn);
 		}
 
-		// 로컬 저장소에서 닉네임을 가져옴
-		let nickname = localStorage.getItem("userNickname");
-		console.log("현재 로컬 저장소에 저장된 닉네임:", nickname); // 닉네임 확인용
-
-		// 닉네임이 없거나 undefined인 경우
-		if (!nickname || nickname === "undefined" || nickname === null || nickname === '') {
-			nickname = $('#nickname').val();  // hidden 필드에서 닉네임 가져오기
-			console.log("닉네임 필드에서 가져온 값: ", nickname); // 닉네임 필드 값 확인용
-
-			// // 닉네임이 유효한 경우에만 로컬 저장소에 저장
-			// if (nickname && nickname !== "undefined" && nickname !== null && nickname !== '') {
-			// 	localStorage.setItem("userNickname", nickname);
-			// 	console.log("닉네임이 로컬 저장소에 저장되었습니다.");
-			// } else {
-			// 	console.warn("닉네임을 가져오지 못했습니다.");
-			// }
-		} else {
-			console.log("이미 저장된 닉네임:", nickname); // 기존 저장된 닉네임 확인
-		}
-
-// 최종적으로 확인할 닉네임
-		console.log("최종 닉네임:", nickname);
+		// 최종적으로 확인할 방 코드
 		console.log("유효한 방 코드: ", match_yn);
-
 
 		// 채팅 서버 연결하기
 		chatConnection();
 		// 이전 채팅 내역 불러오기
 		loadChatMessages();
-
 
 		// 서버로 메시지 보내기 (Enter 키)
 		$("#inputMsg").keyup(function(event) {
@@ -148,14 +128,18 @@
 		$("#sendBtn").click(function() {
 			sendMessageFromInput();
 		});
-	});
+
+	}, 300);
+
 
 
 	// 채팅 서버와 연결하는 함수
 	function chatConnection() {
+		console.log('채팅서버 연결:', usercode); // 디버깅용 로그 추가
 
-		if (!usercode || !nickname) {
-			console.error("usercode 또는 nickname을 가져올 수 없습니다.");
+
+		if (!usercode) {
+			console.error("usercode를 가져올 수 없습니다.");
 			return;
 		}
 		// 매칭 방 코드가 0일 경우 채팅 연결 차단
@@ -170,11 +154,12 @@
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function(frame) {
 			console.log('WebSocket 연결 성공:', frame);
-
 			console.log(usercode, nickname);
 
 
+
 			// 방 코드에 따라 구독 경로 설정
+			console.log('방 코드에 따라:', usercode); // 디버깅용 로그 추가
 			stompClient.subscribe("/topic/messages/"+match_yn, function(receiveMsg) {
 				console.log('receiveMsg->',receiveMsg);
 				var jsonMsg = JSON.parse(receiveMsg.body);
@@ -183,9 +168,8 @@
 			});
 			// 서버로 메시지 전송 (닉네임 접속 알림)
 			sendMessage(usercode, nickname, match_yn, nickname + "님이 접속하였습니다.");
-
-			// 방 코드가 새로 설정되었을 때 localStorage에 저장
-			localStorage.setItem("matchedRoomCode", match_yn);
+		}, function(error) {
+			console.error("WebSocket 연결 실패:", error);
 		});
 	}
 
@@ -193,6 +177,8 @@
 
 	// 메시지를 입력창에서 가져와 서버로 전송하는 함수
 	function sendMessageFromInput() {
+
+		console.log('채팅 입력창:', usercode); // 디버깅용 로그 추가
 
 		var inputMsg = $("#inputMsg").val(); // 입력한 메시지
 		if (inputMsg === "") return false; // 빈 메시지 전송 방지
@@ -204,6 +190,9 @@
 
 	// 메시지 불러오기 함수
 	function loadChatMessages() {
+
+		console.log('메시지 불러오기:', usercode); // 디버깅용 로그 추가
+
 		if (match_yn === 0) {
 			console.warn("매칭 방 코드가 0이므로 이전 메시지를 불러오지 않습니다.");
 			return; // 함수 종료
@@ -228,8 +217,10 @@
 
 	// 서버로 메시지 전송 함수
 	function sendMessage(usercode, nickname,recipient, content, add_date) {
+		console.log('메시지 전송:', usercode); // 디버깅용 로그 추가
+
 		let messageData = {
-			usercode: usercode, // 전역 변수 usercode 사용
+			usercode:usercode,
 			nickname: nickname, // 전역 변수 nickname 사용
 			recipient: recipient, // 방 코드 (방 구분을 위한 식별자)
 			content: content,    // 메시지 내용
@@ -250,62 +241,54 @@
 
 	// 서버에서 받은 메시지를 화면에 표시하는 함수
 	function showCatMessage(data) {
-		console.log("서버에서 받은 메시지:", data); // 수신한 메시지 출력
-		var currentUserCode = localStorage.getItem("usercode"); // 현재 사용자의 유저코드 가져오기
-		var usercode = data.usercode; // 메시지를 보낸 사용자의 유저코드 가져오기
+		setTimeout(function() {
+			// 현재 사용자의 유저코드 가져오기
+			var usercode2 = data.usercode; // 메시지를 보낸 사용자의 유저코드 가져오기
 
-		// 유저코드가 로컬 저장소에 저장되어 있지 않다면 저장
-		if (!currentUserCode  || currentUserCode  !== usercode) {
-			localStorage.setItem("usercode", usercode);
+			// 닉네임을 수신한 데이터에서 가져오기
+			var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
 
-		}
+			// 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
+			var tag = '';
 
-		// 닉네임을 수신한 데이터에서 가져오기
-		var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
-
-		// 닉네임을 로컬 저장소에 저장 (조건 추가 가능)
-		let storedNickname = localStorage.getItem("userNickname");
-		if (!storedNickname || storedNickname !== nickname) {
-			localStorage.setItem("userNickname", nickname);
-			console.log("닉네임이 로컬 저장소에 저장되었습니다:", nickname);
-		}
-		//메시지를 화면에 렌더링하기 위한 HTML 태그 생성
-		var tag = '';
-
-		// 내가 보낸 메시지인 경우 (오른쪽에 표시)
-		if (data.usercode == currentUserCode) {
-			tag += `
+			// 내가 보낸 메시지인 경우 (오른쪽에 표시)
+			if (usercode2 == usercode) {
+				tag += `
         <div class="chat-message">
-            <input type="checkbox"  style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
+            <input type="checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
             <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
-				<span class="nickname" data-usercode=`+data.usercode+` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
-                <span class="nickname">`+nickname+`</span>
-                <p>`+data.content+`</p>
-                <div class="timestamp">`+data.add_date+`</div>
+                <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
+                <span class="nickname">` + nickname + `</span>
+                <p>` + data.content + `</p>
+                <div class="timestamp">` + data.add_date + `</div>
             </div>
         </div>`;
-		} else {
-			// 다른 사람이 보낸 메시지인 경우(왼쪽에 표시)
-			tag += `
+			} else {
+				// 다른 사람이 보낸 메시지인 경우(왼쪽에 표시)
+				tag += `
         <div class="chat-message-left">
             <input type="checkbox" class="message-checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
             <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
             <div class="message-info">
-				<span class="nickname" data-usercode=`+data.usercode+` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
-                <span class="nickname">`+nickname+`</span>
-                <p>`+data.content+`</p>
-                <div class="timestamp-left">`+data.add_date+`</div>
+                <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
+                <span class="nickname">` + nickname + `</span>
+                <p>` + data.content + `</p>
+                <div class="timestamp-left">` + data.add_date + `</div>
             </div>
         </div>`;
-		}
-		// 메시지를 채팅창에 추가
-		$("#taMsg").append(tag);
+			}
 
-		// 스크롤을 최신 메시지로 자동 이동
-		var chatbox = document.getElementById("taMsg");
-		chatbox.scrollTop = chatbox.scrollHeight;
+			// 메시지를 채팅창에 추가
+			$("#taMsg").append(tag);
+
+			// 스크롤을 최신 메시지로 자동 이동
+			var chatbox = document.getElementById("taMsg");
+			chatbox.scrollTop = chatbox.scrollHeight;
+		}, 200); // 0ms 후에 실행
 	}
+
+
 
 	//신고하기부분
 	// 체크박스를 표시하거나 숨길 때 이벤트 리스너를 추가하는 함수
@@ -360,7 +343,7 @@
 			const messageData = JSON.parse(checkbox.value); // 메시지 데이터를 가져옴
 			const messageElement = checkbox.closest('.chat-message, .chat-message-left'); // 부모 요소 찾기
 			const nickname = messageElement.querySelector('.nickname').innerText; // 닉네임 추출
-			const usercode = messageElement.querySelector('.nickname').dataset.usercode; // 유저코드 추출
+			// const usercode = messageElement.querySelector('.nickname').dataset.usercode; // 유저코드 추출
 
 			// 닉네임과 메시지 데이터를 함께 반환
 			return {

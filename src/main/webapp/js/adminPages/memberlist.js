@@ -173,7 +173,7 @@ function userdetail(usercode){
 
             var usertag = `<div id='userprofile'><img src="../../profileImg/` + users.profile_img + `"/>`;
 
-            if ((AdminRole<2&&delete_role==1&&users.role!="ROLE_ADMIN")||Admincode==0){
+            if ((AdminRole<2&&delete_role==1&&users.role!="ROLE_ADMIN" )||Admincode==0  && users.usercode!=104){
 
                 usertag+=`<div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>`;
             }
@@ -206,7 +206,9 @@ function userdetail(usercode){
                 }else if (users.role=="ROLE_ADMIN"){
 
                     usertag +="<h2>관리자👑</h2>";
-                    usertag +="<button type='button' onclick='roleDown(\""+users.usercode+"\",\""+users.nickname+"\")'>관리자 박탈</button>";
+                    if (users.usercode!=104) {
+                        usertag += "<button type='button' onclick='roleDown(\"" + users.usercode + "\",\"" + users.nickname + "\")'>관리자 박탈</button>";
+                    }
                 }
             }
 
@@ -292,16 +294,15 @@ function userdetail(usercode){
 
             var totalamont=0;
             payVo.forEach(function(payVo){
-               totalamont +=payVo.real_amount ;
+               totalamont +=payVo.total_amount ;
             });
             var paytag="<h1 style='text-align: center'>총결제액:"+totalamont.toLocaleString('ko-KR')+"</h1><ul>";
             if (payVo==null||payVo==""){
                 paytag +="<h2 style='text-align: center; font-size: 13pt;'>결제내역이 없습니다</h2>";
             }else{
                 payVo.forEach(function(payVo){
-                    paytag += "<li><div class='paycontent' style='text-align: center'>대회명:"+payVo.marathon_name+"수량:"
-                    paytag += payVo.quantity+"장 단가:"+(payVo.price).toLocaleString('ko-KR')+"원 ";
-                    paytag += "결제액:"+(payVo.real_amount).toLocaleString('ko-KR')+"원";
+                    paytag += "<li><div class='paycontent' style='text-align: center'>대회명:"+payVo.marathon_name;
+                    paytag += "결제액:"+(payVo.total_amount).toLocaleString('ko-KR')+"원";
                     paytag += "<span>구매일:"+payVo.completed_date+"</span></div></li>";
 
 

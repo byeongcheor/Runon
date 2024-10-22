@@ -459,7 +459,7 @@
 //            alert(usercode1);
 //}, 2000);
 
-
+    var usercode=usercode1;
     var Authorization = localStorage.getItem("Authorization");
     var clog=console.log;
     var seoulDistricts = [

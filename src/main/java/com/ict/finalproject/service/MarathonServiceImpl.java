@@ -85,6 +85,24 @@ public class MarathonServiceImpl implements MarathonService {
         params.put("marathonCode", marathonCode);
         return dao.checkLike(params); // DAO 호출
     }
+    @Override
+    public void incrementLikeCount(int marathonCode) {
+        dao.incrementLikeCount(marathonCode);
+    }
 
+    @Override
+    public void removeLike(int  usercode, int marathonCode) {
+        dao.removeLike(usercode, marathonCode);
+    }
+
+    @Override
+    public void decrementLikeCount(int marathonCode) {
+        dao.decrementLikeCount(marathonCode);
+    }
+
+    @Override
+    public void incrementViewCount(int marathonCode) {
+        dao.incrementViewCount(marathonCode);
+    }
 
 }

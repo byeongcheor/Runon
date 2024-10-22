@@ -51,10 +51,10 @@ public class ChatController {
 //    }
 
 
-    @GetMapping("/message/mate")
+    @GetMapping("/message/chatList")
     public String mateChat(){
 
-        return "mate/mate";
+        return "chat/chatList";
     }
 
     //클라이언트가 서버에 접속하고 메시지를 보내면 받는곳

@@ -163,6 +163,7 @@
                 $('#marathon-list').html($(response).find('#marathon-list').html());
 
                 // 페이징도 업데이트
+
                 $('#paging').html($(response).find('#paging').html());
             },
             error: function() {
@@ -193,6 +194,8 @@
             fetchFilteredData(year, month, addr, searchTerm);
 
         });
+
+
         // 조회순 클릭 이벤트
         $('#sort-view').on('click', function() {
             fetchFilteredData(null, null, null, null, '2');
@@ -203,6 +206,8 @@
             fetchFilteredData(null, null, null, null, '1');
         });
     });
+
+
 
     function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {
         // 검색어 출력

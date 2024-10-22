@@ -15,16 +15,14 @@
     </select>
     <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
         SELECT * FROM marathon_list_tbl
-        WHERE is_deleted = 0
-        AND event_date >= CURDATE()
+        WHERE event_date >= CURDATE()
         ORDER BY
         CASE
         WHEN CURDATE() BETWEEN registration_start_date AND registration_end_date THEN 1  -- 접수 중인 대회는 최우선
         ELSE 2  -- 접수 마감된 대회는 그 다음
         END,
         event_date ASC  -- 그 다음으로 대회 날짜를 오름차순으로 정렬
-        LIMIT #{offset}, 8
-
+        LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
 
     <select id="totalRecord" parameterType="PagingVO" resultType="int">
@@ -128,17 +126,36 @@
                 event_date ASC <!-- 기본 정렬 -->
             </otherwise>
         </choose>
-        LIMIT #{offset}, #{onePageRecord}
+        LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
-    <insert id="insertLike" parameterType="com.ict.finalproject.vo.LikeVO">
+    <insert id="addLike" parameterType="com.ict.finalproject.vo.LikeVO">
         INSERT INTO marathon_likes (usercode, marathon_code, created_at) VALUES (#{usercode}, #{marathon_code}, NOW())
     </insert>
-
     <select id="checkLike" parameterType="map" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM marathon_likes
         WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
     </select>
+    <update id="incrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count + 1
+        WHERE marathon_code = #{marathon_code};
+    </update>
+    <delete id="removeLike" parameterType="map">
+        DELETE FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </delete>
+
+    <update id="decrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count - 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET hit = hit + 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
 
 
 </mapper>

@@ -4,8 +4,11 @@ import java.util.List;
 
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MateService;
+import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.MateVO;
+import com.ict.finalproject.vo.MemberVO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,33 +42,59 @@ public class MateController {
             return user_name;}
         return null;
     }
+
+
     @GetMapping("/mate")
     public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
             user_code = service.usercodeSelect(user_name);
-            List<MateVO> ranking = service.ranking();
             List<MateVO> userselect = service.userselect(user_code);
+            List<MateVO> ranking = service.ranking();
             vo.setMatch_yn(service.match_yn(user_code));
             System.out.println(userselect);
 
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);
-
-
+            model.addAttribute("user_code",user_code);
+            System.out.println("user_code : "+user_code);
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
         }
         return "mate/mate";
     }
+    @PostMapping("/go_profileList")
+    @ResponseBody
+    public String go_profileList(@RequestParam("Authorization") String token,
+                                @RequestParam("usercode") int usercode,
+                                @RequestParam("gender") String gender,
+                                @RequestParam("match_yn") String match_yn,
+                                @RequestParam("num") int num,
+                                HttpSession session) {
+        session.setAttribute("user_code", usercode);
+        session.setAttribute("gender", gender);
+        session.setAttribute("match_yn", match_yn);
+        session.setAttribute("num", num);
+        return "success";
+    }
+
 
     @GetMapping("/profileList")
-    public ModelAndView profileList() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("mate/profileList");
-        return mav;
+    public String crewManage(HttpSession session, Model model) {
+        Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
+        Integer user_code = (Integer) session.getAttribute("user_code");
+        String gender = (String) session.getAttribute("gender");
+        String match_yn = (String) session.getAttribute("match_yn");
+        Integer num = (Integer) session.getAttribute("num");
+
+        model.addAttribute("user_code", user_code);
+        model.addAttribute("gender", gender);
+        model.addAttribute("match_yn", match_yn);
+        model.addAttribute("num", num);
+        return "mate/profileList"; // 이동할 JSP 페이지
     }
+
 
     @PostMapping("/more")
     @ResponseBody

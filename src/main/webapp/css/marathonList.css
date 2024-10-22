@@ -16,11 +16,27 @@
 }
 .marathon-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 가로로 4개 */
-    gap: 0px; /* 카드 간의 간격 */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 최소 너비 300px, 가용 공간에 맞게 자동 조정 */
     margin: 40px auto;
 }
+/* 화면이 작아질 때의 설정 */
+@media (max-width: 1200px) { /* 최대 1200px 이하에서 */
+    .marathon-container {
+        grid-template-columns: repeat(3, 1fr); /* 3개씩 표시 */
+    }
+}
 
+@media (max-width: 900px) { /* 최대 900px 이하에서 */
+    .marathon-container {
+        grid-template-columns: repeat(2, 1fr); /* 2개씩 표시 */
+    }
+}
+
+@media (max-width: 600px) { /* 최대 600px 이하에서 */
+    .marathon-container {
+        grid-template-columns: 1fr; /* 1개씩 표시 */
+    }
+}
 .marathon-card {
 
     margin-left: auto;

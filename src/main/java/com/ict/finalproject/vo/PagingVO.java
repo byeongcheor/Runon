@@ -200,6 +200,10 @@ public class PagingVO {
     public void calculateOffset() {
         this.offset = (this.nowPage - 1) * this.onePageRecord;
     }
+    public void calculateTotalPage() {
+        this.totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
+    }
+
     // 대표 지역 추출 메서드
     public String getMainLocation() {
         if (addr == null || addr.isEmpty()) {
@@ -216,6 +220,7 @@ public class PagingVO {
 
         return "기타"; // 해당하는 지역명이 없을 경우 "기타"로 표시
     }
+
 
 
 }

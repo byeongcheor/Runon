@@ -24,4 +24,8 @@ public interface MarathonDAO {
     void addLike(LikeVO likeVO);
     // 좋아요 여부 확인 메서드
     boolean checkLike(Map<String, Object> params);
+    void incrementLikeCount(int marathonCode); // 좋아요 수 증가 메서드
+    void removeLike(int usercode, int marathonCode);
+    void decrementLikeCount(int marathonCode);
+    void incrementViewCount(int marathonCode);
 }

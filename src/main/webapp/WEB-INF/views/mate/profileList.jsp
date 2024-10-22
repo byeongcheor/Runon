@@ -13,12 +13,10 @@
         return urlParams.get(param);
     }
 
-    // gender 값 가져오기
-    var gender = getQueryParam('gender');
-    // usercode 값 가져오기
-    var usercode = getQueryParam('usercode');
-    var match_yn = getQueryParam('match_yn');//룸넘버
-    var num = getQueryParam('num');//방에서의 내 위치의 번호
+    var gender = '${gender}';
+    var usercode = ${user_code};
+    var match_yn = ${match_yn};
+    var num = ${num};
 
     // 콘솔에 gender와 usercode 값 출력
     console.log("Gender value received from parent window: ", gender);

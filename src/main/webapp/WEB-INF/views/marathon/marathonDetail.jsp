@@ -129,7 +129,38 @@
 <script>
     const marathonItem = document.getElementById('marathonDItem');
     const marathonId = ${marathon.marathon_code}; // 선택한 마라톤의 ID
+    // JSP/Thymeleaf에서 전달받은 위도와 경도 값을 자바스크립트 변수에 할당
+    var latitude = '${marathon.lat}';  // 위도
+    var longitude = '${marathon.lon}'; // 경도
+    var marathonName = '${marathon.marathon_name}'; // 마라톤 이름
 
+
+    // 길찾기 iframe URL 설정
+    var iframeSrc = 'https://map.kakao.com/link/to/' + encodeURIComponent(marathonName) + ',' + latitude + ',' + longitude;
+
+    // iframe에 길찾기 URL 적용
+    document.getElementById('mapIframe').src = iframeSrc;
+
+    // 카카오 지도 API를 사용할 경우
+    function initMap() {
+        // 카카오 맵 API 스크립트 추가
+        var mapContainer = document.getElementById('mapIframe'); // 지도를 표시할 iframe
+        var mapOption = {
+            center: new kakao.maps.LatLng(latitude, longitude), // 지도 중심 좌표
+            level: 3 // 지도 확대 레벨
+        };
+
+        // 카카오 맵 객체 생성
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 마커 생성
+        var marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(latitude, longitude) // 마커 위치 설정
+        });
+
+        // 마커를 지도에 표시
+        marker.setMap(map);
+    }
 
 
 
@@ -138,7 +169,27 @@
       /*  username=username1;*/
         console.log('User Code:', usercode); // 디버깅용 로그 추가
 
+        // 페이지 로드 시 조회수 증가 요청
+        fetch('/marathon/incrementViewCount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                marathon_code: marathonId // 요청 본문에 데이터를 포함
+            })
+        })
+            .then(response => response.json())
 
+            .then(data => {
+                console.log(data)
+                if (!data.success) {
+                    console.error("조회수 증가 실패:", data.message);
+                }
+            })
+            .catch(error => {
+                console.error("조회수 증가 요청 중 오류 발생:", error);
+            });
 
         // 좋아요 버튼 클릭 이벤트 처리
         const likeButton = document.getElementById('likeButton'); // 좋아요 버튼
@@ -161,15 +212,10 @@
                     marathon_code: marathonId
                 })
             })
-                .then(response => {
-                    if (!response.ok) { // 응답이 200번대가 아닐 경우
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('서버에서 받은 데이터', data); // 데이터 로그
-                    if (data && data.success) { // 데이터가 존재하고 성공한 경우
+                    console.log('서버에서 받은 데이터', data);
+                    if (data && data.success) {
                         liked = !liked; // 좋아요 상태 토글
                         if (liked) {
                             heartIcon.classList.remove('far');
@@ -184,12 +230,36 @@
                         }
                         likeCount.textContent = count; // 좋아요 카운트 업데이트
                     } else {
-                        alert(data.message || '좋아요 추가 실패'); // 메시지 출력
+                        alert(data.message || '좋아요 추가 실패');
                     }
                 })
                 .catch(error => {
                     console.error('좋아요 추가에 실패했습니다:', error);
                 });
+
+            // 초기 상태 설정
+            function setInitialLikeState() {
+                fetch(`/marathon/checkLike?usercode=${usercode}&marathon_code=${marathonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.liked) {
+                            liked = true; // 사용자가 이미 좋아요를 눌렀다면
+                            heartIcon.classList.remove('far');
+                            heartIcon.classList.add('fas');
+                            likeButton.classList.add('clicked');
+                            count++; // 초기 카운트 설정
+                            likeCount.textContent = count; // 초기 카운트 업데이트
+                        }
+                    })
+                    .catch(error => {
+                        console.error('좋아요 상태 확인에 실패했습니다:', error);
+                    });
+            }
+
+            // 페이지 로드 시 초기 상태 설정
+            document.addEventListener('DOMContentLoaded', setInitialLikeState);
+
+
         });
 
         // 마라톤 거리 옵션 선택
@@ -276,19 +346,6 @@
     },300);
 
 
-
-    //지도
-    // "지도로" 버튼 클릭 시 길찾기 iframe 표시
-    // JSP/Thymeleaf에서 전달받은 위도와 경도 값을 자바스크립트 변수에 할당
-    var latitude = '37.402056';  // 위도
-    var longitude =  '127.108212'; // 경도
-    var marathonName =  '마라톤 장소'; // 마라톤 이름
-
-    // 길찾기 iframe URL 설정
-    var iframeSrc = 'https://map.kakao.com/link/to/' + encodeURIComponent(marathonName) + ',' + latitude + ',' + longitude;
-
-    // iframe에 길찾기 URL 적용
-    document.getElementById('mapIframe').src = iframeSrc;
 
 
 
