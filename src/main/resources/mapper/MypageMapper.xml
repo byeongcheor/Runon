@@ -82,7 +82,7 @@
         where usercode=#{usercode}
     </select>
     <insert id="insertDelUser">
-        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code, point_change_code)
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code)
         select u.usercode,
         u.username,
         u.password,
@@ -99,8 +99,7 @@
         u.is_google,
         u.creation_date,
         p.mypoint,
-        p.point_code,
-        p.point_change_code
+        p.point_code
         from user_tbl u
         left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
     </insert>
@@ -115,17 +114,23 @@
         from user_tbl
         where username=#{param1}
     </select>
-    <select id="selectOrderAll" resultType="com.ict.finalproject.vo.OrderVO">
-        select o.*, m.marathon_name marathon_name
-        from order_tbl o
-        join marathon_list_tbl m on o.marathon_code = m.marathon_code
-        where o.usercode = #{usercode}
-        order by o.order_code desc
+    <select id="selectOrderAll" resultType="com.ict.finalproject.vo.PaymentVO">
+<!--        select o.*, m.marathon_name marathon_name-->
+<!--        from order_tbl o-->
+<!--        join marathon_list_tbl m on o.marathon_code = m.marathon_code-->
+<!--        where o.usercode = #{usercode}-->
+<!--        order by o.order_code desc-->
+<!--        limit #{offset}, #{limit}-->
+        select pm.*, pd.orderId
+        from payment_tbl pm
+        join payment_detail_tbl pd on pm.payment_code = pd.payment_code
+        where pm.usercode = #{usercode}
+        order by pm.payment_code desc
         limit #{offset}, #{limit}
     </select>
     <select id="getTotalOrder">
-        select count(order_code)
-        from order_tbl
+        select count(payment_code)
+        from payment_tbl
         where usercode = #{param1}
     </select>
     <select id="selectMarathonForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
@@ -151,8 +156,7 @@
         update marathon_form_tbl
         set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
         gender=#{gender}, birth_date=#{birth_date}, size=#{size}
-        where usercode=#{usercode
-        }
+        where usercode=#{usercode}
     </update>
     <select id="getOrderId" resultType="com.ict.finalproject.vo.PaymentdetailVO">
         select *
@@ -194,8 +198,8 @@
         limit #{offset}, #{limit}
     </select>
     <insert id="updateCertificate" parameterType="com.ict.finalproject.vo.CertificateVO">
-        insert into certificate_tbl (content, proof_photo, result_status, order_code, username)
-        values (#{content}, #{proof_photo}, '처리중', #{order_code}, #{username})
+        insert into certificate_tbl (content, proof_photo, result_status, order_code, username, run_option, create_crew_code)
+        values (#{content}, #{proof_photo}, '처리중', #{order_code}, #{username}, #{run_option}, #{create_crew_code})
     </insert>
     <delete id="deleteCertificate" parameterType="int">
         delete from certificate_tbl
@@ -205,6 +209,12 @@
         select *
         from certificate_tbl
         where certificate_code=#{param1}
+    </select>
+    <select id="getCrewMember" resultType="com.ict.finalproject.vo.CrewMemberVO">
+        select cm.crew_member_code, cm.usercode, cm.create_crew_code, cc.crew_name
+        from crew_member_tbl cm
+        join create_crew_tbl cc on cc.create_crew_code = cm.create_crew_code
+        where cm.usercode = #{param1}
     </select>
     <select id="getTotalMate">
         select count(u.usercode)
@@ -218,7 +228,7 @@
         and u.usercode != #{usercode}
     </select>
     <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
-        select u.*, a.matching_room_code
+        select u.*, a.matching_room_code, a.writedate
         from user_tbl u
         join applicant_tbl a on u.usercode = a.usercode
         where a.matching_room_code in (

@@ -126,7 +126,7 @@
     </update>
     <update id="updateChangePoint">
         INSERT INTO point_change_tbl (point_code, point_change, point_change_date)
-        SELECT p.point_code, #{real_amount} - #{total_amount}, NOW()
+        SELECT p.point_code, (-1) * #{discount_amount}, NOW()
         FROM point_tbl p
         WHERE p.usercode = #{usercode};
     </update>

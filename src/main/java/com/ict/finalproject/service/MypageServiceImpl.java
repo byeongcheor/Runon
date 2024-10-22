@@ -102,7 +102,7 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public List<OrderVO> selectOrderAll(int usercode, int offset, int limit) {
+    public List<PaymentVO> selectOrderAll(int usercode, int offset, int limit) {
         return dao.selectOrderAll(usercode, offset, limit);
     }
 
@@ -169,6 +169,11 @@ public class MypageServiceImpl implements MypageService{
     @Override
     public CertificateVO selectCertificate(int certificate_code) {
         return dao.selectCertificate(certificate_code);
+    }
+
+    @Override
+    public List<CrewMemberVO> getCrewMember(int usercode) {
+        return dao.getCrewMember(usercode);
     }
 
     @Override

@@ -206,8 +206,8 @@ function userdetail(usercode){
                 }else if (users.role=="ROLE_ADMIN"){
 
                     usertag +="<h2>관리자👑</h2>";
-                    if (users.usercode!=104) {
-                        usertag += "<button type='button' onclick='roleDown(\"" + users.usercode + "\",\"" + users.nickname + "\")'>관리자 박탈</button>";
+                    if (users.usercode!=104){
+                    usertag +="<button type='button' onclick='roleDown(\""+users.usercode+"\",\""+users.nickname+"\")'>관리자 박탈</button>";
                     }
                 }
             }

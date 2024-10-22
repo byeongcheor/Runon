@@ -31,8 +31,8 @@
                     <div>&nbsp; &nbsp; 신고 처리</div>
                 </div>--%>
                 <div class="menubox"><a class="menus" href="">게시판관리</a></div>
-                <div class="menubox"><a class="menus" href="">기록인증</a></div>
-                <div class="menubox"><a class="menus" href="">결제정보</a></div>
+                <div class="menubox"><a class="menus" href="/adminPages/CertificateList">CertificateList</a></div>
+                <div class="menubox"><a class="menus" href="/adminPages/PaymentList">결제정보</a></div>
             </div>
             <div id="lastmenu">
                 <a href="/">홈으로 이동</a>
