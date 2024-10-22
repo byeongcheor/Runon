@@ -40,6 +40,7 @@ public interface MypageService {
     public int deleteCertificate(int certificate_code);
     public int getTotalCertificate(String username);
     public CertificateVO selectCertificate(int certificate_code);
+    public List<CrewMemberVO> getCrewMember(int usercode);
     public List<MemberVO> selectMemberAll(int usercode, int offset, int limit);
     public int getTotalMate(int usercode);
     public int reportMate(ReportVO report);

@@ -130,11 +130,29 @@
         padding-bottom: 20px;
         margin-top: 20px;
     }
+    .modal-contents div label{
+        display: flex;
+        align-items: flex-start;
+        font-weight: 600;
+    }
 </style>
 <script>
     setTimeout(function(){
         var page;
-        reloadPage(page)
+        reloadPage(page);
+
+        var crew_option = document.getElementById('crew_option');
+        var run_option = document.getElementById('run_option');
+
+        crew_option.disabled = run_option.value == '0';
+
+        run_option.addEventListener('change', function(){
+            if(this.value == 0){
+                crew_option.disabled = true;
+            }else{
+                crew_option.disabled = false;
+            }
+        })
     },100);
     function reloadPage(page) {
         if(page==null){
@@ -183,18 +201,27 @@
                     });
                 }
                 document.getElementById("list").innerHTML = tag;
+
                 var orderTag = "";
                 $.each(r.orderList, function (i, order) {
                     orderTag += `
                                 <option value="` + order.marathon_code + `">` + order.marathon_name + `</option>
                         `;
                 });
-                document.getElementById("marathonSelect").innerHTML += orderTag;var paginationTag = "";
+                document.getElementById("marathonSelect").innerHTML += orderTag;
+
+                var crewTag = "";
+                $.each(r.crewMemberList, function (i, crew){
+                    crewTag += `
+                        <option value="` + crew.create_crew_code + `">` + crew.crew_name + `</option>
+                    `;
+                })
+                document.getElementById("crew_option").innerHTML += crewTag;
 
                 var paginationTag="";
 
                 if (pvo.nowPage > 1) {
-                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+");'><</a></li>";
                 }
 
                 for (var p = pvo.startPageNum; p <= pvo.startPageNum + pvo.onePageNum - 1; p++) {
@@ -238,6 +265,13 @@
         var proof_photo = document.getElementById('proof_photo').files[0];
         var order_code = document.getElementById('order_code').value;
         var marathon_code = document.getElementById('marathonSelect').value;
+        var run_option = document.getElementById('run_option').value;
+        var crew_option = document.getElementById('crew_option').value;
+
+        if(!proof_photo){
+            alert("파일을 업로드해 주세요.");
+            return false;
+        }
 
         var formData = new FormData();
         formData.append("content", content);
@@ -246,6 +280,9 @@
         formData.append("usercode", usercode1);
         formData.append("order_code", order_code);
         formData.append("marathon_code", marathon_code);
+        formData.append("run_option", run_option);
+        formData.append("crew_option", crew_option);
+
             $.ajax({
                 url: "/mypage/uploadCertificate",
                 type: "post",
@@ -279,6 +316,14 @@
             })
         }
     }
+    // document.getElementById('run_option').addEventListener('change', function (){
+    //     var crew_option = document.getElementById('crew_option');
+    //     if(this.value == '0'){
+    //         crew_option.disabled = true;
+    //     }else{
+    //         crew_option.disabled = false;
+    //     }
+    // });
 </script>
 <div id="bannerBox">
     <img src="/img/러닝고화질.jpg" id="bannerImg"/>
@@ -312,8 +357,22 @@
                                 <input class="inputs" type="text" name="content" id="content" placeholder="마라톤 대회명을 입력하세요." required/>
                             </div>
                             <div>
+                                <label for="marathonSelect">마라톤선택</label>
                                 <select name="marathon_code" id="marathonSelect" class="inputs" required>
                                     <option value="">-- 선택하세요 --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="run_option">참가옵션</label>
+                                <select class="inputs" id="run_option" name="run_option" required>
+                                    <option value="0">개인참가</option>
+                                    <option value="1">크루참가</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="crew_option">크루선택</label>
+                                <select name="create_crew_code" id="crew_option" class="inputs" >
+                                    <option value="0">-- 선택하세요 --</option>
                                 </select>
                             </div>
                             <div>
