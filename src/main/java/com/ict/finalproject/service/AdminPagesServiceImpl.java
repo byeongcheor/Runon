@@ -412,4 +412,79 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public ReportReplyVO getReportReplys(int report_code) {
         return dao.getReportReply(report_code);
     }
+
+    @Override
+    public int getCertificaterecode(PagingVO pvo) {
+        return dao.getCertificaterecode(pvo);
+    }
+
+    @Override
+    public int getCertificateTotalRecord(PagingVO pvo) {
+        return dao.getCertificateTotalRecord(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo) {
+        return dao.selectWithSearchCertificateList(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo) {
+        return dao.selectAllCertificateList(pvo);
+    }
+
+    @Override
+    public CertificateVO getCertificateDetail(int certificate_code) {
+        return dao.getCertificateDetail(certificate_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateRecordPoint(int record, int certificate_code) {
+        //개인전적업데이트
+        dao.updateRecord(record,certificate_code);
+        //포인트 업데이트
+        dao.updatePoint(record,certificate_code);
+        //포인트code가져오기
+        int point_code = dao.getPointCode(certificate_code);
+        //포인트changetbl 추가
+        dao.insertPointChangetbl(record,point_code);
+        //거리인증마무리update
+        dao.updatecertificate(certificate_code);
+        return 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updatecrewRecordPoint(int record, int certificate_code, int crew_member_code) {
+        //크루전적업데이트
+        dao.updateCrewRecord(record,certificate_code,crew_member_code);
+        //포인트 업데이트
+        dao.updatePoint(record,certificate_code);
+        int point_code = dao.getPointCode(certificate_code);
+        dao.insertPointChangetbl(record,point_code);
+        dao.updatecertificate(certificate_code);
+
+        return 0;
+    }
+
+    @Override
+    public int getSearchPaymentRecord(PagingVO pvo) {
+        return dao.getSearchPaymentRecord(pvo);
+    }
+
+    @Override
+    public List<PaymentVO> getPaymentSearchList(PagingVO pvo) {
+        return dao.getPaymentSearchList(pvo);
+    }
+
+    @Override
+    public int getPaymentRecord(PagingVO pvo) {
+        return dao.getPaymentRecord(pvo);
+    }
+
+    @Override
+    public List<PaymentVO> getPaymentList(PagingVO pvo) {
+        return dao.getPaymentList(pvo);
+    }
 }

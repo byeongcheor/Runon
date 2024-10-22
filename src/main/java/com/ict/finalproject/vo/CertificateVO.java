@@ -20,4 +20,7 @@ public class CertificateVO {
     private int order_code;
     private int run_option;
     private int create_crew_code;
+    private String nickname;
+    private int crew_member_code;
+
 }

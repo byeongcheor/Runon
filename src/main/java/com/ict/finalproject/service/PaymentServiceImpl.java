@@ -148,6 +148,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional(rollbackFor = Exception.class)
     public void updatepoint(int usercode, String orderId) {
         PaymentVO pvo =dao.selectdiscount(orderId,usercode);
+        System.out.println(pvo);
         dao.updateMypoint(pvo);
         dao.updateChangePoint(pvo);
         System.out.println("포인트체인지");

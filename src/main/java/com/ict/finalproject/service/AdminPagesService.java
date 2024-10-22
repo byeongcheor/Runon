@@ -85,4 +85,28 @@ public interface AdminPagesService {
     //신고처리과정 impl확인하세요
     public ReportReplyVO updateReport(ReportVO vo,int loginUserCode);
     public ReportReplyVO getReportReplys(int report_code);
+
+    //검색된 기록인증 레코드수
+    public int getCertificaterecode(PagingVO pvo);
+    //전체 레코드수
+    public int getCertificateTotalRecord (PagingVO pvo);
+    //검색된 기록인증리스트
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo);
+    //전체 기록인증 리스트
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo);
+    //한코드의 기록디테일
+    public CertificateVO getCertificateDetail(int certificate_code);
+    // 개인전적과 포인트 업데이트
+    public int updateRecordPoint(int record,int certificate_code);
+    //크루전적과 포인트 업데이트
+    public int updatecrewRecordPoint(int record,int certificate_code,int crew_member_code);
+    //검색된 결제내역수
+    public int getSearchPaymentRecord(PagingVO pvo);
+    //검색된 결제내역리스트
+    public List<PaymentVO> getPaymentSearchList(PagingVO pvo);
+    //모든 결제내역수
+    public int getPaymentRecord(PagingVO pvo);
+    //모든 결제내역리스트
+    public List<PaymentVO>getPaymentList(PagingVO pvo);
+
 }
