@@ -15,4 +15,9 @@ public class PaymentVO {
     private int total_amount;
     private int discount_amount;
     private int real_amount;
+    private String created_date;
+    private int payment_status;
+    private String payment_method;
+    private String orderId;
+    private int is_completed;
 }

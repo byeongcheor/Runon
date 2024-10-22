@@ -240,10 +240,10 @@
                     `;
                 }else{
                     $.each(r.list, function (i, vo) {
-                        if (vo.order_status == 1) {
-                            vo.order_status = "주문완료";
+                        if (vo.is_completed == 1) {
+                            vo.is_completed = "주문완료";
                         } else {
-                            vo.order_status = "주문취소";
+                            vo.is_completed = "주문취소";
                         }
 
                         tag += `
@@ -254,18 +254,18 @@
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span class="proName">` + vo.marathon_name + `/` + vo.quantity + `</span>
+                                        <span class="proName">` + vo.total_amount + `/` + vo.discount_amount + `</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="orderPdP">
-                                <span>` + vo.price + `</span>
+                                <span>` + vo.payment_method + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span>` + vo.order_status + `</span>
+                                <span>` + vo.is_completed + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails()">주문상세보기</button></span>
+                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails('`+vo.orderId+`')">주문상세</button></span>
                             </div>
                         </div>
                     `;
@@ -302,21 +302,36 @@
     }
 </script>
 <script>
-    function orderDetails(){
+    function orderDetails(orderId){
+        var orderId = orderId;
         $.ajax({
             url: "/mypage/viewOrderDetails",
             type: "post",
             data:{
                 usercode: usercode1,
-                username: username1,
+                orderId: orderId,
+                username: username1
             },
             success: function(r){
-                alert("성공");
                 if(r=="success"){
-                    window.location.href="/mypage/viewOrderDetail";
+                    //window.location.href="/mypage/viewOrderDetail"+orderId;
+                    // 동적으로 폼 생성
+                    let form = document.createElement("form");
+                    form.method = "post";
+                    form.action = "/mypage/complete";
+                    // 전달할 값을 폼에 숨겨진 필드로 추가
+                    let orderIdInput = document.createElement("input");
+                    orderIdInput.type = "hidden";
+                    orderIdInput.name = "orderId";
+                    orderIdInput.value = orderId;
+                    form.appendChild(orderIdInput);
+
+                    // 동적으로 생성한 폼을 문서에 추가하고 제출
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             },error: function(e){
-                alert("실패");
+                alert("다시 로드해주세요.");
                 console.log(e);
             }
         })
@@ -336,8 +351,8 @@
             </div>
             <div class="orderPt">
                 <span>날짜</span>
-                <span>상품명/옵션</span>
-                <span>상품금액</span>
+                <span>주문금액/할인금액</span>
+                <span>결제방식</span>
                 <span>주문상태</span>
                 <span></span>
             </div>

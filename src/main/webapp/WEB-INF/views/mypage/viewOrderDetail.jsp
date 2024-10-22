@@ -68,6 +68,10 @@
             }
         });
     },400);
+
+    function goBack() {
+        history.back(); // 이전 페이지로 돌아갑니다.
+    }
 </script>
 
 <div class="orderSheetFrm">
@@ -123,7 +127,7 @@
         </div>
     </div>
     <div class="orderOk">
-        <span>확인</span>
+        <button type="button" onclick="goBack()"><span>확인</span></button>
     </div>
 </div>
 </div>

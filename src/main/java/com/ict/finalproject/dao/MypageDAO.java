@@ -21,7 +21,7 @@ public interface MypageDAO {
     public int delFromPoint(int usercode);
 
     //주문목록리스트
-    public List<OrderVO> selectOrderAll(@Param("usercode") int usercode,
+    public List<PaymentVO> selectOrderAll(@Param("usercode") int usercode,
                                         @Param("offset") int offset,
                                         @Param("limit") int limit);
     //주문목록 count

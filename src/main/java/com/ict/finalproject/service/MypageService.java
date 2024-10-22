@@ -24,7 +24,7 @@ public interface MypageService {
 
     public MemberVO passwordChk(String username);
     //주문목록
-    public List<OrderVO> selectOrderAll(int usercode, int offset, int limit);
+    public List<PaymentVO> selectOrderAll(int usercode, int offset, int limit);
     //마라톤신청서있는지조회
     public MarathonFormVO selectMarathonForm(int usercode);
     //마라톤신청서작성
