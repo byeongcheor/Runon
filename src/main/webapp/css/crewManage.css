@@ -915,7 +915,7 @@ body{
     color: #333;
     font-size: 16px;
     line-height: 26px;
-    min-height: 350px;
+    min-height: 230px;
     overflow: hidden;
     font-family: inherit !important;
     white-space: pre-wrap; /* 공백 및 줄바꿈을 유지하면서 긴 단어는 줄바꿈 처리 */

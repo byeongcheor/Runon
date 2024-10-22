@@ -11,7 +11,6 @@
     if(!orderId){
         console.log("orderId가 정의되지 않았습니다.")
     }
-
     setTimeout(function(){
         console.log(usercode1);
         console.log(orderId);
@@ -69,6 +68,10 @@
             }
         });
     },400);
+
+    function goBack() {
+        history.back(); // 이전 페이지로 돌아갑니다.
+    }
 </script>
 
 <div class="orderSheetFrm">
@@ -124,7 +127,7 @@
         </div>
     </div>
     <div class="orderOk">
-        <span>확인</span>
+        <button type="button" onclick="goBack()"><span>확인</span></button>
     </div>
 </div>
 </div>

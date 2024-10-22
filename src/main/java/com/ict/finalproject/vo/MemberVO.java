@@ -50,6 +50,15 @@ public class MemberVO {
     private String newPasswordConfirm;
 
     private int matching_room_code;
+    private String writedate;
+
+    public String getWritedate() {
+        return writedate;
+    }
+
+    public void setWritedate(String writedate) {
+        this.writedate = writedate;
+    }
 
     @Override
     public String toString() {

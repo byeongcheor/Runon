@@ -229,7 +229,7 @@
   text-align: left;
   color: rgb(51, 51, 51);
 }
-.orderOk{
+.orderOk button{
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -242,6 +242,7 @@
     height: 43px;
     border-radius: 6px;
     background-color: #CCFF47;
+    border: none;
 }
 .orderOk span {
      font-size: 18px;

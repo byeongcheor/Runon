@@ -21,4 +21,7 @@ public class PaymentVO {
     private String completed_date;
     private String latest_marathon_name;
     private int marathon_count;
+    private String created_date;
+    private int payment_status;
+    private int is_completed;
 }
