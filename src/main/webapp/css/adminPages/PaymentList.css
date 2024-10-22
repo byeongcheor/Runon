@@ -1,12 +1,13 @@
-.CertificateContainer{
+.PaymentContainer{
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
 }
-#CertificateHead{
+#PaymentHead{
     border-bottom: 1px solid black;
 }
+
 #checkboxlist>.hiddenbox{
     display: none;
 }
@@ -14,13 +15,13 @@
     width: 10%;
     display: none;
 }
-#CertificateListbody{
+#PaymentListbody{
     width: 80%;
     height: 100vh;
     min-width: 950px;
     margin: 0 auto;
 }
-#CertificateListbody>div{
+#PaymentListbody>div{
 }
 #menutitle{
     font-weight: bold;
@@ -113,17 +114,17 @@
 #searchbar>div>input:focus{
     outline: none;
 }
-.CertificateFavMain{
+.PaymentFavMain{
     margin-left: 20px;
     margin-bottom: 20px;
 }
 
-.CertificateFavMain>#CertificateList{
+.PaymentFavMain>#PaymentList{
     background-color: white;
     height: auto;
     margin-left: 30px;
 }
-#CertificateListbottom{
+#PaymentListbottom{
     margin: 0;
     padding: 0;
     min-width: 1200px;
@@ -135,7 +136,7 @@
 li{
     list-style: none;
 }
-#CertificateList>li>div{
+#PaymentList>li>div{
     width: 100%;
     display: flex;
     line-height: 40px;
@@ -148,7 +149,7 @@ li{
 
 }
 
-#CertificateList .buttonline{
+#PaymentList .buttonline{
     width: 5%;
 }
 #downloadbutton input{
@@ -196,32 +197,42 @@ li{
     display: none
 }
 
-#Certificatedetailbackground{
+#paymentdetailbackground{
     background-color: rgba(128, 128, 128, 0.8);
     position: fixed;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-  display: none;
+    display: none;
     z-index:999;
 }
-#Certificatedetail{
-    width: 600px;
-    height: 80%;
+#Paymentdetail{
+    width: 1200px;
+    height: 90%;
     background-color: white;
     margin: 0 auto;
     margin-top: 50px;
 }
 #radiobuttons>input{
-   /*display: none;*/
+    /*display: none;*/
 }
 .form_label {
-         background-color: #ddd;
-         padding: 5px;
-         border-radius: 5px;
-     }
+    background-color: #ddd;
+    padding: 5px;
+    border-radius: 5px;
+}
 
 .selected {
     background-color: yellow;
+}
+#Paymentdetail{
+    overflow: auto;
+}
+#closedetail{
+    position:fixed;
+}
+.orderStTop{
+    overflow: auto;
+    height: 400px;
 }

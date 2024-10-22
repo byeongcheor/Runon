@@ -3,6 +3,7 @@
 <%@ include file="../inc/sidebar.jspf" %>
 <link rel="stylesheet" href="/css/adminPages/CertificateList.css" type="text/css">
 <script src="/js/adminPages/CertificateList.js" type="text/javascript"></script>
+
 <div class="CertificateContainer">
     <div id="CertificateHead">
         <div id="maintop">
@@ -45,7 +46,7 @@
 
                     </div>   <div id="selectbutton"></div>
                 </form>
-                <div id="downloadbutton" style="margin: auto 0; display: none"></div>
+               <%-- <div id="downloadbutton" style="margin: auto 0; display: none"></div>--%>
             </div>
         </div>
         <div id="CertificateListbottom">
@@ -69,8 +70,12 @@
                 <div id="CertificateDetails">
 
                 </div>
+                <div id="certificate">
+
+                </div>
             </div>
-            <div id="addreply">
+
+            <div id="addButton">
 
             </div>
 
@@ -82,7 +87,18 @@
 
 </div>
 
+<script>
+    const radioButtons = document.querySelectorAll('input[name="point"]');
+    const labels = document.querySelectorAll('.form_label');
 
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            labels.forEach(label => label.classList.remove('selected')); // 모든 label에서 selected 클래스 제거
+            const selectedLabel = document.querySelector('label[for="' + this.id + '"]');
+            selectedLabel.classList.add('selected'); // 선택된 label에 selected 클래스 추가
+        });
+    });
+</script>
 
 
 

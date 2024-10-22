@@ -1,8 +1,10 @@
 var CertificateSearchType=null;
 var CertificateSearchValue=null;
 var CertificateSearchType2=null;
+
 var page=0;
 var now;
+
 setTimeout(function(){
     CertificateList(page);
 
@@ -14,6 +16,7 @@ function CertificateList(page,CertificateSearchType,CertificateSearchType2,Certi
     var CeriticateData={
         page:page
     }
+    now=page
     if (CertificateSearchType&&CertificateSearchValue){
         CeriticateData.searchKey=CertificateSearchType;
         CeriticateData.searchWord=CertificateSearchValue;
@@ -33,13 +36,13 @@ function CertificateList(page,CertificateSearchType,CertificateSearchType2,Certi
             var pVO=r.pvo;
             var avo=r.Avo;
 
-            if (avo.role<2 ||avo.admin_code==0) {
+         /*   if (avo.role<2 ||avo.admin_code==0) {
 
                 var downloadbuttontag=`<input type="button" value="인증신청리스트받기" onClick="excelDownload()"/>`;
                 document.getElementById("downloadbutton").innerHTML = downloadbuttontag;
                 document.getElementById("downloadbutton").style.display = "block";
 
-            } if(avo.role<4||avo.admin_code==0){
+            }*/ if(avo.role<4||avo.admin_code==0){
                 var tag = "<li>" +
                     "<div id='report_title2'>" +
                         "<div class='certificate_code'>고유번호</div>" +
@@ -126,22 +129,88 @@ function detail(certificate_code){
         },
         success:function(r){
             var Cvo=r.Cvo;
+            console.log(Cvo.result_status)
+
             var tag=`
                 <div><h3>상세내역</h3></div>
                 <div id="Certificate">
                     <div>제목:`+Cvo.content+`</div>
                     <div>접수일:`+Cvo.application_date+`</div>
-                    <div>신청자:`+Cvo.nickname+`</div>
-                    
-                    <div>인증사진:<div> <img style="width:150px;height: 150px" src="../resources/uploadCertificate/`+Cvo.proof_photo+`"></div></div>
+                    <div>신청자:`+Cvo.nickname+`</div>`;
+            if (Cvo.crew_member_code!=0) {
+                tag += `<div>참여유형:크루</div>
+                        <div>크루명:OOO크루</div>`;
+            }else{
+                tag += `<div>참여유형:개인</div>`;
+            }
+                    tag +=`<div>인증사진:<div> <img style="width:150px;height: 150px" src="../resources/uploadCertificate/`+Cvo.proof_photo+`"></div></div>
                 </div>
-                <div onclick="updaterecordPoint('`+Cvo.username+`')"></div> 
+               
             `;
             document.getElementById("CertificateDetails").innerHTML=tag;
             document.getElementById("Certificatedetailbackground").style.display="block";
-            var buttonTag="<button type='button' onclick='blockbutton()'>승인하기</button>";
+            if (Cvo.result_status=="처리중"){
+                var buttonTag="<button type='button' onclick='blockbutton(\""+certificate_code+"\",\""+Cvo.crew_member_code+"\")'>승인하기</button>";
+                var selectTag=`  <div>
+                        <label class="form-label">점수부여</label>
+
+                        <div id="radiobuttons">
+                            <input type="radio" id="value10" name="point" value="10" />
+                            <label class="form_label" for="value10">10Km</label>
+                            <input type="radio" id="value20" name="point" value="20" />
+                            <label class="form_label" for="value20">20Km</label>
+                            <input type="radio" id="value30" name="point" value="30" />
+                            <label class="form_label" for="value30">30Km</label>
+                            <input type="radio" id="value40" name="point" value="30" />
+                            <label class="form_label" for="value40">40Km</label>
+                        </div>
+                    </div>`;
+                document.getElementById("certificate").innerHTML=selectTag;
+                document.getElementById("addButton").innerHTML=buttonTag;
+            }else{   document.getElementById("Certificatedetailbackground").style.display="block";                document.getElementById("addButton").innerHTML=buttonTag;
+                document.getElementById("addButton").innerHTML="";
+
+                document.getElementById("certificate").innerHTML="<div>인증이 완료된 신청입니다</div>";
+
+            }
         }
     })
 
+}
+function blockbutton(certificate_code,crew_member_code){
+    const selectedValue = getSelectedRadioValue();
+    console.log("Selected radio value is: " + selectedValue);
+    console.log(crew_member_code);
+    var datas={certificate_code:certificate_code,
+        selectedValue:selectedValue
 
+    }
+    if (crew_member_code!=0){
+        datas.crew_member_code=crew_member_code;
+    }
+    $.ajax({
+        url:"/adminPages/recordPointUpdate",
+        type:"post",
+        data:datas,
+        success:function(r){
+            console.log(r);
+            if (r.a!=0){
+                document.getElementById("certificate").innerHTML="<div>인증이 완료된 신청입니다</div>";
+                document.getElementById("addButton").innerHTML="";
+                CertificateList(now,CertificateSearchType,CertificateSearchType2,CertificateSearchValue);
+
+            }
+            alert("성공");
+        }
+    });
+
+}
+
+function getSelectedRadioValue() {
+    const selectedRadio = document.querySelector('input[name="point"]:checked');
+    return selectedRadio ? selectedRadio.value : null; // 선택된 값이 있으면 반환, 없으면 null
+}
+
+function reset(){
+    CertificateList(1);
 }

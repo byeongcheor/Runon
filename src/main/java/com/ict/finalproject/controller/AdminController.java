@@ -490,6 +490,7 @@ public class AdminController {
         map.put("rvo",result);
         return map;
     }
+    //페이지이동
     @GetMapping("/CertificateList")
     public String CertificateList(){
         return "adminPages/CertificateList";
@@ -507,7 +508,7 @@ public class AdminController {
             int usercode=usercodeValue.intValue();
             AdminsVO Avo=service.selectAdminRole(usercode);
             map.put("Avo", Avo);
-            System.out.println("관리자확인"+Avo);
+
         }
         pvo.setNowPage(page);
         int Record=15;
@@ -534,8 +535,7 @@ public class AdminController {
         }
         map.put("Cvo",Cvo);
         map.put("pvo",pvo);
-        System.out.println("기록인증VO:"+Cvo);
-        System.out.println("페이징:"+pvo);
+
 
         return map;
     }
@@ -544,9 +544,71 @@ public class AdminController {
     public Map<String,Object> certificateDetail(@RequestParam("certificate_code")int certificate_code){
         Map<String,Object> map=new HashMap<>();
         CertificateVO Cvo=service.getCertificateDetail(certificate_code);
-
         map.put("Cvo",Cvo);
+        System.out.println("크루확인"+Cvo);
+        return map;
+    }
+    @PostMapping("/recordPointUpdate")
+    @ResponseBody
+    public Map<String,Object> recordPointUpdate(@RequestParam("certificate_code")int certificate_code,
+                                                @RequestParam("selectedValue")int record,
+                                                @RequestParam(value = "crew_member_code", required = false, defaultValue = "0")int crewMemberCode){
+        Map<String,Object> map=new HashMap<>();
+        if (crewMemberCode!=0){
+            int crew_member_code=crewMemberCode;
+            int a=service.updatecrewRecordPoint(record,certificate_code,crew_member_code);
+            map.put("a",a);
+        }else{
+            int a =service.updateRecordPoint(record,certificate_code);
+            map.put("a",a);
+        }
+        return map;
+    }
 
+    @GetMapping("/PaymentList")
+    public String GoPaymentList(){
+
+        return "adminPages/PaymentList";
+    }
+    @PostMapping("/PaymentList")
+    @ResponseBody
+    public Map<String,Object>PaymentList(PagingVO pvo,
+                                         @RequestParam(value="usercode",required = false)Integer usercodeValue,
+                                         @RequestParam(value = "page",defaultValue = "1")int page){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println("검색어"+pvo.getSearchWord());
+        System.out.println("분류"+pvo.getSearchKey());
+        System.out.println("정렬"+pvo.getSort());
+        System.out.println("뭘로정렬할지"+pvo.getSchedule());
+        if (usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+        }
+        System.out.println("접속자"+usercodeValue);
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getSearchPaymentRecord(pvo);
+        }else{
+            totalRecord=service.getPaymentRecord(pvo);
+        }
+        pvo.setTotalRecord(totalRecord);
+        int totalPage=(int) Math.ceil((double)totalRecord/Record);
+        pvo.setTotalPage(totalPage);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        System.out.println("페이징"+pvo);
+        List<PaymentVO> Payvo;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            Payvo=service.getPaymentSearchList(pvo);
+        }else{
+            Payvo=service.getPaymentList(pvo);
+        }
+        System.out.println("제발"+Payvo);
+        map.put("pvo",pvo);
+        map.put("Payvo",Payvo);
         return map;
     }
 }

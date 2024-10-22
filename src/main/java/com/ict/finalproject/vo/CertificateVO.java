@@ -19,5 +19,6 @@ public class CertificateVO {
     private String username;
     private int order_code;
     private String nickname;
+    private int crew_member_code;
 
 }

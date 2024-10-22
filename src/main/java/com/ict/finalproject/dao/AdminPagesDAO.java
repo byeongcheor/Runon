@@ -112,4 +112,28 @@ public interface AdminPagesDAO {
     public List<CertificateVO> selectAllCertificateList(PagingVO pvo);
     //한코드의 기록디테일
     public CertificateVO getCertificateDetail(int certificate_code);
+    //개인전적업데이트
+    public int updateRecord(int record,int certificate_code);
+    //포인트 업데이트
+    public int updatePoint(int record,int certificate_code);
+    //point_code가져오기
+    public int getPointCode(int certificate_code);
+    //point_change_tbl
+    public int insertPointChangetbl(int record,int point_code);
+    //거리인증마무리update
+    public int updatecertificate(int certificate_code);
+    //크루전적업데이트
+    public int updateCrewRecord(@Param("record") int record,
+                                @Param("certificate_code") int certificateCode,
+                                @Param("crew_member_code") int crewMemberCode);
+
+    //검색된 결제내역수
+    public int getSearchPaymentRecord(PagingVO pvo);
+    //검색된 결제내역리스트
+    public List<PaymentVO> getPaymentSearchList(PagingVO pvo);
+    //모든 결제내역수
+    public int getPaymentRecord(PagingVO pvo);
+    //모든 결제내역리스트
+    public List<PaymentVO>getPaymentList(PagingVO pvo);
+
 }

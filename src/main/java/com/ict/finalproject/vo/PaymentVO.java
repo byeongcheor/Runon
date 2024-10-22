@@ -15,4 +15,10 @@ public class PaymentVO {
     private int total_amount;
     private int discount_amount;
     private int real_amount;
+    private String orderId;
+    private String nickname;
+    private String payment_method;
+    private String completed_date;
+    private String latest_marathon_name;
+    private int marathon_count;
 }

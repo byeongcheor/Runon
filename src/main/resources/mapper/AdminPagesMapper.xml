@@ -639,4 +639,161 @@
         left join user_tbl u on c.username = u.username
         where c.certificate_code = #{param1}
     </select>
+    <insert id="updateRecord">
+        INSERT INTO record_tbl (score_change, usercode, now_score, changedate,category,grade)
+        SELECT
+        #{record},
+        u.usercode,
+        IFNULL(r.now_score, 0) + #{record},
+        NOW(),
+        1,
+        2
+        FROM certificate_tbl c
+        JOIN user_tbl u ON c.username = u.username
+        LEFT JOIN record_tbl r ON r.usercode = u.usercode
+        AND r.create_crew_code IS NULL
+        WHERE c.certificate_code = #{certificate_code}
+        ORDER BY r.changedate DESC
+        LIMIT 1;
+    </insert>
+    <update id="updatePoint">
+        UPDATE point_tbl p
+        JOIN user_tbl u ON u.usercode = p.usercode
+        JOIN certificate_tbl c ON c.username = u.username
+        SET mypoint = #{record}
+        WHERE  c.certificate_code = #{certificate_code}
+    </update>
+    <select id="getPointCode" >
+        SELECT p.point_code
+        FROM point_tbl p
+        JOIN user_tbl u ON u.usercode = p.usercode
+        JOIN certificate_tbl c ON c.username = u.username
+        WHERE c.certificate_code = #{certificate_code};
+    </select>
+    <insert id="insertPointChangetbl">
+        insert into point_change_tbl(point_change,point_code) values(#{record},#{point_code})
+    </insert>
+    <update id="updatecertificate">
+        update certificate_tbl set result_status="처리완료" ,result_date=now() where certificate_code = #{certificate_code}
+    </update>
+    <insert id="updateCrewRecord">
+        INSERT INTO record_tbl (score_change, usercode, now_score, changedate, category, grade, create_crew_code)
+        SELECT
+        #{record},
+        u.usercode,
+        IFNULL(
+        (SELECT now_score
+        FROM record_tbl r
+        WHERE r.create_crew_code = cm.create_crew_code
+        AND r.usercode = u.usercode
+        ORDER BY r.changedate DESC
+        LIMIT 1), 0) + #{record},
+        NOW(),
+        1,
+        1,
+        cm.create_crew_code
+        FROM certificate_tbl c
+        JOIN user_tbl u ON c.username = u.username
+        JOIN crew_member_tbl cm ON cm.crew_member_code = #{crew_member_code}
+        WHERE c.certificate_code = #{certificate_code};
+    </insert>
+    <select id="getPaymentRecord">
+        select count(payment_code)
+        from payment_tbl
+    </select>
+    <select id="getSearchPaymentRecord">
+        SELECT COUNT(p.payment_code)
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        <if test="searchKey == 'orderId'">
+            JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code  <!-- orderId 검색을 위해 payment_detail_tbl 조인 -->
+        </if>
+        <where>
+            <if test="searchKey != null and !searchKey.isEmpty()">
+                <if test="searchKey == 'orderId'">
+                    pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'nickname'">
+                    u.usercode IN (
+                    SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
+                    )
+                </if>
+            </if>
+        </where>
+
+    </select>
+    <select id="getPaymentSearchList" resultType="com.ict.finalproject.vo.PaymentVO">
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status=1
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        <where>
+            <if test="searchKey != null and !searchKey.isEmpty()">
+                <if test="searchKey == 'orderId'">
+                    AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'nickname'">
+                    AND u.usercode IN (
+                    SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
+                    )
+                </if>
+            </if>
+        </where>
+        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+        <if test="schedule != null and !schedule.isEmpty()">
+            ORDER BY ${schedule} ${sort}
+        </if>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+
+    </select>
+    <select id="getPaymentList" resultType="com.ict.finalproject.vo.PaymentVO">
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM payment_detail_tbl pd
+
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        where status=1
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+        <if test="schedule != null and !schedule.isEmpty()">
+            ORDER BY ${schedule} ${sort}
+        </if>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
 </mapper>
