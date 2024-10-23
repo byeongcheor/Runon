@@ -699,7 +699,7 @@
     </insert>
     <select id="getPaymentRecord">
         select count(payment_code)
-        from payment_tbl
+        from payment_tbl where is_completed = 1
     </select>
     <select id="getSearchPaymentRecord">
         SELECT COUNT(p.payment_code)
@@ -709,12 +709,13 @@
             JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code  <!-- orderId 검색을 위해 payment_detail_tbl 조인 -->
         </if>
         <where>
+            is_completed=1
             <if test="searchKey != null and !searchKey.isEmpty()">
                 <if test="searchKey == 'orderId'">
-                    pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+                    and pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
                 </if>
                 <if test="searchKey == 'nickname'">
-                    u.usercode IN (
+                   and u.usercode IN (
                     SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
                     )
                 </if>

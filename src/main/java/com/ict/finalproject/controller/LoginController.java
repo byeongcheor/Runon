@@ -75,9 +75,13 @@ public class LoginController {
 
 
     }
+    /*@PostMapping("/login&join/userCheck")
+    @ResponseBody
+    public Map<String,Object>userCheck(@RequestParam("username")String username){
+        Map<String,Object> map=new HashMap<>();
+    }
 
-
-
+*/
 
 
 }

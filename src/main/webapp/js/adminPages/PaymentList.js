@@ -88,33 +88,59 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
             var pVO=r.pvo;
             var avo=r.Avo;
             if(avo.role<2||avo.admin_code==0){
-            var tag = "<li>" +
-                "<div id='payment_title2'>" +
-                "<div class='orderId'>주문번호</div>" +
-                "<div  class='marathon_name'>마라톤명</div>" +
-                "<div id='total_amount' class='total_amount'>총가격</div>";
-            tag +=  "<div class='payment_method'>결제방식</div>" +
-                "<div class='nickname'>닉네임</div>";
-            tag += "<div class='completed_date'>결제일자</div>";
-            tag += "</div></li>";
-            PayVo.forEach(function(PayVo){
-                var totalamount=PayVo.total_amount;
-
-                tag +="<li  onclick='detail(\""+PayVo.orderId+"\",\""+PayVo.payment_method+"\")'>" +
-                    "<div class='payment_title3'>" +
-                    "<div class='orderId'>"+PayVo.orderId+"</div>" +
-                    "<div class='marathon_name'>"+PayVo.latest_marathon_name;
-                if (PayVo.marathon_count!=0){
-                    tag+= " 외"+PayVo.marathon_count;
-                }
-                tag += "</div><div class='total_amount'>"+PayVo.total_amount+"</div>";
-                tag += "<div class='payment_method'>"+PayVo.payment_method+"</div>";
-                tag += "<div class='nickname'>"+PayVo.nickname+"</div>";
-                tag += "<div class='completed_date'>"+PayVo.completed_date+"</div>";
+                var tag = "<li>" +
+                    "<div id='payment_title2'>" +
+                    "<div class='orderId'>주문번호</div>" +
+                    "<div  class='marathon_name'>마라톤명</div>" +
+                    "<div id='total_amount' class='total_amount'>총가격</div>";
+                tag +=  "<div class='payment_method'>결제방식</div>" +
+                    "<div class='nickname'>닉네임</div>";
+                tag += "<div class='completed_date'>결제일자</div>";
                 tag += "</div></li>";
+                PayVo.forEach(function(PayVo){
+                    var totalamount=PayVo.total_amount;
 
-            });
-            document.getElementById("PaymentList").innerHTML=tag;
+                    tag +="<li  onclick='detail(\""+PayVo.orderId+"\",\""+PayVo.payment_method+"\")'>" +
+                        "<div class='payment_title3'>" +
+                        "<div class='orderId'>"+PayVo.orderId+"</div>" +
+                        "<div class='marathon_name'>"+PayVo.latest_marathon_name;
+                    if (PayVo.marathon_count!=0){
+                        tag+= " 외"+PayVo.marathon_count;
+                    }
+                    tag += "</div><div class='total_amount'>"+PayVo.total_amount+"</div>";
+                    tag += "<div class='payment_method'>"+PayVo.payment_method+"</div>";
+                    tag += "<div class='nickname'>"+PayVo.nickname+"</div>";
+                    tag += "<div class='completed_date'>"+PayVo.completed_date+"</div>";
+                    tag += "</div></li>";
+
+                });
+
+
+
+                document.getElementById("PaymentList").innerHTML=tag;
+
+
+                var paginationTag="";
+
+
+                if (pVO.nowpage>1){
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage - 1) +
+                        ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>Previous</a></li>";
+                }
+                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                    if (p <= pVO.totalPage) {
+                        paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadPayList(" + p
+                            + ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>" + p + "</a></li>";
+                    }
+                }
+                if (pVO.nowPage < pVO.totalPage) {
+
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage + 1) +
+                        ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>Next</a></li>";
+                }
+
+                $(".pagination").html(paginationTag);
+
 
             }
         }
@@ -129,7 +155,7 @@ function enterKey(event) {
     }
 }
 function searchbutton(){
-    PaymentSearchType=document.getElementById("PaymentSearchValue").value;
+    PaymentSearchType=document.getElementById("CertificateSearchValue").value;
     PaymentSearchValue=document.getElementById("searchtext").value;
     alert(PaymentSearchType+":"+PaymentSearchValue);
     loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);
