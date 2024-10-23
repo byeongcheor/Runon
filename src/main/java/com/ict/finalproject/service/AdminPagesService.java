@@ -78,4 +78,14 @@ public interface AdminPagesService {
     public List<QnAVO> getQnaList();
     //연간 매출top5
     public List<YearsTop5MarathonVO>getYearsTop5list(int year);
+
+
+    //검색된 마라톤게시물수
+    public int getSearchBoardRecord(PagingVO pvo);
+    //모든 마라톤게시물수
+    public int getBoardTotalRecord();
+    //검색된 마라톤게시물vo에 담기
+    public List<MarathonListVO> selectBoardWithSearch(PagingVO pvo);
+    //모든  마라톤 게시물 vo에 담기
+    public List<MarathonListVO> selectAllBoard(PagingVO pvo);
 }

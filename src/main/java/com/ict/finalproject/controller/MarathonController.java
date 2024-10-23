@@ -5,6 +5,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.CartService;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.service.MarathonService;
+import com.ict.finalproject.service.ReportService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class MarathonController {
     JWTUtil jwtUtil;
     String user_name ="";
     int user_code = 0;
-
+    ReportService reportservice;
 
     @PostMapping("/test")
     @ResponseBody
@@ -264,6 +266,9 @@ public class MarathonController {
         }
         return result; // JSON 형태로 응답
     }
+
+
+
 
 
 

@@ -25,7 +25,7 @@
     <div class="marathonDetailF">
         <div class="marathonDTop">
             <div class="marathonDImg">
-                <img src="/img/defaultimg.png"/>
+                <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
             </div>
             <div class="marathonDContent">
                 <div class="marathonDTTop">
@@ -76,17 +76,17 @@
                 <!-- 왼쪽 열: 대회 정보 -->
                 <div class="col-md-6">
                     <ul class="list-group">
-                        <li class="list-group-item"><strong><img src="/img/4.png"/> 일시: </strong> ${marathon.event_date}</li> <!-- 대회 날짜 -->
-                        <li class="list-group-item"><strong><img src="/img/5.png"/> 장소: </strong> ${marathon.addr}</li> <!-- 장소 -->
-                        <li class="list-group-item"><strong><img src="/img/6.png"/> 종목: </strong> ${marathon.total_distance}</li> <!-- 종목 -->
+                        <li class="list-group-item"><strong><img src="/img/d.png"/> 일시: </strong> ${marathon.event_date}</li> <!-- 대회 날짜 -->
+                        <li class="list-group-item"><strong><img src="/img/e.png"/> 장소: </strong> ${marathon.addr}</li> <!-- 장소 -->
+                        <li class="list-group-item"><strong><img src="/img/f.png"/> 종목: </strong> ${marathon.total_distance}</li> <!-- 종목 -->
                     </ul>
                 </div>
                 <!-- 오른쪽 열: 접수 정보 -->
                 <div class="col-md-6">
                     <ul class="list-group">
-                        <li class="list-group-item"><strong><img src="/img/1.png"/> 접수기간: </strong> ${marathon.registration_start_date} ~ ${marathon.registration_end_date}</li>
-                        <li class="list-group-item"><strong><img src="/img/2.png"/> 결제가능: </strong> 가능</li>
-                        <li class="list-group-item"><strong><img src="/img/3.png"/> 주최: </strong> (주)러닝포인트</li>
+                        <li class="list-group-item"><strong><img src="/img/a.png"/> 접수기간: </strong> ${marathon.registration_start_date} ~ ${marathon.registration_end_date}</li>
+                        <li class="list-group-item"><strong><img src="/img/b.png"/> 결제가능: </strong> 가능</li>
+                        <li class="list-group-item"><strong><img src="/img/c.png"/> 주최: </strong> (주)러닝포인트</li>
                     </ul>
                 </div>
             </div>

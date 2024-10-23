@@ -88,7 +88,7 @@
                             <!-- 카드 한 개 -->
                             <div class="marathonC2" onclick="goToDetailPage(${marathon.marathon_code})">
                                 <div class="marathonListI">
-                                    <img src="./img/${marathon.poster_img}" alt="마라톤 이미지">
+                                    <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
                                     <div class="receiptType">
                                         <span style="<c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>">
                                                 ${marathon.registration_status}
@@ -264,7 +264,7 @@
                             <div class="marathonC">
                                 <div class="marathonC2" onclick="goToDetailPage(` + marathon.marathon_code + `)">
                                     <div class="marathonListI">
-                                         <img src=./img/` +marathon.poster_img+` alt="마라톤 이미지">
+                                        <img src=/resources/uploadfile/` + marathon.poster_img + `>
                                         <div class="receiptType">
                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : '') + `">
                                                 ` + marathon.registration_status + `

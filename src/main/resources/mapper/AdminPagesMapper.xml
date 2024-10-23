@@ -499,4 +499,58 @@
         total_real_amount DESC
         LIMIT 3;
     </select>
+    <!-- 마라톤 게시글 총 레코드 수 조회 (검색 조건 포함) -->
+    <select id="getSearchBoardRecord" resultType="int">
+        select count(marathon_code)
+        from marathon_list_tbl
+        <where>
+            <if test="searchKey2 != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey2 == 'Board_name'">
+                    marathon_name like concat('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey2 == 'is_active'">
+                    is_active = #{searchWord}
+                </if>
+                <if test="searchKey2 == 'is_deleted'">
+                    is_deleted = #{searchWord}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <!-- 검색 조건을 포함한 마라톤 게시글 목록 조회 -->
+    <select id="selectBoardWithSearch" resultType="com.ict.finalproject.vo.MarathonListVO">
+        select marathon_code, marathon_name, created_date, is_active, is_deleted, activation_date, deleted_date
+        from marathon_list_tbl
+        <where>
+            <if test="searchKey2 != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey2 == 'Board_name'">
+                    marathon_name like concat('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey2 == 'is_active'">
+                    is_active = #{searchWord}
+                </if>
+                <if test="searchKey2 == 'is_deleted'">
+                    is_deleted = #{searchWord}
+                </if>
+            </if>
+        </where>
+        order by marathon_code desc
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 마라톤 게시글 총 레코드 수 조회 -->
+    <select id="getBoardTotalRecord" resultType="int">
+        select count(marathon_code) from marathon_list_tbl
+    </select>
+
+    <!-- 검색 조건 없이 전체 마라톤 게시글 목록 조회 -->
+    <select id="selectAllBoard" resultType="com.ict.finalproject.vo.MarathonListVO">
+        select marathon_code, marathon_name, created_date, is_active, is_deleted, activation_date, deleted_date
+        from marathon_list_tbl
+        order by marathon_code desc
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+
 </mapper>

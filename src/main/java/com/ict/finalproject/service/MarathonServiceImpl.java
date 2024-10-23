@@ -105,4 +105,14 @@ public class MarathonServiceImpl implements MarathonService {
         dao.incrementViewCount(marathonCode);
     }
 
+    @Override
+    public MarathonListVO getMarathonDetail(int marathonCode) {
+        return dao.getMarathonDetail(marathonCode);
+    }
+
+    @Override
+    public void updateMarathon(MarathonListVO marathon) {
+        dao.updateMarathon(marathon);
+    }
+
 }

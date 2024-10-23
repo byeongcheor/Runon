@@ -300,3 +300,20 @@ button#reportBtn {
     box-sizing: border-box;
 
 }
+.report-item {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color:black;
+}
+.ChatReport_modal-content1 {
+    background-color: #fefefe;
+    margin: 15% auto; /* 가운데 정렬 */
+    padding: 40px;
+    border: 1px solid #888;
+    width: 600px; /* 너비 조정 */
+    height: auto;
+    border-radius: 10px;
+}

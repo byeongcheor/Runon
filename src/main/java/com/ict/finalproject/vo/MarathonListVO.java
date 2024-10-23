@@ -43,7 +43,12 @@ public class MarathonListVO {
     private String registration_status;
 
     public String getRegistration_status() {
+        if (registration_start_date == null || registration_end_date == null) {
+            return "날짜 없음";  // 필요한 경우 더 적절한 기본 메시지로 변경 가능
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         try {
             LocalDateTime startDate = LocalDateTime.parse(registration_start_date, formatter);
             LocalDateTime endDate = LocalDateTime.parse(registration_end_date, formatter);

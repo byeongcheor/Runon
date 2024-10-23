@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!-- Bootstrap JS 연결 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery 연결 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="/css/chatList.css" type="text/css">
 <!-- 채팅창 영역 -->
 <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
@@ -16,6 +20,7 @@
 			 onmouseover="this.src='/img/bell2.png';"
 			 onmouseout="this.src='/img/bell.png';"
 			 onclick="toggleCheckBoxes()">
+		<button id="reportHistoryBtn" style="display: none;" onclick="showReportHistory()">신고 내역 보기</button>
 	</div>
 	<!-- 대화내용 -->
 	<div id="taMsg">
@@ -76,6 +81,17 @@
 		</div>
 	</div>
 </div>
+<!--신고내역 -->
+<div id="reportHistoryModal" class="ChatReportModal">
+	<div class="ChatReport_modal-content1">
+		<span class="chatModalClose" id="chatCloseModal1">&times;</span>
+		<h1 class="reportT">신고 내역</h1>
+		<div id="reportList">
+			<!-- 신고 내역이 여기에 추가됩니다 -->
+		</div>
+	</div>
+</div>
+
 
 <script>
 	console.log("Chat List Size: ${chatList.size()}");
@@ -294,16 +310,19 @@
 	// 체크박스를 표시하거나 숨길 때 이벤트 리스너를 추가하는 함수
 	function toggleCheckBoxes() {
 		const checkboxes = document.querySelectorAll('.message-checkbox');
+		const reportHistoryBtn = document.getElementById('reportHistoryBtn')
 		checkboxes.forEach(checkbox => {
 			// 체크박스를 보이거나 숨기기
 			checkbox.style.display = checkbox.style.display === 'none' ? 'inline' : 'none';
 
 			// 체크박스가 보일 때 change 이벤트 리스너 추가
 			if (checkbox.style.display === 'inline') {
+				reportHistoryBtn.style.display = 'inline';
 				checkbox.addEventListener('change', toggleSendReportButton);
 			} else {
 				// 체크박스가 숨겨질 때 체크 상태 해제 및 리스너 제거
 				checkbox.checked = false; // 체크 해제
+				reportHistoryBtn.style.display = 'none';
 				checkbox.removeEventListener('change', toggleSendReportButton); // 리스너 제거
 			}
 		});
@@ -312,7 +331,75 @@
 		toggleSendReportButton();
 	}
 
-	// 체크박스 상태에 따라 전송 버튼과 신고 버튼을 전환하는 함수
+	//신고내역보기
+	function showReportHistory() {
+		if (!usercode) {
+			console.error('User code is not defined.');
+			return; // usercode가 정의되지 않은 경우 함수를 종료
+		}
+
+		// 사용자 코드를 파라미터로 전송
+		fetch('/chat/reportHistory?usercode=' + usercode)
+				.then(response => response.json())
+				.then(data => {
+					let reportList = document.getElementById('reportList');
+					reportList.innerHTML = ''; // 이전 내용 삭제
+
+					data.forEach(report => {
+						const reportItem = document.createElement('div');
+						// CSS 클래스 추가
+						reportItem.classList.add('report-item'); // 클래스를 추가합니다.
+						reportList.appendChild(reportItem);
+
+						// 신고 내용
+						const contentElement = document.createElement('div');
+						contentElement.innerText = '신고 내용: ' + report.report_content;
+
+						// 신고 이유
+						const reasonElement = document.createElement('div');
+						reasonElement.innerText = '신고 이유: ' + report.report_reason;
+
+						// 신고 날짜
+						const dateElement = document.createElement('div');
+						dateElement.innerText = '신고 날짜: ' + report.report_date;
+
+						// 신고 상태
+						const statusElement = document.createElement('div');
+						const statusText = report.report_status === 1 ? '신고 내역 처리 완료' : '신고 내역 처리 중';
+						statusElement.innerHTML = '신고 내역 상황: <span id="reportStatusText">' + statusText + '</span>';
+
+
+
+
+
+						// 처리 완료 버튼 (버튼을 직접 생성하지 않고 상태를 업데이트할 수 있음)
+						// 여기에서 신고 상태 업데이트를 위한 버튼을 생성하는 대신, 다른 UI 요소에서 호출할 수 있습니다.
+
+						// 각각의 요소를 reportItem에 추가
+						reportItem.appendChild(contentElement);
+						reportItem.appendChild(reasonElement);
+						reportItem.appendChild(dateElement);
+						reportItem.appendChild(statusElement);
+
+						// 신고 상태가 '처리 완료'로 변경된 경우
+						if (report.report_status === 1) {
+							// '신고 내역 처리 완료'라는 텍스트를 업데이트
+							statusElement.querySelector('#reportStatusText').innerText = '신고 내역 처리 완료';
+						}
+
+						// 최종적으로 reportList에 추가
+						reportList.appendChild(reportItem);
+					});
+
+					// 모달 띄우기
+					$('#reportHistoryModal').modal('show');
+				})
+				.catch(error => {
+
+				});
+	}
+
+
 	function toggleSendReportButton() {
 		const checkboxes = document.querySelectorAll('.message-checkbox:checked'); // 체크된 체크박스 탐색
 		const sendButton = document.getElementById('sendBtn');
@@ -334,7 +421,7 @@
 	const closeModalButton = document.getElementById('chatCloseModal');
 	const reportBtn = document.getElementById('reportBtn');
 	const submitReportBtn = document.getElementById('submitReportBtn');
-
+	const closeReportHistoryModalButton = document.getElementById('chatCloseModal1');
 
 	function reportMessages() {
 
@@ -436,6 +523,9 @@
 						.then(data => {
 							alert('신고가 완료되었습니다.');
 							closeModal(); // 모달 닫기 및 초기화
+
+							// 여기에 추가: 신고 내역 보기
+							showReportHistory(); // 신고 내역 보여주기
 						})
 						.catch(error => {
 							console.error('Error:', error);
@@ -465,9 +555,36 @@
 			reportBtn.style.display = 'none';
 		}
 
-		// X 버튼과 신고 접수 버튼 클릭 시 모달 닫기
-		closeModalButton.onclick = closeModal;
+		// X 버튼 클릭 시 모달 닫기 (기존 코드)
+		closeModalButton.onclick = function() {
+			closeModal(); // 이미 정의된 closeModal 함수 호출
+		};
+		// 신고 내역 모달의 X 버튼 클릭 시 닫기
+		closeReportHistoryModalButton.onclick = function() {
+			closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
+		};
+		// 신고 내역 모달의 X 버튼 클릭 시 닫기
+		if (closeReportHistoryModalButton) { // 버튼이 존재하는지 확인
+			closeReportHistoryModalButton.onclick = function() {
+				closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
+			};
+		} else {
+			console.error('신고 내역 모달 닫기 버튼이 존재하지 않습니다.'); // 디버깅 메시지
+		}
+		// 외부 클릭 시 신고 모달 닫기
+		window.onclick = function(event) {
+			if (event.target === reportModal) {
+				closeModal();
+			} else if (event.target === reportHistoryModal) { // 신고 내역 모달 외부 클릭 시
+				closeReportHistoryModal();
+			}
+		};
 
+
+		function closeReportHistoryModal() {
+			const reportHistoryModal = document.getElementById('reportHistoryModal');
+			reportHistoryModal.style.display = 'none'; // 신고 내역 모달 숨기기
+		}
 
 		// 외부 클릭 시 모달 닫기
 		window.onclick = function (event) {

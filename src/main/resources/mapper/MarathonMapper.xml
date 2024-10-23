@@ -156,6 +156,25 @@
         SET hit = hit + 1
         WHERE marathon_code = #{marathonCode}
     </update>
-
-
+    <select id="getMarathonDetail" parameterType="int" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonCode}
+    </select>
+    <update id="updateMarathon">
+        UPDATE marathon_list_tbl
+        <set>
+            marathon_name = #{marathon_name},
+            event_date = #{event_date},
+            addr = #{addr},
+            total_distance = #{total_distance},
+            registration_start_date = #{registration_start_date},
+            registration_end_date = #{registration_end_date},
+            marathon_content = #{marathon_content}
+            <if test="poster_img != null">
+                , poster_img = #{poster_img}
+            </if>
+        </set>
+        WHERE marathon_code = #{marathon_code}
+    </update>
 </mapper>

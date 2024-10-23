@@ -28,4 +28,6 @@ public interface MarathonDAO {
     void removeLike(int usercode, int marathonCode);
     void decrementLikeCount(int marathonCode);
     void incrementViewCount(int marathonCode);
+    MarathonListVO getMarathonDetail(int marathonCode);
+    void updateMarathon(MarathonListVO marathon);
 }
