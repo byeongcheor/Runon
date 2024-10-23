@@ -160,14 +160,14 @@ function detail(report_code){
             reports = r.rvo;
             var replys=r.reply;
 
-            var tag ="  <div id=\"reportDetails\"><div><h3>상세내역</h3></div>";
-            tag+="<div>신고이유:"+reports.report_reason+"</div>";
-            tag+=" <div>접수일:"+reports.report_date+"</div>";
+            var tag ="  <div id=\"reportDetails\"><div style='margin-bottom: 20px;'><h3>상세내역</h3></div>";
+            tag+="<div><div class='detailTitle'>신고이유</div><div class='detailContent'>"+reports.report_reason+"</div></div>";
+            tag+=" <div><div class='detailTitle'>접수일</div><div class='detailContent'>"+reports.report_date+"</div></div>";
             tag+="  <div>" +
-                "<div>신고자:"+reports.victim_nickname+"</div>" +
-                "<div>가해자:"+reports.offender_nickname+"</div>" +
+                "<div><div class='detailTitle'>신고자</div><div class='detailContent'>"+reports.victim_nickname+"</div></div>" +
+                "<div><div class='detailTitle'>가해자</div><div class='detailContent'>"+reports.offender_nickname+"</div></div>" +
                 "</div>";
-            tag+="<div>신고내용:<div>"+reports.report_content+"</div></div>";
+            tag+="<div><div class='detailTitle'>신고내용</div><div class='detailContent'>"+reports.report_content+"</div></div>";
             if (reports.proof_img!=null){
                 tag+=` <div>첨부사진:</div><div style="width:150px;height: 150px">
                 <img style="width:150px;height: 150px" src="../resources/uploadReport/`+reports.proof_img+`"></div>`
@@ -175,16 +175,16 @@ function detail(report_code){
                 tag+="<div>첨부사진:없음</div>";
             }
             if (reports.report_status!=1){
-                tag+="</div><div onclick='reportReply()'>처리하기</div></div>"
+                tag+="</div><div class='handleBtn' onclick='reportReply()'>처리하기</div></div>"
             }
             document.getElementById("reportdetailbackground").style.display="block";
             document.getElementById("addreply").style.display="none";
             document.getElementById("reportcontent").innerHTML=tag;
             if (reports.report_status!=1){
             var addreplyTag=` 
-            <div>
-                <div>신고당한횟수:<div>`+reports.report_count+`</div></div>
-                <div>정지:
+            <div id="replyFrm">
+                <div style="margin-bottom: 10px;">신고당한횟수:<span style="color: tomato;">`+reports.report_count+`</span></div>
+                <div><div>정지</div>
                    <select id="is_disabled" name="is_disabled">
                         <option value="0">무죄</option>
                         <option value="1">7일</option>
@@ -196,15 +196,15 @@ function detail(report_code){
                 <div>
                 <textarea id="content" name="content"></textarea>
                 </div>
-                 <div><button onclick="addreply()">확인</button><button>취소</button></div>
+                 <div><button style='background-color: #d1ff33' onclick="addreply()">확인</button><button style='background-color: lightgray'>취소</button></div>
             </div>
             `;}
             if (reports.report_status==1){
                 var tag=`
-                  <div><h3>신고결과</h3></div>
+                  <div style="margin-top: 10px;"><h4>신고결과</h4></div>
            
-                    <div>신고 결과:`+replys.report_result+`</div>
-                    <div>답변:<div>`+replys.content+`<br/>지금까지 운영자 `+replys.admin_nickname+`었습니다</div></div>
+                    <div>신고 결과<span style="color: tomato;">`+replys.report_result+`</span></div>
+                    <div><div>답변</div><div class="detailContent" style="height: auto;">`+replys.content+`<br/>지금까지 운영자 `+replys.admin_nickname+`었습니다.</div></div>
                     <div>답변작성일:`+replys.process_date+`</div>
                   <!--  <div><div id="updateReply" ><button>확인</button><button>취소</button>
                    </div><button id="updatebutton" onclick="updateReply()">수정</button></div>-->`;

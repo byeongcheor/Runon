@@ -439,9 +439,12 @@ public class MypageController {
 
         List<CertificateVO> list = service.selectCertificateAll(username, pvo.getOffset(), pvo.getOnePageRecord());
         List<OrderVO> orderList = service.getOrderInfo(usercode);
-
+        List<CrewMemberVO> crewMemberList = service.getCrewMember(usercode);
+        System.out.println(usercode);
+        System.out.println(crewMemberList);
         result.put("list", list);
         result.put("orderList", orderList);
+        result.put("crewMemberList", crewMemberList);
         result.put("pvo", pvo);
         return result;
     }
@@ -454,6 +457,9 @@ public class MypageController {
             @RequestParam("username") String username,
             @RequestParam("marathon_code") int marathon_code,
             @RequestParam("usercode") int usercode,
+            @RequestParam(value = "run_option", defaultValue = "0") int run_option,
+            @RequestParam(value = "crew_option", defaultValue = "0", required = false) Integer crew_option,
+            @RequestParam(value = "crew_member_code", defaultValue = "0", required = false) Integer crew_member_code,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
@@ -475,6 +481,9 @@ public class MypageController {
                  cvo.setProof_photo(miliFilename);
                  cvo.setUsername(username);
                  cvo.setOrder_code(order_code);
+                 cvo.setRun_option(run_option);
+                 cvo.setCreate_crew_code(crew_option);
+                 cvo.setCrew_member_code(crew_member_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);

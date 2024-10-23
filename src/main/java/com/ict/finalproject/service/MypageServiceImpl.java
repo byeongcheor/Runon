@@ -172,6 +172,11 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
+    public List<CrewMemberVO> getCrewMember(int usercode) {
+        return dao.getCrewMember(usercode);
+    }
+
+    @Override
     public List<MemberVO> selectMemberAll(int usercode, int offset, int limit) {
         return dao.selectMemberAll(usercode, offset, limit);
     }

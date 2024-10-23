@@ -5,9 +5,11 @@
 <mapper namespace="com.ict.finalproject.dao.CrewDAO">
 
     <select id="usercodeSelect" resultType="int">
-        select usercode
-        from   user_tbl
-        where  username = '${param1}'
+        SELECT IFNULL(
+        (SELECT usercode
+        FROM user_tbl
+        WHERE username = '${param1}'
+        ), 0) AS usercode;
     </select>
 
     <select id="crew_teamEmblem" resultType="String">
@@ -209,7 +211,7 @@
         and    status   = 0
     </select>
 
-    <select id="crew_write_code_select" resultType="int">
+    <select id="crew_write_code_select" resultType="Integer">
         select crew_write_code
         from  crew_write
         where create_crew_code = ${param1}
@@ -285,6 +287,14 @@
         delete_date = now()
         where crew_write_code = ${param2}
     </update>
+    <update id="deleteTeam">
+        update create_crew_tbl
+        set is_deleted = 1,
+        deleted_date = now()
+        where create_crew_code = ${param2}
+        and usercode = ${param1}
+    </update>
+
     <select id="crew_page_write_detail" resultType="com.ict.finalproject.vo.CrewVO">
         select addr,addr_gu,age,gender,crew_name
         from   create_crew_tbl a
@@ -326,6 +336,7 @@
         select create_crew_code
         from   create_crew_tbl
         where  usercode = ${param1}
+        and   is_deleted = 0
         order by writedate desc
         limit 1
     </select>
@@ -706,7 +717,8 @@
 
     <select id="notice_detail" resultType="com.ict.finalproject.vo.CrewVO">
         select subject,content, DATE_FORMAT(updated_date, '%Y-%m-%d %H:%i') as updated_date, hits as a_n, crew_notice_code as b_n ,usercode
-        from   crew_notice_tbl
+        ,(select nickname from user_tbl where usercode=a.usercode) as nickname
+        from   crew_notice_tbl a
         where  crew_notice_code = ${param1}
     </select>
 
@@ -734,7 +746,9 @@
         update crew_notice_tbl
         set subject = '${param2}'
         ,content = '${param3}'
+        ,usercode = ${param4}
         ,updated_date = now()
+        ,is_updated = 1
         where crew_notice_code = ${param1}
     </update>
     <delete id="delete_notice">
@@ -790,5 +804,11 @@
         ,now()
         );
     </insert>
+    <update id="entrust5">
+        update crew_write
+        set
+        usercode = ${param1}
+        where  create_crew_code = ${param2}
+    </update>
 
 </mapper>

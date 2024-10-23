@@ -52,6 +52,8 @@ public interface MypageDAO {
     //order_tbl select
     public int getOrderCode(int marathon_code, int usercode);
     public List<OrderVO> getOrderInfo(int usercode);
+    //crew select
+    public List<CrewMemberVO> getCrewMember(int usercode);
     //전체레코드
     public int getTotalCertificate(String username);
 

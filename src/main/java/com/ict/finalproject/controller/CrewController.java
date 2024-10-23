@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -40,16 +42,17 @@ public class CrewController {
     @PostMapping("/test")
     @ResponseBody
     public String test(@RequestParam("Authorization")String token) {
+        if(token.equals("A")) return user_name= "A";
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        System.out.println(user_code);
         return user_name;
     }
     @GetMapping("/crewList")
     public String crewList(CrewVO cvo, PagingVO pvo, Model model){
         List<CrewVO> list = service.crewSelectPaging(pvo);
         pvo.setTotalRecord(service.totalRecord(pvo));
+        user_code = service.usercodeSelect(user_name);
 
         // 추가: chatList 가져오는 로직
         List<CrewVO> chatList = service.getCrewList();  // 크루 리스트를 가져오는 서비스
@@ -68,7 +71,8 @@ public class CrewController {
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
         model.addAttribute("chatList", chatList);  // 추가: chatList를 모델에 추가
-
+        model.addAttribute("user_code", user_code);
+        System.out.println(user_code);
         return "crew/crewList";
     }
 
@@ -201,7 +205,7 @@ public class CrewController {
 
         // 서비스 호출 (int 값을 파라미터로 전달)
         int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
-        int crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
+        Integer  crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("crew_write_code", crew_write_code);
         return "success";
@@ -429,7 +433,6 @@ public class CrewController {
         int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("user_code", user_code);
-        session.setAttribute("position", position);
         return "success";
     }
 
@@ -438,7 +441,7 @@ public class CrewController {
         // 세션에서 데이터 가져오기
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer user_code = (Integer) session.getAttribute("user_code");
-        Integer position = (Integer) session.getAttribute("position");
+        Integer position = service.position_select(user_code,create_crew_code);
 
         // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
@@ -637,6 +640,7 @@ public class CrewController {
                                                 @RequestParam("files") MultipartFile[] notice_img) {
         UUID uuid = UUID.randomUUID();
         String fileName = "";
+        String fileNames = "";
         try {
             if (notice_img != null && notice_img.length > 0) {
                 for (MultipartFile file : notice_img) {
@@ -646,9 +650,10 @@ public class CrewController {
                         Path path = Paths.get(uploadDir + File.separator + fileName);
                         Files.copy(file.getInputStream(), path);
                         service.upload_images(crewNoticeCode, fileName);
+                        fileNames+=fileName+",";
                     }
                 }
-                return ResponseEntity.ok("Files uploaded successfully");
+                return ResponseEntity.ok(fileNames);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No files to upload");
             }
@@ -680,13 +685,15 @@ public class CrewController {
                               @RequestParam("notice_num") int notice_num,
                               @RequestParam("subject") String subject,
                               @RequestParam("content") String content) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
+
         int a = 0;
         try {
-            service.update_notice(notice_num,subject,content);
-            a=1;
+            token = token.substring("Bearer ".length());
+            String user_name = jwtUtil.setTokengetUsername(token); // user_name은 String
+            int user_code = service.usercodeSelect(user_name);  // user_code는 int로 선언
+            service.update_notice(notice_num, subject, content, user_code);  // int user_code 사용
+
+            a = 1;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -832,6 +839,46 @@ public class CrewController {
         }
         return a;
     }
+    @Transactional(propagation = Propagation.REQUIRED)
+    @PostMapping("/deleteTeam")
+    @ResponseBody
+    public int deleteTeam(@RequestParam("Authorization") String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("position") int position) {
+        token = token.substring("Bearer ".length());
+        String user_name = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(user_name);
+        int result = 0; // 기본값은 0으로 설정
+        int cnt = 0;
+
+            try {
+                cnt = service.resign_select(crewCode, position);
+                // 팀장이면서 팀원이 2명 이상이면 삭제 불가
+                if (position == 1 && cnt > 1) {
+                    return 0; // 바로 반환
+                }
+                // 모집글이 존재하면 result = 1 리턴
+                Integer crewWriteCode = service.crew_write_code_select(crewCode);
+                if (crewWriteCode != null) {
+                    return 1; // 모집글이 존재하는 경우 바로 리턴
+                }
+                // 크루 히스토리 추가 및 팀 삭제
+                int flag = 2;
+                service.crew_history_insert(user_code, crewCode, flag);
+                System.out.println( ":::::resultresult::"+user_code+crewCode);
+                result = 2;
+                service.deleteTeam(user_code, crewCode);
+                result = 3;
+                service.crew_member_out(user_code, crewCode);
+                result = 4; // 성공적으로 삭제된 경우
+
+
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println( ":::::resultresult::"+result);
+        return result; // 최종적으로 result 값을 반환
+    }
+
+
 
 
 
@@ -1010,7 +1057,7 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        int a=0;
+        int a=2;
         try {
             service.entrust(user_code, create_crew_code, usercode);
 
