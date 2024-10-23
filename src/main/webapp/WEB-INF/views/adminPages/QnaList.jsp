@@ -41,7 +41,7 @@
                                 <i class="fa-solid fa-magnifying-glass fa-2x"></i>
                             </div>
                         </div>
-                        <div id="resetbutton" onclick="reset()"><i class="fa-solid fa-arrows-rotate test"></i></div>
+                        <div id="resetbutton" onclick="reset()"><i class="fa-solid fa-arrows-rotate test" style="line-height: 25px;"></i></div>
 
                     </div>
                      <div id="selectbutton"></div>
@@ -62,7 +62,7 @@
 
 <div id="qnadetailbackground">
     <div id="qnadetail">
-        <div  id="closedetail"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
+        <div  id="closedetail" style="text-align: right;"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
         <div id="usermain">
         </div>
 

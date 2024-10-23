@@ -50,6 +50,7 @@
 #mainmid{
     width: 100%;
     height: auto;
+    margin: 20px;
 }
 #mainmid>div{
     display: flex;
@@ -92,17 +93,15 @@
     margin: 0 auto;
 }
 #searchbar>select{
-    height: 34px;
     margin: auto 0;
     margin-right: 10px;
 }
 #searchbar>div>input{
     width: 300px;
-    height: 28px;
     border: none;
 }
 #searchbox{
-    border: 1px solid grey;
+    border: 1px solid lightgrey;
     border-radius: 5px;
     margin-right: 10px;
 }
@@ -141,9 +140,12 @@ li{
     display: flex;
     line-height: 40px;
     border-top: 1px solid #E2E2E2;
-
+    justify-content: space-between;
 }
-
+#payment_title2{
+    background-color: #F0F0F0;
+    font-weight: 700;
+}
 .fa-3x{
     font-size: 3em;
 
@@ -230,9 +232,42 @@ li{
     overflow: auto;
 }
 #closedetail{
-    position:fixed;
+    text-align: right;
+    padding: 10px;
 }
 .orderStTop{
     overflow: auto;
     height: 400px;
+}
+#PaymentList .orderId{
+    width: 20%;
+}
+#PaymentList .marathon_name{
+    width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#PaymentList .total_amount{
+    width: 12%;
+}
+#PaymentList .payment_method{
+    width: 12%;
+}
+#PaymentList .nickname{
+    width: 12%;
+}
+#PaymentList .completed_date{
+    width: 15%;
+}
+
+#amountSortBtn{
+    background-color: transparent;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+#latestSortBtn{
+    background-color: transparent;
+    border-radius: 5px;
 }
