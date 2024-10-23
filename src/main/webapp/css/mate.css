@@ -228,6 +228,19 @@ body {
         overflow-y: auto;
         margin-left:30px;
     }
+    .ranking::-webkit-scrollbar {
+        width: 8px;
+        margin-top: 10px;
+    }
+
+    .ranking::-webkit-scrollbar-thumb {
+        background-color: #899cb5;
+        border-radius: 10px;
+    }
+
+    .ranking::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
 
     .ranking .menu-title {
         position: sticky; /* 스크롤에 따라 고정되게 설정 */
@@ -335,6 +348,11 @@ body {
         color: #CCFF47;
         margin-left: 10px;
         margin-bottom: 3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width:156px
+
     }
     .more {
         margin-top: 12px;

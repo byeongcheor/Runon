@@ -336,12 +336,14 @@
                 for (var i in result) {
                     list+='<li>';
                     list+='<span class="grade" id="grade">'+result[i].ranking+'등</span>';
-                    list+='<img src="/img/'+result[i].profile_img+'" alt="프로필 이미지" class="profile_img">';
-                    list+='<div class="rank-info">';
-                    list+='<span class="rank-name">'+result[i].nickname+'</span>';
-                    list+='<span class="runkm">'+result[i].point_code+'</span>';
-                    list+='<span class="crew-name">'+result[i].crew_name+'</span>';
-                    list+='</div>';
+                    list+='<img src="/resources/uploadfile/'+result[i].profile_img+'" alt="프로필 이미지" class="profile_img">';
+                    list+='   <div class="rank-info">';
+                    list+='      <span class="rank-name">'+result[i].nickname+'</span>';
+                    list+='      <div class="rank-details">';
+                    list+='         <span class="runkm">'+result[i].point_code+'Km</span>';
+                    list+='         <span class="crew-name">'+result[i].crew_name+'</span>';
+                    list+='      </div>';
+                    list+='   </div>';
                     list+='</li>';
                 }
                 $('.rank-list').append(list);
@@ -666,7 +668,6 @@ function grid_draw(length, result) {
                 type: "post",
                 data: { Authorization: Authorization },
                 success: function (r) {
-                    console.log("mate에서 username을 보낸다: " + r);
                 }
             });
         }

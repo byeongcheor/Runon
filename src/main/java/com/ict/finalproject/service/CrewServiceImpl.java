@@ -128,7 +128,8 @@ public class CrewServiceImpl implements CrewService{
         dao.entrust2( user_code, crewCode);//크루장을 운영진으로 수정
         dao.entrust3( usercode, crewCode);//운영진을  크루장으로 수정
         dao.entrust4( usercode, crewCode);//history에 업데이트
-        return dao.entrust3(usercode, crewCode);//운영진을 크루장으로 수정
+        dao.entrust5( usercode, crewCode);//crew_write에 업데이트
+        return dao.entrust2(user_code, crewCode);//운영진을 크루장으로 수정
     }
 
     @Override
@@ -165,9 +166,9 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int update_notice(int notice_num, String subject, String content)
+    public int update_notice(int notice_num, String subject, String content, int user_code)
     {
-        return dao.update_notice(notice_num,subject,content);
+        return dao.update_notice(notice_num,subject,content,user_code);
     }
 
     @Override
@@ -198,6 +199,14 @@ public class CrewServiceImpl implements CrewService{
     {
         return dao.crew_write_delete(user_code, crewWriteCode);
     }
+    @Override
+
+    public int deleteTeam(int user_code, int crewCode)
+    {
+        return dao.deleteTeam(user_code, crewCode);
+    }
+
+
 
     @Override
     public int update14()
@@ -350,7 +359,7 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public int crew_write_code_select(int crewCode) {
+    public Integer  crew_write_code_select(int crewCode) {
         return dao.crew_write_code_select(crewCode);
     }
 
