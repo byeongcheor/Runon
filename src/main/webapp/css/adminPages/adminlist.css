@@ -65,6 +65,7 @@
 #mainmid{
     width: 100%;
     height: auto;
+    margin: 20px;
 }
 #mainmid>div{
     display: flex;
@@ -114,14 +115,13 @@
 }
 #searchbar>div>input{
     width: 300px;
-    height: 28px;
     border: none;
 }
 #searchbar>div{
     display: flex;
     height: 30px;
     margin: auto 0;
-    border: 1px solid grey;
+    border: 1px solid lightgrey;
     border-radius: 5px;
 }
 #searchbar>div>input:focus{
