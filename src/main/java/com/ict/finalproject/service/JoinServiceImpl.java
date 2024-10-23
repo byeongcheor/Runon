@@ -1,5 +1,6 @@
 package com.ict.finalproject.service;
 
+import com.ict.finalproject.dao.LoginDAO;
 import com.ict.finalproject.dao.MemberDAO;
 import com.ict.finalproject.vo.MemberVO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,10 +11,12 @@ public class JoinServiceImpl implements JoinService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberDAO memberDAO;  // 변수명 통일
+    private final LoginDAO loginDAO;
 
-    public JoinServiceImpl(MemberDAO memberDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public JoinServiceImpl(MemberDAO memberDAO, BCryptPasswordEncoder bCryptPasswordEncoder, LoginDAO loginDAO) {
         this.memberDAO = memberDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.loginDAO = loginDAO;
     }
 
     @Override
@@ -88,4 +91,7 @@ public class JoinServiceImpl implements JoinService {
     public MemberVO getUsers(String username) {
         return memberDAO.getUsers(username);
     }
+
+
+
 }

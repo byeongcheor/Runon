@@ -2,12 +2,14 @@ package com.ict.finalproject.controller;
 
 import com.ict.finalproject.dao.MemberDAO;
 import com.ict.finalproject.jwt.JWTUtil;
+import com.ict.finalproject.service.JoinService;
 import com.ict.finalproject.service.LoginService;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.vo.MemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -104,5 +106,29 @@ public class LoginController {
         map.put("token",token);
         return map;
     }
+    @GetMapping("/loginjoin/changepw/{token}")
+    public String updatePw(@PathVariable("token")String token, Model model){
+        System.out.println(token);
+        try {
+            String username=jwtUtil.setTokengetUsername(token);
+            model.addAttribute("username", username);
+        }catch (Exception e){
 
+            return "login&join/changefail";
+        }
+        return "login&join/ChangePw";
+    }
+
+    @PostMapping("/login&join/updatepw")
+    @ResponseBody
+    public Map<String,Object> updatepw(@RequestParam("username")String username,
+                                       @RequestParam("password")String password){
+        Map<String,Object> map=new HashMap<>();
+        String newpassword=bCryptPasswordEncoder.encode(password);
+        System.out.println(newpassword);
+        int result= service.updatePassword(username,newpassword);
+        map.put("result",result);
+        return map;
+
+    }
 }

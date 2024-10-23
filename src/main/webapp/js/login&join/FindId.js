@@ -53,6 +53,7 @@ function FindIds2(){
 }
 
 function findpw(){
+    emailjs.init("tC4QTbGfMO5fEZx63");
     const selectedRadio = document.querySelector('input[name="point"]:checked');
     if (selectedRadio) {
         alert("선택된 값은: " + selectedRadio.value);
@@ -66,6 +67,17 @@ function findpw(){
             success:function(r){
                 var token=r.token;
                 console.log(token);
+                var username= selectedValue;
+                var url="http://192.168.1.154:7942/loginjoin/changepw/"+token;
+                console.log(url);
+      /*          emailjs.send('gmail',"template_2msjhhl", {
+                    to_name:username,
+                    message:url
+                })   .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                    console.log('FAILED...', error);
+                });*/
             }
         });
     } else {

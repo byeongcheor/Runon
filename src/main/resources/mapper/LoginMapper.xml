@@ -9,4 +9,7 @@
     <select id="FindIds" resultType="com.ict.finalproject.vo.MemberVO">
         select username from user_tbl where name = #{name} and tel = #{tel}
     </select>
+    <update id="updatePassword">
+        update user_tbl set password=#{newPassword} where username=#{username}
+    </update>
 </mapper>

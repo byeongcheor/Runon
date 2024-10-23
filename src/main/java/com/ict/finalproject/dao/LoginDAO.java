@@ -13,5 +13,7 @@ public interface LoginDAO {
     public void loginHistory(String username,String ip);
     //아이디찾기
     public List<MemberVO> FindIds(String name, String tel);
+    //비번바꾸기
+    public int updatePassword(String username,String newPassword);
 
 }

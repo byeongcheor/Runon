@@ -1,0 +1,14 @@
+header,footer{display:none;}
+body{
+    animation: none;
+}
+#changePwForm{
+    width: 400px;
+    margin:0 auto;
+    margin-top:20%;
+    text-align: center;
+}
+.oneline{
+    display: flex;
+    width: 500px;
+}
