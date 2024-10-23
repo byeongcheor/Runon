@@ -78,3 +78,6 @@ function formCheck(event){
 
 
     }
+function findIdPopup(){
+    window.open('/login&join/FindId', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
+}

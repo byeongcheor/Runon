@@ -1,5 +1,7 @@
 package com.ict.finalproject.controller;
 
+import com.ict.finalproject.dao.MemberDAO;
+import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.LoginService;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.vo.MemberVO;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,10 +23,14 @@ public class LoginController {
     LoginService service;
 
     @Autowired
+    JWTUtil jwtUtil;
+    @Autowired
     MemberService memberService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private MemberDAO memberDAO;
 
 
     @GetMapping("/login&join/loginForm")
@@ -44,6 +51,7 @@ public class LoginController {
         //입력한 비번값이 db랑비교해서 맞으면
 //        if (bCryptPasswordEncoder.matches(password, vo.getPassword())) {
         //정지 되었는지 확인
+
         if (vo!=null) {
             if (vo.getIs_disabled().equals("1")) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -62,26 +70,39 @@ public class LoginController {
                     return map;
                 }
             }
+
         }
-    //        } 정지 기한이 아니면
-//        else {
-//            result=3;
-//            map.put("result",result);
-//            return map;
-//        }
         result=3;
         map.put("result",result);
         return map;  //정지상태(1)인데 아직 기한이 남았을때
 
 
     }
-    /*@PostMapping("/login&join/userCheck")
+    @GetMapping("/login&join/FindId")
+    public String FindId(){
+
+        return "login&join/FindId";
+    }
+    @PostMapping("/login&join/findId")
     @ResponseBody
-    public Map<String,Object>userCheck(@RequestParam("username")String username){
+    public Map<String,Object> findId(@RequestParam("name")String name,
+                                     @RequestParam("tel")String tel){
         Map<String,Object> map=new HashMap<>();
+        List<MemberVO>usernames=service.FindIds(name,tel);
+        map.put("usernames",usernames);
+
+        return map;
     }
 
-*/
-
+    @PostMapping("/login&join/changePw")
+    @ResponseBody
+    public Map<String,Object>changePw(@RequestParam("selectedRadio")String username){
+        Map<String,Object> map=new HashMap<>();
+        MemberVO mvo=   memberDAO.findByUsername(username);
+        String token = jwtUtil.createJwt(username,mvo.getRole(), 60*60*24*30*1000L);
+        System.out.println(token);
+        map.put("token",token);
+        return map;
+    }
 
 }

@@ -66,7 +66,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/css/**", "/js/**","/img/**").permitAll()
                         .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp").permitAll()
-                        //.requestMatchers("/adminPages/adminHome","/adminPages/memberlist").hasRole("ADMIN")
+                        .requestMatchers("/adminPages/adminHome").hasRole("ADMIN")
                         //.requestMatchers("/mate/mate").authenticated()
 //                        .requestMatchers("링크명").authenticated()
                         .anyRequest().permitAll());

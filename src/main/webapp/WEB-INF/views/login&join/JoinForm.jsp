@@ -52,16 +52,16 @@
             </div>
             <div class="joinN">우편번호</div>
             <div class="joinZ">
-                <input type="text" name="zip_code" id="zip_code" size="5" placeholder="선택사항"/>
+                <input type="text" name="zip_code" id="zip_code" size="5" placeholder="우편번호를 입력해주세요"/>
                 <input type="button" id="zipSearch" value="우편변호찾기" onclick="daumPostcode()"/>
             </div>
             <div class="joinN">주소</div>
             <div class="joinI">
-                <input type="text" name="addr" id="addr" style="width:70%" placeholder="선택사항입니다"/>
+                <input type="text" name="addr" id="addr" style="width:70%" placeholder="주소를 입력해주세요"/>
             </div>
             <div class="joinN">상세주소</div>
             <div class="joinI">
-                <input type="text" name="addr_details" id="addr_details" placeholder="선택사항입니다"/>
+                <input type="text" name="addr_details" id="addr_details" placeholder="상세주소를 입력해주세요"/>
             </div>
             <div class="joinN info">개인정보 공개여부
                 <div class="form-check">

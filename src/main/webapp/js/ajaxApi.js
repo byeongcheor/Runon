@@ -2,67 +2,68 @@ var tokenRequestInProgress = false; // 토큰 갱신 중 여부 확인
 
 $(document).ready(function () {
 
-    // 모든 AJAX 요청에 Authorization 헤더 추가
-    $.ajaxSetup({
-        beforeSend: async function (xhr, settings) {
-            // 재시도 여부를 확인하여 무한 루프 방지
-            if (!settings._retry) {
-                let headers = await addTokenToHeaders({});
+     // 모든 AJAX 요청에 Authorization 헤더 추가
+        $.ajaxSetup({
+            beforeSend: async function (xhr, settings) {
+                // 재시도 여부를 확인하여 무한 루프 방지
+                if (!settings._retry) {
+                    let headers = await addTokenToHeaders({});
 
-                // 반환된 headers의 값을 AJAX 요청에 설정
-                for (let key in headers) {
-                    xhr.setRequestHeader(key, headers[key]);
+                    // 반환된 headers의 값을 AJAX 요청에 설정
+                    for (let key in headers) {
+                        xhr.setRequestHeader(key, headers[key]);
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // 전역적으로 AJAX 에러 처리 (401, 403 에러)
-    $(document).ajaxError(async function (event, xhr, settings, error) {
-        if (xhr.status === 401 || xhr.status === 403) {
-            console.log(`${xhr.status} 에러 발생, 토큰 갱신 시도 중...`);
+        // 전역적으로 AJAX 에러 처리 (401, 403 에러)
+        $(document).ajaxError(async function (event, xhr, settings, error) {
+            if (xhr.status === 401 || xhr.status === 403) {
+                /*console.log(`${xhr.status} 에러 발생, 토큰 갱신 시도 중...`);*/
 
-            if (!settings._retry) {
-                settings._retry = true; // 재시도 플래그 설정
-                let newAccessToken;
+                if (!settings._retry) {
+                    settings._retry = true; // 재시도 플래그 설정
+                    let newAccessToken;
 
-                // 토큰 갱신 시도
-                let atoken = localStorage.getItem("Authorization");
-                if (atoken != null) {
-                    newAccessToken = atoken;
-                } else {
-                    newAccessToken = await obtainNewAccessToken();
-                }
+                    // 토큰 갱신 시도
+                    let atoken = localStorage.getItem("Authorization");
+                    if (atoken != null) {
+                        newAccessToken = atoken;
+                    } else {
+                        newAccessToken = await obtainNewAccessToken();
+                    }
 
-                if (newAccessToken) {
-                    // 갱신된 토큰으로 헤더 설정 후 재시도
-                    $.ajax({
-                        url: settings.url,  // 이전에 실패했던 요청의 URL
-                        type: settings.type,  // 이전 요청의 타입 (GET, POST 등)
-                        data: settings.data,  // 이전 요청의 데이터
-                        headers: { 'Authorization': newAccessToken },  // 새로운 토큰 추가
-                        _retry: true,  // 재시도 시 _retry 설정 방지
+                    if (newAccessToken) {
+                        // 갱신된 토큰으로 헤더 설정 후 재시도
+                        $.ajax({
+                            url: settings.url,  // 이전에 실패했던 요청의 URL
+                            type: settings.type,  // 이전 요청의 타입 (GET, POST 등)
+                            data: settings.data,  // 이전 요청의 데이터
+                            headers: {'Authorization': newAccessToken},  // 새로운 토큰 추가
+                            _retry: true,  // 재시도 시 _retry 설정 방지
 
-                        success: function (response, status, xhr) {
-                            document.cookie = `Authorization=${newAccessToken}; path=/; Secure; HttpOnly`;
-                            alert("성공");
-                            console.log("상태:", status);
-                            //console.log("xhr:", xhr);
-                            $('body').html(response);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('재시도 실패:', status, error);
-                            alert("재시도 실패");
-                            logout();  // 재시도 실패 시 로그아웃
-                        }
-                    });
-                } else {
-                    console.log('토큰 갱신 실패, 로그아웃 처리');
-                    logout();  // 토큰 갱신 실패 시 로그아웃 처리
+                            success: function (response, status, xhr) {
+                                document.cookie = `Authorization=${newAccessToken}; path=/; Secure; HttpOnly`;
+
+                             /*   console.log("상태:", status);*/
+                                //console.log("xhr:", xhr);
+                                $('body').html(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('재시도 실패:', status, error);
+                              /*  alert("재시도 실패");*/
+                                logout();  // 재시도 실패 시 로그아웃
+                            }
+                        });
+                    } else {
+                        console.log('토큰 갱신 실패, 로그아웃 처리');
+                        logout();  // 토큰 갱신 실패 시 로그아웃 처리
+                    }
                 }
             }
-        }
-    });
+        });
+
 });
 
 // AJAX 요청을 보낼 때마다 헤더에 토큰 추가
@@ -78,7 +79,7 @@ async function addTokenToHeaders(headers) {
 
     // 토큰이 없고, 다른 갱신 요청이 진행 중이지 않으면
     if (!token && !tokenRequestInProgress) {
-        console.log("토큰 없음, 갱신 시도");
+      /*  console.log("토큰 없음, 갱신 시도");*/
         tokenRequestInProgress = true;  // 토큰 갱신 중 상태로 설정
 
         token = await obtainNewAccessToken();  // 토큰 갱신 함수 호출
@@ -123,12 +124,12 @@ async function obtainNewAccessToken() {
                     }
                 },
                 error: function (e) {
-                    console.log("토큰 갱신 실패", e);
+                    /*console.log("토큰 갱신 실패", e);*/
                     resolve(null);  // 에러 발생 시 null 반환
                 }
             });
         } else {
-            console.log("리프레시 토큰이 없습니다.");
+          /*  console.log("리프레시 토큰이 없습니다.");*/
             resolve(null);  // 리프레시 토큰이 없으면 null 반환
         }
     });
@@ -154,6 +155,6 @@ function logout2() {
     localStorage.removeItem("matchedRoomCode");
     localStorage.removeItem("userNickname");
     localStorage.removeItem("usercode");
-    window.location.reload();
+    window.location.href="/";
 
 }
