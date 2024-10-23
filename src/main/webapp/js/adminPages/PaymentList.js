@@ -114,10 +114,28 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
                 tag += "</div></li>";
 
             });
-
-
-
             document.getElementById("PaymentList").innerHTML=tag;
+
+                var paginationTag="";
+
+
+                if (pVO.nowpage>1){
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage - 1) +
+                        ", PaymentSearchType,PaymentSearchValue);'>Previous</a></li>";
+                }
+                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                    if (p <= pVO.totalPage) {
+                        paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadPayList(" + p
+                            + ",PaymentSearchType,PaymentSearchValue);'>" + p + "</a></li>";
+                    }
+                }
+                if (pVO.nowPage < pVO.totalPage) {
+
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage + 1) +
+                        ", PaymentSearchType,PaymentSearchValue);'>Next</a></li>";
+                }
+
+                $(".pagination").html(paginationTag);
             }
         }
     });
@@ -131,7 +149,7 @@ function enterKey(event) {
     }
 }
 function searchbutton(){
-    PaymentSearchType=document.getElementById("CertificateSearchValue").value;
+    PaymentSearchType=document.getElementById("PaymentSearchValue").value;
     PaymentSearchValue=document.getElementById("searchtext").value;
     alert(PaymentSearchType+":"+PaymentSearchValue);
     loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);
