@@ -6,8 +6,6 @@ clickCount=0;
 function report(){
     const submenus = document.querySelectorAll('.submenu');
     clickCount++;
-
-
     submenus.forEach(submenu => {
         if (clickCount % 2 === 1) {
             submenu.classList.remove("hidden");

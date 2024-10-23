@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -611,4 +612,78 @@ public class AdminController {
         map.put("Payvo",Payvo);
         return map;
     }
+    @GetMapping("/QnaList")
+    public String QnaList(){
+        return "adminPages/QnaList";
+    }
+    @PostMapping("/QnaLists")
+    @ResponseBody
+    public Map<String,Object>QnaLists(PagingVO pvo,
+                                      @RequestParam(value = "usercode",required = false)Integer usercodeValue,
+                                      @RequestParam(value="page",defaultValue = "1")int page){
+        Map<String,Object> map=new HashMap<>();
+        if(usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+        }
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getSearchQnaRecord(pvo);
+        }else if (pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            totalRecord=service.getSearchQnaRecord(pvo);
+        }else{
+            totalRecord=service.getQnaRecord();
+        }
+        pvo.setTotalRecord(totalRecord);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        List<QnAVO> QnaList=new ArrayList<>();
+            if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+                QnaList=service.getSearchQnaLists(pvo);
+            }else  if (pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+                QnaList=service.getSearchQnaLists(pvo);
+            }else{
+                QnaList=service.getQnaLists(pvo);
+            }
+            map.put("QnaList",QnaList);
+            map.put("pvo",pvo);
+        System.out.println(QnaList);
+        return map;
+    }
+    @PostMapping("/qnaDetail")
+    @ResponseBody
+    public Map<String,Object> qnaDetail(@RequestParam(value = "qna_code",required = false)int qna_code){
+        Map<String,Object> map=new HashMap<>();
+        QnAVO qvo=service.getQnaDetail(qna_code);
+        AnswerVO AnswerVO=service.getAnswer(qna_code);
+        map.put("qvo",qvo);
+        map.put("AnswerVO",AnswerVO);
+        return map;
+    }
+
+    @PostMapping("/insertAnswer")
+    @ResponseBody
+    public Map<String,Object> insertAnswer(@RequestParam("qna_code")int qna_code,
+                                           @RequestParam("usercode")int usercode,
+                                           @RequestParam("content")String content){
+        Map<String,Object> map=new HashMap<>();
+        service.insertAnswer(qna_code,usercode,content);
+
+
+        return map;
+    }
+    @PostMapping("/updateAnswer")
+    @ResponseBody
+    public Map<String,Object> updateAnswer(@RequestParam("qna_code")int qna_code,
+                                           @RequestParam("usercode")int usercode,
+                                           @RequestParam("content")String content){
+        Map<String,Object> map=new HashMap<>();
+        service.updateAnswer(qna_code,usercode,content);
+
+        return map;
+    }
+
 }

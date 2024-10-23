@@ -108,5 +108,22 @@ public interface AdminPagesService {
     public int getPaymentRecord(PagingVO pvo);
     //모든 결제내역리스트
     public List<PaymentVO>getPaymentList(PagingVO pvo);
+    //검색된 qna수
+    public int getSearchQnaRecord(PagingVO pvo);
+    //검색된 qnalist
+    public List<QnAVO>getSearchQnaLists(PagingVO pvo);
+    //모든 qna수
+    public int getQnaRecord();
+    //모든 qna리스트
+    public List<QnAVO>getQnaLists(PagingVO pvo);
+    //qna_code로 디테일받기
+    public QnAVO getQnaDetail(int qna_code);
+    //qna_code로 answer_tbl값 가져오기
+    public AnswerVO getAnswer(int qna_code);
+    //answer등록
+    public void insertAnswer(int qna_code,int usercode,String content);
+    //답변수정
+    public void updateAnswer(int qna_code,int usercode,String content);
+
 
 }

@@ -487,4 +487,48 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public List<PaymentVO> getPaymentList(PagingVO pvo) {
         return dao.getPaymentList(pvo);
     }
+
+    @Override
+    public int getSearchQnaRecord(PagingVO pvo) {
+        return dao.getSearchQnaRecord(pvo);
+    }
+
+    @Override
+    public List<QnAVO> getSearchQnaLists(PagingVO pvo) {
+        return dao.getSearchQnaLists(pvo);
+    }
+
+    @Override
+    public int getQnaRecord() {
+        return dao.getQnaRecord();
+    }
+
+    @Override
+    public List<QnAVO> getQnaLists(PagingVO pvo) {
+        return dao.getQnaLists(pvo);
+    }
+
+    @Override
+    public QnAVO getQnaDetail(int qna_code) {
+        return dao.getQnaDetail(qna_code);
+    }
+
+    @Override
+    public AnswerVO getAnswer(int qna_code) {
+        return dao.getAnswer(qna_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void insertAnswer(int qna_code, int usercode, String content) {
+        int result= dao.insertAnswer(qna_code,usercode,content);
+        if (result!=0){
+            dao.updateqna(qna_code);
+        }
+    }
+
+    @Override
+    public void updateAnswer(int qna_code, int usercode, String content) {
+        dao.updateAnswer(qna_code,usercode,content);
+    }
 }

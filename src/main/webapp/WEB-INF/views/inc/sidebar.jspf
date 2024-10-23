@@ -17,7 +17,8 @@
                     <a class="menus" href="/adminPages/memberlist">Members</a>
                 </div>
                 <div class="menubox"><a class="menus" href="/adminPages/adminlist">Admins</a></div>
-                <div class="menubox"><a class="menus" href="/adminPages/ReportList">ReportList</a></div>
+                <div class="menubox"><a class="menus" href="/adminPages/ReportList">신고관리</a></div>
+                <div class="menubox"><a class="menus" href="/adminPages/QnaList">Q&A관리</a></div>
              <%--   <div onclick="report()" id="report" class="mouse menubox">
                     <a class="menus" id="reportfont" >신고 관리</a>
 
@@ -31,7 +32,7 @@
                     <div>&nbsp; &nbsp; 신고 처리</div>
                 </div>--%>
                 <div class="menubox"><a class="menus" href="">게시판관리</a></div>
-                <div class="menubox"><a class="menus" href="/adminPages/CertificateList">CertificateList</a></div>
+                <div class="menubox"><a class="menus" href="/adminPages/CertificateList">기록인증</a></div>
                 <div class="menubox"><a class="menus" href="/adminPages/PaymentList">결제정보</a></div>
             </div>
             <div id="lastmenu">

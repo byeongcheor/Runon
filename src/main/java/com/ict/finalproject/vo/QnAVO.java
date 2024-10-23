@@ -26,4 +26,6 @@ public class QnAVO {
 
     //에러 터지면 지우세요
     private String nickname;
+    private String username;
+    private String answer_date;
 }

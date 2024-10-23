@@ -114,7 +114,7 @@
                         </div>
                     </div>
                     <div onclick="closedetail()" class="orderOk">
-                        <span >확인</span>
+                        <span>확인</span>
                     </div>
                 </div>
             </div>

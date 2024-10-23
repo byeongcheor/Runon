@@ -244,9 +244,23 @@
     background-color: #CCFF47;
     border: none;
 }
+.orderOk{
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    margin: 60px auto 140px;
+    width: 170px;
+    height: 43px;
+    border-radius: 6px;
+    background-color: #CCFF47;
+}
 .orderOk span {
-     font-size: 18px;
-     font-weight: bold;
-     text-align: center;
-     color: black;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: black;
 }

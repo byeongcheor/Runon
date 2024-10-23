@@ -324,3 +324,7 @@
     border-radius: 5px;
     line-height: 20px;
 }
+.prefers-reduced-motion{
+    display: none !important;
+
+}

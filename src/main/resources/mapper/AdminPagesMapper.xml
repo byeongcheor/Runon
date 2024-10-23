@@ -660,7 +660,7 @@
         UPDATE point_tbl p
         JOIN user_tbl u ON u.usercode = p.usercode
         JOIN certificate_tbl c ON c.username = u.username
-        SET mypoint = #{record}
+        SET mypoint =mypoint+${record}
         WHERE  c.certificate_code = #{certificate_code}
     </update>
     <select id="getPointCode" >
@@ -796,4 +796,84 @@
         </if>
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
+    <select id="getSearchQnaRecord">
+        select count(qna_code)
+        from qna_tbl
+        <where>
+          is_deleted=0
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                and
+                <if test="searchKey == 'username'">
+                      usercode in (select usercode from user_tbl where username like concat('%', #{searchWord}, '%'))
+                </if>
+                <if test="searchKey == 'nickname'">
+                    usercode in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                </if>
+
+
+            </if>
+            <if test="searchKey2 != null">
+                and qna_status = #{searchKey2}
+            </if>
+        </where>
+    </select>
+
+    <select id="getQnaRecord">
+        select count(qna_code)
+        from qna_tbl where is_deleted=0
+    </select>
+    <select id="getSearchQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*, u.nickname, u.username, a.writedate as answer_date
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        left join answer_tbl a on q.qna_code = a.qna_code
+        <where>
+            q.is_deleted = 0
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                and
+                <if test="searchKey == 'username'">
+                    u.username like concat('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'nickname'">
+                    u.nickname like concat('%', #{searchWord}, '%')
+                </if>
+            </if>
+            <if test="searchKey2 != null">
+                and q.qna_status = #{searchKey2}
+            </if>
+        </where>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <select id="getQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*, u.nickname, u.username, a.writedate as answer_date
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        left join answer_tbl a on q.qna_code = a.qna_code
+        where q.is_deleted=0
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <select id="getQnaDetail" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*,u.nickname,u.username
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        where q.qna_code=#{qna_code}
+    </select>
+    <select id="getAnswer" resultType="com.ict.finalproject.vo.AnswerVO">
+        select * from answer_tbl
+        where qna_code=#{qna_code}
+    </select>
+    <insert id="insertAnswer">
+        insert into answer_tbl(answer_content,qna_code,admin_code) values(#{content},#{qna_code},
+        (select admin_code from admin_tbl where usercode=#{usercode}));
+    </insert>
+    <update id="updateqna">
+        update qna_tbl set qna_status=1 where qna_code=#{qna_code}
+    </update>
+    <update id="updateAnswer">
+        update answer_tbl
+        set answer_content = #{content},
+        writedate=now(),
+        admin_code = (select admin_code from admin_tbl where usercode = #{usercode})
+        where qna_code = #{qna_code}
+    </update>
 </mapper>
