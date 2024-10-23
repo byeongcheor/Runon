@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/css/main.css" type="text/css">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
 <script>
     AOS.init({
       duration: 1200,

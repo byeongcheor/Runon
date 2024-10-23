@@ -88,7 +88,7 @@
                             <!-- 카드 한 개 -->
                             <div class="marathonC2" onclick="goToDetailPage(${marathon.marathon_code})">
                                 <div class="marathonListI">
-                                    <img src="/img/defaultimg.png" alt="마라톤 이미지">
+                                    <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
                                     <div class="receiptType">
                                         <span style="<c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>">
                                                 ${marathon.registration_status}
@@ -116,15 +116,14 @@
         <!-- 페이징 UI 추가 -->
         <!-- 페이징 -->
         <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
-            <!-- 이전 페이지 -->
-            <c:if test="${pvo.nowPage == 1}">
-                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">&lt;</a></li>
-            </c:if>
-
+            <!-- 이전 페이지 버튼 -->
             <c:if test="${pvo.nowPage > 1}">
-                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage - 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">Previous</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?nowPage=${pvo.nowPage - 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&lt;</a>
+                </li>
             </c:if>
 
+            <!-- 페이지 번호 출력 -->
             <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
                 <c:if test="${p <= pvo.totalPage}">
                     <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
@@ -133,14 +132,16 @@
                 </c:if>
             </c:forEach>
 
-            <!-- 다음 페이지 -->
-            <c:if test="${pvo.nowPage == pvo.totalPage}">
-                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">Next</a></li>
-            </c:if>
+
+            <!-- 다음 페이지 버튼 -->
             <c:if test="${pvo.nowPage < pvo.totalPage}">
-                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">></a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&gt;</a>
+                </li>
             </c:if>
         </ul>
+
+
     </div>
 </div>
 <script>
@@ -163,6 +164,7 @@
                 $('#marathon-list').html($(response).find('#marathon-list').html());
 
                 // 페이징도 업데이트
+
                 $('#paging').html($(response).find('#paging').html());
             },
             error: function() {
@@ -193,6 +195,8 @@
             fetchFilteredData(year, month, addr, searchTerm);
 
         });
+
+
         // 조회순 클릭 이벤트
         $('#sort-view').on('click', function() {
             fetchFilteredData(null, null, null, null, '2');
@@ -203,6 +207,8 @@
             fetchFilteredData(null, null, null, null, '1');
         });
     });
+
+
 
     function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {
         // 검색어 출력
@@ -259,7 +265,7 @@
                             <div class="marathonC">
                                 <div class="marathonC2" onclick="goToDetailPage(` + marathon.marathon_code + `)">
                                     <div class="marathonListI">
-                                        <img src="/img/defaultimg.png" alt="마라톤 이미지">
+                                        <img src=/resources/uploadfile/` + marathon.poster_img + `>
                                         <div class="receiptType">
                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : '') + `">
                                                 ` + marathon.registration_status + `

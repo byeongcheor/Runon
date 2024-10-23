@@ -32,6 +32,7 @@
     top: 0;
     z-index: 10;
     border-top-left-radius: 10px;
+    margin-bottom: 10px;
     border-top-right-radius: 10px;
 }
 /* 닫기 버튼 스타일 */
@@ -221,8 +222,8 @@ button#reportBtn {
     margin: 15% auto; /* 가운데 정렬 */
     padding: 40px;
     border: 1px solid #888;
-    width: 400px; /* 너비 조정 */
-    height: 500px;
+    width: 340px; /* 너비 조정 */
+    height: 400px;
     border-radius: 10px;
 }
 
@@ -290,7 +291,7 @@ button#reportBtn {
     background-color: white;
 }
 .reportTT textarea{
-
+    margin-top: 10px;
     border: 1px solid #d9e0e6;
     background-color: #f8fafb;
     border-radius: 16px;
@@ -298,4 +299,21 @@ button#reportBtn {
     font-size: 16px;
     box-sizing: border-box;
 
+}
+.report-item {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color:black;
+}
+.ChatReport_modal-content1 {
+    background-color: #fefefe;
+    margin: 15% auto; /* 가운데 정렬 */
+    padding: 40px;
+    border: 1px solid #888;
+    width: 600px; /* 너비 조정 */
+    height: auto;
+    border-radius: 10px;
 }

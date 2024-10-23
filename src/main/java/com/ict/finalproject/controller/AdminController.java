@@ -3,12 +3,17 @@ package com.ict.finalproject.controller;
 import com.ict.finalproject.dao.AdminPagesDAO;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.AdminPagesService;
+import com.ict.finalproject.service.MarathonService;
 import com.ict.finalproject.vo.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +28,8 @@ public class AdminController {
     JWTUtil jwtUtil;
     @Autowired
     private AdminPagesDAO adminPagesDAO;
+    @Autowired
+    MarathonService marathonservice;
 
     @GetMapping("/adminHome")
     public String admin(Model model){
@@ -685,5 +692,137 @@ public class AdminController {
 
         return map;
     }
+ //관리자페이지 게시물관리
+    @GetMapping("/boardList")
+    public String boardList(){return "adminPages/boardList";}
+
+
+    @PostMapping("/BoardList")
+    @ResponseBody
+    public Map<String,Object> boardLists(
+            PagingVO pvo,@RequestParam(value = "usercode",required = false) Integer usercode,
+            @RequestParam(value = "page",defaultValue = "1")int page){
+        System.out.println("K1"+pvo.getSearchKey2());
+        System.out.println("K2"+pvo.getSearchKey());
+        System.out.println("V"+pvo.getSearchWord());
+        Map<String,Object> map=new HashMap<>();
+        if (usercode !=null){
+            int usercodevlaue=usercode.intValue();
+            AdminsVO AdminRole = service.selectAdminRole(usercodevlaue);
+            map.put("Avo", AdminRole);
+        }
+        System.out.println("V2");
+        pvo.setNowPage(page);
+        int Record = 15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if(pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
+            totalRecord=service.getSearchBoardRecord(pvo);
+        }else if(pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
+            totalRecord=service.getSearchBoardRecord(pvo);
+        }else{
+            totalRecord=service.getBoardTotalRecord();
+        }System.out.println("V3");
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / Record);
+        pvo.setTotalPage(totalPage);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        List<MarathonListVO> BoardList;
+
+        if (pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
+            BoardList=service.selectBoardWithSearch(pvo);
+        }else if(pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
+            BoardList=service.selectBoardWithSearch(pvo);
+        }else{
+            BoardList=service.selectAllBoard(pvo);
+        }System.out.println("V4");
+        map.put("list", BoardList);
+        map.put("pvo", pvo);
+        System.out.println(pvo);
+        System.out.println(BoardList);
+        return map;
+    }
+
+    @GetMapping("/marathon/marathonDetail/{marathonCode}")
+    public String marathonDetail(@PathVariable("marathonCode") int marathonCode) {
+        return "marathon/marathonDeatail";
+    }
+
+    @GetMapping("/boardEdit/marathonCode/{marathonCode}")
+    public String editMarathon(@PathVariable("marathonCode") int marathonCode, Model model) {
+        MarathonListVO marathonDetail = marathonservice.getMarathonDetail(marathonCode);  // 마라톤 정보 가져오기
+
+
+        System.out.println("마라톤 코드: " + marathonCode); // 로그로 마라톤 코드 확인
+        model.addAttribute("marathonDetail", marathonDetail);  // 마라톤 정보를 모델에 추가
+        model.addAttribute("latitude", marathonDetail.getLat()); // 위도
+        model.addAttribute("longitude", marathonDetail.getLon()); // 경도
+
+        return "adminPages/boardEdit";  // 수정 페이지 경로 설정
+    }
+
+    @PostMapping("/marathon/update")
+    public String updateMarathon(
+            @RequestParam("marathonCode") int marathonCode,
+            @RequestParam("marathonName") String marathonName,
+            @RequestParam("event_date") String eventDate,
+            @RequestParam("addr") String addr,
+            @RequestParam("total_distance") String totalDistance,
+            @RequestParam("registration_start_date") String registrationStartDate,
+            @RequestParam("registration_end_date") String registrationEndDate,
+            @RequestParam("marathonContent") String marathonContent,
+            @RequestParam(value = "posterImage", required = false) MultipartFile posterImage,
+            HttpServletRequest request, Model model) {
+
+        // 이미지 파일 업로드 처리
+        String posterPath = null;
+        if (posterImage != null && !posterImage.isEmpty()) {
+            try {
+                // 서버 상대 경로 설정
+                String uploadDir = request.getServletContext().getRealPath("/resources/uploadfile/");
+
+                // 업로드 디렉토리가 없으면 생성
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                // 파일 이름 중복 방지를 위해 새로운 파일 이름 생성 (현재 시간 기반)
+                String newFilename = System.currentTimeMillis() + "_" + posterImage.getOriginalFilename();
+
+                // 이미지 파일 저장 경로 설정
+                File file = new File(uploadDir + newFilename);
+                posterImage.transferTo(file);
+
+                // 저장된 파일 경로를 저장 (웹에서 접근 가능한 경로로 변경)
+                posterPath =   newFilename;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // MarathonListVO 객체에 데이터 설정
+        MarathonListVO marathon = new MarathonListVO();
+        marathon.setMarathon_code(marathonCode);
+        marathon.setMarathon_name(marathonName);
+        marathon.setEvent_date(eventDate);
+        marathon.setAddr(addr);
+        marathon.setTotal_distance(totalDistance);
+        marathon.setRegistration_start_date(registrationStartDate);
+        marathon.setRegistration_end_date(registrationEndDate);
+        marathon.setMarathon_content(marathonContent);
+
+        if (posterPath != null) {
+            marathon.setPoster_img(posterPath); // 이미지 파일 경로 설정
+        }
+
+        // 마라톤 정보 업데이트 서비스 호출
+        marathonservice.updateMarathon(marathon);
+
+        // 수정 후 마라톤 상세 페이지로 리다이렉트
+        return "redirect:/marathon/marathonDetail/"  + marathonCode + "?success";
+    }
+
+
 
 }

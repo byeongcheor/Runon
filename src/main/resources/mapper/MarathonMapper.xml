@@ -14,22 +14,18 @@
         where  username ='${param1}'
     </select>
     <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
-        SELECT * FROM marathon_list_tbl
-        WHERE is_deleted = 0
-        AND event_date >= CURDATE()
-        ORDER BY
-        CASE
-        WHEN CURDATE() BETWEEN registration_start_date AND registration_end_date THEN 1  -- 접수 중인 대회는 최우선
-        ELSE 2  -- 접수 마감된 대회는 그 다음
-        END,
-        event_date ASC  -- 그 다음으로 대회 날짜를 오름차순으로 정렬
-        LIMIT #{offset}, 8
-
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
+        ORDER BY event_date ASC  <!-- 대회 날짜 오름차순 정렬 -->
+        LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
-
     <select id="totalRecord" parameterType="PagingVO" resultType="int">
-        SELECT COUNT(*) FROM marathon_list_tbl
+        SELECT COUNT(*)
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
     </select>
+
     <!-- 마라톤 코드로 마라톤 정보 조회 -->
     <select id="getMarathonByCode" resultType="MarathonListVO" parameterType="int">
         SELECT
@@ -128,9 +124,55 @@
                 event_date ASC <!-- 기본 정렬 -->
             </otherwise>
         </choose>
-        LIMIT #{offset}, #{onePageRecord}
+        LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
+    <insert id="addLike" parameterType="com.ict.finalproject.vo.LikeVO">
+        INSERT INTO marathon_likes (usercode, marathon_code, created_at) VALUES (#{usercode}, #{marathon_code}, NOW())
+    </insert>
+    <select id="checkLike" parameterType="map" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </select>
+    <update id="incrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count + 1
+        WHERE marathon_code = #{marathon_code};
+    </update>
+    <delete id="removeLike" parameterType="map">
+        DELETE FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </delete>
 
-
-
+    <update id="decrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count - 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET hit = hit + 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <select id="getMarathonDetail" parameterType="int" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonCode}
+    </select>
+    <update id="updateMarathon">
+        UPDATE marathon_list_tbl
+        <set>
+            marathon_name = #{marathon_name},
+            event_date = #{event_date},
+            addr = #{addr},
+            total_distance = #{total_distance},
+            registration_start_date = #{registration_start_date},
+            registration_end_date = #{registration_end_date},
+            marathon_content = #{marathon_content}
+            <if test="poster_img != null">
+                , poster_img = #{poster_img}
+            </if>
+        </set>
+        WHERE marathon_code = #{marathon_code}
+    </update>
 </mapper>

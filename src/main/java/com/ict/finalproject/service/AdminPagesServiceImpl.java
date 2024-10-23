@@ -531,4 +531,28 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public void updateAnswer(int qna_code, int usercode, String content) {
         dao.updateAnswer(qna_code,usercode,content);
     }
+
+
+    // 마라톤 게시글 관리
+    @Override
+    public int getSearchBoardRecord(PagingVO pvo) {
+        return dao.getSearchBoardRecord(pvo);
+    }
+
+    @Override
+    public int getBoardTotalRecord() {
+        return dao.getBoardTotalRecord();
+    }
+
+    @Override
+    public List<MarathonListVO> selectBoardWithSearch(PagingVO pvo) {
+        return dao.selectBoardWithSearch(pvo);
+    }
+
+    @Override
+    public List<MarathonListVO> selectAllBoard(PagingVO pvo) {
+        return dao.selectAllBoard(pvo);
+    }
+    //
+
 }

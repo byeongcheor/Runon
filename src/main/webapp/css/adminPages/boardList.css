@@ -1,0 +1,247 @@
+.adminContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+#BoardHead{
+    border-bottom: 1px solid black;
+}
+
+#checkboxlist>.hiddenbox{
+    display: none;
+}
+
+.updateRole{
+    width: 10%;
+    display: none;
+}
+
+#BoardListBody{
+    width: 80%;
+    height: 100vh;
+    min-width: 950px;
+    margin: 0 auto;
+}
+
+#menutitle{
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.AdminRole{
+    display: none;
+    width: 15%;
+}
+
+#checkboxlist{
+    min-width: 170px;
+    max-width: 330px;
+    display: none;
+}
+
+#maintop{
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+#subtitle{
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+#mainmid{
+    width: 100%;
+    height: auto;
+}
+
+#mainmid>div{
+    display: flex;
+    margin: auto 0;
+}
+
+#mainmid>div>input{
+    margin: auto 0;
+}
+
+.clickbox{
+    margin-top: 8px;
+    height: 25px;
+    border: 1px solid black;
+    margin-right: 10px;
+    width: 70px;
+}
+
+#checkboxlist{
+    margin: auto 0;
+}
+
+#mainmid>div>form{
+    display: flex;
+    margin: 0 auto;
+    height: 60px;
+}
+
+#searchbutton{
+    height: 25px;
+    border: none;
+    background-color: white;
+    padding: 0;
+    width: 30px;
+    cursor: pointer;
+}
+
+#searchbutton .fa-2x{
+    font-size: 1.5em;
+}
+
+#searchbar{
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#searchbar>select{
+    height: 34px;
+    margin: auto 0;
+    margin-right: 10px;
+}
+
+#searchbar>div>input{
+    width: 300px;
+    height: 28px;
+    border: none;
+}
+
+#searchbox{
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#searchbar>div{
+    display: flex;
+    height: 30px;
+    margin: auto 0;
+}
+
+#searchbar>div>input:focus{
+    outline: none;
+}
+
+.BoardFavMain{
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.BoardFavMain>#ReportList{
+    background-color: white;
+    height: auto;
+    margin-left: 30px;
+}
+
+#BoardListBottom{
+    margin: 0;
+    padding: 0;
+    min-width: 1200px;
+}
+.test {
+    font-size: 1.2em;
+    border: none;
+    margin-left: 10px;
+    margin-top: 4px;
+}
+#board_title2{
+    text-align: center;
+    background-color: #F0F0F0;
+}
+.board_title3 .marathon_code{
+    width: 20%;
+    text-align: left;
+}
+li{
+    list-style: none;
+}
+
+#BoardList>li>div{
+    width: 100%;
+    display: flex;
+    line-height: 40px;
+    border-top: 1px solid #E2E2E2;
+    justify-content: space-between;
+    padding-left: 8px;
+    padding-right: 5px;
+}
+
+#BoardList .board_code{
+    width: 20%;  /* 마라톤번호 */
+    text-align: left;
+}
+
+#BoardList .marathon_name{
+    width: 45%;  /* 마라톤명 */
+    text-align: left;
+}
+
+#BoardList .created_date{
+    width: 20%;  /* 날짜 관련 */
+    text-align: left;
+}
+#BoardList .activation_date, #BoardList .deleted_date {
+    width: 20%;
+    text-align: center;
+}
+
+#BoardList .is_active,
+#BoardList .is_deleted {
+    width: 20%;  /* 활성화 여부, 삭제 여부 */
+    text-align: center;
+}
+
+#BoardList .edit_button,
+#BoardList .delete_button {
+    width: 10%;   /* 수정, 삭제 버튼 */
+    text-align: center;
+}
+
+.board_title3:hover{
+    background-color: #EBECEC;
+}
+
+#BoardList .buttonline{
+    width: 5%;
+}
+
+#downloadbutton input{
+    border-radius: 5px;
+    background-color: transparent;
+    border: 1px solid grey;
+}
+
+#resetbutton:hover{
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.pagination .page-link{
+    color: black;
+}
+
+.pagination .page-link:hover {
+    color: #fff;
+    background-color: black;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+
+.pagination .page-item.active .page-link:hover {
+    background-color: grey;
+    border-color: grey;
+}

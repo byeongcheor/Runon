@@ -1,11 +1,9 @@
 package com.ict.finalproject.service;
 
-import com.ict.finalproject.vo.CartVO;
-import com.ict.finalproject.vo.MarathonListVO;
-import com.ict.finalproject.vo.MateVO;
-import com.ict.finalproject.vo.PagingVO;
+import com.ict.finalproject.vo.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MarathonService {
     List<MarathonListVO> marathonSelectPaging(PagingVO pvo);
@@ -20,4 +18,14 @@ public interface MarathonService {
     List<MarathonListVO> filterMarathons(String year, String month, String addr, String search, PagingVO pvo, Integer sort1);
     public int usercodeSelect(String username);
     public List<MarathonListVO> userselect(int user_code);
+    // 좋아요 추가 메서드
+    void addLike(LikeVO likeVO);
+    // 좋아요 여부 확인 메서드
+    boolean checkLike(int usercode, int marathonCode);
+    void incrementLikeCount(int marathonCode); // 좋아요 수 증가 메서드
+    void removeLike(int usercode, int marathonCode);
+    void decrementLikeCount(int marathonCode);
+    void incrementViewCount(int marathonCode);
+    MarathonListVO getMarathonDetail(int marathonCode);
+    void updateMarathon(MarathonListVO marathon);
 }

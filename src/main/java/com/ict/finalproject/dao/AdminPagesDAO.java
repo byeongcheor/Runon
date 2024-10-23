@@ -157,4 +157,13 @@ public interface AdminPagesDAO {
 
 
 
+
+    //검색된 마라톤게시물수
+    public int getSearchBoardRecord(PagingVO pvo);
+    //모든 마라톤게시물수
+    public int getBoardTotalRecord();
+    //검색된 마라톤게시물vo에 담기
+    public List<MarathonListVO> selectBoardWithSearch(PagingVO pvo);
+    //모든  마라톤 게시물 vo에 담기
+    public List<MarathonListVO> selectAllBoard(PagingVO pvo);
 }

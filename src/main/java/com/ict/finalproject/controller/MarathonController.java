@@ -5,6 +5,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.CartService;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.service.MarathonService;
+import com.ict.finalproject.service.ReportService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class MarathonController {
     JWTUtil jwtUtil;
     String user_name ="";
     int user_code = 0;
-
+    ReportService reportservice;
 
     @PostMapping("/test")
     @ResponseBody
@@ -84,6 +86,7 @@ public class MarathonController {
         // 마라톤 코드에 따라 마라톤 정보를 가져오는 로직
         MarathonListVO marathon = service.getMarathonByCode(marathonCode);
 
+
         // 거리와 가격 매칭을 위한 Map 생성
         Map<String, Integer> distancePriceMap = new HashMap<>();
         String[] totalDistances = marathon.getTotal_distance().split(","); // total_distance 값
@@ -128,36 +131,19 @@ public class MarathonController {
             }
         }
 
-
+        /* model.addAttribute("userselect",userselect);*/
         // 모델에 데이터 추가
         model.addAttribute("marathon", marathon);
         model.addAttribute("distancePriceMap", distancePriceMap); // 거리와 가격 맵 추가
-       /* model.addAttribute("userselect",userselect);*/
-
+        model.addAttribute("marathonName", marathon.getMarathon_name()); // 마라톤 이름
+        model.addAttribute("latitude", marathon.getLat()); // 위도
+        model.addAttribute("longitude", marathon.getLon()); // 경도
+        model.addAttribute("totalDistance", marathon.getTotal_distance()); // 총 거리
+        model.addAttribute("entryFee", marathon.getEntry_fee()); // 참가비 추가
 
         return "marathon/marathonDetail";
     }
 
-//    @GetMapping("/marathonDetail/{id}")
-//    public String getMarathonDetail(@PathVariable("id") int marathonId, Model model,MarathonListVO mvo) {
-//        // 조회수 증가
-//        service.increaseHit(marathonId);
-//
-//        // DB에서 마라톤 정보를 가져옴 (마라톤 이름, 위도, 경도)
-//        MarathonListVO marathon  = service.getMarathonById(marathonId);
-//
-//        // 모델에 마라톤 정보 추가
-//        // 모델에 마라톤 정보 추가
-//        model.addAttribute("marathon", marathon);
-//        model.addAttribute("marathonName", marathon.getMarathon_name()); // 마라톤 이름
-//        model.addAttribute("latitude", marathon.getLat()); // 위도
-//        model.addAttribute("longitude", marathon.getLon()); // 경도
-//        model.addAttribute("totalDistance", marathon.getTotal_distance()); // 총 거리
-//        model.addAttribute("entryFee", marathon.getEntry_fee()); // 참가비 추가
-//
-//        // JSP 또는 Thymeleaf로 데이터를 전달하여 화면에 출력
-//        return "marathon/marathonDetail";
-//    }
     @PostMapping("/addToCart")
     @ResponseBody
     public Map<String, Object> addToCart(@RequestBody CartVO cartVO) {
@@ -227,6 +213,61 @@ public class MarathonController {
 
         return result; // 필터링된 마라톤 목록과 총 레코드 수 반환
     }
+    @PostMapping("/addLike")
+    @ResponseBody
+    public Map<String, Object> addLike(@RequestBody LikeVO likeVO) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // 좋아요 여부 확인
+            boolean alreadyLiked = service.checkLike(likeVO.getUsercode(), likeVO.getMarathon_code());
+
+            if (!alreadyLiked) {
+                // 좋아요 추가
+                service.addLike(likeVO);
+                service.incrementLikeCount(likeVO.getMarathon_code()); // 총합 업데이트
+                result.put("success", true);
+                result.put("message", "좋아요가 추가되었습니다.");
+            } else {
+                // 좋아요 해제
+                service.removeLike(likeVO.getUsercode(), likeVO.getMarathon_code()); // 좋아요 삭제
+                service.decrementLikeCount(likeVO.getMarathon_code()); // 총합 감소
+                result.put("success", true);
+                result.put("message", "좋아요가 해제되었습니다.");
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            result.put("success", false);
+            result.put("message", "좋아요 추가 실패: " + e.getMessage());
+            e.printStackTrace(); // 전체 스택 트레이스를 로그에 출력
+        }
+        return result; // JSON 형태로 응답
+    }
+
+    @GetMapping("/checkLike")
+    @ResponseBody
+    public Map<String, Object> checkLike(@RequestParam int usercode, @RequestParam int marathon_code) {
+        Map<String, Object> result = new HashMap<>();
+        boolean liked = service.checkLike(usercode, marathon_code); // 좋아요 여부 확인
+        result.put("liked", liked);
+        return result; // JSON 형태로 응답
+    }
+    @PostMapping("/incrementViewCount")
+    @ResponseBody
+    public Map<String, Object> incrementViewCount(@RequestBody Map<String, Integer> params) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int marathonCode = params.get("marathon_code"); // 요청 본문에서 marathon_code 가져오기
+            service.incrementViewCount(marathonCode); // 서비스에서 조회수 증가 메서드 호출
+            result.put("success", true);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "조회수 증가 실패: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result; // JSON 형태로 응답
+    }
+
+
 
 
 

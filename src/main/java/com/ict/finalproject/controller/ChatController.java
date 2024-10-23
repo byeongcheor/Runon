@@ -4,6 +4,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.ChatService;
 import com.ict.finalproject.service.CrewService;
 import com.ict.finalproject.service.MateService;
+import com.ict.finalproject.service.ReportService;
 import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.MessageVO;
 import com.ict.finalproject.vo.ReportVO;
@@ -33,6 +34,8 @@ public class ChatController {
     ChatService chatservice;
     @Autowired
     CrewService crewservice;
+    @Autowired
+    private ReportService reportservice;
 
 
 //    // @ModelAttribute를 사용하여 공통 속성 추가
@@ -51,10 +54,10 @@ public class ChatController {
 //    }
 
 
-    @GetMapping("/message/mate")
+    @GetMapping("/message/chatList")
     public String mateChat(){
 
-        return "mate/mate";
+        return "chat/chatList";
     }
 
     //클라이언트가 서버에 접속하고 메시지를 보내면 받는곳
@@ -144,8 +147,38 @@ public class ChatController {
             return reportVO; // 실패 시에도 ReportVO 반환
         }
     }
+    @GetMapping("/chat/reportHistory")
+    @ResponseBody
+    public List<ReportVO> getReportHistory(@RequestParam int usercode) {
 
+        List<ReportVO> reportHistory = null;
+        try {
+            reportHistory = reportservice.getReportsByUserCode(usercode);
 
+            if (reportHistory.isEmpty()) {
+                log.info("No report history found for usercode: {}", usercode);
+            }
+
+        } catch (Exception e) {
+            // 로그 출력 및 빈 리스트 반환
+            log.error("Error retrieving report history for usercode {}: {}", usercode, e.getMessage());
+            return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
+        }
+
+        return reportHistory;
+    }
+    @PostMapping("/report/updateStatus")
+    @ResponseBody
+    public ReportVO updateReportStatus(@RequestBody ReportVO reportVO) {
+        try {
+            reportservice.updateReportStatus(reportVO); // 신고 상태 업데이트 서비스 메서드 호출
+            return reportVO; // 업데이트된 ReportVO 반환
+        } catch (Exception e) {
+            log.error("신고 상태 업데이트 오류: {}", e.getMessage());
+            reportVO.setReport_status(-1); // 에러가 발생한 경우 상태를 -1로 설정 (원하는 에러 코드로 변경 가능)
+            return reportVO; // 에러가 발생했을 때도 ReportVO를 반환
+        }
+    }
 
 
 

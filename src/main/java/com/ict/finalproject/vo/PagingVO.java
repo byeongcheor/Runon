@@ -16,7 +16,7 @@ public class PagingVO {
     private String region; // 필터링할 지역
     private String search; // 필터링할 검색어 추가
     private Integer  sort1;
-
+    public int endPageNum;
     private String searchKey2;
     private String searchWord2;
     private String sort;
@@ -40,14 +40,13 @@ public class PagingVO {
                 ", region='" + region + '\'' +
                 ", search='" + search + '\'' +
                 ", sort1=" + sort1 +
+                ", endPageNum=" + endPageNum +
                 ", searchKey2='" + searchKey2 + '\'' +
                 ", searchWord2='" + searchWord2 + '\'' +
                 ", sort='" + sort + '\'' +
                 ", schedule='" + schedule + '\'' +
                 '}';
     }
-
-
 
     public Integer getSort1() {
         return sort1;
@@ -141,13 +140,11 @@ public class PagingVO {
     }
     public void setTotalRecord(int totalRecord) {
         this.totalRecord = totalRecord;
-        //총 페이지수 -> totalPage
-        totalPage = totalRecord / onePageRecord;
-        if(totalRecord%onePageRecord > 0) {
-            //5의 배수가 아니면 1page추가
-            totalPage++;
-        }
+
+        // 총 페이지 수 계산 (총 레코드 수 / 한 페이지당 레코드 수)
+        totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
     }
+
     public int getTotalPage() {
         return totalPage;
     }
@@ -200,6 +197,10 @@ public class PagingVO {
     public void calculateOffset() {
         this.offset = (this.nowPage - 1) * this.onePageRecord;
     }
+    public void calculateTotalPage() {
+        this.totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
+    }
+
     // 대표 지역 추출 메서드
     public String getMainLocation() {
         if (addr == null || addr.isEmpty()) {
@@ -217,5 +218,15 @@ public class PagingVO {
         return "기타"; // 해당하는 지역명이 없을 경우 "기타"로 표시
     }
 
+    public int getEndPageNum() {
+        int endPageNum = startPageNum + onePageNum - 1;
+        if (endPageNum > totalPage) {
+            endPageNum = totalPage;
+        }
+        return endPageNum;
+    }
 
+    public void setEndPageNum(int endPageNum) {
+        this.endPageNum = endPageNum;
+    }
 }
