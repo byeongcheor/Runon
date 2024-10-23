@@ -62,7 +62,7 @@
 
     <div id="Certificatedetailbackground">
         <div id="Certificatedetail">
-            <div  id="closedetail"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
+            <div  id="closedetail" style="text-align: right;"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
             <div id="usermain">
             </div>
 

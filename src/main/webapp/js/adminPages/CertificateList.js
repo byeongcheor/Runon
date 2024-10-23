@@ -132,25 +132,25 @@ function detail(certificate_code){
             console.log(Cvo.result_status)
 
             var tag=`
-                <div><h3>상세내역</h3></div>
+                <div style="margin-bottom: 20px;"><h3>상세내역</h3></div>
                 <div id="Certificate">
-                    <div>제목:`+Cvo.content+`</div>
-                    <div>접수일:`+Cvo.application_date+`</div>
-                    <div>신청자:`+Cvo.nickname+`</div>`;
+                    <div><div>제목</div><div class="detailContent">`+Cvo.content+`</div></div>
+                    <div><div>접수일</div><div class="detailContent">`+Cvo.application_date+`</div></div>
+                    <div><div>신청자</div><div class="detailContent">`+Cvo.nickname+`</div></div>`;
             if (Cvo.crew_member_code!=0) {
-                tag += `<div>참여유형:크루</div>
-                        <div>크루명:OOO크루</div>`;
+                tag += `<div><div>참여유형</div><div class="detailContent">크루</div></div>
+                        <div><div>크루명</div><div class="detailContent">OOO크루</div></div>`;
             }else{
-                tag += `<div>참여유형:개인</div>`;
+                tag += `<div><div>참여유형</div><div class="detailContent">개인</div></div>`;
             }
-                    tag +=`<div>인증사진:<div> <img style="width:150px;height: 150px" src="../resources/uploadCertificate/`+Cvo.proof_photo+`"></div></div>
+                    tag +=`<div><div>인증사진</div><div style="margin-bottom: 20px;"> <img style="width:150px;height: 150px; border-radius: 10px;" src="../resources/uploadCertificate/`+Cvo.proof_photo+`"></div></div>
                 </div>
                
             `;
             document.getElementById("CertificateDetails").innerHTML=tag;
             document.getElementById("Certificatedetailbackground").style.display="block";
             if (Cvo.result_status=="처리중"){
-                var buttonTag="<button type='button' onclick='blockbutton(\""+certificate_code+"\",\""+Cvo.crew_member_code+"\")'>승인하기</button>";
+                var buttonTag="<button type='button' id='approveBtn' onclick='blockbutton(\""+certificate_code+"\",\""+Cvo.crew_member_code+"\")'>승인하기</button>";
                 var selectTag=`  <div>
                         <label class="form-label">점수부여</label>
 
@@ -170,7 +170,7 @@ function detail(certificate_code){
             }else{   document.getElementById("Certificatedetailbackground").style.display="block";                document.getElementById("addButton").innerHTML=buttonTag;
                 document.getElementById("addButton").innerHTML="";
 
-                document.getElementById("certificate").innerHTML="<div>인증이 완료된 신청입니다</div>";
+                document.getElementById("certificate").innerHTML="<div class='detailContent' style='margin-top: 20px; color:darkblue;'>인증이 완료된 신청입니다</div>";
 
             }
         }
@@ -195,7 +195,7 @@ function blockbutton(certificate_code,crew_member_code){
         success:function(r){
             console.log(r);
             if (r.a!=0){
-                document.getElementById("certificate").innerHTML="<div>인증이 완료된 신청입니다</div>";
+                document.getElementById("certificate").innerHTML="<div style='margin-top: 20px; color: tomato;'>인증이 완료된 신청입니다</div>";
                 document.getElementById("addButton").innerHTML="";
                 CertificateList(now,CertificateSearchType,CertificateSearchType2,CertificateSearchValue);
 

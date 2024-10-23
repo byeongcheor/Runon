@@ -122,20 +122,20 @@ function detail(qna_code){
 
             var Dtag=`
              <div id="reportDetails">
-                <div><h3>문의내역</h3></div>
+                <div style="margin-bottom: 20px;"><h3>문의내역</h3></div>
                 <div id="report">
-                    <div>제목:`+qvo.qna_subject+`</div>
-                    <div>닉네임:`+qvo.nickname+`</div>
-                    <div>아이디:`+qvo.username+`</div>
+                    <div><div>제목</div><div class="detailContent">`+qvo.qna_subject+`</div></div>
+                    <div><div>닉네임</div><div class="detailContent">`+qvo.nickname+`</div></div>
+                    <div><div>아이디</div><div class="detailContent">`+qvo.username+`</div></div>
                     `;
             if (qvo.qna_status==1){
-                Dtag+= `<div>접수상태:답변완료</div>`;
+                Dtag+= `<div><div>접수상태</div><div class="detailContent"><span style="color: tomato">답변완료</span></div></div>`;
             }else{
-                Dtag+= `<div>접수상태:접수중</div>`;
+                Dtag+= `<div><div>접수상태</div><div class="detailContent"><span style="color: tomato">접수중</span></div></div>`;
             }
-            Dtag+=`<div>접수일:`+qvo.writedate+`</div>
-                    <div>내용:
-                        <div>`+qvo.qna_content+`</div>
+            Dtag+=`<div><div>접수일</div><div class="detailContent">`+qvo.writedate+`</div></div>
+                    <div><div>내용</div>
+                        <div class="detailContent" style="height: auto;">`+qvo.qna_content+`</div>
                     </div>
                 </div>   
             </div>
@@ -146,8 +146,8 @@ function detail(qna_code){
                 document.getElementById("addreply").innerHTML="";
             }
             if (answer!=null&&answer!=""){
-               var answertag= "<div>답변:</div><div id='answercontent'>"+answer.answer_content+"</div>";
-               answertag += "<div><button type='button' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+               var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
+               answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
                document.getElementById("qnareply").innerHTML=answertag;
 
             }
@@ -163,7 +163,7 @@ function detail(qna_code){
 function answer(qna_code) {
     // 확인완료 alert(qna_code);
     document.getElementById("answerbutton").style.display="none";
-    var buttonTag= " <div> <textarea id='answercontent' name='answercontent'></textarea> </div> <div> <button type='button' onclick='insertAnswer(\""+qna_code+"\")'>확인</button> </div>";
+    var buttonTag= " <div> <textarea id='answercontent' name='answercontent'></textarea> </div> <div> <button type='button' id='insertAnswer' onclick='insertAnswer(\""+qna_code+"\")'>확인</button> </div>";
     document.getElementById("addreply").innerHTML=buttonTag;
 }
 function insertAnswer(qna_code){
@@ -203,7 +203,7 @@ function updateanswer(qna_code){
     var content=document.getElementById("answercontent").innerText;
     document.getElementById("qnareply").innerHTML="";
     var tag=`<div> <textarea id='updatecontent' name='updatecontent'>`+content+`</textarea> 
-        </div> <div> <button type='button' onclick='updateAnswer("`+qna_code+`")'>수정하기</button> </div>`
+        </div> <div> <button type='button' id='updateAnswer' onclick='updateAnswer("`+qna_code+`")'>수정하기</button> </div>`
     alert(content);
     document.getElementById("addreply").innerHTML=tag;
 
