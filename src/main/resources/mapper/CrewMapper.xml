@@ -91,6 +91,18 @@
         order by ${param2} desc
         limit 10 offset ${param1}
     </select>
+    <select id="getTotalRecord" resultType="int">
+        select count(*)
+        from create_crew_tbl a
+        join crew_write b on a.create_crew_code = b.create_crew_code
+        where b.is_delete = 0
+        and b.gender like ifnull(concat('%', #{gender}, '%'), '%')
+        and b.age like ifnull(concat('%', #{age}, '%'), '%')
+        and concat(a.addr, ' ', a.addr_gu) like ifnull(concat('%', #{addr}, '%'), '%')
+        and concat(a.addr, ' ', a.addr_gu) like ifnull(concat('%', #{addr_gu}, '%'), '%')
+        and instr(concat(concat(a.addr, ' ', a.addr_gu), '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull(#{searchWord}, '')) > 0
+    </select>
+
     <insert id="crew_insert">
         insert into create_crew_tbl
         (

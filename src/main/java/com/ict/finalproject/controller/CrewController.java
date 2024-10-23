@@ -48,11 +48,19 @@ public class CrewController {
         user_code = service.usercodeSelect(user_name);
         return user_name;
     }
+
     @GetMapping("/crewList")
     public String crewList(CrewVO cvo, PagingVO pvo, Model model){
-        List<CrewVO> list = service.crewSelectPaging(pvo);
         pvo.setTotalRecord(service.totalRecord(pvo));
         user_code = service.usercodeSelect(user_name);
+        if (pvo.getNowPage() == 0) {
+            pvo.setNowPage(1);  // 기본 페이지 설정
+        }
+        pvo.setOnePageRecord(10);
+        int totalRecord = service.totalRecord(pvo);
+        pvo.setTotalRecord(totalRecord);
+        pvo.setTotalPage((int) Math.ceil((double) totalRecord / 10));
+        List<CrewVO> list = service.crewSelectPaging(pvo);
 
         // 추가: chatList 가져오는 로직
         List<CrewVO> chatList = service.getCrewList();  // 크루 리스트를 가져오는 서비스
@@ -78,13 +86,41 @@ public class CrewController {
 
     @PostMapping("/search_crewList")
     @ResponseBody
-    public List<CrewVO> search_crewList(
-            @RequestParam("Authorization")String token,
-            int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord, Model model) {
-        token=token.substring("Bearer ".length());
-        List<CrewVO> list = service.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);
-        return list;
+    public Map<String, Object> search_crewList(@RequestParam("Authorization") String token,
+                                               @RequestParam(value = "page", defaultValue = "1") int page,
+                                               String orderby,
+                                               String gender,
+                                               String age,
+                                               String addr,
+                                               String addr_gu,
+                                               String searchWord,
+                                               Model model) {
+        token = token.substring("Bearer ".length());
+
+        // 한 페이지당 보여줄 레코드 수 설정
+
+        // offset 계산
+        int offset = (page > 0) ? (page - 1) * 10 : 0;
+
+        // 전체 레코드 수를 계산하여 totalPage 계산
+        int totalRecord = service.getTotalRecord(orderby, gender, age, addr, addr_gu, searchWord);
+        int totalPage = (int) Math.ceil((double) totalRecord / 10);
+
+        // 서비스 호출 (데이터와 함께 페이징 정보 포함)
+        List<CrewVO> list = service.search_crewList(offset, orderby, gender, age, addr, addr_gu, searchWord);
+
+        // 결과 데이터를 맵에 담아 클라이언트로 전송
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("totalRecord", totalRecord);
+        result.put("nowPage", page);
+        result.put("totalPage", totalPage);
+
+        return result;
     }
+
+
+
     @Value("${file.upload-dir_crew}")
     private String uploadDir;
 
@@ -100,7 +136,7 @@ public class CrewController {
             @RequestParam("gender") String gender,
             @RequestParam("teamIntro") String content) {
         int a=0;
-        String fileName = "man1.png";
+        String fileName = "basicimg.png";
         token=token.substring("Bearer ".length());
         try {
             a=service.crew_name_check(crew_name);
@@ -821,23 +857,34 @@ public class CrewController {
 
     @PostMapping("/resign_team")
     @ResponseBody
-    public int resign_team(@RequestParam("Authorization")String token, @RequestParam("create_crew_code") int crewCode, @RequestParam("position") int position) {
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
+    public int resign_team(@RequestParam("Authorization") String token,
+                           @RequestParam("create_crew_code") int crewCode,
+                           @RequestParam("position") int position) {
+        token = token.substring("Bearer ".length());
+        user_name = jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        int a = 0;
-        int cnt=0;
+
+        int result = 0;
+        int cnt = 0;  // 본인 제외 다른 멤버 수
         try {
-            cnt = service.resign_select(crewCode,position);
-            if(position==1 && cnt>1) return 0;
-            service.crew_member_out(user_code,crewCode);
-            int flag = 2;
-            service.crew_history_insert(user_code,crewCode,flag);
-            a=1;
+            cnt = service.resign_select(crewCode, position);
+
+            if (position == 1 && cnt > 1) {
+                return 0;
+            }
+            if (position == 1 && cnt == 1) {
+                result = 2;
+            } else {
+                service.crew_member_out(user_code, crewCode);
+                int flag = 2;
+                service.crew_history_insert(user_code, crewCode, flag);
+                result = 1;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return a;
+
+        return result;
     }
     @Transactional(propagation = Propagation.REQUIRED)
     @PostMapping("/deleteTeam")

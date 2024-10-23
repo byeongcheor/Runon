@@ -1,3 +1,8 @@
+* {
+    animation: none !important;
+}
+
+
   /* 첫 번째 모달 크기 10% 키움 */
     #crewCreateModal .modal-content {
         transform: scale(1.1); /* 전체적으로 10% 키움 */

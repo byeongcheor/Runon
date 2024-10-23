@@ -124,37 +124,35 @@
             </ul>
         </div>
     </div>
-    <!-- 페이징 -->
-    <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
-        <!-- 이전페이지 -->
-        <!-- 첫번째 페이지 -->
-        <c:if test="${pvo.nowPage==1}">
-            <li class="page-item"><a class="page-link" href="javascript:void(0);"><</a></li>
-        </c:if>
+  <!-- 페이징 -->
+  <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
+      <!-- 이전페이지 -->
+      <c:if test="${pvo.nowPage == 1}">
+          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);"><</a></li>
+      </c:if>
 
-        <!-- 첫번째 페이지가 아니면 -->
-        <c:if test="${pvo.nowPage>1}">
-            <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage-1});">Previous</a></li>
-        </c:if>
+      <c:if test="${pvo.nowPage > 1}">
+          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage - 1});">Previous</a></li>
+      </c:if>
 
-        <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum+pvo.onePageNum-1}">
-            <c:if test="${p<=pvo.totalPage}">
-                <li class='page-item <c:if test="${p==pvo.nowPage}">active</c:if>'>
-                    <a class="page-link" href="javascript:crew_list_select(${p});">${p}</a>
-                </li>
-            </c:if>
-        </c:forEach>
+      <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
+          <c:if test="${p <= pvo.totalPage}">
+              <li class='page-item ${p == pvo.nowPage ? "active" : ""}'>
+                  <a class="page-link" href="javascript:crew_list_select(${p});">${p}</a>
+              </li>
+          </c:if>
+      </c:forEach>
 
-        <!-- 다음페이지 -->
-        <c:if test="${pvo.nowPage==pvo.totalPage}">
-            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-        </c:if>
-        <c:if test="${pvo.nowPage<pvo.totalPage}">
-            <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage+1});">></a></li>
-        </c:if>
-    </ul>
+      <!-- 다음페이지 -->
+      <c:if test="${pvo.nowPage == pvo.totalPage}">
+          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">Next</a></li>
+      </c:if>
+      <c:if test="${pvo.nowPage < pvo.totalPage}">
+          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage + 1});">></a></li>
+      </c:if>
+  </ul>
 
-    <!-- 첫 번째 모달 -->
+<!-- 첫 번째 모달 -->
     <form id="crewCreateForm" enctype="multipart/form-data">
         <div class="modal fade" id="crewCreateModal" tabindex="-1" aria-labelledby="crewCreateModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
@@ -446,7 +444,7 @@
       <div class="modal-dialog modal-dialog-centered custom-modal-width">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="myCrewModalLabel">내 팀</h5>
+            <h5 class="modal-title" id="myCrewModalLabel">나의 크루</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -750,84 +748,96 @@ var usercode=${user_code};
         }
     });
 
-    function crew_list_select(panging){
-        var list = '';
-        var page = panging===undefined?0:panging*10;
+function crew_list_select(panging) {
+    var list = '';
+    // 페이지 번호 그대로 전달 (offset 계산은 서버에서 처리)
+    var page = (panging === undefined || panging <= 0) ? 1 : panging;
 
-        $.ajax({
-            url: '/crew/search_crewList',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization : Authorization,
-                page          : page,
-                orderby       : $('#orderby').val(),
-                gender        : $('#gender').val(),
-                age           : $('#age').val(),
-                addr          : $('#addr').val(),
-                addr_gu       : $('#addr_gu').val(),
-                searchWord    : $('#searchWord').val()
-            },
-            success: function(result) {
-                for(var i in result){
+    $.ajax({
+        url: '/crew/search_crewList',
+        type: 'post',
+        async: false,
+        data: {
+            Authorization: Authorization,
+            page: page,  // offset 대신 page 번호를 서버로 보냄
+            orderby: $('#orderby').val(),
+            gender: $('#gender').val(),
+            age: $('#age').val(),
+            addr: $('#addr').val(),
+            addr_gu: $('#addr_gu').val(),
+            searchWord: $('#searchWord').val()
+        },
+        success: function(result) {
+            var crewList = result.list;  // 검색 결과 리스트
+            var totalPage = result.totalPage;  // 총 페이지 수
+            var nowPage = result.nowPage;  // 현재 페이지
+
+            // 데이터 리스트 렌더링
+            for (var i in crewList) {
                 list += '<div class="list_wrapper">';
-                    list += ' <ul id="crew_list">';
-                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code +','+ result[i].crew_write_code +')">';
-                    list += '   <div class="crew_profileimage">';
-                    list += '       <div class="profileBox">';
-                    list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
-                    list += '       </div>';
-                    list += '   </div>';
-                    list += '   <div class="crew_content">';
-                    list += '       <div class="crew_title">';
-                    list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>'+result[i].crew_name+'</b></span>';
-                    list += '           <span class="count">🏃‍♀️'+result[i].num+'<span>';
-                    list += '           <span class="count2">멤버모집<span>';
-                    list += '       </div>';
-                    list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
-                    list += '          <span class="crewaddr">'+result[i].addr+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '          <span class="crewIntro">'+result[i].content+'</span>';
-                    list += '       </div>';
-                    list += '       <div style="margin-top:3px; >';
-                    list += '          <span class="crewhit">'+result[i].gender+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '          <span class="crewhit">'+result[i].age+'</span>';
-                    list += '       </div>';
-                    list += '       <div style="margin-top:12px;">';
-                    list += '           <span class="crewhit">조회수'+result[i].hits+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '         <span class="crewhit">신청'+ result[i].a_n+'</span>';
-                    list += '       </div>';
-                    list += '     </div>';
-                    list += '   </li>';
-                    list += '  </ul>';
-                    list += '</div>';
-                }
-
-                $('#crew_list').html('');
-                $('#crew_list').append(list);
-                var num = (Math.ceil(result.length / 10));
-                var page_list='';
-
-                if(paging==0){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);"><</a></li>';
-                }
-
-                if(i>1) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging-1)+');">Previous</a></li>';
-
-                for(var i=0; i<num;i++){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+i+');">'+(i+1)+'</a></li>';
-                }
-
-                if(paging==num) page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>';
-
-                if(paging<num) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging+1)+');">></a></li>';
-                $('#paging').html('');
-                $('#paging').append(page_list);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+                list += ' <ul id="crew_list">';
+                list += '  <li class="list_item" onClick="crew_page_detail(' + crewList[i].create_crew_code + ',' + crewList[i].crew_write_code + ')">';
+                list += '   <div class="crew_profileimage">';
+                list += '       <div class="profileBox">';
+                list += '           <img src="/crew_upload/' + crewList[i].logo + '" class="profileImg">';
+                list += '       </div>';
+                list += '   </div>';
+                list += '   <div class="crew_content">';
+                list += '       <div class="crew_title">';
+                list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>' + crewList[i].crew_name + '</b></span>';
+                list += '           <span class="count">🏃‍♀️' + crewList[i].num + '<span>';
+                list += '           <span class="count2">멤버모집<span>';
+                list += '       </div>';
+                list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
+                list += '          <span class="crewaddr">' + crewList[i].addr + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '          <span class="crewIntro">' + crewList[i].content + '</span>';
+                list += '       </div>';
+                list += '       <div style="margin-top:3px;">';
+                list += '          <span class="crewhit">' + crewList[i].gender + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '          <span class="crewhit">' + crewList[i].age + '</span>';
+                list += '       </div>';
+                list += '       <div style="margin-top:12px;">';
+                list += '           <span class="crewhit">조회수' + crewList[i].hits + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '           <span class="crewhit">신청' + crewList[i].a_n + '</span>';
+                list += '       </div>';
+                list += '     </div>';
+                list += '   </li>';
+                list += '  </ul>';
+                list += '</div>';
             }
-        });
-    }
+
+            $('#crew_list').html('');
+            $('#crew_list').append(list);
+
+            // 페이징 처리
+            var page_list = '';
+
+            if (nowPage == 1) {
+                page_list += '<li class="page-item disabled"><a class="page-link" href="javascript:void(0);"><</a></li>';
+            } else {
+                page_list += '<li class="page-item"><a class="page-link" href="javascript:crew_list_select(' + (nowPage - 1) + ');"><</a></li>';
+            }
+
+            for (var i = 1; i <= totalPage; i++) {
+                page_list += '<li class="page-item ' + (i == nowPage ? 'active' : '') + '">';
+                page_list += '<a class="page-link" href="javascript:crew_list_select(' + i + ');">' + i + '</a></li>';
+            }
+
+            // 마지막 페이지에선 "Next" 버튼을 비활성화
+            if (nowPage < totalPage) {
+                page_list += '<li class="page-item"><a class="page-link" href="javascript:crew_list_select(' + (nowPage + 1) + ');">></a></li>';
+            } else {
+                page_list += '<li class="page-item disabled"><a class="page-link" href="javascript:void(0);">></a></li>';
+            }
+
+            $('#paging').html('');
+            $('#paging').append(page_list);
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+}
 
     function previewImage(event) {
         var reader = new FileReader();
@@ -870,7 +880,7 @@ var usercode=${user_code};
             return;
         }
         const teamImageFile = document.getElementById('teamEmblem').files[0];
-        const teamImageURL = teamImageFile ? URL.createObjectURL(teamImageFile) : "/img/man1.png";
+        const teamImageURL = teamImageFile ? URL.createObjectURL(teamImageFile) : "/img/basicimg.png";
 
         document.getElementById('teamNameDisplay').textContent = teamName;
         document.getElementById('teamImage').src = teamImageURL;
@@ -889,7 +899,7 @@ function submitCrewInfo() {
     // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
     if (!teamImageFile) {
         // 기본 이미지 경로를 추가
-        formData.append('teamEmblem', 'man1.png');
+        formData.append('teamEmblem', 'basicimg.png');
     } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
         alert('이미지파일만 업로드가 가능합니다.');
         return false;

@@ -21,7 +21,8 @@ public interface CrewDAO {
     public List<CrewVO> crew_app_select(int crew_code);
     public List<CrewVO> vote_detail(int vote_num);
     public List<CrewVO> notice_detail(int notice_num);
-    public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
+    public List<CrewVO> search_crewList(int offset, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
+    public int getTotalRecord(String orderby, String gender, String age, String addr, String addr_gu, String searchWord);
     public String crew_teamEmblem(int create_crew_code);
     public List<String> notice_detail_img(int notice_num);
     public int img_delete(int notice_num, String img_name);

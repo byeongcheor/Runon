@@ -1,3 +1,7 @@
+* {
+    animation: none !important;
+}
+
 body{
     background-color: #F8FAFB;
 }
@@ -940,7 +944,7 @@ body{
     font-size: 14px;
     line-height: 120%;
     color: #727f88;
-    margin: 50px 0px 30px 0px
+    margin: 50px 20px 30px 20px;
 }
 .title-container {
     display: flex;
