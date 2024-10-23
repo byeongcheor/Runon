@@ -458,7 +458,8 @@ public class MypageController {
             @RequestParam("marathon_code") int marathon_code,
             @RequestParam("usercode") int usercode,
             @RequestParam(value = "run_option", defaultValue = "0") int run_option,
-            @RequestParam(value = "crew_option", defaultValue = "0") int crew_option,
+            @RequestParam(value = "crew_option", defaultValue = "0", required = false) Integer crew_option,
+            @RequestParam(value = "crew_member_code", defaultValue = "0", required = false) Integer crew_member_code,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
@@ -482,6 +483,7 @@ public class MypageController {
                  cvo.setOrder_code(order_code);
                  cvo.setRun_option(run_option);
                  cvo.setCreate_crew_code(crew_option);
+                 cvo.setCrew_member_code(crew_member_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);

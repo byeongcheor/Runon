@@ -213,7 +213,7 @@
                 var crewTag = "";
                 $.each(r.crewMemberList, function (i, crew){
                     crewTag += `
-                        <option value="` + crew.create_crew_code + `">` + crew.crew_name + `</option>
+                        <option value="` + crew.create_crew_code + `" data_crew_member_code="`+crew.crew_member_code+`">` + crew.crew_name + `</option>
                     `;
                 })
                 document.getElementById("crew_option").innerHTML += crewTag;
@@ -266,7 +266,11 @@
         var order_code = document.getElementById('order_code').value;
         var marathon_code = document.getElementById('marathonSelect').value;
         var run_option = document.getElementById('run_option').value;
-        var crew_option = document.getElementById('crew_option').value;
+        var crew_option = document.getElementById('crew_option').value || 0;
+
+        var crewSelect = document.getElementById('crew_option');
+        var crew_member_code = crewSelect.options[crewSelect.selectedIndex].getAttribute('data_crew_member_code') || 0;
+
 
         if(!proof_photo){
             alert("파일을 업로드해 주세요.");
@@ -282,6 +286,10 @@
         formData.append("marathon_code", marathon_code);
         formData.append("run_option", run_option);
         formData.append("crew_option", crew_option);
+        formData.append("crew_member_code", crew_member_code);
+        if (crew_member_code) {
+            formData.append("crew_member_code", crew_member_code);
+        }
 
             $.ajax({
                 url: "/mypage/uploadCertificate",
