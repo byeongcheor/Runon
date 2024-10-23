@@ -14,20 +14,18 @@
         where  username ='${param1}'
     </select>
     <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
-        SELECT * FROM marathon_list_tbl
-        WHERE event_date >= CURDATE()
-        ORDER BY
-        CASE
-        WHEN CURDATE() BETWEEN registration_start_date AND registration_end_date THEN 1  -- 접수 중인 대회는 최우선
-        ELSE 2  -- 접수 마감된 대회는 그 다음
-        END,
-        event_date ASC  -- 그 다음으로 대회 날짜를 오름차순으로 정렬
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
+        ORDER BY event_date ASC  <!-- 대회 날짜 오름차순 정렬 -->
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
-
     <select id="totalRecord" parameterType="PagingVO" resultType="int">
-        SELECT COUNT(*) FROM marathon_list_tbl
+        SELECT COUNT(*)
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
     </select>
+
     <!-- 마라톤 코드로 마라톤 정보 조회 -->
     <select id="getMarathonByCode" resultType="MarathonListVO" parameterType="int">
         SELECT

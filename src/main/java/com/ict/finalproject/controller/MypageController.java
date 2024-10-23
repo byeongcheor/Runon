@@ -6,6 +6,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.service.MypageService;
 
+import com.ict.finalproject.service.PaymentService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -35,7 +36,7 @@ public class MypageController {
     @Autowired
     MypageService service;
     @Autowired
-    MemberService memberservice;
+    PaymentService paymentService;
     @Autowired
     JWTUtil jwtUtil;
     @Autowired
@@ -175,12 +176,66 @@ public class MypageController {
         pvo.setNowPage(page);
         pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
 
-        List<OrderVO> list = service.selectOrderAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
-
+        List<PaymentVO> list = service.selectOrderAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+        System.out.println(list);
         result.put("list", list);
         result.put("pvo", pvo);
         return result;
     }
+    //구매내역->구매목록상세보기
+    @PostMapping("/mypage/viewOrderDetails")
+    @ResponseBody
+    public String viewOrderDetails(@RequestParam("usercode")int usercode,
+                                   @RequestParam("username")String username,
+                                   @RequestParam("orderId")String orderId){
+        System.out.println("usercode"+usercode);
+        System.out.println("orderId"+orderId);
+        return "success";
+    }
+//    @GetMapping("mypage/viewOrderDetail")
+//    public String viewOrderDetail(){
+//        return "mypage/viewOrderDetail";
+//    }
+//    @PostMapping("mypage/viewOrderDetails")
+//    @ResponseBody
+//    public String viewOrderDetail(@RequestParam("orderId") String orderId, Model model) {
+//        // orderId를 기반으로 주문 상세 정보를 조회하고 모델에 추가
+//        System.out.println("orderId"+orderId);
+//        PaymentdetailVO list = service.getOrderId(orderId);
+//        model.addAttribute("list", list);
+//
+//        return "viewOrderDetail";
+//    }
+    @PostMapping("/mypage/complete")
+    public ModelAndView complete(
+            @RequestParam("orderId")String orderId
+    ){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("orderId", orderId);
+        mav.setViewName("mypage/viewOrderDetail");
+        return mav;
+    }
+    //구매내역 뿌려주기
+    @PostMapping("/mypage/completed")
+    @ResponseBody
+    public Map<String,Object>completed(@RequestParam("orderId")String orderId){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println("orderId:"+orderId);
+        List<CompleteVO>Cvo=new ArrayList<>();
+        Cvo=paymentService.selectCvoList(orderId);
+        map.put("Cvo",Cvo);
+        return map;
+    }
+//    @PostMapping("/mypage/completed")
+//    public List<CompleteVO> completed(@RequestParam("orderId") String orderId,
+//                                      @RequestParam("usercode") int usercode,
+//                                      Model model){
+//        List<CompleteVO> Cvo = paymentService.selectCvoList(orderId);
+//        model.addAttribute("Cvo", Cvo);
+//        model.addAttribute("orderId", orderId);
+//        return Cvo;
+//    }
+
     //마라톤신청서조회
     @GetMapping("mypage/marathonFormCheck")
     @ResponseBody
@@ -219,6 +274,7 @@ public class MypageController {
                                      @RequestParam("gender") String gender,
                                      @RequestParam("birth_date") String birthDate,
                                      @RequestParam("size") String size
+
                                      ){
         MarathonFormVO mvo = service.selectMarathonForm(usercode);
         if(mvo != null){
@@ -383,9 +439,12 @@ public class MypageController {
 
         List<CertificateVO> list = service.selectCertificateAll(username, pvo.getOffset(), pvo.getOnePageRecord());
         List<OrderVO> orderList = service.getOrderInfo(usercode);
-
+        List<CrewMemberVO> crewMemberList = service.getCrewMember(usercode);
+        System.out.println(usercode);
+        System.out.println(crewMemberList);
         result.put("list", list);
         result.put("orderList", orderList);
+        result.put("crewMemberList", crewMemberList);
         result.put("pvo", pvo);
         return result;
     }
@@ -398,6 +457,9 @@ public class MypageController {
             @RequestParam("username") String username,
             @RequestParam("marathon_code") int marathon_code,
             @RequestParam("usercode") int usercode,
+            @RequestParam(value = "run_option", defaultValue = "0") int run_option,
+            @RequestParam(value = "crew_option", defaultValue = "0", required = false) Integer crew_option,
+            @RequestParam(value = "crew_member_code", defaultValue = "0", required = false) Integer crew_member_code,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
@@ -419,6 +481,9 @@ public class MypageController {
                  cvo.setProof_photo(miliFilename);
                  cvo.setUsername(username);
                  cvo.setOrder_code(order_code);
+                 cvo.setRun_option(run_option);
+                 cvo.setCreate_crew_code(crew_option);
+                 cvo.setCrew_member_code(crew_member_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);

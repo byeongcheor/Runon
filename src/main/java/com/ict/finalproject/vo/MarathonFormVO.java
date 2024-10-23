@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +28,7 @@ public class MarathonFormVO {
     private int is_deleted; // 삭제 여부
     private int deleted_date; // 삭제일
     private int usercode; // 사용자 코드
+    private int run_option;
+    private List<Integer> crew_member_code;
+
 }

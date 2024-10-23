@@ -22,9 +22,10 @@
             $.each(r.list, function(i, vo){
                var eventDate = new Date(vo.event_date);
                var status = (eventDate < today) ? '모집종료':'모집중';
+               var recruitStyle = (status === '모집종료') ? 'background-color: grey; color: white;' : '';
                tag += `
                   <div class="slideBox">
-                     <div class="posterrecruit"><span>`+status+`</span></div>
+                     <div class="posterrecruit" style="`+recruitStyle+`"><span>`+status+`</span></div>
                      <p class="postername">`+vo.marathon_name+`</p><br>
                      <p class="posterdate">📅`+vo.event_date+`</p>
                   </div>
@@ -74,15 +75,16 @@
             $.each(r.list, function(i, vo){
                var eventDate = new Date(vo.event_date);
                var status = (eventDate < today) ? '모집종료':'모집중';
+               var recruitStyle = (status === '모집종료') ? 'background-color: grey; color: white;' : '';
                tag += `
                   <div class="hit_poster">
-                     <div class="poster_img">
-                        <img src="./img/마라톤1.png">
-                        <div class="recruit"><span>`+status+`</span></div>
-                     </div>
+                     <a href="/marathon/marathonDetail/`+vo.marathon_code+`"><div class="poster_img">
+                        <img src="./img/marathonPoster/`+vo.poster_img+`">
+                        <div class="recruit" style="`+recruitStyle+`"><span>`+status+`</span></div>
+                     </div></a>
                      <div>
-                        <div style="margin: 10px;">📍`+vo.addr+`</div>
-                        <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
+                        <div class="addrstyle" style="margin: 10px;">📍`+vo.addr+`</div>
+                        <div class="addrstyle" style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
                      </div>
                   </div>
                `;
@@ -102,15 +104,16 @@
             $.each(r.list, function(i, vo){
                var eventDate = new Date(vo.event_date);
                var status = (eventDate < today) ? '모집종료':'모집중';
+               var recruitStyle = (status === '모집종료') ? 'background-color: grey; color: white;' : '';
                tag += `
                   <div class="hit_poster">
-                     <div class="poster_img">
-                        <img src="./img/poster4.png">
-                        <div class="recruit"><span>`+status+`</span></div>
-                     </div>
+                     <a href="/marathon/marathonDetail/`+vo.marathon_code+`"><div class="poster_img">
+                        <img src="./img/marathonPoster/`+vo.poster_img+`">
+                        <div class="recruit" style="`+recruitStyle+`"><span>`+status+`</span></div>
+                     </div></a>
                      <div>
-                        <div style="margin: 10px;">📍`+vo.addr+`</div>
-                        <div style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
+                        <div class="addrstyle" style="margin: 10px;">📍`+vo.addr+`</div>
+                        <div class="addrstyle" style="font-size: 14pt; font-weight: bold; margin-top: 5px;">`+vo.marathon_name+`</div>
                      </div>
                   </div>
                `;
@@ -207,7 +210,7 @@
          </div>
       </div>
       <div data-aos="fade-up">
-         <button id="more2">&nbsp;더알아보기→&nbsp;</button>
+         <button id="more2">&nbsp;<a class="menus" href="/marathon/marathonList">더알아보기→&nbsp;</a></button>
       </div>
       </div>
    </div>
@@ -225,7 +228,7 @@
          </div>
          <div id="chatImgBox">
             <div data-aos="fade-right">
-                <img src="./img/채팅2.png" id="chatImg">
+                  <img src="./img/채팅2.png" id="chatImg" style="width: 600px;height: auto;">
             </div>
             <div id="crewInfo">
                <div data-aos="fade-left">

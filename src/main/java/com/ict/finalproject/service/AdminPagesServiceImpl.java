@@ -364,6 +364,174 @@ public class AdminPagesServiceImpl implements AdminPagesService {
         return dao.getYearsTop5list(year);
     }
 
+    @Override
+    public ReportVO getReportDetail(int report_code) {
+        return dao.getReportDetail(report_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ReportReplyVO updateReport(ReportVO vo,int LoginUserCode) {
+        AdminsVO loginAdmin=dao.selectAdminRole(LoginUserCode);
+        vo.setAdmin_code(loginAdmin.getAdmin_code());
+        System.out.println("신고코드"+vo.getReport_code());
+        int disableday=vo.getIs_disabled();
+        if (disableday!=0) {
+
+            if (disableday==1){
+                disableday=7;
+                vo.setReport_result("7일 정지조치");
+            }else if (disableday==2){
+                disableday=14;
+                vo.setReport_result("14일 정지조치");
+            }else if (disableday==3){
+                disableday=30;
+                vo.setReport_result("30일 정지조치");
+            }else if(disableday==4){
+                disableday=999;
+                vo.setReport_result("영구 정지조치");
+            }
+            //정지 실행
+            dao.setDisableUserTime(vo.getOffender_code(),disableday);
+            System.out.println("정지성공");
+        }else{
+
+            vo.setReport_result("경고 조치");
+        }
+            dao.setReportReply(vo);
+        System.out.println("신고리플달기");
+            dao.updateReport(vo);
+        System.out.println("신고업데이트");
+            //업데이한것 가져오기
+
+
+        return dao.getReportReply(vo.getReport_code());
+    }
+
+    @Override
+    public ReportReplyVO getReportReplys(int report_code) {
+        return dao.getReportReply(report_code);
+    }
+
+    @Override
+    public int getCertificaterecode(PagingVO pvo) {
+        return dao.getCertificaterecode(pvo);
+    }
+
+    @Override
+    public int getCertificateTotalRecord(PagingVO pvo) {
+        return dao.getCertificateTotalRecord(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo) {
+        return dao.selectWithSearchCertificateList(pvo);
+    }
+
+    @Override
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo) {
+        return dao.selectAllCertificateList(pvo);
+    }
+
+    @Override
+    public CertificateVO getCertificateDetail(int certificate_code) {
+        return dao.getCertificateDetail(certificate_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateRecordPoint(int record, int certificate_code) {
+        //개인전적업데이트
+        dao.updateRecord(record,certificate_code);
+        //포인트 업데이트
+        dao.updatePoint(record,certificate_code);
+        //포인트code가져오기
+        int point_code = dao.getPointCode(certificate_code);
+        //포인트changetbl 추가
+        dao.insertPointChangetbl(record,point_code);
+        //거리인증마무리update
+        dao.updatecertificate(certificate_code);
+        return 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updatecrewRecordPoint(int record, int certificate_code, int crew_member_code) {
+        //크루전적업데이트
+        dao.updateCrewRecord(record,certificate_code,crew_member_code);
+        //포인트 업데이트
+        dao.updatePoint(record,certificate_code);
+        int point_code = dao.getPointCode(certificate_code);
+        dao.insertPointChangetbl(record,point_code);
+        dao.updatecertificate(certificate_code);
+
+        return 0;
+    }
+
+    @Override
+    public int getSearchPaymentRecord(PagingVO pvo) {
+        return dao.getSearchPaymentRecord(pvo);
+    }
+
+    @Override
+    public List<PaymentVO> getPaymentSearchList(PagingVO pvo) {
+        return dao.getPaymentSearchList(pvo);
+    }
+
+    @Override
+    public int getPaymentRecord(PagingVO pvo) {
+        return dao.getPaymentRecord(pvo);
+    }
+
+    @Override
+    public List<PaymentVO> getPaymentList(PagingVO pvo) {
+        return dao.getPaymentList(pvo);
+    }
+
+    @Override
+    public int getSearchQnaRecord(PagingVO pvo) {
+        return dao.getSearchQnaRecord(pvo);
+    }
+
+    @Override
+    public List<QnAVO> getSearchQnaLists(PagingVO pvo) {
+        return dao.getSearchQnaLists(pvo);
+    }
+
+    @Override
+    public int getQnaRecord() {
+        return dao.getQnaRecord();
+    }
+
+    @Override
+    public List<QnAVO> getQnaLists(PagingVO pvo) {
+        return dao.getQnaLists(pvo);
+    }
+
+    @Override
+    public QnAVO getQnaDetail(int qna_code) {
+        return dao.getQnaDetail(qna_code);
+    }
+
+    @Override
+    public AnswerVO getAnswer(int qna_code) {
+        return dao.getAnswer(qna_code);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void insertAnswer(int qna_code, int usercode, String content) {
+        int result= dao.insertAnswer(qna_code,usercode,content);
+        if (result!=0){
+            dao.updateqna(qna_code);
+        }
+    }
+
+    @Override
+    public void updateAnswer(int qna_code, int usercode, String content) {
+        dao.updateAnswer(qna_code,usercode,content);
+    }
+
 
     // 마라톤 게시글 관리
     @Override

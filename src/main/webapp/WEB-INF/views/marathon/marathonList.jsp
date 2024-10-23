@@ -116,15 +116,14 @@
         <!-- 페이징 UI 추가 -->
         <!-- 페이징 -->
         <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
-            <!-- 이전 페이지 -->
-            <c:if test="${pvo.nowPage == 1}">
-                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">&lt;</a></li>
-            </c:if>
-
+            <!-- 이전 페이지 버튼 -->
             <c:if test="${pvo.nowPage > 1}">
-                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage - 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">Previous</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?nowPage=${pvo.nowPage - 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&lt;</a>
+                </li>
             </c:if>
 
+            <!-- 페이지 번호 출력 -->
             <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
                 <c:if test="${p <= pvo.totalPage}">
                     <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
@@ -133,14 +132,16 @@
                 </c:if>
             </c:forEach>
 
-            <!-- 다음 페이지 -->
-            <c:if test="${pvo.nowPage == pvo.totalPage}">
-                <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">Next</a></li>
-            </c:if>
+
+            <!-- 다음 페이지 버튼 -->
             <c:if test="${pvo.nowPage < pvo.totalPage}">
-                <li class="page-item"><a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">></a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&gt;</a>
+                </li>
             </c:if>
         </ul>
+
+
     </div>
 </div>
 <script>

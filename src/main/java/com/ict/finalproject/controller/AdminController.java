@@ -1,5 +1,6 @@
 package com.ict.finalproject.controller;
 
+import com.ict.finalproject.dao.AdminPagesDAO;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.AdminPagesService;
 import com.ict.finalproject.service.MarathonService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,8 @@ public class AdminController {
     AdminPagesService service;
     @Autowired
     JWTUtil jwtUtil;
+    @Autowired
+    private AdminPagesDAO adminPagesDAO;
     @Autowired
     MarathonService marathonservice;
 
@@ -352,9 +356,7 @@ public class AdminController {
     public Map<String,Object> ReportLists(
         PagingVO pvo,@RequestParam(value = "usercode",required = false) Integer usercode,
         @RequestParam(value = "page",defaultValue = "1")int page){
-        System.out.println("K1"+pvo.getSearchKey2());
-        System.out.println("K2"+pvo.getSearchKey());
-        System.out.println("V"+pvo.getSearchWord());
+
         Map<String,Object> map=new HashMap<>();
         if (usercode !=null){
             int usercodevlaue=usercode.intValue();
@@ -473,6 +475,222 @@ public class AdminController {
 
         return map;
 
+    }
+
+    @PostMapping("/reportDetail")
+    @ResponseBody
+    public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code){
+        Map<String,Object> map=new HashMap<>();
+        ReportVO rvo=service.getReportDetail(report_code);
+        ReportReplyVO RRvo=service.getReportReplys(report_code);
+        System.out.println(RRvo);
+        map.put("rvo",rvo);
+        map.put("reply",RRvo);
+        return map;
+    }
+    @PostMapping("/ReportReply")
+    @ResponseBody
+    public Map<String,Object>ReportReply(ReportVO rvo,@RequestParam("loginCode")int usercode){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println(rvo);
+        System.out.println(usercode);
+        ReportReplyVO result = service.updateReport(rvo,usercode);
+        map.put("rvo",result);
+        return map;
+    }
+    //페이지이동
+    @GetMapping("/CertificateList")
+    public String CertificateList(){
+        return "adminPages/CertificateList";
+    }
+    @PostMapping("/loadCertificateList")
+    @ResponseBody
+    public Map<String,Object> loadCertificateList(PagingVO pvo,
+                                                  @RequestParam(value="usercode",required = false)Integer usercodeValue,
+                                                  @RequestParam(value="page",defaultValue = "1")int page){
+        System.out.println("K1"+pvo.getSearchKey2());
+        System.out.println("K2"+pvo.getSearchKey());
+        System.out.println("V"+pvo.getSearchWord());
+        Map<String,Object> map=new HashMap<>();
+        if(usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+
+        }
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getCertificaterecode(pvo);
+        }else if(pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            totalRecord=service.getCertificaterecode(pvo);
+        }else{
+            totalRecord=service.getCertificateTotalRecord(pvo);
+        }
+        pvo.setTotalRecord(totalRecord);
+        int totalPage=(int) Math.ceil((double)totalRecord/Record);
+        pvo.setTotalPage(totalPage);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        List<CertificateVO> Cvo;
+        if(pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            Cvo=service.selectWithSearchCertificateList(pvo);
+        }else if(pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            Cvo=service.selectWithSearchCertificateList(pvo);
+        }else{
+            Cvo=service.selectAllCertificateList(pvo);
+        }
+        map.put("Cvo",Cvo);
+        map.put("pvo",pvo);
+
+
+        return map;
+    }
+    @PostMapping("/certificateDetail")
+    @ResponseBody
+    public Map<String,Object> certificateDetail(@RequestParam("certificate_code")int certificate_code){
+        Map<String,Object> map=new HashMap<>();
+        CertificateVO Cvo=service.getCertificateDetail(certificate_code);
+        map.put("Cvo",Cvo);
+        System.out.println("크루확인"+Cvo);
+        return map;
+    }
+    @PostMapping("/recordPointUpdate")
+    @ResponseBody
+    public Map<String,Object> recordPointUpdate(@RequestParam("certificate_code")int certificate_code,
+                                                @RequestParam("selectedValue")int record,
+                                                @RequestParam(value = "crew_member_code", required = false, defaultValue = "0")int crewMemberCode){
+        Map<String,Object> map=new HashMap<>();
+        if (crewMemberCode!=0){
+            int crew_member_code=crewMemberCode;
+            int a=service.updatecrewRecordPoint(record,certificate_code,crew_member_code);
+            map.put("a",a);
+        }else{
+            int a =service.updateRecordPoint(record,certificate_code);
+            map.put("a",a);
+        }
+        return map;
+    }
+
+    @GetMapping("/PaymentList")
+    public String GoPaymentList(){
+
+        return "adminPages/PaymentList";
+    }
+    @PostMapping("/PaymentList")
+    @ResponseBody
+    public Map<String,Object>PaymentList(PagingVO pvo,
+                                         @RequestParam(value="usercode",required = false)Integer usercodeValue,
+                                         @RequestParam(value = "page",defaultValue = "1")int page){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println("검색어"+pvo.getSearchWord());
+        System.out.println("분류"+pvo.getSearchKey());
+        System.out.println("정렬"+pvo.getSort());
+        System.out.println("뭘로정렬할지"+pvo.getSchedule());
+        if (usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+        }
+        System.out.println("접속자"+usercodeValue);
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getSearchPaymentRecord(pvo);
+        }else{
+            totalRecord=service.getPaymentRecord(pvo);
+        }
+        pvo.setTotalRecord(totalRecord);
+        int totalPage=(int) Math.ceil((double)totalRecord/Record);
+        pvo.setTotalPage(totalPage);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        System.out.println("페이징"+pvo);
+        List<PaymentVO> Payvo;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            Payvo=service.getPaymentSearchList(pvo);
+        }else{
+            Payvo=service.getPaymentList(pvo);
+        }
+        System.out.println("제발"+Payvo);
+        map.put("pvo",pvo);
+        map.put("Payvo",Payvo);
+        return map;
+    }
+    @GetMapping("/QnaList")
+    public String QnaList(){
+        return "adminPages/QnaList";
+    }
+    @PostMapping("/QnaLists")
+    @ResponseBody
+    public Map<String,Object>QnaLists(PagingVO pvo,
+                                      @RequestParam(value = "usercode",required = false)Integer usercodeValue,
+                                      @RequestParam(value="page",defaultValue = "1")int page){
+        Map<String,Object> map=new HashMap<>();
+        if(usercodeValue!=null){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=service.selectAdminRole(usercode);
+            map.put("Avo", Avo);
+        }
+        pvo.setNowPage(page);
+        int Record=15;
+        pvo.setOnePageRecord(Record);
+        int totalRecord;
+        if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+            totalRecord=service.getSearchQnaRecord(pvo);
+        }else if (pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+            totalRecord=service.getSearchQnaRecord(pvo);
+        }else{
+            totalRecord=service.getQnaRecord();
+        }
+        pvo.setTotalRecord(totalRecord);
+        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        List<QnAVO> QnaList=new ArrayList<>();
+            if (pvo.getSearchWord()!=null&&!pvo.getSearchWord().isEmpty()){
+                QnaList=service.getSearchQnaLists(pvo);
+            }else  if (pvo.getSearchKey2()!=null&&!pvo.getSearchKey2().isEmpty()){
+                QnaList=service.getSearchQnaLists(pvo);
+            }else{
+                QnaList=service.getQnaLists(pvo);
+            }
+            map.put("QnaList",QnaList);
+            map.put("pvo",pvo);
+        System.out.println(QnaList);
+        return map;
+    }
+    @PostMapping("/qnaDetail")
+    @ResponseBody
+    public Map<String,Object> qnaDetail(@RequestParam(value = "qna_code",required = false)int qna_code){
+        Map<String,Object> map=new HashMap<>();
+        QnAVO qvo=service.getQnaDetail(qna_code);
+        AnswerVO AnswerVO=service.getAnswer(qna_code);
+        map.put("qvo",qvo);
+        map.put("AnswerVO",AnswerVO);
+        return map;
+    }
+
+    @PostMapping("/insertAnswer")
+    @ResponseBody
+    public Map<String,Object> insertAnswer(@RequestParam("qna_code")int qna_code,
+                                           @RequestParam("usercode")int usercode,
+                                           @RequestParam("content")String content){
+        Map<String,Object> map=new HashMap<>();
+        service.insertAnswer(qna_code,usercode,content);
+
+
+        return map;
+    }
+    @PostMapping("/updateAnswer")
+    @ResponseBody
+    public Map<String,Object> updateAnswer(@RequestParam("qna_code")int qna_code,
+                                           @RequestParam("usercode")int usercode,
+                                           @RequestParam("content")String content){
+        Map<String,Object> map=new HashMap<>();
+        service.updateAnswer(qna_code,usercode,content);
+
+        return map;
     }
  //관리자페이지 게시물관리
     @GetMapping("/boardList")

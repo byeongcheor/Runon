@@ -13,49 +13,63 @@ function formCheck(event){
         return false;
 
     }
-    $.ajax({
-        url:"/login&join/disableCheck",
-        type:"post",
+   /* $.ajax({
+        url:"/login&join/userCheck",
+        typ:"post",
         data:{
             username:username,
             password:password,
         },
-        success:function (r){
-            if(r.result!=0){
-                $.ajax({
-                    type: "post",
-                    url:"/login",
-                    data:{username:username,password:password },
-                    //success:function (response){
-                    success:function (response,status,xhr){
-                        const token = xhr.getResponseHeader("Authorization");
-                        const refreshToken = xhr.getResponseHeader('refreshToken');
-                        localStorage.setItem("refresh",refreshToken);
-                        localStorage.setItem("Authorization",token);
+        success:function(r){
 
-
-                        window.close();
-                        opener.window.location.reload();
-                    },
-                    error:function (e){
-                        console.log(e);
-                        alert(e.message);
-                    }
-
-                });
-
-            }else if(r.result==0) {
-
-                alert("아이디가 정지되었습니다.\n시작일:"+r.disabled_start_date+"\n정지기한:"+r.disabled_date+"까지입니다.");
-            }
-
-
-        },
-        error:function (e){
-
-            console.log(e.message);
         }
-    });
+    })*/
+        $.ajax({
+            url:"/login&join/disableCheck",
+            type:"post",
+            data:{
+                username:username,
+                password:password,
+            },
+            success:function (r){
+
+                if(r.result!=0){
+                    $.ajax({
+                        type: "post",
+                        url:"/login",
+                        data:{username:username,password:password },
+                        //success:function (response){
+                        success:function (response,status,xhr){
+
+                            const token = xhr.getResponseHeader("Authorization");
+                            const refreshToken = xhr.getResponseHeader('refreshToken');
+                            localStorage.setItem("refresh",refreshToken);
+                            localStorage.setItem("Authorization",token);
+
+                            opener.window.location.reload();
+                            window.close();
+
+                        },
+                        error:function (e){
+                            alert("아이디혹은 비밀번호가 틀렸습니다");
+                        }
+
+                    });
+
+                }else if(r.result==0) {
+
+                    alert("아이디가 정지되었습니다.\n시작일:"+r.disabled_start_date+"\n정지기한:"+r.disabled_date+"까지입니다.");
+                }
+
+
+            },
+            error:function (e){
+
+                console.log(e.message);
+            }
+        });
+
+
 
 
 }

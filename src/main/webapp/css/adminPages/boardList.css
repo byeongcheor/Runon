@@ -159,8 +159,8 @@
     background-color: #F0F0F0;
 }
 .board_title3 .marathon_code{
-    width: 10%;
-    text-align: center;
+    width: 20%;
+    text-align: left;
 }
 li{
     list-style: none;
@@ -177,19 +177,21 @@ li{
 }
 
 #BoardList .board_code{
-    width: 10%;  /* 마라톤번호 */
-    text-align: center;
+    width: 20%;  /* 마라톤번호 */
+    text-align: left;
 }
 
 #BoardList .marathon_name{
-    width: 60%;  /* 마라톤명 */
-    text-align: center;
+    width: 45%;  /* 마라톤명 */
+    text-align: left;
 }
 
-#BoardList .created_date,
-#BoardList .activation_date,
-#BoardList .deleted_date {
+#BoardList .created_date{
     width: 20%;  /* 날짜 관련 */
+    text-align: left;
+}
+#BoardList .activation_date, #BoardList .deleted_date {
+    width: 20%;
     text-align: center;
 }
 

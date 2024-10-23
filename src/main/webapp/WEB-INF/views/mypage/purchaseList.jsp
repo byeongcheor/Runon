@@ -204,6 +204,12 @@
      .orderStatus button{
          font-size: 10pt;
      }
+     .proName{
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         width: 200px;
+     }
 </style>
 <script>
     setTimeout(function(){
@@ -234,10 +240,10 @@
                     `;
                 }else{
                     $.each(r.list, function (i, vo) {
-                        if (vo.order_status == 1) {
-                            vo.order_status = "주문완료";
+                        if (vo.is_completed == 1) {
+                            vo.is_completed = "주문완료";
                         } else {
-                            vo.order_status = "주문취소";
+                            vo.is_completed = "주문취소";
                         }
 
                         tag += `
@@ -248,18 +254,18 @@
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span>` + vo.marathon_name + `/` + vo.quantity + `</span>
+                                        <span class="proName">` + vo.total_amount + `/` + vo.discount_amount + `</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="orderPdP">
-                                <span>` + vo.price + `</span>
+                                <span>` + vo.payment_method + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span>` + vo.order_status + `</span>
+                                <span>` + vo.is_completed + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span><button type="button" class="btn btn-outline-secondary">주문취소</button></span>
+                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails('`+vo.orderId+`')">주문상세</button></span>
                             </div>
                         </div>
                     `;
@@ -272,7 +278,7 @@
 
                 // 이전 버튼
                 if (pvo.nowPage > 1) {
-                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+");'><</a></li>";
                 }
 
                 // 페이지 번호 출력
@@ -295,6 +301,43 @@
         })
     }
 </script>
+<script>
+    function orderDetails(orderId){
+        var orderId = orderId;
+        $.ajax({
+            url: "/mypage/viewOrderDetails",
+            type: "post",
+            data:{
+                usercode: usercode1,
+                orderId: orderId,
+                username: username1
+            },
+            success: function(r){
+                if(r=="success"){
+                    //window.location.href="/mypage/viewOrderDetail"+orderId;
+                    // 동적으로 폼 생성
+                    let form = document.createElement("form");
+                    form.method = "post";
+                    form.action = "/mypage/complete";
+                    // 전달할 값을 폼에 숨겨진 필드로 추가
+                    let orderIdInput = document.createElement("input");
+                    orderIdInput.type = "hidden";
+                    orderIdInput.name = "orderId";
+                    orderIdInput.value = orderId;
+                    form.appendChild(orderIdInput);
+
+                    // 동적으로 생성한 폼을 문서에 추가하고 제출
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            },error: function(e){
+                alert("다시 로드해주세요.");
+                console.log(e);
+            }
+        })
+    }
+</script>
+
 <div id="bannerBox">
     <img src="/img/러닝고화질.jpg" id="bannerImg"/>
 </div>
@@ -308,10 +351,10 @@
             </div>
             <div class="orderPt">
                 <span>날짜</span>
-                <span>상품명/옵션</span>
-                <span>상품금액</span>
+                <span>주문금액/할인금액</span>
+                <span>결제방식</span>
                 <span>주문상태</span>
-                <span>취소요청</span>
+                <span></span>
             </div>
             <div class="orderP" id="orderlist">
             </div>

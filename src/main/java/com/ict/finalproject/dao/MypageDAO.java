@@ -21,11 +21,13 @@ public interface MypageDAO {
     public int delFromPoint(int usercode);
 
     //주문목록리스트
-    public List<OrderVO> selectOrderAll(@Param("usercode") int usercode,
+    public List<PaymentVO> selectOrderAll(@Param("usercode") int usercode,
                                         @Param("offset") int offset,
                                         @Param("limit") int limit);
     //주문목록 count
     public int getTotalOrder(int usercode);
+    //주문상세 불러오기
+    public PaymentdetailVO getOrderId(String orderId);
     //회원정보수정 기존비밀번호 유효성검사
     public MemberVO passwordChk(String username);
     //마라톤신청서있는지조회
@@ -50,6 +52,8 @@ public interface MypageDAO {
     //order_tbl select
     public int getOrderCode(int marathon_code, int usercode);
     public List<OrderVO> getOrderInfo(int usercode);
+    //crew select
+    public List<CrewMemberVO> getCrewMember(int usercode);
     //전체레코드
     public int getTotalCertificate(String username);
 

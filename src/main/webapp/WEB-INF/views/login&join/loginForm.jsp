@@ -4,7 +4,7 @@
 
 <script src="/js/login&join/loginForm.js" type="text/javascript"></script>
     <div class="loginFrm">
-        <h1 class="loginTop"><a href="/"><img src="/img/logo3.png"></a></h1>
+        <h1 class="loginTop"><a><img src="/img/logo3.png"></a></h1>
         <form onsubmit="return formCheck(event)">
             <input type="text" name="username" id="username" placeholder="아이디 입력" />
             <input type="password" name="password" id="password" placeholder="비밀번호 입력"/>

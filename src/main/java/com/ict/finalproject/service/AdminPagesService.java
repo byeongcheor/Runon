@@ -79,6 +79,54 @@ public interface AdminPagesService {
     //연간 매출top5
     public List<YearsTop5MarathonVO>getYearsTop5list(int year);
 
+    //신고번호보내서 신고디테일받기
+    public ReportVO getReportDetail(int report_code);
+
+    //신고처리과정 impl확인하세요
+    public ReportReplyVO updateReport(ReportVO vo,int loginUserCode);
+    public ReportReplyVO getReportReplys(int report_code);
+
+    //검색된 기록인증 레코드수
+    public int getCertificaterecode(PagingVO pvo);
+    //전체 레코드수
+    public int getCertificateTotalRecord (PagingVO pvo);
+    //검색된 기록인증리스트
+    public List<CertificateVO> selectWithSearchCertificateList(PagingVO pvo);
+    //전체 기록인증 리스트
+    public List<CertificateVO> selectAllCertificateList(PagingVO pvo);
+    //한코드의 기록디테일
+    public CertificateVO getCertificateDetail(int certificate_code);
+    // 개인전적과 포인트 업데이트
+    public int updateRecordPoint(int record,int certificate_code);
+    //크루전적과 포인트 업데이트
+    public int updatecrewRecordPoint(int record,int certificate_code,int crew_member_code);
+    //검색된 결제내역수
+    public int getSearchPaymentRecord(PagingVO pvo);
+    //검색된 결제내역리스트
+    public List<PaymentVO> getPaymentSearchList(PagingVO pvo);
+    //모든 결제내역수
+    public int getPaymentRecord(PagingVO pvo);
+    //모든 결제내역리스트
+    public List<PaymentVO>getPaymentList(PagingVO pvo);
+    //검색된 qna수
+    public int getSearchQnaRecord(PagingVO pvo);
+    //검색된 qnalist
+    public List<QnAVO>getSearchQnaLists(PagingVO pvo);
+    //모든 qna수
+    public int getQnaRecord();
+    //모든 qna리스트
+    public List<QnAVO>getQnaLists(PagingVO pvo);
+    //qna_code로 디테일받기
+    public QnAVO getQnaDetail(int qna_code);
+    //qna_code로 answer_tbl값 가져오기
+    public AnswerVO getAnswer(int qna_code);
+    //answer등록
+    public void insertAnswer(int qna_code,int usercode,String content);
+    //답변수정
+    public void updateAnswer(int qna_code,int usercode,String content);
+
+
+
 
     //검색된 마라톤게시물수
     public int getSearchBoardRecord(PagingVO pvo);
