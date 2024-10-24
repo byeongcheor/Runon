@@ -4,7 +4,12 @@ a,a:visited{
     padding: 0;
     color: inherit;
 }
-
+.poster_img img{
+    transition: all 0.5s ease;
+}
+.poster_img img:hover{
+    transform: scale(1.1);
+}
 .slideBox{
     width: 550px;
     height: 500px;
@@ -236,6 +241,7 @@ body{
     justify-content: space-between;
     overflow-x: auto;
     scrollbar-width: none;
+    padding: 30px;
 }
 .hit_poster{
     width: 300px;
