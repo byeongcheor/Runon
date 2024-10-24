@@ -245,20 +245,23 @@
         values(#{offender_code}, #{report_reason}, #{victim_code}, #{matching_room_code}, #{report_content}, #{proof_img})
     </insert>
     <select id="selectReportForm" resultType="com.ict.finalproject.vo.ReportVO">
-        select *
-        from report_tbl
-        where victim_code = #{param1} and matching_room_code = #{param2}
+        select q.*, a.report_result
+        from report_tbl q
+        left join report_reply_tbl a on q.report_code = a.report_code
+        where victim_code =#{usercode} and matching_room_code = #{matching_room_code}
+        AND q.proof_img IS NOT NULL
         limit 1
     </select>
     <select id="getTotalQnA">
         select count(qna_code)
         from qna_tbl
-        where usercode=#{param1}
+        where usercode=#{param1} and is_deleted =0
     </select>
     <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
         select *
         from qna_tbl
         where usercode=#{param1} and is_deleted = 0
+        order by qna_code desc
         limit #{offset}, #{limit}
     </select>
     <insert id="updateQnA" parameterType="com.ict.finalproject.vo.QnAVO">

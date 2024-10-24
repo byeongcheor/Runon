@@ -779,9 +779,9 @@
                         <input type="hidden" name="nickChk" id="nickChk" value="N">
                     </div>
                     <div id="nickCheck" style="font-size: 0.8em;"></div>
-                    <div>연락처</div>
+                    <div style="margin-top: 20px;">연락처</div>
                     <div>
-                        <select  class="inputs" style="width:33%" name="tel1" id="tel1_editProfile" value="tel1">
+                        <select  class="inputs" style="width:33%;" name="tel1" id="tel1_editProfile" value="tel1">
                             <option>010</option>
                             <option>02</option>
                             <option>031</option>

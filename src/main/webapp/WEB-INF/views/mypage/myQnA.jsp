@@ -347,19 +347,29 @@
 
         <div id="viewQnA" class="modal" style="display:none;">
             <div class="modal-content" style="width: 20%;">
-                <span class="close-button" onclick="closeViewQnA()">&times;</span>
+                <span style="text-align: right;" class="close-button" onclick="closeViewQnA()">&times;</span>
                 <h2 style="text-align: center">QnA</h2>
-                <form method="post"  action="/" onsubmit="return submitviewQnA()">
+                <form method="post"  class="modal-contents" action="/" onsubmit="return submitviewQnA()">
                     <div>
                         <div>
-                            <input type="text" name="subject" id="subject1" readonly/>
+                            <div>문의제목</div>
+                            <div>
+                                <input class="inputs" type="text" name="subject" id="subject1" readonly/>
+                            </div>
                         </div>
                         <div>
-                            <textarea name="content" id="content1" readonly></textarea>
+                            <div>문의내용</div>
+                            <div>
+                                <textarea style="height: auto;" name="content" id="content1" readonly></textarea>
+                            </div>
                         </div>
                         <div>
-                            <textarea name="answer" id="answer1"  readonly></textarea>
+                            <div>관리자답변</div>
+                            <div>
+                                <textarea style="height: auto;" name="answer" id="answer1"  readonly></textarea>
+                            </div>
                         </div>
+
                     </div>
                 </form>
             </div>
