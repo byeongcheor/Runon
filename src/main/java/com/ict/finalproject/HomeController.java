@@ -4,8 +4,10 @@ package com.ict.finalproject;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.JoinService;
 import com.ict.finalproject.vo.MemberVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,5 +40,15 @@ public class HomeController {
         map.put("mvo",mvo);
         return map;
     }
+    @GetMapping("/callback")
+    public String handleCallback(HttpServletRequest request, Model model) {
+        // 클라이언트로부터 요청을 받고 필요한 로직을 수행
+        String token = request.getHeader("Authorization");
+        // 클라이언트 측에 필요한 데이터를 모델로 전달
+        model.addAttribute("token", token);
 
+        // 처리 후 특정 페이지로 이동
+        return "callback";
+
+    }
 }

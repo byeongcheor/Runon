@@ -54,5 +54,14 @@
         SELECT point_code FROM point_tbl WHERE usercode = #{param1}
 
     </insert>
-
+    <select id="is_googleSelect">
+        select count(username) from user_tbl where  username=#{username} and is_google=0
+    </select>
+    <select id="googleSelect">
+        select count(username) from user_tbl where username=#{username} and is_google=1
+    </select>
+    <insert id="googleJoins">
+        insert into user_tbl(username,name,nickname,is_google,is_info_disclosure) values(#{username},#{name},#{nickname},1,0)
+    </insert>
 </mapper>
+

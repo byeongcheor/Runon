@@ -190,7 +190,7 @@ function detail(orderId,payment_method){
                 </div>
                 <div class="orderPd">
                     <div class="orderPdImg">
-                        <img src="../img/cart/marathonposter1.png" alt="상품이미지">
+                        <img src="../img/marathonPoster/`+cvo.poster_img+`" alt="상품이미지">
                         <div class="orderPdN">
                             <span>` + cvo.marathon_name + `</span>
                         </div>

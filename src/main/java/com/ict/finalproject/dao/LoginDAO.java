@@ -15,5 +15,7 @@ public interface LoginDAO {
     public List<MemberVO> FindIds(String name, String tel);
     //비번바꾸기
     public int updatePassword(String username,String newPassword);
+    //구글로그인시 아이디가 있는지 확인
+    public int googleSelect(String username);
 
 }

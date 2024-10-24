@@ -10,6 +10,7 @@
             <input type="password" name="password" id="password" placeholder="비밀번호 입력"/>
             <input type="submit" class="loginbtn" value="로그인" />
         </form>
+        <div id="googlelogin">다른방식으로 로그인<div><a href="/oauth2/authorization/google"><img src="/img/googlelogin.png"></a></div></div>
     <div class='find'>
         <a onclick="joinPopup()">회원가입</a>/<a onclick="findIdPopup()">아이디찾기</a>/<a onclick="findPwdPopup()">비밀번호찾기</a>
     </div>

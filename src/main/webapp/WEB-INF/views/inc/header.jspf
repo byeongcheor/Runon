@@ -132,8 +132,8 @@ function crew() {
                     <li><a class="menus" onclick="crew()">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/cart/cart">CART</a></li>
-<%--                    <li><a class="menus" href="/mypage/myHome">MY</a></li>--%>
-                    <li><a onclick="mypage()">MY</a></li>
+                    <li><a class="menus" href="/mypage/myHome">MY</a></li>
+                    <%--<li> <a href="/oauth2/authorization/google">google</a></li>--%>
                     <li id="login"><a onclick="openLoginPopup()" style="color: #d1ff33">LOGIN</a></li>
 
                     <li id="logout"><a onclick="logout2()" style="color: #d1ff33">LOGOUT</a></li>

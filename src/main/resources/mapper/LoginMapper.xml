@@ -12,4 +12,7 @@
     <update id="updatePassword">
         update user_tbl set password=#{newPassword} where username=#{username}
     </update>
+    <select id="googleSelect">
+        select username from user_tbl where username=#{username} and is_google =1
+    </select>
 </mapper>

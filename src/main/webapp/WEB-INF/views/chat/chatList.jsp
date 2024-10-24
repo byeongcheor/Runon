@@ -3,7 +3,7 @@
 <!-- Bootstrap JS 연결 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- jQuery 연결 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <link rel="stylesheet" href="/css/chatList.css" type="text/css">
 <!-- 채팅창 영역 -->
 <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
@@ -367,20 +367,13 @@
 						const statusElement = document.createElement('div');
 						const statusText = report.report_status === 1 ? '신고 내역 처리 완료' : '신고 내역 처리 중';
 						statusElement.innerHTML = '신고 내역 상황: <span id="reportStatusText">' + statusText + '</span>';
-
-
-
-
-
 						// 처리 완료 버튼 (버튼을 직접 생성하지 않고 상태를 업데이트할 수 있음)
 						// 여기에서 신고 상태 업데이트를 위한 버튼을 생성하는 대신, 다른 UI 요소에서 호출할 수 있습니다.
-
 						// 각각의 요소를 reportItem에 추가
 						reportItem.appendChild(contentElement);
 						reportItem.appendChild(reasonElement);
 						reportItem.appendChild(dateElement);
 						reportItem.appendChild(statusElement);
-
 						// 신고 상태가 '처리 완료'로 변경된 경우
 						if (report.report_status === 1) {
 							// '신고 내역 처리 완료'라는 텍스트를 업데이트

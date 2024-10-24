@@ -65,7 +65,7 @@ console.log("1");
         }// 테스트용으로 클릭 확인
     });
 
-    $(document).one('click', '.menus', function (event) {
+  /*  $(document).one('click', '.menus', function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
         alert($(this).attr("href"));
         if ($(this).attr("href") != null) {
@@ -79,6 +79,6 @@ console.log("1");
                 }
             });
         }
-    });
+    });*/
 };
 
