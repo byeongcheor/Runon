@@ -39,26 +39,29 @@ public class CrewController {
     int    user_code = 0;
     private static final String UPLOAD_DIR = "./src/main/webapp/crew_upload/";
 
-    @PostMapping("/test")
+    @PostMapping("/go_crew")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
-        if(token.equals("A")) return user_name= "A";
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        user_code = service.usercodeSelect(user_name);
+    public String go_crew(@RequestParam("Authorization")String token, HttpSession session) {
+        if(token.equals("A")) user_name= "A";
+        else {
+            token = token.substring("Bearer ".length());
+            user_name = jwtUtil.setTokengetUsername(token);
+        }
+        int user_code = service.usercodeSelect(user_name);
+        session.setAttribute("user_code", user_code);
         return user_name;
     }
 
     @GetMapping("/crewList")
-    public String crewList(CrewVO cvo, PagingVO pvo, Model model){
+    public String crewList(CrewVO cvo, PagingVO pvo, Model model, HttpSession session){
         pvo.setTotalRecord(service.totalRecord(pvo));
-        user_code = service.usercodeSelect(user_name);
         if (pvo.getNowPage() == 0) {
             pvo.setNowPage(1);  // 기본 페이지 설정
         }
-        pvo.setOnePageRecord(10);
         int totalRecord = service.totalRecord(pvo);
+
         pvo.setTotalRecord(totalRecord);
+        pvo.setOnePageRecord(10);
         pvo.setTotalPage((int) Math.ceil((double) totalRecord / 10));
         List<CrewVO> list = service.crewSelectPaging(pvo);
 
@@ -76,11 +79,11 @@ public class CrewController {
             log.warn("크루 목록을 가져오지 못했습니다."); // 로깅 사용
         }
         //
+        Integer user_code = (Integer) session.getAttribute("user_code");
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
         model.addAttribute("chatList", chatList);  // 추가: chatList를 모델에 추가
         model.addAttribute("user_code", user_code);
-        System.out.println(user_code);
         return "crew/crewList";
     }
 
@@ -105,6 +108,7 @@ public class CrewController {
         // 전체 레코드 수를 계산하여 totalPage 계산
         int totalRecord = service.getTotalRecord(orderby, gender, age, addr, addr_gu, searchWord);
         int totalPage = (int) Math.ceil((double) totalRecord / 10);
+        System.out.println("totalPage::::::::::"+totalPage);
 
         // 서비스 호출 (데이터와 함께 페이징 정보 포함)
         List<CrewVO> list = service.search_crewList(offset, orderby, gender, age, addr, addr_gu, searchWord);
@@ -235,13 +239,19 @@ public class CrewController {
     public String crewDetail(@RequestParam("Authorization") String token,
                              @RequestParam("create_crew_code") int create_crew_code,
                              HttpSession session) {
-        // 토큰 처리 및 기타 데이터 처리
+
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
 
-        // 서비스 호출 (int 값을 파라미터로 전달)
-        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
-        Integer  crew_write_code = service.crew_write_code_select(create_crew_code);  // int 값 파라미터 전달
+        int userCode = service.usercodeSelect(userName);
+        Integer  crew_write_code = service.crew_write_code_select(create_crew_code);
+        System.out.println("crew_write_code"+crew_write_code);
+
+          int a=0;
+          if(crew_write_code ==null) return "false";
+          a= service.check_delete(crew_write_code);
+          if(a==1) return "false";
+
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("crew_write_code", crew_write_code);
         return "success";
@@ -249,12 +259,11 @@ public class CrewController {
 
     @GetMapping("/crewDetail")
     public String nextPage(HttpSession session, Model model) {
-        // 세션에서 데이터 가져오기
+
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer crew_write_code = (Integer) session.getAttribute("crew_write_code");
-       // int position = service.position_select(user_code,create_crew_code);
+        // int position = service.position_select(user_code,create_crew_code);
 
-        // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("crew_write_code", crew_write_code);
         return "crew/crewDetail"; // 이동할 JSP 페이지
@@ -303,7 +312,6 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        //가입신청 중복 확인하기
         int a=0;
         try {
             service.crew_join_delete(user_code,crewCode);
@@ -337,7 +345,7 @@ public class CrewController {
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
-        //가입신청 중복 확인하기
+
         int a=0;
         try {
             service.crew_write_delete(user_code,crew_write_code);
@@ -399,12 +407,13 @@ public class CrewController {
             UUID uuid = UUID.randomUUID();
             // 파일 업로드가 있는지 확인
             if (teamPhotoInput != null && teamPhotoInput.length > 0 && !teamPhotoInput[0].isEmpty()) {
-                for (MultipartFile file : teamPhotoInput) {
-                    fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                    fileName = uuid.toString() + "_" + fileName;
-                    Path path = Paths.get(uploadDir + File.separator + fileName);
-                    Files.copy(file.getInputStream(), path);
-                }
+                MultipartFile file = teamPhotoInput[0];
+                fileName = uuid.toString() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+                Path path = Paths.get(uploadDir + File.separator + fileName);
+                Files.copy(file.getInputStream(), path);
+            }
+            else{
+                fileName=service.crew_teamPhoto(crew_write_code);
             }
             String age = String.join(",", arr_age);
             service.crew_write_update(crew_write_code, user_code, fileName, age, gender, content);
@@ -474,12 +483,11 @@ public class CrewController {
 
     @GetMapping("/crewManage")
     public String crewManage(HttpSession session, Model model) {
-        // 세션에서 데이터 가져오기
+
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer user_code = (Integer) session.getAttribute("user_code");
         Integer position = service.position_select(user_code,create_crew_code);
 
-        // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("user_code", user_code);
         model.addAttribute("position", position);
@@ -536,11 +544,10 @@ public class CrewController {
                              @RequestParam("create_crew_code") int create_crew_code,
                              @RequestParam("position") int position,
                              HttpSession session) {
-        // 토큰 처리 및 기타 데이터 처리
+
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
 
-        // 서비스 호출 (int 값을 파라미터로 전달)
         int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("position", position);
@@ -549,11 +556,10 @@ public class CrewController {
 
     @GetMapping("/crewApp")
     public String crewApp(HttpSession session, Model model) {
-        // 세션에서 데이터 가져오기
+
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer position = (Integer) session.getAttribute("position");
 
-        // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("position", position);
         return "crew/crewApp"; // 이동할 JSP 페이지
@@ -936,12 +942,12 @@ public class CrewController {
                                 @RequestParam("create_crew_code") int create_crew_code,
                                 @RequestParam("user_code") int user_code,
                                 HttpSession session) {
-        // 토큰 처리 및 기타 데이터 처리
+
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
 
-        // 서비스 호출 (int 값을 파라미터로 전달)
-        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+
+        int userCode = service.usercodeSelect(userName);
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("user_code", user_code);
         return "success";
@@ -949,11 +955,10 @@ public class CrewController {
 
     @GetMapping("/crewRevise")
     public String crewRevise(HttpSession session, Model model) {
-        // 세션에서 데이터 가져오기
+
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer user_code = (Integer) session.getAttribute("user_code");
 
-        // 모델에 데이터 추가 (JSP에 전달하기 위해)
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("user_code", user_code);
         return "crew/crewRevise"; // 이동할 JSP 페이지
@@ -1033,7 +1038,7 @@ public class CrewController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return -1; // 에러 발생 시 -1 반환
+            return -1;
         }
     }
 
@@ -1052,11 +1057,11 @@ public class CrewController {
         token = token.substring("Bearer ".length());  // JWT 토큰에서 "Bearer " 제거
 
         try {
-            // JWT에서 사용자 이름을 가져오고, 사용자 코드를 조회
+
             user_name = jwtUtil.setTokengetUsername(token);
             user_code = service.usercodeSelect(user_name);
 
-            // 공지사항 정보 삽입
+
             result = service.createNotice(subject, content, user_code, create_crew_code);
 
             // 생성된 공지사항의 코드 가져오기
@@ -1066,7 +1071,7 @@ public class CrewController {
             // UUID를 사용한 파일 이름 생성
             UUID uuid = UUID.randomUUID();
 
-            // 파일 업로드가 있는 경우 처리
+
             if (noticeImages != null && noticeImages.length > 0) {
                 for (MultipartFile image : noticeImages) {
                     if (!image.isEmpty()) {
@@ -1082,7 +1087,6 @@ public class CrewController {
                     }
                 }
             }
-            // 성공적으로 공지사항이 생성되었을 때
             if (result > 0) {
                 return 1; // 성공
             } else {
@@ -1113,7 +1117,6 @@ public class CrewController {
         }
         return a;
     }
-
 
 
 }

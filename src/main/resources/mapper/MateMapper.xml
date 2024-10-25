@@ -158,6 +158,7 @@
         a.profile as b_s,
         b.birthdate,
         a.profile,
+        (select count(1) from applicant_tbl where matching_room_code= ${param1}) as a_n,
         (select count(1)
         from applicant_tbl
         where accept_yn = 'y'

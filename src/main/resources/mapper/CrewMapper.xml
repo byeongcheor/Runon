@@ -18,6 +18,12 @@
         where  create_crew_code = '${param1}'
     </select>
 
+    <select id="crew_teamPhoto" resultType="String">
+        select logo
+        from   crew_write
+        where  teamPhoto = '${param1}'
+    </select>
+
     <update id="crew_write_hit_update">
         update crew_write
         set
@@ -26,9 +32,10 @@
     </update>
 
     <select id="totalRecord" resultType="int">
-        select count(b.create_crew_code)
-        from  create_crew_tbl a, crew_write b
-        where a.create_crew_code = b.create_crew_code
+        select count(*)
+        from create_crew_tbl a
+        join crew_write b on a.create_crew_code = b.create_crew_code
+        where b.is_delete = 0
     </select>
 
     <select id="crew_name_check" resultType="int">
@@ -63,18 +70,6 @@
         where vote_code = ${param1}
     </select>
 
-    <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
-        ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
-        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code and status = 0) as a_n
-        from  create_crew_tbl a, crew_write b
-        where b.is_delete = 0
-        and   a.create_crew_code = b.create_crew_code
-        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code,b.crew_write_code
-        order by b.writedate desc
-        limit 10 offset #{offset}
-    </select>
-
     <select id="search_crewList" resultType="com.ict.finalproject.vo.CrewVO">
         select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
@@ -101,6 +96,17 @@
         and concat(a.addr, ' ', a.addr_gu) like ifnull(concat('%', #{addr}, '%'), '%')
         and concat(a.addr, ' ', a.addr_gu) like ifnull(concat('%', #{addr_gu}, '%'), '%')
         and instr(concat(concat(a.addr, ' ', a.addr_gu), '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull(#{searchWord}, '')) > 0
+    </select>
+    <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
+        select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
+        ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
+        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code and status = 0) as a_n
+        from  create_crew_tbl a, crew_write b
+        where b.is_delete = 0
+        and   a.create_crew_code = b.create_crew_code
+        group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code,b.crew_write_code
+        order by b.writedate desc
+        limit 10 offset #{offset}
     </select>
 
     <insert id="crew_insert">
@@ -228,6 +234,12 @@
         from  crew_write
         where create_crew_code = ${param1}
         and   is_delete = 0;
+    </select>
+
+    <select id="check_delete" resultType="int">
+        select is_delete
+        from   crew_write
+        where  crew_write_code = ${param1}
     </select>
 
     <select id="getNoticeCode" resultType="int">

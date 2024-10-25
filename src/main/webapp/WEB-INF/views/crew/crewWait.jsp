@@ -198,6 +198,10 @@ var create_crew_code;
                  create_crew_code: create_crew_code  // 전송할 데이터
              },
              success: function(response) {
+                if(response=="false"){
+                     alert("모집이 마감된 글 입니다.")
+                     return false;
+                }
                  window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
              },
              error: function(error) {

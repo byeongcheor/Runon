@@ -24,11 +24,13 @@ public interface CrewDAO {
     public List<CrewVO> search_crewList(int offset, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);
     public int getTotalRecord(String orderby, String gender, String age, String addr, String addr_gu, String searchWord);
     public String crew_teamEmblem(int create_crew_code);
+    public String crew_teamPhoto(int crew_write_code);
     public List<String> notice_detail_img(int notice_num);
     public int img_delete(int notice_num, String img_name);
     public int upload_images(int notice_num, String img_name);
     public int update_notice(int notice_num, String subject, String content, int user_code);
     public int totalRecord(PagingVO pVO);
+    public int check_delete(int crew_write_code);
     public int update14();
     public int usercodeSelect(String user_name);
     public int crew_code_select(int user_code);
