@@ -605,8 +605,11 @@ function crew_overview(response) {
             list += '   <img src="/img/notice.png"> ';
             list += '      </div>';
             list += '      <div class="text-container"> ';
-            list += '<span class="main-text">' + response[i].subject + '</span>';
-            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
+            list += '      <div class="info-row2"> ';
+            list += '      <span class="main-text">' + response[i].subject + '</span>';
+            list += '      </div>';
+            list += '      <div class="info-row2"> ';
+            list += '      <span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
             list += '      </div>';
             list += '   </div>';
             list += '</li>';
