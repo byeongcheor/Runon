@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" href="/css/cart.css" type="text/css">
 <script src="/js/cart.js" type="text/javascript"></script>
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
 
 <div class="cartFrm">
     <div class="cartName" id="cartItemsContainer">

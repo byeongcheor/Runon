@@ -28,4 +28,6 @@ public interface MarathonService {
     void incrementViewCount(int marathonCode);
     MarathonListVO getMarathonDetail(int marathonCode);
     void updateMarathon(MarathonListVO marathon);
+    boolean deleteMarathon(int marathonCode);
+    void saveMarathon(MarathonListVO marathonListVO);
 }

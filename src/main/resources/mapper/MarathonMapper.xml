@@ -17,7 +17,7 @@
         SELECT *
         FROM marathon_list_tbl
         WHERE 1=1  <!-- 모든 대회를 포함 -->
-        ORDER BY event_date ASC  <!-- 대회 날짜 오름차순 정렬 -->
+        ORDER BY like_count DESC
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="totalRecord" parameterType="PagingVO" resultType="int">
@@ -166,13 +166,28 @@
             event_date = #{event_date},
             addr = #{addr},
             total_distance = #{total_distance},
+            entry_fee = #{entry_fee},
             registration_start_date = #{registration_start_date},
             registration_end_date = #{registration_end_date},
-            marathon_content = #{marathon_content}
+            marathon_content = #{marathon_content},
+            lat = #{lat},
+            lon = #{lon}
             <if test="poster_img != null">
                 , poster_img = #{poster_img}
             </if>
         </set>
         WHERE marathon_code = #{marathon_code}
     </update>
+    <update id="deleteMarathon" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET is_deleted = 1, deleted_date = NOW()
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <insert id="saveMarathon" parameterType="com.ict.finalproject.vo.MarathonListVO">
+        INSERT INTO marathon_list_tbl
+        (marathon_name,  marathon_type, total_distance, entry_fee, poster_img, event_date, addr, registration_start_date, registration_end_date, marathon_content, admin_code, lat, lon)
+        VALUES
+        (#{marathon_name}, 1, #{total_distance}, #{entry_fee}, #{poster_img}, #{event_date}, #{addr}, #{registration_start_date}, #{registration_end_date}, #{marathon_content}, 0, #{lat}, #{lon});
+    </insert>
+
 </mapper>

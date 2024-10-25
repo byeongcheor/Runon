@@ -169,7 +169,7 @@ public class MarathonController {
         // 장바구니 조회
         List<CartVO> cartList = service.getCartByUserCode(usercode);
         model.addAttribute("cartList", cartList);
-        return "order/cart"; // 장바구니 JSP 페이지 경로
+        return "cart/cart"; // 장바구니 JSP 페이지 경로
     }
 
 
@@ -263,6 +263,24 @@ public class MarathonController {
             result.put("success", false);
             result.put("message", "조회수 증가 실패: " + e.getMessage());
             e.printStackTrace();
+        }
+        return result; // JSON 형태로 응답
+    }
+    @PostMapping("/addMarathonToCart")
+    public Map<String, Object> addMarathonToCart(@RequestBody CartVO cartVO) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            System.out.println("cartVO 확인: " + cartVO);
+            // CartVO에 usercode 설정
+            // 장바구니에 추가
+            int addedCount = service.addToCart(cartVO);
+            System.out.println("장바구니에 추가된 항목 수: " + addedCount);
+
+            result.put("success", true);
+            result.put("message", "마라톤 상품이 장바구니에 담겼습니다.");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "장바구니에 추가 실패: " + e.getMessage());
         }
         return result; // JSON 형태로 응답
     }

@@ -10,7 +10,7 @@
 	<input type='hidden' id=usercode value=${uvo.usercode}>
 	<input type='hidden' id=nickname value=${uvo.nickname}>
 </c:forEach>
-
+<button id="chatButton" class="image-button"></button>
 <div id="chatbox" >
 	<div class="chatbox-header">
 		<button id="closeChatBtn" class="close-chat-btn">×</button>
@@ -20,7 +20,9 @@
 			 onmouseover="this.src='/img/bell2.png';"
 			 onmouseout="this.src='/img/bell.png';"
 			 onclick="toggleCheckBoxes()">
-		<button id="reportHistoryBtn" style="display: none;" onclick="showReportHistory()">신고 내역 보기</button>
+		<button id="reportHistoryBtn" style="display: none; margin-left: 10px;
+    border-radius: 10px;
+    background-color: #ddd;" onclick="showReportHistory()">신고 내역 보기</button>
 	</div>
 	<!-- 대화내용 -->
 	<div id="taMsg">
@@ -36,26 +38,26 @@
 </div>
 <!--채팅방 리스트 영역-->
 <div id="chatList" class="chat-list hidden">
-	<!-- 메이트 방 -->
-	<div class="chat-item mate-item" id="mateChatButton">
-		<img src="/img/man0.png" alt="메이트 이미지" class="chat-img">
-		<div id="mate_chat" class="chat-info">
-			<div class="chat-text">메이트 채팅방</div>
-			<div class="chat-date">2024-10-13</div>
-		</div>
-	</div>
+<%--	<!-- 메이트 방 -->--%>
+<%--	<div class="chat-item mate-item" id="mateChatButton">--%>
+<%--		<img src="/img/man0.png" alt="메이트 이미지" class="chat-img">--%>
+<%--		<div id="mate_chat" class="chat-info">--%>
+<%--			<div class="chat-text">메이트 채팅방</div>--%>
+<%--			<div class="chat-date">2024-10-13</div>--%>
+<%--		</div>--%>
+<%--	</div>--%>
 
 	<!-- 크루 방 리스트 -->
 
-	<c:forEach var="crewchat" items="${chatList}">
-		<div class="chat-item">
-			<img src="/crew_upload/${crewchat.logo}" alt="${crewchat.crew_name} 이미지" class="chat-img">
-			<div class="chat-info">
-				<div class="chat-text">${crewchat.crew_name}</div>
-				<div class="chat-date">2024-10-12</div>
-			</div>
-		</div>
-	</c:forEach>
+<%--	<c:forEach var="crewchat" items="${chatList}">--%>
+<%--		<div class="chat-item">--%>
+<%--			<img src="/crew_upload/${crewchat.logo}" alt="${crewchat.crew_name} 이미지" class="chat-img">--%>
+<%--			<div class="chat-info">--%>
+<%--				<div class="chat-text">${crewchat.crew_name}</div>--%>
+<%--				<div class="chat-date">2024-10-12</div>--%>
+<%--			</div>--%>
+<%--		</div>--%>
+<%--	</c:forEach>--%>
 </div>
 <!-- 더 많은 크루들 추가 -->
 <!-- 신고하기 모달 -->
@@ -103,13 +105,16 @@
 	var nickname=$('#nickname').val();
 	var token = localStorage.getItem("Authorization");
 	var usercode=usercode1;
-/*	var usercode=usercode1;*/
+	var gender;
+
+	/*	var usercode=usercode1;*/
 
 	//채팅연결공통
 
 	setTimeout(function() {
 
 		console.log('User Code:', usercode); // 디버깅용 로그 추가
+		console.log('gender:', gender);
 
 		// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
 		if (!match_yn || match_yn === "undefined") {
@@ -180,6 +185,9 @@
 				console.log('receiveMsg->',receiveMsg);
 				var jsonMsg = JSON.parse(receiveMsg.body);
 				console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
+
+				console.log('성별:', jsonMsg.gender); // gender 값 확인
+
 				showCatMessage(jsonMsg);
 			});
 			// 서버로 메시지 전송 (닉네임 접속 알림)
@@ -188,6 +196,7 @@
 			console.error("WebSocket 연결 실패:", error);
 		});
 	}
+
 
 
 
@@ -232,7 +241,7 @@
 
 
 	// 서버로 메시지 전송 함수
-	function sendMessage(usercode, nickname,recipient, content, add_date) {
+	function sendMessage(usercode, nickname,recipient, content, add_date ,gender) {
 		console.log('메시지 전송:', usercode); // 디버깅용 로그 추가
 
 		let messageData = {
@@ -240,7 +249,8 @@
 			nickname: nickname, // 전역 변수 nickname 사용
 			recipient: recipient, // 방 코드 (방 구분을 위한 식별자)
 			content: content,    // 메시지 내용
-			add_date: add_date
+			add_date: add_date,
+			gender: gender // 로그인한 사용자의 성별 추가
 		};
 		stompClient.debug = null;
 		// WebSocket이 연결되었는지 확인 (readyState가 OPEN인지 확인)
@@ -255,6 +265,7 @@
 	}
 
 
+
 	// 서버에서 받은 메시지를 화면에 표시하는 함수
 	function showCatMessage(data) {
 		setTimeout(function() {
@@ -264,36 +275,40 @@
 			// 닉네임을 수신한 데이터에서 가져오기
 			var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
 
+			var gender = data.gender;
 			// 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
 			var tag = '';
 
 			// 내가 보낸 메시지인 경우 (오른쪽에 표시)
 			if (usercode2 == usercode) {
+				let profileImage = gender === '남' ? '/img/man0.png' : '/img/woman0.png'; // 메시지의 성별에 따라 이미지 선택
 				tag += `
-        <div class="chat-message">
-            <input type="checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
-            <img src="/img/man0.png" alt="프로필 이미지" class="profile-img">
-            <div class="message-info">
-                <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
-                <span class="nickname">` + nickname + `</span>
-                <p>` + data.content + `</p>
-                <div class="timestamp">` + data.add_date + `</div>
-            </div>
-        </div>`;
+    <div class="chat-message">
+        <input type="checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
+        <img src =` + profileImage + `  class="profile-img">
+        <div class="message-info">
+            <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span>
+            <span class="nickname">` + nickname + `</span>
+            <p>` + data.content + `</p>
+            <div class="timestamp">` + data.add_date + `</div>
+        </div>
+    </div>`;
 			} else {
-				// 다른 사람이 보낸 메시지인 경우(왼쪽에 표시)
+				// 다른 사람이 보낸 메시지인 경우 (왼쪽에 표시)
+				let profileImage = data.gender === '남' ? '/img/man0.png' : '/img/woman0.png'; // 메시지의 성별에 따라 이미지 선택
 				tag += `
-        <div class="chat-message-left">
-            <input type="checkbox" class="message-checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
-            <img src="/img/woman0.png" alt="프로필 이미지" class="profile-img">
-            <div class="message-info">
-                <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span> <!-- 유저코드를 숨김 -->
-                <span class="nickname">` + nickname + `</span>
-                <p>` + data.content + `</p>
-                <div class="timestamp-left">` + data.add_date + `</div>
-            </div>
-        </div>`;
+    <div class="chat-message-left">
+        <input type="checkbox" class="message-checkbox" style="display: none;" value='{"message_code": "` + data.message_code + `", "content": "` + data.content + `"}'>
+         <img src =` + profileImage + `  class="profile-img">
+        <div class="message-info">
+            <span class="nickname" data-usercode=` + data.usercode + ` style="display: none;">` + data.nickname + `</span>
+            <span class="nickname">` + nickname + `</span>
+            <p>` + data.content + `</p>
+            <div class="timestamp-left">` + data.add_date + `</div>
+        </div>
+    </div>`;
 			}
+
 
 			// 메시지를 채팅창에 추가
 			$("#taMsg").append(tag);
@@ -301,10 +316,16 @@
 			// 스크롤을 최신 메시지로 자동 이동
 			var chatbox = document.getElementById("taMsg");
 			chatbox.scrollTop = chatbox.scrollHeight;
+
+			// 채팅방 목록에서 해당 채팅방의 날짜 업데이트
+			updateChatRoomDate(data.add_date); // 메시지가 수신된 날짜로 업데이트
 		}, 200); // 0ms 후에 실행
 	}
 
-
+	// 채팅방 목록에서 해당 채팅방의 날짜 업데이트 함수
+	function updateChatRoomDate(latestDate) {
+		$('#mate_chat .chat-date').text(latestDate); // 메이트 채팅방의 날짜를 최신 날짜로 변경
+	}
 
 	//신고하기부분
 	// 체크박스를 표시하거나 숨길 때 이벤트 리스너를 추가하는 함수
@@ -524,8 +545,8 @@
 							alert('신고가 완료되었습니다.');
 							closeModal(); // 모달 닫기 및 초기화
 
-							// 여기에 추가: 신고 내역 보기
-							showReportHistory(); // 신고 내역 보여주기
+							// // 여기에 추가: 신고 내역 보기
+							// showReportHistory(); // 신고 내역 보여주기
 						})
 						.catch(error => {
 							console.error('Error:', error);
@@ -593,6 +614,28 @@
 			}
 		};
 	}
+	$(document).ready(function() {
+		// 채팅 아이콘 클릭 시 채팅창 표시 및 숨기기
+		$('#chatButton').click(function () {
+			// 매칭 방 코드가 0일 경우 알림창을 띄우고 채팅을 막음
+			if (match_yn === "0") {
+				alert("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
+				return; // 채팅 연결 및 메시지 불러오기를 막음
+			}
+
+			// 채팅창의 현재 상태 확인 후 보이거나 숨기기
+			if ($('#chatbox').is(':visible')) {
+				$('#chatbox').hide(); // 채팅창 숨기기
+			} else {
+				$('#chatbox').css('display', 'flex'); // 채팅창을 flex로 보이기
+			}
+		});
+
+		// 닫기 버튼 클릭 시 채팅창 숨기기
+		$('#closeChatBtn').click(function () {
+			$('#chatbox').hide(); // 채팅창 숨기기
+		});
+	});
 
 
 </script>

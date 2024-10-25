@@ -553,6 +553,11 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public List<MarathonListVO> selectAllBoard(PagingVO pvo) {
         return dao.selectAllBoard(pvo);
     }
+
+    @Override
+    public List<MarathonListVO> selectMarathons() {
+        return dao.selectMarathons();
+    }
     //
 
 }

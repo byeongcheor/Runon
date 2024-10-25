@@ -8,7 +8,7 @@
 <%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">--%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="/css/marathonList.css" type="text/css">
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
 
 
 <!-- 상단이미지 -->
@@ -208,6 +208,12 @@
         });
     });
 
+    document.getElementById('search-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('mSearch-button').click(); // 'mSearch-button' 버튼을 클릭한 것과 동일한 동작
+        }
+    });
 
 
     function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {

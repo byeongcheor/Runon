@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="${pageContext.request.contextPath}/js/crew.js" type="text/javascript"></script>
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
 
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -807,22 +807,7 @@ var usercode=${user_code};
                 var num = (Math.ceil(result.length / 10));
                 var page_list='';
 
-                if(paging==0){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);"><</a></li>';
-                }
 
-                if(i>1) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging-1)+');">Previous</a></li>';
-
-                for(var i=0; i<num;i++){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+i+');">'+(i+1)+'</a></li>';
-                }
-
-                if(paging==num) page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>';
-
-                if(paging<num) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging+1)+');">></a></li>';
-                $('#paging').html('');
-                $('#paging').append(page_list);
-            },
             error: function(e) {
                 console.error('Error: ', e);
             }

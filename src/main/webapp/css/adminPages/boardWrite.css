@@ -5,6 +5,14 @@
     height: 400px;
     object-fit: cover;
 }
+.marathonDetailFrm{
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    width: 100%; /* 전체 너비 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 수평 중앙 정렬을 위한 여백 */
+    padding: 20px; /* 적당한 패딩 추가 */
+}
 .marathonDetailF{
     display: flex;
     width: 1280px;
@@ -21,7 +29,7 @@
     -webkit-box-pack: justify;
 
     align-items: flex-start;
-    margin-top: 150px;
+    margin-top: 80px;
     width: 100%; /* 전체 너비 설정 */
 }
 .marathonDImg{

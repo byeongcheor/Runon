@@ -55,6 +55,7 @@
 #mainmid{
     width: 100%;
     height: auto;
+    margin: 20px;
 }
 
 #mainmid>div{
@@ -159,7 +160,7 @@
     background-color: #F0F0F0;
 }
 .board_title3 .marathon_code{
-    width: 20%;
+    width: 15%;
     text-align: left;
 }
 li{
@@ -177,7 +178,7 @@ li{
 }
 
 #BoardList .board_code{
-    width: 20%;  /* 마라톤번호 */
+    width: 15%;  /* 마라톤번호 */
     text-align: left;
 }
 
@@ -244,4 +245,15 @@ li{
 .pagination .page-item.active .page-link:hover {
     background-color: grey;
     border-color: grey;
+}
+#board_title2 {
+    text-align: center;
+    background-color: #F0F0F0;
+    font-weight: bold; /* 글씨를 진하게 */
+}
+
+#writebutton input {
+    border-radius: 5px;
+    background-color: transparent;
+    border: 1px solid grey;
 }

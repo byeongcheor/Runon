@@ -24,16 +24,23 @@
                     <!-- 이미지 업로드 -->
                     <input type="file" name="posterImage" id="posterImage" accept="image/*" onchange="updateImage(event)">
                     <img id="marathonPoster" src="/resources/uploadfile/${marathonDetail.poster_img}" alt="마라톤 포스터">
-
-
                 </div>
                 <div class="marathonDContent">
                     <div class="marathonDTTop">
                         <!-- 마라톤 이름 -->
                         <span>마라톤 대회명</span>
                         <input type="text" name="marathonName" id="marathonName" value="${marathonDetail.marathon_name}">
-
-
+                        <div class="Mline"></div>
+                        <div class="marathonType">
+                            <span class="marathonO">상품</span>
+                            <input type="text" name="total_distance" value="${marathonDetail.total_distance}">
+                            <div class="marathonO text">마라톤 상품(km)별 적어주세요.<br/>(예: 5km,8km,10km)</div>
+                        </div>
+                        <div class="marathonTypeSize">
+                            <span class="marathonO1">가격</span>
+                            <input type="text" name="entry_fee" value="${marathonDetail.entry_fee}">
+                            <div class="marathonO1 text">마라톤 거리에 따라 가격을 적어주세요.<br/>(예: 25000원/40000원/55000원)</div>
+                        </div>
 
                     </div>
                 </div>
@@ -57,15 +64,21 @@
                     <!-- 오른쪽 열: 접수 정보 -->
                     <div class="col-md-6">
                         <ul class="list-group">
-                            <li class="list-group-item"><strong><img src="/img/a.png"/> 접수기간: </strong> <input type="date" name="registration_start_date" value="${fn:substring(marathonDetail.registration_start_date, 0, 10)}">
+                            <li class="list-group-item"><strong><img src="/img/a.png"/> 접수기간: </strong> <input class="rg" type="date" name="registration_start_date" value="${fn:substring(marathonDetail.registration_start_date, 0, 10)}">
                                 ~
-                                <input type="date" name="registration_end_date" value="${fn:substring(marathonDetail.registration_end_date, 0, 10)}"></li>
+                                <input class="rg" type="date" name="registration_end_date" value="${fn:substring(marathonDetail.registration_end_date, 0, 10)}"></li>
                             <li class="list-group-item"><strong><img src="/img/b.png"/> 결제가능: </strong> 가능</li>
                             <li class="list-group-item"><strong><img src="/img/c.png"/> 주최: </strong> (주)러닝포인트</li>
                         </ul>
                     </div>
                 </div>
+                <div class="marathonMap">
+                    <h2>마라톤 지도</h2>
+                    <span>위도:</span><input type="text" id="latitude" name="latitude" value="${marathonDetail.lat}"><br/>
+                    <span>경도:</span><input type="text" id="longitude"  name="longitude"  value="${marathonDetail.lon}" >
+                </div>
             </div>
+
 
             <div class="marathonDCC">
                 <h2>마라톤 상세설명</h2>
@@ -73,10 +86,10 @@
                     <textarea name="marathonContent" id="marathonContent">${marathonDetail.marathon_content}</textarea>
                 </div> <!-- 상세 설명 -->
             </div>
-            <!-- 지도 표시할 영역 -->
+            <button type="submit" class="btn btn-outline-success tnwjdBtn">수정하기</button>
 
         </div>
     </div>
-    <!-- 수정 버튼 -->
-    <input class="tnwjdBtn" type="submit" value="수정">
+
+
 </form>
