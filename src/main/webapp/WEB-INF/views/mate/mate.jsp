@@ -117,7 +117,7 @@
     <div class="modal-content">
         <p>매칭이 완료되었습니다.</p>
         <div class="modal-buttons">
-            <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+            <button id="continueMatching" onClick="go_matepage()"class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
             <button id="goToMyPage" onClick="go_mypage()"class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
     </div>
 </div>
@@ -637,14 +637,9 @@ function grid_draw(length, result) {
         document.getElementById('optionSelectModal').style.display = 'none';
     };
 
-    // 매칭 완료 모달의 닫기 버튼 클릭 시 모달 닫기
-    document.querySelector('#matchCompleteModal .close').onclick = function() {
-        document.getElementById('matchCompleteModal').style.display = 'none';
-    };
-
 
     // 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고 이에를 ajax 안에서 열여야되는뎅
-    document.getElementById('continueMatching').onclick = function() {
+    function go_matepage() {
         window.location.href = '/mate/mate';  //
     };
 
@@ -732,6 +727,8 @@ function grid_draw(length, result) {
            }
        });
     }
+
+
 
     function modal_close(){
         $('#mateMatchModal').hide();
