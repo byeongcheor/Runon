@@ -27,23 +27,22 @@ public class MateController {
 
     @PostMapping("/test")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
+ public String test(@RequestParam("Authorization")String token) {
         if(token.equals("A")) return user_name= "A";
         token=token.substring("Bearer ".length());
         user_name=jwtUtil.setTokengetUsername(token);
-        System.out.println("test로 들어오는 user_name: " + user_name);
         user_code = service.usercodeSelect(user_name);
         return user_name;
     }
 
     @GetMapping("/mate")
-    public String matchingList(MateVO vo, Model model){//
+    public String matchingList(MateVO vo, HttpServletRequest request, Model model){//
         try {
 
-            System.out.println("mate로 들어오는 user_name : "+user_name);
             List<MateVO> userselect = service.userselect(user_code);
             List<MateVO> ranking = service.ranking();
             vo.setMatch_yn(service.match_yn(user_code));
+
             //  System.out.println(userselect);
 
             model.addAttribute("ranking",ranking);
@@ -60,11 +59,7 @@ public class MateController {
     @PostMapping("/go_profileList")
     @ResponseBody
     public String go_profileList(@RequestParam("Authorization") String token,
-                                 @RequestParam("usercode") int usercode,
-                                 @RequestParam("gender") String gender,
-                                 @RequestParam("match_yn") String match_yn,
-                                 @RequestParam("num") int num,
-                                 HttpSession session) {
+
         session.setAttribute("user_code", usercode);
         session.setAttribute("gender", gender);
         session.setAttribute("match_yn", match_yn);
@@ -74,7 +69,7 @@ public class MateController {
 
 
     @GetMapping("/profileList")
-    public String crewManage(HttpSession session, Model model) {
+
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer user_code = (Integer) session.getAttribute("user_code");
         String gender = (String) session.getAttribute("gender");

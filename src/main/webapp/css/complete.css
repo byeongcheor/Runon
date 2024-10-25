@@ -246,3 +246,9 @@
     font-size: 13pt;
     font-weight: 700;
 }
+.orderOk{
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+    margin: 0 auto;
+}
