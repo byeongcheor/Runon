@@ -57,9 +57,15 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
-    public List<CrewVO> search_crewList(int page, String orderby, String gender , String age, String addr, String addr_gu, String searchWord)
+    public List<CrewVO> search_crewList(int offset, String orderby, String gender , String age, String addr, String addr_gu, String searchWord)
     {
-        return dao.search_crewList(page, orderby, gender, age, addr, addr_gu, searchWord);
+        return dao.search_crewList(offset, orderby, gender, age, addr, addr_gu, searchWord);
+    }
+
+    // 전체 레코드 수를 반환하는 메서드 구현
+    @Override
+    public int getTotalRecord(String orderby, String gender, String age, String addr, String addr_gu, String searchWord) {
+        return dao.getTotalRecord(orderby, gender, age, addr, addr_gu, searchWord);
     }
 
     @Override

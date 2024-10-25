@@ -152,7 +152,7 @@ function detail(certificate_code){
             if (Cvo.result_status=="처리중"){
                 var buttonTag="<button type='button' id='approveBtn' onclick='blockbutton(\""+certificate_code+"\",\""+Cvo.crew_member_code+"\")'>승인하기</button>";
                 var selectTag=`  <div>
-                        <label class="form-label">점수부여</label>
+                       <label class="form-label">점수부여</label>
 
                         <div id="radiobuttons">
                             <input type="radio" id="value10" name="point" value="10" />

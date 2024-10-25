@@ -1,32 +1,40 @@
-body{
-    animation: none;background-color: black;
+body {
+    animation: none;
+    background-image: url('/img/loginback.jpg'); /* 여기에 이미지 URL을 넣으세요 */
+    background-size: cover; /* 이미지를 전체 화면에 맞게 조정 */
+    background-position: center; /* 이미지를 중앙에 위치 */
+    overflow-y: hidden; /* 세로 스크롤 숨기기 */
+    margin: 0; /* 기본 margin 제거 */
+    padding: 0; /* 기본 padding 제거 */
+    height: 100vh; /* 전체 높이를 100%로 설정 */
+   filter: opacity(0.85); /* 이미지 투명도 조절 (0.0 ~ 1.0) */
 }
 
 .loginFrm{
-    width: 350px;  margin: 0 auto;
+    width: 300px;  margin: 0 auto;
     /*overflow-y:auto;*/
 }
 .loginFrm h1{
     text-align: center; margin: 50px 0 30px;
 }
 .loginFrm input[type="text"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
+    width: 300px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 3px solid #ddd;  font-size:16px;
 }
 .loginFrm input[type="password"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
+    width: 300px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 3px solid #ddd;  font-size: 16px;
 }
 .loginFrm input[type="password"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
+    border: 3px solid #ccff33; /* 포커스 시 테두리 색상 변경 */
     outline: none; /* 기본 포커스 윤곽선 제거 */
 }
 .loginFrm input[type="text"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
+    border: 3px solid #ccff33; /* 포커스 시 테두리 색상 변경 */
     outline: none; /* 기본 포커스 윤곽선 제거 */
 }
 .loginbtn{
-    width: 350px; color: #fff; background: #87CEEB; font-size: 1.2em;
+    width: 300px; color:black; background: #ccff33; font-size:16px;
     border-style: none;
     padding: 10px; margin: 10px 0; border-radius: 10px;
 }
@@ -34,18 +42,25 @@ body{
 .find{
     text-align: center;
     padding: 10px; margin: 10px 0;
-    color:#696969;
+    color: #ddd;
 
 }
 .find a:link, .find a:visited{
     color:#696969;
 }
 .find a:hover{
-    color: #87CEEB;
+    color:  #ccff33;
     font-weight: bold;
 }
 
 header,footer{display:none;}
 .loginTop img{
-    width: 300px;
+    width: 240px;
+}
+#googlelogin{
+    color: #ddd;
+}
+#googlelogin img{
+    width: 50px;
+    height: 50px;
 }

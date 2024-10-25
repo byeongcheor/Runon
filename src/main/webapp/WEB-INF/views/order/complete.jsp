@@ -61,7 +61,8 @@
         </div>
     </div>
     <div class="orderOk">
-        <span>확인</span>
+        <button type="button"><span>확인</span></button>
+        <button type="button" style="background-color: lightgray"><span>주문취소</span></button>
     </div>
 </div>
 </div>

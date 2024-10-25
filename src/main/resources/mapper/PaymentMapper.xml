@@ -101,6 +101,7 @@
         p.discount_amount,
         p.real_amount,
         m.marathon_name,
+        m.poster_img as poster_img,
         pd.status,
         pd.created_date AS create_time
         FROM payment_detail_tbl pd

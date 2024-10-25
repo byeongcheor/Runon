@@ -15,5 +15,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("*")
                 .addResourceLocations("classpath:/**", "classpath:/js/")
                 .setCacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES));
+
     }
 }

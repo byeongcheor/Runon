@@ -2,13 +2,14 @@ package com.ict.finalproject.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
-@ResponseBody
+@NoArgsConstructor
 public class CompleteVO {
     private int payment_detail_id;
     private String orderId;
@@ -19,5 +20,5 @@ public class CompleteVO {
     private String marathon_name;
     private int status;
     private Date create_time;
-
+    private String poster_img;
 }

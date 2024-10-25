@@ -1,3 +1,7 @@
+* {
+    animation: none !important;
+}
+
 body{
     background-color: #F8FAFB;
 }
@@ -475,7 +479,7 @@ body{
     background-color: #b2e600;
   }
   .handover-btn2 {
-    width: 50%;
+    width: 100%;
     padding: 10px;
     background-color: #ccff33; /* 연두색 배경 */
     color: black; ; /* 흰색 글씨 */
@@ -732,6 +736,11 @@ body{
   font-size: 12px;
   color: #666;
 }
+.info-row2 {
+  display: flex;
+  justify-content: space-between; /* 텍스트 사이를 수평으로 배치 */
+
+}
 ////////////////////
 
 
@@ -940,7 +949,7 @@ body{
     font-size: 14px;
     line-height: 120%;
     color: #727f88;
-    margin: 50px 0px 30px 0px
+    margin: 50px 20px 30px 20px;
 }
 .title-container {
     display: flex;
@@ -953,6 +962,7 @@ body{
     font-weight: bold; /* 굵은 글씨 */
     text-align: center; /* 제목 중앙 정렬 */
     width: 100%;
+    margin-top:40px;
 }
 
 .notice_detail_name {
@@ -960,8 +970,10 @@ body{
     text-align: center; /* 제목 중앙 정렬 */
     width: 100%;
     font-size: 14px;
+    margin-top:10px;
     color: #666;
     margin-bottom: 15px;
+
 }
 
 

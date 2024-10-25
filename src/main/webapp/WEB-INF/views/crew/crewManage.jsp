@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="editCrew">
-                    <button type="button" class="editCrewBtn" id="editCrewBtn">크루정보변경</button>
+                    <button type="button" class="editCrewBtn" id="editCrewBtn"> 크루 정보변경</button>
                     <button type="button" class="editCrewBtn" id="resignCrew" onclick="openResignModal()">
                       <img src="/img/more.png" style="width: 14px; height: 14px;">
                     </button>
@@ -160,13 +160,13 @@
     </div>
     <div class="custom-modal-body">
      <button class="custom-modal-option" id="update" onclick="crewRevise()">프로필 수정</button>
-      <button class="custom-modal-option" id="handoverCrewBtn" onclick="crew_manage_handover(this)">팀소유자 위임</button>
-      <button class="custom-modal-danger" id="crew_delete" onclick="deleteTeam()">팀 삭제하기</button>
+      <button class="custom-modal-option" id="handoverCrewBtn" onclick="crew_manage_handover(this)">크루 소유자 위임</button>
+      <button class="custom-modal-danger" id="crew_delete" onclick="deleteTeam()">크루 삭제하기</button>
     </div>
   </div>
 </div>
 
-<!-- 팀 소유자 위임 모달 -->
+<!-- 크루 소유자 위임 모달 -->
 <div id="handoverModal" class="custom-modal">
   <div class="custom-modal-content">
     <div class="custom-modal-header">
@@ -174,7 +174,7 @@
       <span class="custom-close" onclick="closeHandoverModal()">&times;</span>
     </div>
     <div class="custom-modal-body" id=crew_handover_list>
-      <!-- 팀 멤버 리스트 append -->
+      <!-- 크루 멤버 리스트 append -->
     </div>
     <div class="custom-modal-footer">
       <button class="handover-btn" onclick="handoverOwnership()">위임하기</button>
@@ -192,7 +192,7 @@
     <div class="custom-modal-body">
       <button class="custom-modal-option" id="noticeMake" onclick="openNoticeModal()">공지 올리기</button>
       <button class="custom-modal-option" id="voteMake" onclick="openVoteModal()">투표 올리기</button>
-      <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">팀 탈퇴하기</button>
+      <button class="custom-modal-danger" onclick="resignTeam()" id="teamResign">크루 탈퇴하기</button>
     </div>
   </div>
 </div>
@@ -605,8 +605,11 @@ function crew_overview(response) {
             list += '   <img src="/img/notice.png"> ';
             list += '      </div>';
             list += '      <div class="text-container"> ';
-            list += '<span class="main-text">' + response[i].subject + '</span>';
-            list += '<span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
+            list += '      <div class="info-row2"> ';
+            list += '      <span class="main-text">' + response[i].subject + '</span>';
+            list += '      </div>';
+            list += '      <div class="info-row2"> ';
+            list += '      <span class="sub-text" style="background-color:white; color:grey; font-size:10px;">' +  response[i].writedate + '</span>';
             list += '      </div>';
             list += '   </div>';
             list += '</li>';
@@ -1094,7 +1097,7 @@ function uploadImages(event) {
                    usercode: usercode
                },
                success: function(response) {
-                  alert("팀 소유자가 위임되었습니다.");
+                  alert("크루 소유자가 위임되었습니다.");
                   location.reload(true);
                },
                error: function(e) {
@@ -1115,10 +1118,12 @@ function uploadImages(event) {
    }
 
 function resignTeam() {
-    // 팀탈퇴 확인 메시지
-    var confirmation = confirm("정말 팀을 탈퇴 하시겠습니까?");
+    // 크루탈퇴 확인 메시지
+    var confirmation = confirm("정말 크루을 탈퇴 하시겠습니까?");
+    if (!confirmation) {
+        return;  // 사용자가 취소를 누르면 탈퇴 중단
+    }
 
-    // 팀장이 아닌 경우에만 탈퇴 가능
     $.ajax({
         url: '/crew/resign_team',
         type: 'POST',
@@ -1130,11 +1135,17 @@ function resignTeam() {
         },
         success: function(response) {
             if (response == 0) {
-                alert("크루장을 위임해야 탈퇴할수있습니다.");
+                // 크루장이면서 다른 멤버가 있는 경우 탈퇴 불가
+                alert("크루장을 위임해야 탈퇴할 수 있습니다.");
                 return false;
-            } else {
-                alert("팀에서 탈퇴되었습니다.");
-                window.location.href = '/crew/crewList';
+            } else if (response == 2) {
+                // 크루장이면서 본인 외에 다른 멤버가 없을 때 (크루 해산 필요)
+                alert("크루 삭제를 진행해주세요.");
+                return false;  // 크루 해산이 필요한 경우 탈퇴 중단
+            } else if (response == 1) {
+                // 크루장이 아닌 경우 정상 탈퇴 처리
+                alert("크루에서 탈퇴되었습니다.");
+                window.location.href = '/crew/crewList';  // 탈퇴 후 목록으로 리다이렉트
             }
         },
         error: function(e) {
@@ -1144,15 +1155,14 @@ function resignTeam() {
     closeCustomModal();
 }
 
-
 function deleteTeam() {
-    // 팀 삭제 확인 메시지
+    // 크루 삭제 확인 메시지
     var confirmation = confirm("삭제하면 데이터를 복구할 수 없어요. 크루를 삭제하시겠습니까?");
 
     // 사용자가 확인을 누른 경우에만 삭제 처리
     if (confirmation) {
         $.ajax({
-            url: '/crew/deleteTeam',  // 팀 삭제 관련 초기 검증 요청
+            url: '/crew/deleteTeam',  // 크루 삭제 관련 초기 검증 요청
             type: 'POST',
             async: false,
             data: {
@@ -1162,15 +1172,15 @@ function deleteTeam() {
             },
             success: function(response) {
                 if (response == 0) {
-                    alert("멤버가 있으면 팀을 삭제할 수 없어요.");
+                    alert("멤버가 있으면 크루를 삭제할 수 없어요.");
                     return false;
                 } else if (response == 1) {
-                    alert("팀원 모집 중에는 팀을 삭제할 수 없어요.");
+                    alert("크루원 모집 중에는 크루을 삭제할 수 없어요.");
                     return false;
                 } else if (response == 4) {
-                    // 팀이 삭제되었음을 알림
-                    alert("팀이 성공적으로 삭제되었습니다.");
-                    window.location.href = '/crew/crewList'; // 팀 삭제 후 페이지 리다이렉트
+                    // 크루이 삭제되었음을 알림
+                    alert("크루가 성공적으로 삭제되었습니다.");
+                    window.location.href = '/crew/crewList'; // 크루 삭제 후 페이지 리다이렉트
                 }
             },
             error: function(e) {

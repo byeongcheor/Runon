@@ -128,6 +128,7 @@
     </div>
     <div class="orderOk">
         <button type="button" onclick="goBack()"><span>확인</span></button>
+        <button type="button" style="background-color: lightgray"><span>주문취소</span></button>
     </div>
 </div>
 </div>

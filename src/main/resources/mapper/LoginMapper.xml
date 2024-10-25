@@ -6,5 +6,13 @@
     <insert id="loginHistory">
         insert into login_history_tbl (ip_address,usercode) values(#{param2},(select usercode from user_tbl where username=#{param1}))
     </insert>
-
+    <select id="FindIds" resultType="com.ict.finalproject.vo.MemberVO">
+        select username from user_tbl where name = #{name} and tel = #{tel}
+    </select>
+    <update id="updatePassword">
+        update user_tbl set password=#{newPassword} where username=#{username}
+    </update>
+    <select id="googleSelect">
+        select username from user_tbl where username=#{username} and is_google =1
+    </select>
 </mapper>

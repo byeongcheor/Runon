@@ -438,7 +438,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                     crew_write_code: crew_write_code
                 },
                 success: function(result) {
-                    alert('크루모집이 취소되었습니다.');
+                    alert('크루모집이 중단 되었습니다.');
                     window.location.href = '/crew/crewList';
                 },
                 error: function(e) {

@@ -29,5 +29,10 @@ public interface MemberDAO {
     public MemberVO disableCheck(String username);
     //정지 시간을 확인후 풀렸으면 업데이트
     public int enableUser(String username);
-
+    //구글로그인시 일반회원이랑 같은 아이디가 있는지 확인
+    public int is_googleSelect(String username);
+    //구글로그인시 기존가입자인지 확인
+    public int googleSelect(String username);
+    //구글로그인시 회원가입
+    public int googleJoins(String username,String name,String nickname);
 }

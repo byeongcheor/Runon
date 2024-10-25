@@ -105,11 +105,17 @@ function formCheck(){
     var tel1=document.getElementById("tel1").value;
     var tel2=document.getElementById("tel2").value;
     var tel3=document.getElementById("tel3").value
+    if (tel2.length!=4||tel3.length!=4){
+        alert("핸드폰번호를 제대로 입력해주세요");
+        return false;
+    }
     if (tel2 !=""&&tel2!=null&&tel3 !=""&&tel3!=null) {
         var tel = tel1+tel2+tel3;
         document.getElementById("tel").value = tel;
     }else{
         document.getElementById("tel").value=null;
+        alert("핸드폰번호를 입력해주세요");
+        return false;
     }
 
 
@@ -136,6 +142,18 @@ function formCheck(){
     }
     if(document.getElementById("nickChk").value!="Y"){
         alert("이미 사용인 닉네임이거나 닉네임을 입력해주세요");
+        return false;
+    }
+    if (document.getElementById("addr").value==""){
+        alert("주소를 입력해주세요");
+        return false;
+    }
+    if (document.getElementById("addr_details").value==""){
+        alert("상세주소를 입력해주세요");
+        return false;
+    }
+    if (document.getElementById("zip_code").value==""){
+        alert("우편번호를 입력해주세요");
         return false;
     }
     const selectedValue = document.querySelector('input[name="is_info_disclosure"]:checked');

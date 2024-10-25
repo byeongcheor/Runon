@@ -354,6 +354,7 @@ public class MypageController {
             @RequestParam("matchingroom") int matchingroom
     ){
         ReportVO report = service.selectReportForm(usercode, matchingroom);
+        System.out.println("여기안옴?");
         System.out.println(report);
         Map<String, Object> result = new HashMap<>();
         if(report != null){
@@ -390,13 +391,29 @@ public class MypageController {
                 file.transferTo(new File(savePath));
                 System.out.println("확인1");
                 rvo.setVictim_code(usercode);
+                System.out.println("usercode:"+usercode);
                 rvo.setOffender_code(offender);
+                System.out.println("offender:"+offender);
                 rvo.setReport_reason(subjectReport);
+                System.out.println("subjectReport:"+subjectReport);
                 rvo.setReport_content(contentReport);
+                System.out.println("contentReports:"+contentReport);
                 rvo.setProof_img(miliFile);
+                System.out.println("miliFile:"+miliFile);
                 rvo.setMatching_room_code(matchingroom);
+                System.out.println("matchingroom:"+matchingroom);
+
+                System.out.println("DB에 저장시도");
                 service.reportMate(rvo);
+                System.out.println(rvo);
                 System.out.println("DB에 저장완");
+
+                System.out.println("offender_code: " + rvo.getOffender_code());
+                System.out.println("report_reason: " + rvo.getReport_reason());
+                System.out.println("victim_code: " + rvo.getVictim_code());
+                System.out.println("matching_room_code: " + rvo.getMatching_room_code());
+                System.out.println("report_content: " + rvo.getReport_content());
+                System.out.println("proof_img: " + rvo.getProof_img());
             }
             System.out.println("저장됐지?");
         }catch(Exception e){

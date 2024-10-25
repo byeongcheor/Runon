@@ -257,6 +257,7 @@
         var contentReport = document.getElementById("contentReport").value;
         var proofReport = document.getElementById("proofReport").files[0];
         var matchingroom = document.getElementById("matchingroom").value;
+
         var formData = new FormData();
         formData.append("usercode", usercode)
         formData.append("offender", offender)
@@ -271,6 +272,7 @@
             contentType: false,
             processData: false
             ,success: function(r){
+                console.log(r);
                 alert("성공");
                 closeReport();
             },error: function(e){
@@ -295,16 +297,23 @@
                     alert("기존에 작성한 신고내역이 있습니다.");
                     console.log(r.data);
                     var result = datas.report_status;
+                    var adminresult = datas.report_result;
+                    console.log(adminresult);
                     if(result == 0){
                         document.getElementById("resultstatus").value = "관리자가 신고내역 처리중";
+                        document.getElementById("report_result").style.display = "none";
                     }else{
                         document.getElementById("resultstatus").value = "신고내역 처리완료";
+                        document.getElementById("report_result").style.display = "block";
                     }
+
                     var modal = document.getElementById("viewReport");
                     if(modal){
                         document.getElementById("viewsubjectReport").value=datas.report_reason;
                         document.getElementById("viewcontentReport").value=datas.report_content;
-                        document.getElementById("resultstatus").valur=result;
+                        if(adminresult){
+                            document.getElementById("report_result").value = adminresult;
+                        }
                     }
                     openReportDetail(offender, matchingroomcode);
                 }else{
@@ -375,6 +384,9 @@
                         </div>
                         <div>
                             <input class="inputs" type="text" name="resultstatus" id="resultstatus" style="color: tomato;" readonly/>
+                        </div>
+                        <div>
+                            <input class="inputs" type="text" name="report_result" id="report_result" style="color: tomato;" readonly/>
                         </div>
                         <div>* 신고내역 취소 및 기타문의사항은 1:1문의하기로 관리자에게 문의해주세요.</div>
                     </div>

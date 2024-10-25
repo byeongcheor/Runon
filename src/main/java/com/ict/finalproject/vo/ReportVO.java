@@ -27,5 +27,4 @@ public class ReportVO {
     private String report_result;
     private int admin_code;
     private int is_disabled;
-
 }
