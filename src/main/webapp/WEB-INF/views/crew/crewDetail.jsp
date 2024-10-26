@@ -327,16 +327,17 @@ $('#prevBtnInCreateModal').on('click', function() {
 
                 $('#content').text(result[0].content);
                 $('#hits').text('조회수 ' + result[0].hits);
-                $('#crew_request').text('신청자수 ' + result[0].c_n);
+                $('#crew_request').text('신청자수 ' + result[0].i_n);
                 $('#write_date').text('업데이트    ' + result[0].writedate);
 
                 usercode = result[0].b_n;
-                if (result[0].usercode == usercode) {
+                if (result[0].usercode == usercode) {//맴버
                     $('#crew_request_btn').hide();
                     $('#crew_request_delete').hide();
                 } else {
                     $('#update_btn').hide();
                     $('#delete_btn').hide();
+
                     if (result[0].c_n > 0) {
                         $('#crew_request_delete').show();
                         $('#crew_request_btn').hide();
@@ -345,8 +346,15 @@ $('#prevBtnInCreateModal').on('click', function() {
                         $('#crew_request_btn').show();
                     }
                 }
-                if(result[0].g_n>0){
+                // 이미 크루에 가입된 경우
+                if(result[0].g_n > 0){
                     $('#crew_request_btn').hide();
+                    $('#crew_request_delete').hide();
+                }
+
+                // 강퇴 or 탈퇴한 경우 가입하기 버튼 표시 (단, 크루장이 아닌 경우 && g_n == 0)
+                if (result[0].h_n > 0 && result[0].usercode != usercode && result[0].g_n == 0) {
+                    $('#crew_request_btn').show();
                     $('#crew_request_delete').hide();
                 }
             },
