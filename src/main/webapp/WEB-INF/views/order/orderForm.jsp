@@ -27,7 +27,6 @@
             <div>수량</div>
             <div>상품단가</div>
             <div>상품금액</div>
-
         </div>
 
         <div id="ticket_order" class="ticket_order">
@@ -57,54 +56,81 @@
             </div>
         </div>
 
-        <div class="titles">기존 마라톤신청서</div>
+        <div class="titles">마라톤신청서</div>
 
             <div id="marathonForm">
-<%--                <h2 style="text-align: center">마라톤신청서 작성</h2>--%>
-<%--                <div>--%>
-<%--                    <label for="name">이름:</label>--%>
-<%--                    <input type="text" id="name" name="name" maxlength="30" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="tel">전화번호:</label>--%>
-<%--                    <input type="tel" id="tel" name="tel" maxlength="15" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="addr">주소:</label>--%>
-<%--                    <input type="text" id="addr" name="addr" maxlength="100" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="addr_details">상세 주소:</label>--%>
-<%--                    <input type="text" id="addr_details" name="addr_details" maxlength="300" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="gender">성별:</label>--%>
-<%--                    <select id="gender" name="gender" required>--%>
-<%--                        <option value="M">남성</option>--%>
-<%--                        <option value="F">여성</option>--%>
-<%--                    </select>--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="birth_date">생년월일:</label>--%>
-<%--                    <input type="date" id="birth_date" name="birth_date" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="size">사이즈:</label>--%>
-<%--                    <input type="text" id="size" name="size" maxlength="30" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="terms_agreement">이용약관 동의:</label>--%>
-<%--                    <input type="checkbox" id="terms_agreement" name="terms_agreement" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="privacy_consent">개인정보 수집 동의:</label>--%>
-<%--                    <input type="checkbox" id="privacy_consent" name="privacy_consent" required />--%>
-<%--                </div>--%>
-<%--                <div>--%>
-<%--                    <label for="media_consent">미디어 사용 동의:</label>--%>
-<%--                    <input type="checkbox" id="media_consent" name="media_consent" />--%>
-<%--                </div>--%>
-<%--                <button type="button" onclick="savebutton()">작성하기</button>--%>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="name">이름</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="name" name="name" maxlength="30" required />
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="tel">전화번호</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="tel" id="tel" name="tel" maxlength="15" required />
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="addr">주소</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="addr" name="addr" maxlength="100" required />
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="addr_details">상세 주소</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="gender">성별</label>
+                    </div>
+                    <div class="maraR">
+                        <select id="gender" name="gender" required>
+                            <option value="M">남성</option>
+                            <option value="F">여성</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="birth_date">생년월일</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="date" id="birth_date" name="birth_date" required />
+                    </div>
+                </div>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="size">사이즈</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="size" name="size" maxlength="30" required />
+                    </div>
+                </div>
+                <div>
+                    <label for="terms_agreement">이용약관 동의:</label>
+                    <input type="checkbox" id="terms_agreement" name="terms_agreement" required />
+                </div>
+                <div>
+                    <label for="privacy_consent">개인정보 수집 동의:</label>
+                    <input type="checkbox" id="privacy_consent" name="privacy_consent" required />
+                </div>
+                <div>
+                    <label for="media_consent">미디어 사용 동의:</label>
+                    <input type="checkbox" id="media_consent" name="media_consent" />
+                </div>
+                <button type="button" onclick="savebutton()">작성하기</button>
 
             </div>
 
