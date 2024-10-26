@@ -121,11 +121,22 @@
 <!--        where o.usercode = #{usercode}-->
 <!--        order by o.order_code desc-->
 <!--        limit #{offset}, #{limit}-->
-        select pm.*, pd.orderId
-        from payment_tbl pm
-        join payment_detail_tbl pd on pm.payment_code = pd.payment_code
-        where pm.usercode = #{usercode}
-        order by pm.payment_code desc
+<!--        select pm.*, pd.orderId-->
+<!--        from payment_tbl pm-->
+<!--        join payment_detail_tbl pd on pm.payment_code = pd.payment_code-->
+<!--        where pm.usercode = #{usercode}-->
+<!--        order by pm.payment_code desc-->
+<!--        limit #{offset}, #{limit}-->
+        SELECT *
+        FROM (
+        SELECT pm.*, pd.orderId,
+        ROW_NUMBER() OVER (PARTITION BY pd.orderId ORDER BY pm.payment_code DESC) AS rn
+        FROM payment_tbl pm
+        JOIN payment_detail_tbl pd ON pm.payment_code = pd.payment_code
+        WHERE pm.usercode = #{usercode}
+        ) AS subquery
+        WHERE rn = 1
+        ORDER BY payment_code DESC
         limit #{offset}, #{limit}
     </select>
     <select id="getTotalOrder">
