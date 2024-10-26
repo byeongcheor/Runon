@@ -204,7 +204,7 @@
         CONCAT(a.addr, ' ', a.addr_gu) AS addr,
         DATE_FORMAT(a.writedate, '%Y-%m-%d') AS c_s,
         ${param1} AS b_n,
-        (SELECT COUNT(1) FROM crew_request_tbl WHERE create_crew_code=a.create_crew_code AND usercode=${param1} AND status=0) AS c_n,
+        (SELECT COUNT(1) FROM crew_request_tbl WHERE create_crew_code=a.create_crew_code) AS c_n,
         (SELECT COUNT(1) FROM crew_member_tbl WHERE create_crew_code=${param2}) AS d_n,
         (SELECT AVG(FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25)) FROM user_tbl u JOIN crew_member_tbl cm ON u.usercode = cm.usercode WHERE cm.create_crew_code = ${param2}) AS e_n,
         (SELECT position FROM crew_member_tbl WHERE usercode=${param1} AND create_crew_code=${param2}) AS f_n,
@@ -785,10 +785,19 @@
         where crew_notice_code = ${param1}
     </delete>
     <select id="position_select" resultType="int">
-        select position
-        from   crew_member_tbl
-        where  create_crew_code = ${param2}
-        and    usercode = ${param1}
+        select ifnull(position, 0)
+        from crew_member_tbl
+        where create_crew_code = ${param2}
+        and usercode = ${param1}
+        union all
+        select 0
+        where not exists (
+        select 1
+        from crew_member_tbl
+        where create_crew_code = ${param2}
+        and usercode = ${param1}
+        )
+        limit 1;
     </select>
     <update id="entrust1">
         update create_crew_tbl

@@ -66,7 +66,6 @@
                         <li data-value="13">13명</li>
                         <li data-value="14">14명</li>
                         <li data-value="15">15명</li>
-                        <li data-value="16">16명</li>
                     </ul>
                 </div>
                 <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>

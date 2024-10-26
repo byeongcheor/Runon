@@ -273,7 +273,7 @@ public class CrewController {
 
     @PostMapping("/detail")
     @ResponseBody
-    public List<CrewVO> crew_write_detail_select(@RequestParam("Authorization") String token, @RequestParam("create_crew_code") int crewCode) {
+    public List<CrewVO> detail(@RequestParam("Authorization") String token, @RequestParam("create_crew_code") int crewCode) {
         token = token.substring("Bearer ".length());
         user_name = jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
@@ -470,17 +470,15 @@ public class CrewController {
     @ResponseBody
     public String go_crewManage(@RequestParam("Authorization") String token,
                                 @RequestParam("create_crew_code") int create_crew_code,
-                                @RequestParam("position") int position,
-                                @RequestParam("user_code") int user_code,
                                 HttpSession session) {
         // 토큰 처리 및 기타 데이터 처리
         token = token.substring("Bearer ".length());
         String userName = jwtUtil.setTokengetUsername(token);
-
         // 서비스 호출 (int 값을 파라미터로 전달)
-        int userCode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        int usercode = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        System.out.println("usercode : "+usercode);
         session.setAttribute("create_crew_code", create_crew_code);
-        session.setAttribute("user_code", user_code);
+        session.setAttribute("user_code", usercode);
         return "success";
     }
 
