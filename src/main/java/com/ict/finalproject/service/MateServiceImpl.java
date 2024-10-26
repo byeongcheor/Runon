@@ -52,6 +52,7 @@ public class MateServiceImpl implements MateService {
 
     @Override
     public int applicant_insert(int applicant_insert, int user_code) {
+
         return dao.applicant_insert(applicant_insert, user_code);
     }
 
@@ -81,7 +82,9 @@ public class MateServiceImpl implements MateService {
     }
 
     @Override
-    public int mate_complite( int matching_room_code, int user_code) {return dao.mate_complite(matching_room_code, user_code);
+    public int mate_complite( int matching_room_code, int user_code) {
+        dao.matching_complite(matching_room_code);
+        return dao.mate_complite(matching_room_code, user_code);
     }
 
     @Override
