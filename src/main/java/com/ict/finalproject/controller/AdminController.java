@@ -614,7 +614,7 @@ public class AdminController {
         }else{
             Payvo=service.getPaymentList(pvo);
         }
-        System.out.println("제발"+Payvo);
+        //System.out.println("제발"+Payvo);
         map.put("pvo",pvo);
         map.put("Payvo",Payvo);
         return map;
@@ -657,7 +657,7 @@ public class AdminController {
             }
             map.put("QnaList",QnaList);
             map.put("pvo",pvo);
-        System.out.println(QnaList);
+        // System.out.println(QnaList);
         return map;
     }
     @PostMapping("/qnaDetail")
@@ -735,11 +735,11 @@ public class AdminController {
             BoardList=service.selectBoardWithSearch(pvo);
         }else{
             BoardList=service.selectAllBoard(pvo);
-        }System.out.println("V4");
+        }/*System.out.println("V4");*/
         map.put("list", BoardList);
         map.put("pvo", pvo);
-        System.out.println(pvo);
-        System.out.println(BoardList);
+        /*System.out.println(pvo);
+        System.out.println(BoardList);*/
         return map;
     }
 

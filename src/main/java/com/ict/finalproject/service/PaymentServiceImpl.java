@@ -1,10 +1,7 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.PaymentDAO;
-import com.ict.finalproject.vo.CompleteVO;
-import com.ict.finalproject.vo.OrderVO;
-import com.ict.finalproject.vo.PaymentVO;
-import com.ict.finalproject.vo.PaymentdetailVO;
+import com.ict.finalproject.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,12 +113,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int orderSuccess(String method, int usercode, String orderId, int realAmount) {
+    public int orderSuccess(String method, int usercode, String orderId, int realAmount,String paymentKey) {
         int details=dao.updateDetails(orderId,usercode);
         System.out.println(details);
         if (details>0){
             //int updatepoint=dao.updateMypoint(realAmount,usercode,orderId);
-            int payment=dao.updatepayment(realAmount,usercode,method);
+            int payment=dao.updatepayments(realAmount,usercode,method,paymentKey);
             System.out.println("1번째확인");
             if (payment!=0) {
                 System.out.println("2번째확인");
@@ -152,5 +149,27 @@ public class PaymentServiceImpl implements PaymentService {
         dao.updateMypoint(pvo);
         dao.updateChangePoint(pvo);
         System.out.println("포인트체인지");
+    }
+
+    @Override
+    public List<CompleteVO> getPDVO(List<Integer> codes) {
+        return dao.getPDVO(codes);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int refundpay(RefundVO rvo){
+        System.out.println(rvo);
+        int insertR=dao.insertRefund(rvo);
+        int updateDetail=dao.updatepayDetail(rvo);
+        int updatePay=dao.updatePay(rvo);
+        List<Integer> order_codes=dao.selectorderCodes(rvo);
+        int updateOrder=dao.updateOrderstatus(order_codes);
+        if (rvo.getReturn_discount()!=0){
+            int updatePoint=dao.updatePoint(rvo.getReturn_discount());
+            int insertPointc=dao.insertPoint(rvo);
+        }
+        System.out.println("오는것 확인");
+        return 0;
     }
 }

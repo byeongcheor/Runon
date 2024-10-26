@@ -185,7 +185,7 @@ function cartload(){
                 tag+='<div class="oneline">' +
                     '<input type="hidden" id="productId" name="productId" value="'+cart.marathon_code+'">';
                 tag+=   '<div class="checkB"><input type="checkbox" name="itemCheckbox" class="itemCheckbox" id="itemCheckbox" value="'+cart.cart_code+'" onclick="updateTotalAmount(\'' + cart.cart_code + '\', \'' + amount + '\', this.checked)"></div>';
-                tag+=   '<div class="ticket"><img src="'+cart.poster_img+'" alt="마라톤 포스터" class="marathonP"><span class="marathonT">'+cart.marathon_name+ '</span></div>';
+                tag+=   '<div class="ticket"><img src="/img/marathonPoster/'+cart.poster_img+'" alt="마라톤 포스터" class="marathonP"><span class="marathonT">'+cart.marathon_name+ '</span></div>';
                 tag+=   '<div class="marathonC">'+
                     '<div class="counter-container">' +
                     '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';

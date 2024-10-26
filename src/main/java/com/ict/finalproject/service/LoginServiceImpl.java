@@ -49,5 +49,10 @@ public class LoginServiceImpl implements LoginService {
         return dao.updatePassword(username,newPassword);
     }
 
+    @Override
+    public MemberVO ChangePwd(String username, String name) {
+        return dao.ChangePwd(username,name);
+    }
+
 
 }

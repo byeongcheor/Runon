@@ -15,4 +15,7 @@
     <select id="googleSelect">
         select username from user_tbl where username=#{username} and is_google =1
     </select>
+    <select id="ChangePwd" >
+        select username from user_tbl where username =#{username} and name=#{name} and is_google=0
+    </select>
 </mapper>

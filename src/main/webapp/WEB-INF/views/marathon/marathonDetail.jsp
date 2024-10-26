@@ -12,7 +12,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <!-- 커스텀 스타일 시트 연결 -->
 <link rel="stylesheet" href="/css/marathonDetail.css" type="text/css">
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+<%--<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>--%>
 
 
 
@@ -343,7 +343,7 @@
             // 마라톤 리스트 페이지로 이동
             window.location.href = '/marathon/marathonList'; // 또는 사용자가 원래 있던 페이지로 이동
         });
-    },300);
+    },500);
 
 
 

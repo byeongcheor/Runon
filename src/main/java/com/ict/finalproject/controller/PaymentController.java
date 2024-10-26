@@ -1,10 +1,7 @@
 package com.ict.finalproject.controller;
 
 import com.ict.finalproject.service.PaymentService;
-import com.ict.finalproject.vo.CompleteVO;
-import com.ict.finalproject.vo.OrderVO;
-import com.ict.finalproject.vo.PaymentVO;
-import com.ict.finalproject.vo.PaymentdetailVO;
+import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +34,7 @@ public class PaymentController {
         PaymentdetailVO PDvo=new PaymentdetailVO();
         PDvo.setOrderId(orderId);
         PDvo.setCart_codes(cart_codes);
-        System.out.println("확인:"+PDvo);
+        //System.out.println("확인:"+PDvo);
         //카트코드로 오더코드 가격들 구해와서 payment_detail_tbl에 order_code,payment_code,orderId담기
         service.setPayment(PDvo,usercode,cart_codes);
 
@@ -57,11 +54,13 @@ public class PaymentController {
         int usercode = (int) requestData.get("usercode");
         int totalAmount = (int) requestData.get("total_Amount");
         String method = (String) requestData.get("method");
+        String paymentKey = (String) requestData.get("paymentKey");
         System.out.println("결제방식"+method);
         System.out.println("유저코드"+usercode);
         System.out.println("주문번호"+orderId);
         System.out.println("결제금액"+totalAmount);
-        int result=service.orderSuccess(method,usercode,orderId,totalAmount);
+        System.out.println("주문고유키"+paymentKey);
+        int result=service.orderSuccess(method,usercode,orderId,totalAmount,paymentKey);
 
 
         return result ;
@@ -90,10 +89,29 @@ public class PaymentController {
     @ResponseBody
     public Map<String,Object>complete(@RequestParam("orderId")String orderId){
         Map<String,Object> map=new HashMap<>();
-        System.out.println(orderId);
+        //System.out.println(orderId);
         List<CompleteVO>Cvo=new ArrayList<>();
         Cvo=service.selectCvoList(orderId);
         map.put("Cvo",Cvo);
+        return map;
+    }
+    @PostMapping("/payment/cancelpayment")
+    @ResponseBody
+    public Map<String,Object>cancelpayment(@RequestParam("paymentdetail_codes")List<Integer> codes){
+        System.out.println(codes);
+        Map<String,Object> map=new HashMap<>();
+        List<CompleteVO> Pdvo=service.getPDVO(codes);
+        System.out.println(Pdvo);
+        map.put("Pdvo",Pdvo);
+        return map;
+    }
+    @PostMapping("/payment/refund")
+    @ResponseBody
+    public Map<String,Object>refund(RefundVO rvo){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println(rvo);
+        int result =service.refundpay(rvo);
+        map.put("result",result);
         return map;
     }
 }

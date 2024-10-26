@@ -64,9 +64,9 @@
     <select id="selectCartCode">
         select cart_code from order_tbl where usercode=#{param1} and order_status=0 and is_deleted=0
     </select>
-    <update id="updatepayment">
+    <update id="updatepayments">
         update payment_tbl set is_completed=1 ,completed_date=now(),real_amount=#{param1},
-        payment_method=#{param3} ,discount_amount=total_amount-#{param1}
+        payment_method=#{param3} ,discount_amount=total_amount-#{param1},paymentKey=#{paymentKey}
         where usercode=#{param2}
         and is_completed=0
     </update>
@@ -100,6 +100,7 @@
         o.total_amount AS total_amount,
         p.discount_amount,
         p.real_amount,
+        p.paymentKey,
         m.marathon_name,
         m.poster_img as poster_img,
         pd.status,
@@ -131,4 +132,60 @@
         FROM point_tbl p
         WHERE p.usercode = #{usercode};
     </update>
+    <select id="getPDVO" resultType="com.ict.finalproject.vo.CompleteVO">
+        SELECT
+        pd.payment_detail_id,
+        pd.orderId,
+        pd.total_amount AS amount,
+        o.total_amount AS total_amount,
+        p.discount_amount,
+        p.real_amount,
+        p.paymentKey,
+        m.marathon_name,
+        m.poster_img as poster_img,
+        pd.status,
+        pd.created_date AS create_time
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN payment_tbl p ON pd.payment_code = p.payment_code
+        JOIN marathon_list_tbl m ON o.marathon_code = m.marathon_code
+        where status=1 and payment_detail_id in
+        <foreach item="codes" collection="list" open="(" separator="," close=")">
+            #{codes}
+        </foreach>
+    </select>
+    <insert id="insertRefund">
+        insert into refund_tbl (refund_request_date,reason,usercode,refund_amount,paymentKey,refund_point)
+            values(now(),#{reason},(select usercode from payment_tbl where paymentKey= #{paymentKey}),
+            #{refund_amount},#{paymentKey},#{return_discount})
+    </insert>
+    <update id="updatepayDetail">
+        update payment_detail_tbl set status=2  where status=1 and payment_detail_id in
+        <foreach item="order_codes" collection="order_codes" open="(" separator="," close=")">
+            #{order_codes}
+        </foreach>
+    </update>
+    <update id="updatePay">
+        update payment_tbl set payment_status=2, refund_amount=refund_amount where is_completed=1 and paymentKey=#{paymentKey}
+    </update>
+    <select id="selectorderCodes" resultType="Integer">
+        select order_code from payment_detail_tbl where payment_detail_id in
+        <foreach item="order_codes" collection="order_codes" open="(" separator="," close=")">
+            #{order_codes}
+        </foreach>
+    </select>
+    <update id="updateOrderstatus">
+        update order_tbl set order_status=2 where order_code in
+        <foreach item="order_codes" collection="order_codes" open="(" separator="," close=")">
+            #{order_codes}
+        </foreach>
+    </update>
+    <update id="updatePoint">
+        update point_tbl set mypoint= mypoint+${return_discount} where usercode=(select usercode from payment_tbl where paymentKey=CAST(#{paymentKey} AS CHAR))
+    </update>
+    <insert id="insertPoint">
+        insert into point_change_tbl (point_change,point_code) values((#{return_discount}),(select point_code from point_tbl where usercode=(select usercode from payment_tbl where paymentKey=CAST(#{paymentKey} AS CHAR))))
+    </insert>
+
+
 </mapper>
