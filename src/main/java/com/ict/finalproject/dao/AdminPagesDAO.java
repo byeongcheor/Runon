@@ -168,4 +168,9 @@ public interface AdminPagesDAO {
     public List<MarathonListVO> selectAllBoard(PagingVO pvo);
     //마라톤 리스트 엑셀
     List<MarathonListVO> selectMarathons(); // 마라톤 리스트 조회 메서드
+    // 검색된 게시물의 총 레코드 수를 가져오는 메서드
+    int getSearchBoardRecordForStatus(PagingVO pvo);
+
+    // 검색 조건에 따른 게시물 목록을 가져오는 메서드
+    List<MarathonListVO> selectBoardWithSearchForStatus(PagingVO pvo);
 }

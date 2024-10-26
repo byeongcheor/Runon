@@ -558,6 +558,16 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     public List<MarathonListVO> selectMarathons() {
         return dao.selectMarathons();
     }
+
+    @Override
+    public int getSearchBoardRecordForStatus(PagingVO pvo) {
+        return dao.getSearchBoardRecordForStatus(pvo);
+    }
+
+    @Override
+    public List<MarathonListVO> selectBoardWithSearchForStatus(PagingVO pvo) {
+        return dao.selectBoardWithSearchForStatus(pvo);
+    }
     //
 
 }

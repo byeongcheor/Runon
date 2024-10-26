@@ -93,7 +93,10 @@
                                     </div>
 
                                     <div class="receiptType">
-                                        <span style="<c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>">
+                                        <span style="
+                                        <c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>
+                                        <c:if test='${marathon.registration_status == "접수 시작 전"}'>color:green; font-weight: bold;</c:if>
+                                                ">
                                                 ${marathon.registration_status}
                                         </span>
                                     </div>
@@ -117,7 +120,6 @@
         </div>
 
         <!-- 페이징 UI 추가 -->
-        <!-- 페이징 -->
         <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
             <!-- 이전 페이지 버튼 -->
             <c:if test="${pvo.nowPage > 1}">
@@ -127,19 +129,16 @@
             </c:if>
 
             <!-- 페이지 번호 출력 -->
-            <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
-                <c:if test="${p <= pvo.totalPage}">
-                    <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
-                        <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
-                    </li>
-                </c:if>
+            <c:forEach var="p" begin="1" end="${pvo.totalPage > 5 ? 5 : pvo.totalPage}">
+                <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
+                    <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
+                </li>
             </c:forEach>
 
-
             <!-- 다음 페이지 버튼 -->
-            <c:if test="${pvo.nowPage < pvo.totalPage}">
+            <c:if test="${pvo.totalPage > 5}">
                 <li class="page-item">
-                    <a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&gt;</a>
+                    <a class="page-link" href="?nowPage=6&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">Next</a>
                 </li>
             </c:if>
         </ul>
@@ -274,11 +273,11 @@
                             <div class="marathonC">
                                 <div class="marathonC2" onclick="goToDetailPage(` + marathon.marathon_code + `)">
                                     <div class="marathonListI">
-                                        <img src=/resources/uploadfile/` + marathon.poster_img + `>
+                                        <img src="/resources/uploadfile/` + marathon.poster_img + `" style="width: 300px; height: 300px;">
                                         <div class="receiptType">
-                                            <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : '') + `">
-                                                ` + marathon.registration_status + `
-                                            </span>
+                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수 시작 전' ? 'color:green; font-weight: bold;' : '') + `">
+                                    ` + marathon.registration_status + `
+                                </span>
                                         </div>
                                     </div>
                                     <div class="marathonListContent">
@@ -302,13 +301,6 @@
             $('#marathon-list').append(marathonHTML);
         }
     }
-
-
-
-
-
-
-
 
 
 </script>

@@ -54,10 +54,12 @@ public class MarathonListVO {
             LocalDateTime endDate = LocalDateTime.parse(registration_end_date, formatter);
             LocalDateTime now = LocalDateTime.now();
 
-            if (now.isAfter(startDate) && now.isBefore(endDate)) {
-                return "접수중";
+            if (now.isBefore(startDate)) {
+                return "접수 시작 전"; // 접수 시작 전 상태
+            } else if (now.isAfter(endDate)) {
+                return "접수마감"; // 접수 마감 상태
             } else {
-                return "접수마감";
+                return "접수중"; // 접수 중 상태
             }
         } catch (DateTimeParseException e) {
             e.printStackTrace();  // 로그에 에러 출력

@@ -17,13 +17,47 @@
         SELECT *
         FROM marathon_list_tbl
         WHERE 1=1  <!-- 모든 대회를 포함 -->
-        ORDER BY like_count DESC
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND addr LIKE CONCAT('%', #{addr}, '%')
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sort1 == 1">
+                like_count DESC
+            </when>
+            <when test="sort1 == 2">
+                hit DESC
+            </when>
+            <otherwise>
+                event_date DESC
+            </otherwise>
+        </choose>
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="totalRecord" parameterType="PagingVO" resultType="int">
         SELECT COUNT(*)
         FROM marathon_list_tbl
         WHERE 1=1  <!-- 모든 대회를 포함 -->
+        <if test="searchKey != null and searchKey != ''">
+            <if test="searchKey == 'marathon_name'">
+                AND marathon_name LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+            <if test="searchKey == 'is_active'">
+                AND is_active = #{searchWord}
+            </if>
+            <if test="searchKey == 'is_deleted'">
+                AND is_deleted = #{searchWord}
+            </if>
+        </if>
     </select>
 
     <!-- 마라톤 코드로 마라톤 정보 조회 -->

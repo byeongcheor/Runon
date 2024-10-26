@@ -1,5 +1,7 @@
 package com.ict.finalproject.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.ChatService;
 import com.ict.finalproject.service.CrewService;
@@ -9,6 +11,8 @@ import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.MessageVO;
 import com.ict.finalproject.vo.ReportVO;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -119,7 +123,22 @@ public class ChatController {
             String report_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             reportVO.setReport_date(report_date); // report_date 필드에 설정
 
-            System.out.println("Received report data: " + reportVO.toString());
+            String reportContentJsonString = reportVO.getReport_content();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonArray = mapper.readTree(reportContentJsonString);
+            StringBuilder contentText = new StringBuilder();
+
+            for (JsonNode jsonObject : jsonArray) {
+                String nickname = jsonObject.get("nickname").asText();
+                String content = jsonObject.get("content").asText();
+                contentText.append("닉네임: ").append(nickname)
+                        .append(", 메시지 내용: ").append(content)
+                        .append("\n");
+            }
+            // 변환된 텍스트를 reportVO에 설정
+            reportVO.setReport_content(contentText.toString());
+
+            System.out.println("Processed report content: " + reportVO.getReport_content());
             // 신고 정보를 데이터베이스에 저장
             chatservice.saveReport(reportVO); // 서비스 호출
 
@@ -138,17 +157,19 @@ public class ChatController {
         List<ReportVO> reportHistory = null;
         try {
             reportHistory = reportservice.getReportsByUserCode(usercode);
-
+            System.out.println("reportHistory: " + reportHistory.toString());
             if (reportHistory.isEmpty()) {
                 log.info("No report history found for usercode: {}", usercode);
+
             }
 
         } catch (Exception e) {
             // 로그 출력 및 빈 리스트 반환
             log.error("Error retrieving report history for usercode {}: {}", usercode, e.getMessage());
+
             return Collections.emptyList(); // 예외 발생 시 빈 리스트 반환
         }
-
+        System.out.println("마지막까지 오는것 확인");
         return reportHistory;
     }
     @PostMapping("/report/updateStatus")
