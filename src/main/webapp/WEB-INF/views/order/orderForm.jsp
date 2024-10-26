@@ -27,13 +27,14 @@
             <div>수량</div>
             <div>상품단가</div>
             <div>상품금액</div>
+
         </div>
 
         <div id="ticket_order" class="ticket_order">
             <c:forEach var="order" items="${Cvo}">
                 <div class="oneline">
                     <div class="ticket">
-                        <img src="${order.poster_img}"/>
+                        <img src="/img/marathonPoster/${order.poster_img}"/>
                         <span class="marathonT">${order.marathon_name}</span>
                     </div>
                     <div class="num">${order.quantity}</div>
@@ -56,7 +57,7 @@
             </div>
         </div>
 
-        <div class="titles">마라톤신청서</div>
+        <div class="titles">기존 마라톤신청서</div>
 
             <div id="marathonForm">
                 <div class="maraT">
@@ -186,7 +187,7 @@
 
     }
 
-    function usePoints() {
+    /*function usePoints() {
         totalAmount=${totalAmount};
         inputVal = document.getElementById("pointInput").value;
         inputPoints = parseInt(inputVal, 10); // 숫자로 변환
@@ -250,6 +251,69 @@
             document.getElementById("pointInput").value = usedPoints.toLocaleString('ko-KR') + "P";
             document.getElementById("totalAmounts").innerText=realamount.toLocaleString('ko-KR')+"원";
 
+        }
+    }*/
+    function usePoints() {
+        totalAmount = ${totalAmount};
+        inputVal = document.getElementById("pointInput").value;
+        inputPoints = parseInt(inputVal, 10); // 숫자로 변환
+        realamount = totalAmount;
+        availableAmount = totalAmount - usedPoints; // 사용 가능한 총액 계산
+
+        if (isNaN(inputPoints) || inputPoints < 100) {
+            alert("100포인트 이상부터 사용 가능합니다.");
+            inputPoints = 0;
+            return;
+        }
+
+        // 100 단위로 조정
+        if (inputPoints % 100 !== 0) {
+            alert("포인트는 100 단위로만 사용 가능합니다.");
+            inputPoints = Math.floor(inputPoints / 100) * 100; // 100의 배수로 내림
+        }
+
+        if (inputPoints > mypoint) {
+            alert("보유 포인트보다 많은 포인트를 사용할 수 없습니다.");
+            inputPoints = Math.floor(mypoint / 100) * 100;
+        }
+
+        if (inputPoints > availableAmount * 0.1) {
+            alert("총 결제 금액의 10%보다 많은 포인트를 사용할 수 없습니다.");
+            inputPoints = Math.floor((availableAmount * 0.1) / 100) * 100;
+        }
+
+        usedPoints = inputPoints;
+        realamount = totalAmount - usedPoints;
+
+        // 화면 업데이트
+        document.getElementById("userPoints").innerText = (mypoint - usedPoints).toLocaleString('ko-KR') + "P";
+        document.getElementById("pointInput").value = usedPoints.toLocaleString('ko-KR') + "P";
+        document.getElementById("totalAmounts").innerText = realamount.toLocaleString('ko-KR') + "원";
+        document.getElementById("usePoint").innerText = usedPoints.toLocaleString('ko-KR') + "P";
+    }
+
+    function useAllPoints() {
+        resetInput();
+        usemypoint = 0;
+        totalAmount = ${totalAmount};
+        availableAmount = totalAmount - usedPoints;
+
+        usemypoint = mypoint >= availableAmount ? availableAmount : mypoint;
+        if (usemypoint >= 100) {
+            // 100 단위로 조정
+            if (usemypoint % 100 !== 0) {
+                usemypoint = Math.floor(usemypoint / 100) * 100;
+            }
+
+            usedPoints = usemypoint > availableAmount * 0.1 ? Math.floor((availableAmount * 0.1) / 100) * 100 : usemypoint;
+            realamount = totalAmount - usedPoints;
+
+            document.getElementById("usePoint").innerText = usedPoints.toLocaleString('ko-KR') + "P";
+            document.getElementById("userPoints").innerText = (mypoint - usedPoints).toLocaleString('ko-KR') + "P";
+            document.getElementById("pointInput").value = usedPoints.toLocaleString('ko-KR') + "P";
+            document.getElementById("totalAmounts").innerText = realamount.toLocaleString('ko-KR') + "원";
+        } else {
+            alert("100포인트 단위로 사용 가능합니다.");
         }
     }
 </script>

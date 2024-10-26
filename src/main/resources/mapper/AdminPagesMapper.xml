@@ -699,7 +699,7 @@
     </insert>
     <select id="getPaymentRecord">
         select count(payment_code)
-        from payment_tbl where is_completed = 1
+        from payment_tbl where is_completed = 1 and is_deleted=0
     </select>
     <select id="getSearchPaymentRecord">
         SELECT COUNT(p.payment_code)
@@ -709,7 +709,7 @@
             JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code  <!-- orderId 검색을 위해 payment_detail_tbl 조인 -->
         </if>
         <where>
-            is_completed=1
+            is_completed=1 and pd.is_deleted = 0 and p.is_deleted
             <if test="searchKey != null and !searchKey.isEmpty()">
                 <if test="searchKey == 'orderId'">
                     and pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
@@ -731,7 +731,7 @@
         p.payment_method,
         p.completed_date,
         m.latest_marathon_name,
-        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count
+        CONCAT(IFNULL(m.marathon_count - 1, 0)) AS marathon_count
         FROM payment_tbl p
         JOIN user_tbl u ON p.usercode = u.usercode
         JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
@@ -744,26 +744,26 @@
         FROM payment_detail_tbl pd
         JOIN order_tbl o ON pd.order_code = o.order_code
         JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
-        WHERE status=1
+        WHERE status != 0 AND pd.is_deleted = 0
         GROUP BY pd.payment_code, pd.orderId
         ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
-        <where>
-            <if test="searchKey != null and !searchKey.isEmpty()">
-                <if test="searchKey == 'orderId'">
-                    AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
-                </if>
-                <if test="searchKey == 'nickname'">
-                    AND u.usercode IN (
-                    SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
-                    )
-                </if>
+        WHERE p.is_deleted = 0
+        <if test="searchKey != null and !searchKey.isEmpty()">
+            <if test="searchKey == 'orderId'">
+                AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
             </if>
-        </where>
+            <if test="searchKey == 'nickname'">
+                AND u.usercode IN (
+                SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
+                )
+            </if>
+        </if>
         GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
         <if test="schedule != null and !schedule.isEmpty()">
             ORDER BY ${schedule} ${sort}
         </if>
-        LIMIT #{onePageRecord} OFFSET #{offset}
+        LIMIT #{onePageRecord} OFFSET #{offset};
+
 
     </select>
     <select id="getPaymentList" resultType="com.ict.finalproject.vo.PaymentVO">
@@ -785,17 +785,20 @@
         MAX(mt.marathon_name) AS latest_marathon_name,
         COUNT(mt.marathon_name) AS marathon_count
         FROM payment_detail_tbl pd
-
         JOIN order_tbl o ON pd.order_code = o.order_code
         JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
-        where status=1
+        WHERE status != 0 AND pd.is_deleted = 0  -- 서브쿼리에서 pd의 is_deleted 조건만 사용
         GROUP BY pd.payment_code, pd.orderId
         ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0  -- 메인 쿼리에서 p.is_deleted 조건 추가
         GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+
         <if test="schedule != null and !schedule.isEmpty()">
             ORDER BY ${schedule} ${sort}
         </if>
+
         LIMIT #{onePageRecord} OFFSET #{offset}
+
     </select>
     <select id="getSearchQnaRecord">
         select count(qna_code)

@@ -36,7 +36,7 @@ confirm().then(function (data) {
     console.log(data);
     //결제금액
     var total_Amount=data.balanceAmount;
-    alert(total_Amount);
+
     //카드결제일때 json
     var card=data.crad;
     //결제방식
@@ -47,7 +47,8 @@ confirm().then(function (data) {
     var orderName=data.orderName;
     //결제시간
     var approvedAt=data.approvedAt;
-
+    //결제key
+    var paymentKey=data.paymentKey;
     $.ajax({
        url:"/payment/saveOrder",
        type:"post",
@@ -56,7 +57,8 @@ confirm().then(function (data) {
             method: method,
             orderId: orderId,
             total_Amount: total_Amount,
-            usercode: usercode1
+            usercode: usercode1,
+            paymentKey: paymentKey
         }),
         success:function(r){
             // 동적으로 폼 생성

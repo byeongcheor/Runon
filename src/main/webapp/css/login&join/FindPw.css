@@ -1,0 +1,33 @@
+body{
+    animation: none;
+}
+header,footer{display:none;}
+
+
+.findPwFrm{
+    width: 350px;  margin: 0 auto;
+    /*overflow-y:auto;*/
+}
+.findPwFrm h1{
+    text-align: center; margin: 50px 0 30px;
+}
+.findPwFrm input[type="text"]{
+    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 2px solid #ddd;  font-size: 1.1em;
+}
+.findPwFrm input[type="password"]{
+    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 2px solid #ddd;  font-size: 1.1em;
+}
+.findPwFrm input[type="password"]:focus {
+    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.findPwFrm input[type="text"]:focus {
+    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
+    outline: none; /* 기본 포커스 윤곽선 제거 */
+}
+.FindPwTop a{
+    color: white;
+}
+

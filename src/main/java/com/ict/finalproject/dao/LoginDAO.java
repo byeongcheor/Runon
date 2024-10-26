@@ -18,4 +18,7 @@ public interface LoginDAO {
     //구글로그인시 아이디가 있는지 확인
     public int googleSelect(String username);
 
+    //아이디와 이름으로 디비조회
+    public MemberVO ChangePwd(String username,String name);
+
 }

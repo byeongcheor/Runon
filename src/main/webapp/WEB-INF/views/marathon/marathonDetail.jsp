@@ -63,7 +63,7 @@
                             <span id="likeCount" class="like-count">${marathon.like_count}</span> <!-- 좋아요 수 -->
                         </div>
                         <button class="MC">장바구니</button>
-                        <button type="button" id="buyNowButton" class="MP">바로구매</button>
+                        <button class="MP">바로구매</button>
                     </div>
                 </div>
             </div>
@@ -334,50 +334,6 @@
         // 장바구니로 이동 버튼 클릭 시
         document.getElementById('goToCartBtn').addEventListener('click', function() {
             window.location.href = '/cart/cart'; // 장바구니 페이지로 이동
-        });
-// 장바구니 추가 후 이동하는 버튼 클릭 시
-        document.getElementById('buyNowButton').addEventListener('click', function() {
-            const itemPrice = parseInt(marathonItem.value); // 선택한 상품 가격
-            const sizeSelected = marathonSize.value !== '0'; // 사이즈 선택 여부 확인
-
-            // 필수 항목 모두 선택 확인
-            if (itemPrice > 0 && sizeSelected && usercode) {
-                // 장바구니에 담을 데이터를 서버로 전송
-                const cartData = {
-                    price: itemPrice,
-                    marathon_code: marathonId,
-                    usercode: usercode1,
-                    quantity: 1
-                };
-
-                fetch('/marathon/addToCart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(cartData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // 장바구니에 추가 성공 후 장바구니 페이지로 이동
-                            window.location.href = '/cart/cart'; // 장바구니 페이지로 이동
-                        } else {
-                            alert(data.message); // 실패 메시지 출력
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error adding to cart:', error);
-                        alert('장바구니에 담기 실패!');
-                    });
-            } else {
-                // 상품, 사이즈, 사용자 코드 선택 여부 확인 후 메시지 출력
-                if (!usercode) {
-                    alert('로그인 후 다시 시도해주세요.'); // 로그인 미비 메시지
-                } else {
-                    alert('상품과 사이즈를 모두 선택해주세요.'); // 필수 항목 미선택 메시지
-                }
-            }
         });
 
         // 계속 쇼핑하기 버튼 클릭 시

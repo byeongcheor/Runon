@@ -16,4 +16,7 @@ public interface LoginService {
     public List<MemberVO> FindIds(String name, String tel);
     //비번바꾸기
     public int updatePassword(String username,String newPassword);
+    //아이디와 이름으로 디비조회
+    public MemberVO ChangePwd(String username,String name);
+
 }

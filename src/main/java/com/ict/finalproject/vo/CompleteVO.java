@@ -21,4 +21,5 @@ public class CompleteVO {
     private int status;
     private Date create_time;
     private String poster_img;
+    private String paymentKey;
 }

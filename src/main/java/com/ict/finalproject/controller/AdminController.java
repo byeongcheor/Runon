@@ -717,7 +717,6 @@ public class AdminController {
         pvo.setNowPage(page);
         int Record = 15;
         pvo.setOnePageRecord(Record);
-
         int totalRecord;
         if(pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
             totalRecord=service.getSearchBoardRecord(pvo);
