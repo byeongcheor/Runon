@@ -285,7 +285,7 @@
                     alert("비밀번호가 일치하지 않습니다.");
                 }
             },error: function(e){
-                alert("회원탈퇴에 실패했습니다.");
+                alert("회원탈퇴에 실패했습니다. 가입되어있는 크루가 있는지 확인해주세요.");
                 console.log(e);
             }
         });
@@ -480,6 +480,7 @@
                                         <div class="profile_container">
                                             <div class="names">
                                                 <h1>`+r.name+`님</h1>
+                                                <p>`+r.nickname+`</p>
                                                 <p>`+r.username+`</p>
                                             </div>
                                             <div class="profileimage">

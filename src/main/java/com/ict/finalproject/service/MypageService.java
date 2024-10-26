@@ -51,4 +51,5 @@ public interface MypageService {
     public QnAVO selectQnA(int qna_code);
     public int deleteQnA(int qna_code);
     public void updateQnAStatus(int qna_status, int qna_code);
+    public int isinCrew(int usercode);
 }

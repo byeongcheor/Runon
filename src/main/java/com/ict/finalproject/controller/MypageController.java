@@ -445,7 +445,7 @@ public class MypageController {
                                                @RequestParam(value="page", defaultValue = "1") int page) {
         Map<String, Object> result = new HashMap<>();
         PagingVO pvo = new PagingVO();
-        int record = 5;
+        int record = 8;
         pvo.setOnePageRecord(record);
         int totalRecord = service.getTotalCertificate(username);
         pvo.setTotalRecord(totalRecord);
@@ -459,6 +459,7 @@ public class MypageController {
         List<CrewMemberVO> crewMemberList = service.getCrewMember(usercode);
         System.out.println(usercode);
         System.out.println(crewMemberList);
+        System.out.println(list);
         result.put("list", list);
         result.put("orderList", orderList);
         result.put("crewMemberList", crewMemberList);
