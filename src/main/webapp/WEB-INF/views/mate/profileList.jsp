@@ -17,7 +17,6 @@
     var usercode = ${user_code};
     var match_yn = ${match_yn};
     var num = ${num};
-
     // 콘솔에 gender와 usercode 값 출력
     console.log("Gender value received from parent window: ", gender);
     console.log("Usercode value received from parent window: ", usercode);
@@ -55,9 +54,8 @@
            },
            success:function(result){
                if (result === 0) {  // 성공적인 처리 (result가 0일 때)
-
-                    window.opener.$('#img'+num).attr('src', '/img/woman'+profileValue+'.png');
-                    window.opener.match_view(match_yn,'F');
+                    var img_gender = gender=='남'? 'man':'woman';
+                    window.opener.$('#img'+num).attr('src', '/img/'+img_gender+profileValue+'.png');
                     window.close();  // 팝업 창 닫기
                } else {
                    console.log('Profile saving failed, result:', result);

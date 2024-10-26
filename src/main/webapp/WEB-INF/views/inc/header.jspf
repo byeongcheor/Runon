@@ -73,7 +73,7 @@ function mate() {
         return;
     }
     $.ajax({
-        url: "/mate/test", // 원하는 URL을 지정
+        url: "/mate/go_mate", // 원하는 URL을 지정
         type: "post",
         data: { Authorization: Authorization },
         success: function (r) {
@@ -89,15 +89,13 @@ function crew() {
     var Authorization=localStorage.getItem("Authorization");
     if(Authorization===null)Authorization='A';
     $.ajax({
-        url: "/crew/test", // 원하는 URL을 지정
+        url: "/crew/go_crew", // 원하는 URL을 지정
         type: "post",
         data: { Authorization:Authorization },
         success: function (r) {
-          console.log('crew : '+r);
             window.location.href = '/crew/crewList';
         }
     });
-
 }
     function marathonList() {
         var Authorization = localStorage.getItem("Authorization");

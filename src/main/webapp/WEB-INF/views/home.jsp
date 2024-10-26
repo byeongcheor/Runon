@@ -4,7 +4,16 @@
 <link rel="stylesheet" href="/css/main.css" type="text/css">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
+
+<style>
+   .poster_img img{
+      transition: all 0.5s ease;
+   }
+   .poster_img img:hover{
+      transform: scale(1.05);
+   }
+</style>
 <script>
     AOS.init({
       duration: 1200,
@@ -24,11 +33,11 @@
                var status = (eventDate < today) ? '모집종료':'모집중';
                var recruitStyle = (status === '모집종료') ? 'background-color: grey; color: white;' : '';
                tag += `
-                  <div class="slideBox">
+                  <a href="/marathon/marathonDetail/`+vo.marathon_code+`"><div class="slideBox">
                      <div class="posterrecruit" style="`+recruitStyle+`"><span>`+status+`</span></div>
                      <p class="postername">`+vo.marathon_name+`</p><br>
                      <p class="posterdate">📅`+vo.event_date+`</p>
-                  </div>
+                  </div></a>
                `;
             })
             $("#slide").html(tag);

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/css/main.css" type="text/css">
     <link rel="stylesheet" href="/css/mate.css" type="text/css">
     <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
-    <%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+     <%@ include file="/WEB-INF/views/chat/chatList.jsp"%>
 
 
 
@@ -66,7 +66,6 @@
                         <li data-value="13">13명</li>
                         <li data-value="14">14명</li>
                         <li data-value="15">15명</li>
-                        <li data-value="16">16명</li>
                     </ul>
                 </div>
                 <button class="search_match" id="matching" onclick="matching();">&nbsp;매칭하기&nbsp;</button>
@@ -115,11 +114,10 @@
 <!-- 매칭 완료 후 선택 모달 -->
 <div id="matchCompleteModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
         <p>매칭이 완료되었습니다.</p>
         <div class="modal-buttons">
-            <button id="continueMatching" class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
-            <button id="goToMyPage" class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
+            <button id="continueMatching" onClick="go_matepage()"class="modal-button" data-tooltip="남은 나의 대회에 대한 매칭을 계속 진행합니다.">매칭 계속하기</button>
+            <button id="goToMyPage" onClick="go_mypage()"class="modal-button" data-tooltip="마이페이지에서 매칭된 메이트를 확인하세요.">마이페이지로 이동 </button>    </div>
     </div>
 </div>
 
@@ -127,7 +125,7 @@
 <div id="mateMatchModal" class="mate-modal" style="display:none;">
     <div class="mate-modal-content">
         <!-- 닫기 버튼을 모달 창 내부에 위치시킵니다 -->
-        <span class="mate-close-btn">&times;</span>
+        <span class="mate-close-btn" onClick="modal_close()">&times;</span>
         <h2>매이트 이용방법 안내</h2>
         <p>매이트 페이지에 오신 것을 환영합니다! 이 페이지에서는 러너들을 위한 매이트 매칭 서비스를 이용할 수 있습니다. 아래 설명을 참고하여 매칭을 원활하게 진행해 주세요.</p>
 
@@ -168,7 +166,7 @@
             <label>
                 <input type="checkbox" id="mateNeverShow" onclick="neverShow()"> 다시 보지 않기
             </label>
-            <button id="mateSaveModalPreferences">확인</button>
+            <button id="mateSaveModalPreferences" onClick="modal_close()">확인</button>
         </div>
     </div>
 </div>
@@ -180,40 +178,18 @@
     //매칭룸코드
     var more = 0;
     var cnt  = 0;
-    var accept_cnt = 0;
-    var update_cnt = 0;
+    var img_no = 0;
     var day7_check='N';
     var match_yn="${vo.match_yn}";
     var usercode =${user_code};
     var gender;
-    var token = localStorage.getItem("Authorization");
+    var Authorization = localStorage.getItem("Authorization");
     var nickname=$('#nickname').val();
 
-    function user_select(){
-    $.ajax({
-        url: '/mate/user_select',
-        type: 'POST',
-        data: {Authorization : token},
-        processData: false,
-        contentType: false,
-        success: function(response) {
-           usercode=response;
-        },
-        error: function(xhr, status, error) {
-            alert("파일 업로드 실패: " + error);
-        }
-    });
-    }
-
-
     $(document).ready(function() {
-
         document.getElementById('mateMatchModal').style.display = 'none';
-        usercode=$('#usercode').val();
         if(usercode>0) $('#login').hide();
         gender=$('#gender').val();
-             clog('usercode : '+usercode)
-             clog('gender : '+gender)
        popup_yn();//팝업 여부
         mate_popup_date_select();
         marathon_code();//내가 결제한 대회리스트 불러오기
@@ -282,36 +258,37 @@
 
 
     function match_view(match_yn, flag){//선택한 인원수대로 매칭 자리만들기
-        $.ajax({
+         $.ajax({
             url:'/mate/match_view',
             type:'post',
             async: false,
             data:{
+                Authorization  : Authorization,
                 matching_room_code:match_yn //matching_room_code
             },
             success:function(result){
                 var length = result[0].buff_n;
-
-                for(var i in  result)
-                {
-                    if(accept_cnt != result[i].accept_cnt || update_cnt != result[i].update_cnt||flag=='F'){
-                        grid_draw(length,result);
-                        accept_cnt = result[i].accept_cnt;// Y한사람
-                        update_cnt = result[i].update_cnt;// 현재 입장한사람
+                var accept_cnt = 0;
+                var update_cnt = 0;
+                for(var i in  result){
+                    if(usercode==result[0].usercode && img_no != result[i].b_s){
+                         img_no = result[i].b_s;// 이미지 바꾼유저
+                         grid_draw(length,result);
                     }
                 }
-
+                if(accept_cnt != result[0].accept_cnt||update_cnt != result[0].update_cnt){
+                    accept_cnt = result[0].accept_cnt;// Y한사람
+                    update_cnt = result[0].update_cnt;// 현재 입장한사람
+                    grid_draw(length,result);
+                }
                 // 매칭 완료가 한 번 표시된 후에는 다시 실행되지 않도록 플래그로 제어
-                if(result[0].update_cnt !== 1 && result[0].update_cnt == result[0].accept_cnt) {
-
+                if(result[0].update_cnt != 1 && (result[0].update_cnt == result[0].accept_cnt||result[0].a_n == result[0].accept_cnt)) {
                     clearInterval(intervalId);
                     mate_complite();
                     showMatchCompleteModal();
-
-
                 }
-
                 if(cnt==0){
+                    grid_draw(length,result);
                     match_view_start(match_yn);
                     cnt++;
                 }
@@ -323,13 +300,13 @@
 
     function ranking_more(){
         more +=5;
-        clog(more);
         if(more>20){$('#more').hide();}
         $.ajax({
             url:'/mate/more',
             type:'post',
             async: false,
             data:{
+                Authorization  : Authorization,
                 more:more
             },success:function(result){
                 var list='';
@@ -355,6 +332,7 @@
     }
 
     function profile_update(num) {//num은 칸에서의 내 위치의 번호
+
         // 팝업 창의 너비와 높이 설정
         var width = 920;
         var height = 850;
@@ -366,7 +344,7 @@
            url: '/mate/go_profileList',  // 서버에 전송할 URL
            type: 'POST',  // POST 방식으로 전송
            data: {
-               Authorization  : token,
+               Authorization  : Authorization,
                usercode       : usercode,
                gender         : gender,
                match_yn       : match_yn,
@@ -380,46 +358,52 @@
                console.log('에러 발생:', error);
            }
        });
-
-
-
-
     }
 
-    function matching() {
-        var marathonValue = $('#marathonSelect').data('selected-value');
-        var participationCountValue = $('#participationCountSelect').data('selected-value');
-        var mateCountValue = $('#mateCountSelect').data('selected-value');
-        clog(marathonValue);
-        if(marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
+function matching() {
+    var marathonValue = $('#marathonSelect').data('selected-value');
+    var participationCountValue = $('#participationCountSelect').data('selected-value');
+    var mateCountValue = $('#mateCountSelect').data('selected-value');
+
+        // 매칭 로직
+        if (marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
             // 모달 열기
             showOptionSelectModal(); // 옵션 선택 모달을 호출
             return false;
         }
-        $.ajax({
-            url:'/mate/matching',
-            type:'post',
-            async: false,
-            data:{
-                marathonValue:marathonValue,
-                participationCountValue:participationCountValue,
-                mateCountValue:mateCountValue
-            },success:function(result){
-                 match_yn=result; // 방 코드 받아옴
-                 match_view(result); // 방에 대한 정보 조회
 
-                // // 채팅방 연결
+        $.ajax({
+            url: '/mate/matching',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization  : Authorization,
+                marathonValue  : marathonValue,
+                participationCountValue : participationCountValue,
+                mateCountValue : mateCountValue
+            },
+            success: function (result) {
+                match_yn = result; // 방 코드 받아옴
+                match_view(result); // 방에 대한 정보 조회
+
+                // 채팅방 연결
                 chatConnection(match_yn); // 방 코드에 맞는 채팅방 연결
             },
-            error:function(e){
+            error: function (e) {
+                console.error("Error in matching AJAX request:", e);
             }
         });
-    }
+}
+
     function marathon_code(){
+        var marathonValue = $('#marathonSelect').data('selected-value');
         $.ajax({
             url:'/mate/marathon_code',
             type:'post',
             async: false,
+            data: {
+                Authorization  : Authorization
+            },
             success:function(result){
                 var list = '';
 
@@ -437,12 +421,14 @@
     }
 
 
-    function match_out(){
+  function match_out(){
+
         $.ajax({
             url:'/mate/match_out',
             type:'post',
             async: false,
             data:{
+                Authorization  : Authorization,
                 matching_room_code:match_yn
             },
             success:function(result){
@@ -453,7 +439,6 @@
                 localStorage.removeItem("userNickname");
                 localStorage.removeItem("usercode");
                 location.reload();  // 페이지 새로고침 추가
-
             },
             error:function(e){
             }
@@ -461,11 +446,13 @@
     }
 
     function mate_complite(){
+
         $.ajax({
             url:'/mate/mate_complite',
             type:'post',
             async: false,
             data:{
+                Authorization  : Authorization,
                 matching_room_code:match_yn
             },
             success:function(result) {
@@ -480,51 +467,49 @@
             error:function(e){
             }
         });
-    };
+  };
 
 
     function accept(){
-        $.ajax({
-            url: '/mate/accept',
-            type: 'post',
-            async: false,
-            data: {
-                matching_room_code: match_yn
-            },
-            success: function(result) {
-                match_view(match_yn);
-                $('#accept').hide();
-                $('#accept_n').show();
 
+            $.ajax({
+                url: '/mate/accept',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization  : Authorization,
+                    matching_room_code: match_yn
+                },
+                success: function(result) {
+                    $('#accept').hide();
+                    $('#accept_n').show();
+                    match_view(match_yn);
 
-
-
-
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
     }
 
     function accept_n(){
-        $.ajax({
-            url: '/mate/accept_n',
-            type: 'post',
-            async: false,
-            data: {
-                matching_room_code: match_yn
-            },
-            success: function(result) {
-
-                match_view(match_yn);
-                $('#accept').show();
-                $('#accept_n').hide();
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+            $.ajax({
+                url: '/mate/accept_n',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization  : Authorization,
+                    matching_room_code: match_yn
+                },
+                success: function(result) {
+                    $('#accept').show();
+                    $('#accept_n').hide();
+                    match_view(match_yn);
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
     }
 
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
@@ -549,7 +534,6 @@
 
 function grid_draw(length, result) {
     var list = '';
-
     // 선택한 메이트 인원 + 3의 배수로 맞춘 방 개수 계산
     var total_mates = length;
     var remainder = total_mates % 3;
@@ -560,9 +544,9 @@ function grid_draw(length, result) {
 
     for (var i = 0; i < result.length; i++) {
         var on = result[i].usercode == usercode ? 'onclick="profile_update(' + i + ');"' : '';
-        var gender = result[i].gender == "여" ? 'woman' : 'man';
+        var list_gender = result[i].gender == "여" ? 'woman' : 'man';
         var no = result[i].b_s == "0" ? '0' : result[i].b_s; // profile 값 가져옴
-        var img = gender + no;
+        var img = list_gender + no;
         // 나이 가져오기
         var today = new Date();
         var birthDate = new Date(result[i].birthdate);
@@ -570,14 +554,20 @@ function grid_draw(length, result) {
         age = age < 10 ? '잼민이' : age[0] + '0대';
 
         var style = '';
-        if (result[i].a_s === 'Y') {  // 스타일 및 버튼 제어
-            style = "transform: scale(1.05);border-color: #CCFF47;";
+
+        if (result[i].a_s == 'Y' && usercode == result[i].usercode){
             $('#accept').hide();
             $('#accept_n').show();
-        } else {
-            style = '';
+        }
+        else if(result[i].a_s != 'Y' && usercode == result[i].usercode){
             $('#accept').show();
             $('#accept_n').hide();
+        }
+        if (result[i].a_s == 'Y') {  // 스타일 및 버튼 제어
+            style = "transform: scale(1.05);border-color: #CCFF47;";
+        }
+        else if(result[i].a_s != 'Y') {
+            style = '';
         }
 
         list += '<div class="profile-box" ' + on + ' style="' + style + '">';
@@ -626,8 +616,6 @@ function grid_draw(length, result) {
 
     // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
     $('#matching').hide();
-    $('#accept').show();
-    $('#accept_n').hide();
     $('#out').show();
 }
 
@@ -648,84 +636,45 @@ function grid_draw(length, result) {
         document.getElementById('optionSelectModal').style.display = 'none';
     };
 
-    // 매칭 완료 모달의 닫기 버튼 클릭 시 모달 닫기
-    document.querySelector('#matchCompleteModal .close').onclick = function() {
-        document.getElementById('matchCompleteModal').style.display = 'none';
-    };
-
 
     // 매칭 계속하기 버튼 클릭 시 매칭 완료 모달 닫고 이에를 ajax 안에서 열여야되는뎅
-    document.getElementById('continueMatching').onclick = function() {
+    function go_matepage() {
         window.location.href = '/mate/mate';  //
     };
 
-    // 모달 열기
-   window.onload = function test3() {
-        var Authorization = localStorage.getItem("Authorization");
-        if (token !== "" && token !== null) {
+    function hide7days(){
+            var num = $('#mateHide7days').is(':checked')?7:-7;
             $.ajax({
-                url: "/mate/test",
-                type: "post",
-                data: { Authorization: Authorization },
-                success: function (r) {
+                url: '/mate/hide7days',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization: Authorization,
+                    num: num
+                },
+                success: function(result) {
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
                 }
             });
-        }
     }
-
-
-    // 모달 닫기 버튼
-    document.querySelector('.mate-close-btn').onclick = function() {
-        document.getElementById('mateMatchModal').style.display = 'none';
-    }
-    // 모달 닫기 버튼
-    document.querySelector('#mateSaveModalPreferences').onclick = function() {
-        document.getElementById('mateMatchModal').style.display = 'none';
-    }
-    // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-        var modal = document.getElementById('mateMatchModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
-
-    function hide7days(){
-        var num = $('#mateHide7days').is(':checked')?7:-7;
-        $.ajax({
-            url: '/mate/hide7days',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization: token,
-                num: num
-            },
-            success: function(result) {
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
-    }
-
-
     function neverShow(){
-        var num = $('#mateNeverShow').is(':checked')?99999:0;
-        clog(num);
-        $.ajax({
-            url: '/mate/neverShow',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization: token,
-                num: num
-            },
-            success: function(result) {
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+            var num = $('#mateNeverShow').is(':checked')?99999:0;
+                $.ajax({
+                    url: '/mate/neverShow',
+                    type: 'post',
+                    async: false,
+                    data: {
+                        Authorization: Authorization,
+                        num: num
+                    },
+                    success: function(result) {
+                    },
+                    error: function(e) {
+                        console.error('Error: ', e);
+                    }
+              });
     }
     function popup_yn(){
         var today = new Date();
@@ -743,23 +692,44 @@ function grid_draw(length, result) {
         else {
             document.getElementById('mateMatchModal').style.display = 'none';
         }
+
     }
 
     function mate_popup_date_select(){
+            $.ajax({
+                url: '/mate/mate_popup_date_select',
+                type: 'post',
+                async: false,
+                data: {
+                    Authorization: Authorization,
+                },
+                success: function(result) {
+                    $('#mate_popup_date').val(result);
+                },
+                error: function(e) {
+                    console.error('Error: ', e);
+                }
+            });
+    }
+    function go_mypage(){
         $.ajax({
-            url: '/mate/mate_popup_date_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization: token,
-            },
-            success: function(result) {
-                $('#mate_popup_date').val(result);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+           url: '/mate/go_mypage',
+           type: 'POST',
+           data: {
+               Authorization  : Authorization
+           },
+           success: function(response) {
+                    window.location.href = '/mypage/myHome';
+           },
+           error: function(error) {
+               console.log('에러 발생:', error);
+           }
+       });
     }
 
+
+
+    function modal_close(){
+        $('#mateMatchModal').hide();
+    }
 </script>

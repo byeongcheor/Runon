@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="../inc/sidebar.jspf" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!-- Bootstrap JS 및 추가 스크립트 연결 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap CSS 연결 -->
@@ -18,19 +19,18 @@
 		<div id="mainmid">
 			<div>
 				<form>
-					<div id="checkboxlist" >
-
-					</div>
+					<div id="checkboxlist" ></div>
 					<div id="searchbar">
-						<select class="form-select" id="BoardSearchValue" name="BoardSearchValue" onchange="changeOption()">
+						<!--검색조건 -->
+						<select class="form-select" id="BoardSearchValue" name="BoardSearchValue" style="width: 110px;" onchange="changeOption()">
 							<option value="all_code">
 								전체
 							</option>
-							<option value="Board_name">
+							<option value="marathon_name">
 								마라톤명
 							</option>
 						</select>
-						<select class="form-select" id="BoardSearchValue2" name="BoardSearchValue2" onchange="changeOption()">
+						<select class="form-select" id="BoardSearchValue2" name="BoardSearchValue2" style="width: 130px;" onchange="changeOption()">
 							<option value="is_active">
 								활성화여부
 							</option>
@@ -39,7 +39,8 @@
 							</option>
 						</select>
 						<div id="searchbox">
-							<input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)" />
+							<!--검색어입력 -->
+							<input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)" placeholder="검색어를 입력하세요"/>
 							<div type="button" id="searchbutton" class="btn btn-m search" onclick="searchbutton()">
 								<i class="fa-solid fa-magnifying-glass fa-2x"></i>
 							</div>
@@ -48,6 +49,7 @@
 					</div>
 					<div id="selectbutton"></div>
 				</form>
+				<div id="writebutton" style="margin: auto 0; display: none"></div>
 				<div id="downloadbutton" style="margin: auto 0; display: none"></div>
 			</div>
 		</div>

@@ -30,4 +30,6 @@ public interface MarathonDAO {
     void incrementViewCount(int marathonCode);
     MarathonListVO getMarathonDetail(int marathonCode);
     void updateMarathon(MarathonListVO marathon);
+    int deleteMarathon(int marathonCode);
+    void saveMarathon(MarathonListVO marathonListVO);
 }

@@ -166,4 +166,6 @@ public interface AdminPagesDAO {
     public List<MarathonListVO> selectBoardWithSearch(PagingVO pvo);
     //모든  마라톤 게시물 vo에 담기
     public List<MarathonListVO> selectAllBoard(PagingVO pvo);
+    //마라톤 리스트 엑셀
+    List<MarathonListVO> selectMarathons(); // 마라톤 리스트 조회 메서드
 }

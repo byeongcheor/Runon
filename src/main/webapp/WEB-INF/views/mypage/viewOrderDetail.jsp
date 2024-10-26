@@ -31,7 +31,7 @@
                 var orderListTag="";
 
                 Cvo.forEach(function (cvo){
-                    var orderStatusText = cvo.status === 1 ? "주문완료" : "주문중";
+                    var orderStatusText = cvo.status === 1 ? "주문완료" : "주문취소";
                     orderListTag +=`<div class="orderP2">
                 <div class="orderP3">
                     <span>`+ new Date(cvo.create_time).toLocaleDateString()+`</span>
@@ -128,6 +128,7 @@
     </div>
     <div class="orderOk">
         <button type="button" onclick="goBack()"><span>확인</span></button>
+        <button type="button" style="background-color: lightgray"><span>주문취소</span></button>
     </div>
 </div>
 </div>

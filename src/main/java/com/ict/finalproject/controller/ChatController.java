@@ -38,22 +38,6 @@ public class ChatController {
     private ReportService reportservice;
 
 
-//    // @ModelAttribute를 사용하여 공통 속성 추가
-//    @ModelAttribute
-//    public void addCommonAttributes(Model model) {
-//        // 크루 리스트를 가져옵니다.
-//        List<CrewVO> chatList = crewservice.getCrewList();
-//        log.info("Retrieved crew list size: {}", chatList.size()); // 로그 추가
-//        model.addAttribute("chatList", chatList);  // 모델에 추가
-//
-//        // 크루 목록의 내용을 로그로 출력
-//        for (CrewVO crew : chatList) {
-//            log.info("Crew Name: {}", crew.getCrew_name());
-//        }
-//
-//    }
-
-
     @GetMapping("/message/chatList")
     public String mateChat(){
 

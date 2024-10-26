@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -614,7 +615,7 @@ public class AdminController {
         }else{
             Payvo=service.getPaymentList(pvo);
         }
-        //System.out.println("제발"+Payvo);
+        System.out.println("제발"+Payvo);
         map.put("pvo",pvo);
         map.put("Payvo",Payvo);
         return map;
@@ -657,7 +658,7 @@ public class AdminController {
             }
             map.put("QnaList",QnaList);
             map.put("pvo",pvo);
-        // System.out.println(QnaList);
+        System.out.println(QnaList);
         return map;
     }
     @PostMapping("/qnaDetail")
@@ -705,6 +706,7 @@ public class AdminController {
         System.out.println("K1"+pvo.getSearchKey2());
         System.out.println("K2"+pvo.getSearchKey());
         System.out.println("V"+pvo.getSearchWord());
+
         Map<String,Object> map=new HashMap<>();
         if (usercode !=null){
             int usercodevlaue=usercode.intValue();
@@ -723,23 +725,26 @@ public class AdminController {
         }else{
             totalRecord=service.getBoardTotalRecord();
         }System.out.println("V3");
+
         pvo.setTotalRecord(totalRecord);
         int totalPage = (int) Math.ceil((double) totalRecord / Record);
         pvo.setTotalPage(totalPage);
         pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+
         List<MarathonListVO> BoardList;
 
         if (pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
-            BoardList=service.selectBoardWithSearch(pvo);
-        }else if(pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
-            BoardList=service.selectBoardWithSearch(pvo);
-        }else{
-            BoardList=service.selectAllBoard(pvo);
-        }/*System.out.println("V4");*/
+            BoardList = service.selectBoardWithSearch(pvo);  // 마라톤명 검색
+        } else if (pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
+            BoardList = service.selectBoardWithSearch(pvo);  // 활성화 또는 삭제 여부 검색
+        } else {
+            BoardList = service.selectAllBoard(pvo);  // 기본적으로 모든 게시글 검색
+        }
+        System.out.println("V4");
         map.put("list", BoardList);
         map.put("pvo", pvo);
-        /*System.out.println(pvo);
-        System.out.println(BoardList);*/
+        System.out.println(pvo);
+        System.out.println(BoardList);
         return map;
     }
 
@@ -768,9 +773,12 @@ public class AdminController {
             @RequestParam("event_date") String eventDate,
             @RequestParam("addr") String addr,
             @RequestParam("total_distance") String totalDistance,
+            @RequestParam("entry_fee") String entryFee,
             @RequestParam("registration_start_date") String registrationStartDate,
             @RequestParam("registration_end_date") String registrationEndDate,
             @RequestParam("marathonContent") String marathonContent,
+            @RequestParam("latitude") String latitude, // 위도 추가
+            @RequestParam("longitude") String longitude, // 경도 추가
             @RequestParam(value = "posterImage", required = false) MultipartFile posterImage,
             HttpServletRequest request, Model model) {
 
@@ -808,9 +816,12 @@ public class AdminController {
         marathon.setEvent_date(eventDate);
         marathon.setAddr(addr);
         marathon.setTotal_distance(totalDistance);
+        marathon.setEntry_fee(entryFee);
         marathon.setRegistration_start_date(registrationStartDate);
         marathon.setRegistration_end_date(registrationEndDate);
         marathon.setMarathon_content(marathonContent);
+        marathon.setLat(latitude); // 위도 설정
+        marathon.setLon(longitude); // 경도 설정
 
         if (posterPath != null) {
             marathon.setPoster_img(posterPath); // 이미지 파일 경로 설정
@@ -823,6 +834,77 @@ public class AdminController {
         return "redirect:/marathon/marathonDetail/"  + marathonCode + "?success";
     }
 
+    @PostMapping("/delete/{marathonCode}")
+    @ResponseBody
+    public MarathonListVO deleteMarathon(@PathVariable("marathonCode") int marathonCode) {
+        MarathonListVO marathon = marathonservice.getMarathonByCode(marathonCode);
+        if (marathon != null) {
+            boolean isDeleted = marathonservice.deleteMarathon(marathonCode);
+            if (isDeleted) {
+                System.out.println(isDeleted);
+                return marathon;  // 삭제된 마라톤 정보를 반환
+            }
+        }
+        return null;  // 삭제 실패 또는 마라톤을 찾지 못한 경우
+    }
+    // 글 작성 페이지로 이동하는 메서드 (GET 방식)
+    @GetMapping("/writePost")
+    public String showWritePostPage(Model model) {
+        MarathonListVO marathonListVO = new MarathonListVO();
+        // 필요한 데이터 설정 또는 서비스 호출
+        model.addAttribute("marathonList", marathonListVO);
+        return "adminPages/boardWrite";
+    }
+
+    @PostMapping("/writePostSubmit")
+    public String submitWritePost(
+            @ModelAttribute MarathonListVO marathonListVO,
+            @RequestParam(value = "posterImage", required = false) MultipartFile posterImage,
+            HttpServletRequest request) {
+
+        // 이미지 파일 업로드 처리 (이 부분은 동일)
+        String posterPath = null;
+
+        if (posterImage != null && !posterImage.isEmpty()) {
+            try {
+                String uploadDir = request.getServletContext().getRealPath("/resources/uploadfile/");
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String newFilename = System.currentTimeMillis() + "_" + posterImage.getOriginalFilename();
+                File file = new File(uploadDir + newFilename);
+                posterImage.transferTo(file);
+                posterPath = newFilename;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "파일 업로드 실패";
+            }
+        }
+
+        // DB에 저장할 때 이미지 경로 설정
+        if (posterPath != null) {
+            marathonListVO.setPoster_img(posterPath);
+        }
+        // 위도와 경도 설정
+        marathonListVO.setLat(request.getParameter("latitude")); // 위도
+        marathonListVO.setLon(request.getParameter("longitude")); // 경도
+
+        // DB에 저장하는 로직 호출
+        marathonservice.saveMarathon(marathonListVO);
+
+        // 글 작성 후 목록으로 리다이렉트
+        return "redirect:/adminPages/boardList";
+    }
+    //미리톤 게시글 엑셀로 담기
+    @PostMapping("/boardListDownload")
+    @ResponseBody
+    public  Map<String,Object> boardListDownload(){
+        Map<String, Object> map = new HashMap<>();
+        List<MarathonListVO> list = service.selectMarathons(); // 마라톤 목록을 가져오는 메서드 호출
+        map.put("list", list);
+        return map;
+    }
 
 
 }

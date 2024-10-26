@@ -8,7 +8,7 @@
 <%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">--%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="/css/marathonList.css" type="text/css">
-<%@ include file="/WEB-INF/views/chat/chatList.jsp" %>
+
 
 
 <!-- 상단이미지 -->
@@ -88,7 +88,10 @@
                             <!-- 카드 한 개 -->
                             <div class="marathonC2" onclick="goToDetailPage(${marathon.marathon_code})">
                                 <div class="marathonListI">
-                                    <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
+                                    <div class="imgBox">
+                                        <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
+                                    </div>
+
                                     <div class="receiptType">
                                         <span style="<c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>">
                                                 ${marathon.registration_status}
@@ -208,6 +211,12 @@
         });
     });
 
+    document.getElementById('search-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('mSearch-button').click(); // 'mSearch-button' 버튼을 클릭한 것과 동일한 동작
+        }
+    });
 
 
     function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {

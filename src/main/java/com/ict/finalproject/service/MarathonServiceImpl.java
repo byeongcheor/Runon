@@ -115,4 +115,15 @@ public class MarathonServiceImpl implements MarathonService {
         dao.updateMarathon(marathon);
     }
 
+    @Override
+    public boolean deleteMarathon(int marathonCode) {
+        int result = dao.deleteMarathon(marathonCode);
+        return result > 0;  // 삭제된 행의 수가 0보다 크면 삭제 성공
+    }
+
+    @Override
+    public void saveMarathon(MarathonListVO marathonListVO) {
+        dao.saveMarathon(marathonListVO);
+    }
+
 }

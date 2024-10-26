@@ -40,15 +40,18 @@ function formCheck(event){
                         data:{username:username,password:password },
                         //success:function (response){
                         success:function (response,status,xhr){
-
                             const token = xhr.getResponseHeader("Authorization");
                             const refreshToken = xhr.getResponseHeader('refreshToken');
                             localStorage.setItem("refresh",refreshToken);
                             localStorage.setItem("Authorization",token);
-
                             opener.window.location.reload();
+                            if (window.opener) {
+                                const parentUrl = window.opener.location.href;
+                                const parentFileName = parentUrl.substring(parentUrl.lastIndexOf('/') + 1);
+                                console.log(parentFileName);
+                                if(parentFileName=='crewList')crew();
+                            }
                             window.close();
-
                         },
                         error:function (e){
                             alert("아이디혹은 비밀번호가 틀렸습니다");
@@ -83,4 +86,17 @@ function findIdPopup(){
 }
 function findPwdPopup(){
     window.open('/login&join/FindPw', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
+}
+
+function crew() {
+    var Authorization=localStorage.getItem("Authorization");
+    if(Authorization===null)Authorization='A';
+    $.ajax({
+        url: "/crew/go_crew", // 원하는 URL을 지정
+        type: "post",
+        data: { Authorization:Authorization },
+        success: function (r) {
+            window.location.href = '/crew/crewList';
+        }
+    });
 }

@@ -149,7 +149,7 @@ function previewImage(event) {
 // 서버에서 기존 크루 정보를 불러와서 입력 필드에 미리 채우기
 function loadCrewInfo() {
     $.ajax({
-        url: '/crew/getCrewInfo',  // 서버에서 크루 정보를 가져오는 API
+        url: '/crew/getCrewInfo',
         type: 'POST',
         async: false,
         data: {

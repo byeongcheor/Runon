@@ -49,8 +49,8 @@
           <div class="modal-body">
             <p class="modal-subtitle" id='write_date'></p>
             <pre class="text-wrapper" id='content'></pre>
-          </div>
           <div id=cancel_check_box class="rejected_list"></div>
+          </div>
           <div class="modal-footer">
             <button type="button" data-bs-dismiss="modal" id=cancel_btn onClick="crew_join_delete();" >신청 취소하기</button>
           </div>
@@ -189,6 +189,29 @@ var create_crew_code;
             }
         });
     }
-    function crew_page_detail(create_crew_code, crew_write_code) {
-        window.location.href = '/crew/crewDetail?create_crew_code=' + create_crew_code + '&crew_write_code=' + crew_write_code;    }
+   function crew_page_detail(create_crew_code, crew_write_code) {
+         $.ajax({
+             url: '/crew/go_crewDetail',  // 서버에 전송할 URL
+             type: 'POST',  // POST 방식으로 전송
+             data: {
+                 Authorization: Authorization,  // 토큰 또는 기타 데이터
+                 create_crew_code: create_crew_code  // 전송할 데이터
+             },
+             success: function(response) {
+                if(response=="false"){
+                     alert("모집이 마감된 글 입니다.")
+                     return false;
+                }
+                 window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+             },
+             error: function(error) {
+                 console.log('에러 발생:', error);
+             }
+         });
+         $('#createNewTeamModal').modal('hide');
+     }
+
+
+
+
 </script>

@@ -41,9 +41,13 @@ public interface CrewService {
 
     public String crew_teamEmblem(int create_crew_code);
 
+    public String crew_teamPhoto(int crew_write_code);
+
     public List<String> notice_detail_img(int notice_num);
 
     public int totalRecord(PagingVO pVO);
+
+    public int check_delete(int crew_write_code);
 
     public int img_delete(int notice_num, String img_name);
 
