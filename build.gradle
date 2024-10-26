@@ -68,6 +68,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.2'
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0' // 적절한 버전으로 변경
+
+
 
 
 }

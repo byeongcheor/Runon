@@ -880,18 +880,18 @@
 
     <!-- 마라톤 게시글 총 레코드 수 조회 (검색 조건 포함) -->
     <select id="getSearchBoardRecord" resultType="int">
-        select count(marathon_code)
-        from marathon_list_tbl
+        SELECT COUNT(marathon_code)
+        FROM marathon_list_tbl
         <where>
-            <if test="searchKey2 != null and searchWord != null and !searchWord.isEmpty()">
-                <if test="searchKey2 == 'marathon_name'">
-                    marathon_name like concat('%', #{searchWord}, '%')
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey == 'marathon_name'">
+                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')
                 </if>
-                <if test="searchKey2 == 'is_active'">
-                    is_active = #{searchWord}
+                <if test="searchKey == 'is_active'">
+                    AND is_active = #{searchWord} <!-- is_active에 대한 조건 -->
                 </if>
-                <if test="searchKey2 == 'is_deleted'">
-                    is_deleted = #{searchWord}
+                <if test="searchKey == 'is_deleted'">
+                    AND is_deleted = #{searchWord} <!-- is_deleted에 대한 조건 -->
                 </if>
             </if>
         </where>
@@ -901,12 +901,19 @@
     <select id="selectBoardWithSearch" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
         SELECT *
         FROM marathon_list_tbl
-        <if test="searchKey != null and searchWord != null">
-            WHERE ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
-        </if>
-        <if test="searchKey2 != null and searchWord2 != null">
-            AND ${searchKey2} = #{searchWord2}
-        </if>
+        <where>
+            <if test="searchKey != null and searchWord != null">
+                <if test="searchKey == 'marathon_name'">
+                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'is_active'">
+                    AND is_active = #{searchWord} <!-- is_active에 대한 조건 -->
+                </if>
+                <if test="searchKey == 'is_deleted'">
+                    AND is_deleted = #{searchWord} <!-- is_deleted에 대한 조건 -->
+                </if>
+            </if>
+        </where>
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
 
@@ -919,13 +926,61 @@
 
     <!-- 검색 조건 없이 전체 마라톤 게시글 목록 조회 -->
     <select id="selectAllBoard" resultType="com.ict.finalproject.vo.MarathonListVO">
-        select marathon_code, marathon_name, created_date, is_active, is_deleted, activation_date, deleted_date
-        from marathon_list_tbl
-        order by marathon_code desc
+        SELECT marathon_code, marathon_name, created_date, is_active, is_deleted, activation_date, deleted_date
+        FROM marathon_list_tbl
+        ORDER BY marathon_code DESC
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
+
     <!-- 마라톤리스트 엑셀 -->
     <select id="selectMarathons" resultType="com.ict.finalproject.vo.MarathonListVO">
-        SELECT * FROM marathon_list_tbl; <!-- 마라톤 리스트를 조회하는 SQL 쿼리 -->
+        SELECT * FROM marathon_list_tbl;
     </select>
+
+    <!-- 게시글 총 레코드 수 조회 (검색 조건 포함)-->
+<!--    <select id="getSearchBoardRecord" resultType="int">-->
+<!--        SELECT COUNT(marathon_code)-->
+<!--        FROM marathon_list_tbl-->
+<!--        <where>-->
+<!--            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">-->
+<!--                <if test="searchKey == 'marathon_name'">-->
+<!--                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_active'">-->
+<!--                    AND is_active = #{searchWord}-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_deleted'">-->
+<!--                    AND is_deleted = #{searchWord}-->
+<!--                </if>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 검색 조건을 포함한 마라톤 게시글 목록 조회 &ndash;&gt;-->
+<!--    <select id="selectBoardWithSearch" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">-->
+<!--        SELECT *-->
+<!--        FROM marathon_list_tbl-->
+<!--        <where>-->
+<!--            <if test="searchKey != null and searchWord != null">-->
+<!--                <if test="searchKey == 'marathon_name'">-->
+<!--                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_active'">-->
+<!--                    AND is_active = #{searchWord}-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_deleted'">-->
+<!--                    AND is_deleted = #{searchWord}-->
+<!--                </if>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        LIMIT #{onePageRecord} OFFSET #{offset}-->
+<!--    </select>-->
+
+
+
+
+
+
+
+
 </mapper>

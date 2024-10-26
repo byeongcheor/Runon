@@ -703,49 +703,62 @@ public class AdminController {
     public Map<String,Object> boardLists(
             PagingVO pvo,@RequestParam(value = "usercode",required = false) Integer usercode,
             @RequestParam(value = "page",defaultValue = "1")int page){
-        System.out.println("K1"+pvo.getSearchKey2());
-        System.out.println("K2"+pvo.getSearchKey());
-        System.out.println("V"+pvo.getSearchWord());
 
-        Map<String,Object> map=new HashMap<>();
-        if (usercode !=null){
-            int usercodevlaue=usercode.intValue();
-            AdminsVO AdminRole = service.selectAdminRole(usercodevlaue);
-            map.put("Avo", AdminRole);
+        System.out.println("K1"+pvo.getSearchKey());
+        System.out.println("W"+pvo.getSearchWord());
+
+        Map<String, Object> map = new HashMap<>();
+        if (usercode != null) {
+            int usercodeValue = usercode.intValue();
+            AdminsVO adminRole = service.selectAdminRole(usercodeValue);
+            map.put("Avo", adminRole);
         }
         System.out.println("V2");
         pvo.setNowPage(page);
-        int Record = 15;
-        pvo.setOnePageRecord(Record);
+        int record = 15;
+        pvo.setOnePageRecord(record);
 
         int totalRecord;
-        if(pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
-            totalRecord=service.getSearchBoardRecord(pvo);
-        }else if(pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
-            totalRecord=service.getSearchBoardRecord(pvo);
-        }else{
-            totalRecord=service.getBoardTotalRecord();
-        }System.out.println("V3");
+
+        // 검색어와 검색 키를 확인하여 총 레코드 수를 계산합니다.
+        // 검색어와 검색 키를 확인하여 총 레코드 수를 계산합니다.
+        if (pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
+            if (pvo.getSearchKey() != null && pvo.getSearchKey().equals("marathon_name")) {
+                // 마라톤명으로 검색
+                totalRecord = service.getSearchBoardRecord(pvo);
+            } else if (pvo.getSearchKey().equals("is_active") || pvo.getSearchKey().equals("is_deleted")) {
+                // 활성화 또는 삭제 여부 검색
+                totalRecord = service.getSearchBoardRecord(pvo);
+            } else {
+                totalRecord = service.getBoardTotalRecord(); // 유효하지 않은 검색 키인 경우 전체 레코드 수
+            }
+        } else {
+            totalRecord = service.getBoardTotalRecord(); // 전체 게시글 수
+        }
+
+        System.out.println("V3");
+
 
         pvo.setTotalRecord(totalRecord);
-        int totalPage = (int) Math.ceil((double) totalRecord / Record);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
         pvo.setTotalPage(totalPage);
-        pvo.setOffset((pvo.getNowPage()-1)*pvo.getOnePageRecord());
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
 
         List<MarathonListVO> BoardList;
 
-        if (pvo.getSearchWord() != null && !pvo.getSearchWord().isEmpty()) {
-            BoardList = service.selectBoardWithSearch(pvo);  // 마라톤명 검색
-        } else if (pvo.getSearchKey2() != null && !pvo.getSearchKey2().isEmpty()) {
-            BoardList = service.selectBoardWithSearch(pvo);  // 활성화 또는 삭제 여부 검색
+        // 검색 조건에 따른 처리
+        if (pvo.getSearchKey() != null && pvo.getSearchWord() != null) {
+            BoardList = service.selectBoardWithSearch(pvo); // 마라톤명 검색
         } else {
-            BoardList = service.selectAllBoard(pvo);  // 기본적으로 모든 게시글 검색
+            BoardList = service.selectAllBoard(pvo); // 모든 게시글 검색
         }
+
         System.out.println("V4");
         map.put("list", BoardList);
         map.put("pvo", pvo);
         System.out.println(pvo);
         System.out.println(BoardList);
+
         return map;
     }
 
