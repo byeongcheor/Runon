@@ -271,3 +271,14 @@ li{
     background-color: transparent;
     border-radius: 5px;
 }
+#cancelbutton{
+    background-color: white;
+
+}
+#orderStN{
+    display: flex;
+    justify-content: space-between
+}
+.detailid{
+    display: none;
+}

@@ -32,7 +32,7 @@
             url: "/mypage/openMymate",
             type: "Post",
             data: {
-                username:username,
+                username:username1,
                 usercode:usercode1},
             success: function(r) {
                 location.href = "/mypage/myMate";

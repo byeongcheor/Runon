@@ -1,9 +1,6 @@
 package com.ict.finalproject.dao;
 
-import com.ict.finalproject.vo.CompleteVO;
-import com.ict.finalproject.vo.OrderVO;
-import com.ict.finalproject.vo.PaymentVO;
-import com.ict.finalproject.vo.PaymentdetailVO;
+import com.ict.finalproject.vo.*;
 
 import java.util.List;
 
@@ -22,7 +19,7 @@ public interface PaymentDAO {
     public int insertPaymentDetails(List<PaymentdetailVO> newDetails);
 
     public int updateDetails(String orderId,int usercode);
-    public int updatepayment(int realAmount,int usercode,String method);
+    public int updatepayments(int realAmount,int usercode,String method,String paymentKey);
     public int updateOrder(int usercode);
     public List<Integer>selectCartCode(int usercode);
     public int deletedCart_code(List<Integer> cart_codes);
@@ -30,5 +27,18 @@ public interface PaymentDAO {
     public void updateMypoint(PaymentVO pvo);
     public PaymentVO selectdiscount(String orderId ,int usercode);
     public void updateChangePoint(PaymentVO pvo);
+    public List<CompleteVO> getPDVO(List<Integer>codes);
+
+
+    //환불시 실행할 class
+    public int insertRefund(RefundVO rvo);
+    public int updatepayDetail(RefundVO rvo);
+    public int updatePay(RefundVO rvo);
+    public List<Integer>selectorderCodes(RefundVO rvo);
+    public int updateOrderstatus(List<Integer>order_codes);
+    public int updatePoint(int point);
+    public int insertPoint(RefundVO rvo);
+
+
 
 }

@@ -190,6 +190,17 @@ public class CrewServiceImpl implements CrewService{
     }
 
     @Override
+    public String crew_teamPhoto(int crew_write_code) {
+        return dao.crew_teamPhoto(crew_write_code);
+    }
+
+    @Override
+    public int check_delete(int crew_write_code)
+    {
+        return dao.check_delete(crew_write_code);
+    }
+
+    @Override
     public List<String> notice_detail_img(int notice_num) {
         return dao.notice_detail_img(notice_num);
     }

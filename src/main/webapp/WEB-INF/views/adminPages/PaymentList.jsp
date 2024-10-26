@@ -56,7 +56,6 @@
             </div>
         </div>
     </div>
-
     <div id="paymentdetailbackground">
         <div id="Paymentdetail">
             <div  id="closedetail"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
@@ -118,18 +117,13 @@
                     </div>
                 </div>
             </div>
-
             <div id="Certificatecontent">
                 <div id="CertificateDetails">
-
                 </div>
                 <div id="certificate">
-
                 </div>
             </div>
-
             <div id="addButton">
-
             </div>
 
         </div>

@@ -24,33 +24,46 @@ public class MateController {
     String user_name ="";
     int    user_code = 0;
 
-
-    @PostMapping("/test")
+    @PostMapping("/go_mypage")
     @ResponseBody
-    public String test(@RequestParam("Authorization")String token) {
+    public String go_mypage(@RequestParam("Authorization")String token,HttpSession session) {
         if(token.equals("A")) return user_name= "A";
-        token=token.substring("Bearer ".length());
-        user_name=jwtUtil.setTokengetUsername(token);
-        System.out.println("test로 들어오는 user_name: " + user_name);
-        user_code = service.usercodeSelect(user_name);
-        return user_name;
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int user_code = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("Authorization", token);
+        session.setAttribute("user_code", user_code);
+        return "success";
+    }
+
+    @PostMapping("/go_mate")
+    @ResponseBody
+    public String go_mate(@RequestParam("Authorization")String token,HttpSession session) {
+        if(token.equals("A")) return user_name= "A";
+
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+
+        // 서비스 호출 (int 값을 파라미터로 전달)
+        int user_code = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
+        session.setAttribute("user_code", user_code);
+
+        return "success";
     }
 
     @GetMapping("/mate")
-    public String matchingList(MateVO vo, Model model){//
+    public String mate(MateVO vo,Model model,HttpSession session){//
         try {
-
-            System.out.println("mate로 들어오는 user_name : "+user_name);
+            Integer user_code = (Integer) session.getAttribute("user_code");
             List<MateVO> userselect = service.userselect(user_code);
             List<MateVO> ranking = service.ranking();
             vo.setMatch_yn(service.match_yn(user_code));
-            //  System.out.println(userselect);
 
             model.addAttribute("ranking",ranking);
             model.addAttribute("vo",vo);
             model.addAttribute("userselect",userselect);
             model.addAttribute("user_code",user_code);
-            System.out.println("user_code : "+user_code);
         } catch (Exception e) {
             // 에러가 발생한 경우 로그 출력
             e.printStackTrace();
@@ -97,9 +110,10 @@ public class MateController {
     }
     @PostMapping("/matching")
     @ResponseBody
-    public int  matching(int marathonValue,String participationCountValue,int mateCountValue, Model model) {
-        //participationCountValue 다시 봐야됨
-        //int user_code = 4;//유저코드
+    public int  matching(@RequestParam("Authorization")String token,int marathonValue,String participationCountValue,int mateCountValue, Model model) {
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         int matching_room_code=0;
         try {
             matching_room_code = service.matching_select(marathonValue, participationCountValue, mateCountValue);
@@ -119,8 +133,10 @@ public class MateController {
 
     @PostMapping("/match_view")
     @ResponseBody
-    public List<MateVO>  matching(int matching_room_code, Model model) {
-        //int user_code = 4;//유저코드
+    public List<MateVO>  matching(@RequestParam("Authorization")String token,int matching_room_code, Model model) {
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         List<MateVO> room_list = null;
         try {
             room_list = service.match_view(matching_room_code);
@@ -133,8 +149,11 @@ public class MateController {
     }
     @PostMapping("/match_out")
     @ResponseBody
-    public int  match_out(int matching_room_code) {
+    public int  match_out(@RequestParam("Authorization")String token,int matching_room_code) {
         // int user_code = 4;//유저코드
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         int a=0;
         try {
             service.match_out(matching_room_code, user_code);
@@ -149,8 +168,10 @@ public class MateController {
 
     @PostMapping("/accept")
     @ResponseBody
-    public int  accept(int matching_room_code) {
-        // int user_code = 4;//유저코드
+    public int  accept(@RequestParam("Authorization")String token,int matching_room_code) {
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         int a=0;
         try {
             service.accept(matching_room_code, user_code);
@@ -164,9 +185,12 @@ public class MateController {
     // 수락거절
     @PostMapping("/accept_n")
     @ResponseBody
-    public int  accept_n(int matching_room_code) {
+    public int  accept_n(@RequestParam("Authorization")String token,int matching_room_code) {
         // int user_code = 4;//유저코드
         int a=1;
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         try {
             service.accept_n(matching_room_code, user_code);
         } catch (Exception e) {
@@ -179,8 +203,7 @@ public class MateController {
 
     @PostMapping("/profile_click")
     @ResponseBody
-    public int  profile_click(int profileValue ,int usercode) {
-        //int user_code = 4;//유저코드
+    public int  profile_click(int profileValue, int usercode) {
         int profile=0;
         try {
             service. profile_click(profileValue, usercode);
@@ -194,8 +217,10 @@ public class MateController {
 
     @PostMapping("/mate_complite")
     @ResponseBody
-    public int  mate_complite(int matching_room_code) {
-        // int user_code = 4;//유저코드
+    public int  mate_complite(@RequestParam("Authorization")String token,int matching_room_code) {
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         int a=1;
         try {
             service.mate_complite(matching_room_code, user_code);
@@ -209,8 +234,10 @@ public class MateController {
 
     @PostMapping("/marathon_code")
     @ResponseBody
-    public List<MateVO> marathon_code(){
-        // int user_code = 4;//유저코드
+    public List<MateVO> marathon_code(@RequestParam("Authorization")String token){
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         List<MateVO> list = service.marathon_code_list(user_code);
         return  list;
     }
@@ -218,19 +245,29 @@ public class MateController {
     @PostMapping("/hide7days")
     @ResponseBody
     public void hide7days(@RequestParam("Authorization")String token, int num){
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         service.hide7daysAdd(user_code,num);
     }
 
     @PostMapping("/neverShow")
     @ResponseBody
     public void neverShow(@RequestParam("Authorization")String token, int num){
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);
         service.neverShow(user_code,num);
     }
 
     @PostMapping("/mate_popup_date_select")
     @ResponseBody
     public Date  mate_popup_date_select(@RequestParam("Authorization")String token) {
+        token = token.substring("Bearer ".length());
+        String userName = jwtUtil.setTokengetUsername(token);
+        int user_code = service.usercodeSelect(userName);  // 주입이 아닌 메서드 파라미터로 전달
         Date mate_popup_date= service.mate_popup_date_select(user_code);
         return mate_popup_date;
     }
 }
+

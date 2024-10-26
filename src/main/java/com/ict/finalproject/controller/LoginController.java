@@ -98,7 +98,7 @@ public class LoginController {
 
     @PostMapping("/login&join/changePw")
     @ResponseBody
-    public Map<String,Object>changePw(@RequestParam("selectedRadio")String username){
+    public Map<String,Object>changePw(@RequestParam("username")String username){
         Map<String,Object> map=new HashMap<>();
         MemberVO mvo=   memberDAO.findByUsername(username);
         String token = jwtUtil.createJwt(username,mvo.getRole(), 60*60*24*30*1000L);
@@ -131,4 +131,19 @@ public class LoginController {
         return map;
 
     }
+    @GetMapping("/login&join/FindPw")
+    public String FindPw(){
+        return "login&join/FindPw";
+    }
+    @PostMapping("/login&join/FindPwd")
+    @ResponseBody
+    public Map<String,Object> FindPwd (@RequestParam("username")String username,
+                                       @RequestParam("name")String name){
+        Map<String,Object> map=new HashMap<>();
+        MemberVO mvo=service.ChangePwd(username,name);
+        map.put("mvo",mvo);
+
+        return map;
+    }
+
 }

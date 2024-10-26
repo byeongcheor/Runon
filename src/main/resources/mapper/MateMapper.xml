@@ -85,7 +85,9 @@
         where  marathon_no = ${param1}
         and    marathon_count = '${param2}'
         and    max_personnel > now_personnel
-        and    max_personnel = ${param3}     limit 1), 0)
+        and    max_personnel = ${param3}
+        and    room_status ='1'
+        limit 1), 0)
         from dual
         order by rand()
         limit 1;
@@ -158,6 +160,7 @@
         a.profile as b_s,
         b.birthdate,
         a.profile,
+        (select count(1) from applicant_tbl where matching_room_code= ${param1}) as a_n,
         (select count(1)
         from applicant_tbl
         where accept_yn = 'y'
@@ -215,6 +218,12 @@
         set
         is_Completion=1,
         completiondate = now()
+        where  matching_room_code=${param1}
+    </update>
+
+    <update id="matching_complite">
+        update matching_room_tbl
+        set    room_status = '2'
         where  matching_room_code=${param1}
     </update>
 

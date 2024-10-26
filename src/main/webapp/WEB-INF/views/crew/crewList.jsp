@@ -124,7 +124,7 @@
             </ul>
         </div>
     </div>
-  <!-- 페이징 -->
+ <!-- 페이징 -->
   <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
       <!-- 이전페이지 -->
       <c:if test="${pvo.nowPage == 1}">
@@ -132,7 +132,7 @@
       </c:if>
 
       <c:if test="${pvo.nowPage > 1}">
-          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage - 1});">Previous</a></li>
+          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage - 1});"><</a></li>
       </c:if>
 
       <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
@@ -145,7 +145,7 @@
 
       <!-- 다음페이지 -->
       <c:if test="${pvo.nowPage == pvo.totalPage}">
-          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">Next</a></li>
+          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">></a></li>
       </c:if>
       <c:if test="${pvo.nowPage < pvo.totalPage}">
           <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage + 1});">></a></li>
@@ -273,7 +273,6 @@
             </div>
         </div>
     </form>
-
     <!-- 플러스 버튼을 클릭하면 나오는 첫번째 모달 -->
     <div class="modal fade" id="createNewTeamModal" tabindex="-1" aria-labelledby="createNewTeamModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -287,7 +286,6 @@
             </div>
         </div>
     </div>
-
     <!-- 플러스 버튼을 클릭하면 나오는 두번째 모달 -->
     <div class="modal fade" id="crewInfoModal" tabindex="-1" aria-labelledby="crewInfoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -358,7 +356,6 @@
             </div>
         </div>
     </div>
-
     <!-- 3번째 모달 -->
     <form id="crew_write_add" enctype="multipart/form-data">
         <input type=hidden id='third_crew_code' name='third_crew_code'>
@@ -457,18 +454,12 @@
 
 <script>
 
-// 공통 로그인 확인 함수
-//setTimeout(function(){
-//                 alert(username1);
-// }, 1500);
-//setTimeout(function(){
-//            alert(usercode1);
-//}, 2000);
-
-
 var Authorization = localStorage.getItem("Authorization");
 var clog=console.log;
 var usercode=${user_code};
+clog('usercode : '+usercode);
+
+
     var seoulDistricts = [
         "강남구", "강동구", "강북구", "강서구", "관악구", "광진구",
         "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구",
@@ -547,8 +538,6 @@ var usercode=${user_code};
     var jejuDistricts = [
         "서귀포시", "제주시"
     ];
-
-
 
     function select_box_change3(flag) {
 
@@ -726,10 +715,8 @@ var usercode=${user_code};
         $('#addr_gu').hide();
        if(usercode!=0){
           crew_page(1);
-          $('#login').hide();
        }
        else{
-          $('#logout').hide();
           $('.list_item').removeAttr('onclick');
        }
     });
@@ -748,7 +735,7 @@ var usercode=${user_code};
         }
     });
 
-function crew_list_select(panging) {
+  function crew_list_select(panging) {
     var list = '';
     // 페이지 번호 그대로 전달 (offset 계산은 서버에서 처리)
     var page = (panging === undefined || panging <= 0) ? 1 : panging;
@@ -837,7 +824,7 @@ function crew_list_select(panging) {
             console.error('Error: ', e);
         }
     });
-}
+  }
 
     function previewImage(event) {
         var reader = new FileReader();
@@ -889,65 +876,65 @@ function crew_list_select(panging) {
         $('#locationModal').modal('show');
     }
 
-function submitCrewInfo() {
-    var form = $('#crewCreateForm')[0];
-    var formData = new FormData(form);
+    function submitCrewInfo() {
+        var form = $('#crewCreateForm')[0];
+        var formData = new FormData(form);
 
-    // 이미지 파일이 있는지 확인
-    var teamImageFile = $('#teamEmblem').val();
+        // 이미지 파일이 있는지 확인
+        var teamImageFile = $('#teamEmblem').val();
 
-    // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
-    if (!teamImageFile) {
-        // 기본 이미지 경로를 추가
-        formData.append('teamEmblem', 'basicimg.png');
-    } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
-        alert('이미지파일만 업로드가 가능합니다.');
-        return false;
-    }
-
-    // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-    var city = $('#city').val();
-    var ageChecked = $('input[name="age[]"]:checked').length > 0;
-    var genderChecked = $('input[name="gender"]:checked').length > 0;
-
-    if (!city) {
-        alert('활동하는 지역을 선택해주세요.');
-        return false;
-    }
-
-    if (!ageChecked) {
-        alert('주요 나이대를 선택해주세요.');
-        return false;
-    }
-
-    if (!genderChecked) {
-        alert('성별을 선택해주세요.');
-        return false;
-    }
-
-    // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
-    $.ajax({
-        url: '/crew/crew_add',
-        type: 'POST',
-        headers: {
-            Authorization: localStorage.getItem('Authorization')
-        },
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-         if(response==1) alert('이미 존재하는 크루명입니다.');
-         else {
-            alert('크루가 성공적으로 생성되었습니다!');
-            $('#locationModal').modal('hide');
-         }
-        },
-        error: function(error) {
-            console.log(error);
-            alert('크루 생성 중 오류가 발생했습니다.');
+        // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
+        if (!teamImageFile) {
+            // 기본 이미지 경로를 추가
+            formData.append('teamEmblem', 'basicimg.png');
+        } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
+            alert('이미지파일만 업로드가 가능합니다.');
+            return false;
         }
-    });
-}
+
+        // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+        var city = $('#city').val();
+        var ageChecked = $('input[name="age[]"]:checked').length > 0;
+        var genderChecked = $('input[name="gender"]:checked').length > 0;
+
+        if (!city) {
+            alert('활동하는 지역을 선택해주세요.');
+            return false;
+        }
+
+        if (!ageChecked) {
+            alert('주요 나이대를 선택해주세요.');
+            return false;
+        }
+
+        if (!genderChecked) {
+            alert('성별을 선택해주세요.');
+            return false;
+        }
+
+        // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+        $.ajax({
+            url: '/crew/crew_add',
+            type: 'POST',
+            headers: {
+                Authorization: localStorage.getItem('Authorization')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+             if(response==1) alert('이미 존재하는 크루명입니다.');
+             else {
+                alert('크루가 성공적으로 생성되었습니다!');
+                $('#locationModal').modal('hide');
+             }
+            },
+            error: function(error) {
+                console.log(error);
+                alert('크루 생성 중 오류가 발생했습니다.');
+            }
+        });
+    }
 
     function resetForm() {
         document.getElementById('crewCreateForm').reset();
@@ -1130,62 +1117,50 @@ function submitCrewInfo() {
         $('#crewCreateModal').modal('show');
     }
 
-function crew_write_add() {
+    function crew_write_add() {
 
-       var form = $('#crew_write_add')[0];
-       var formData = new FormData(form);
-        clog(form);
-        var ageChecked = $('input[name="age[]3"]:checked').length > 0;
-        var genderChecked = $('input[name="gender3"]:checked').length > 0;
-        var teamIntro = $('#teamIntro3').val().trim();
-       if (!ageChecked) {
-           alert('주요 나이대를 선택해주세요.');
-           return false;
-       }
-       if (!genderChecked) {
-           alert('성별을 선택해주세요.');
-           return false;
-       }
-       if (teamIntro === "") {
-           alert('크루 소개글을 작성해주세요.');
-           return false;
-       }
-       // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
-       $.ajax({
-           url: '/crew/crew_write_add',
-           type: 'POST',
-           headers: {
-               Authorization: localStorage.getItem('Authorization')
-           },
-           data: formData,
-           processData: false,
-           contentType: false,
-           success: function(response) {
-               alert('크루 모집이 성공적으로 생성되었습니다!');
-               $('#uploadTeamPhotoModal').modal('hide');
+           var form = $('#crew_write_add')[0];
+           var formData = new FormData(form);
+            clog(form);
+            var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+            var genderChecked = $('input[name="gender3"]:checked').length > 0;
+            var teamIntro = $('#teamIntro3').val().trim();
+           if (!ageChecked) {
+               alert('주요 나이대를 선택해주세요.');
+               return false;
+           }
+           if (!genderChecked) {
+               alert('성별을 선택해주세요.');
+               return false;
+           }
+           if (teamIntro === "") {
+               alert('크루 소개글을 작성해주세요.');
+               return false;
+           }
+           // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+           $.ajax({
+               url: '/crew/crew_write_add',
+               type: 'POST',
+               headers: {
+                   Authorization: localStorage.getItem('Authorization')
+               },
+               data: formData,
+               processData: false,
+               contentType: false,
+               success: function(response) {
+                   alert('크루 모집이 성공적으로 생성되었습니다!');
+                   $('#uploadTeamPhotoModal').modal('hide');
 
-               crew_list_select(0);
-           },
-           error: function(error) {
-               console.log(error);
-               alert('크루 모집 중 오류가 발생했습니다.');
-           }
-       });
-   }
-      window.onload = function test3() {
-           var Authorization = localStorage.getItem("Authorization");
-           if (token !== "" && token !== null) {
-               $.ajax({
-                   url: "/crew/test",
-                   type: "post",
-                   data: { Authorization: Authorization },
-                   success: function (r) {
-                   }
-               });
-           }
+                   crew_list_select(0);
+               },
+               error: function(error) {
+                   console.log(error);
+                   alert('크루 모집 중 오류가 발생했습니다.');
+               }
+           });
        }
-    function login(){
-        alert('로그인해주세요.')
-    }
+        function login(){
+            alert('로그인해주세요.')
+        }
 </script>
 

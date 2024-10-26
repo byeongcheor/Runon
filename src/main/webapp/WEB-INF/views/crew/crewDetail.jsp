@@ -561,9 +561,7 @@ $('#prevBtnInCreateModal').on('click', function() {
             type: 'POST',  // POST 방식으로 전송
             data: {
                 Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                user_code        : usercode,
-                position         : position
+                create_crew_code : create_crew_code
             },
             success: function(response) {
                 window.location.href = '/crew/crewManage';
