@@ -245,7 +245,7 @@
                         } else {
                             vo.is_completed = "주문취소";
                         }
-
+                        var marathonCountText = (vo.marathon_count > 1) ? ` 및 ...` : '';
                         tag += `
                         <div class="orderP2">
                             <div class="orderP3">
@@ -254,7 +254,7 @@
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span class="proName">` + vo.latest_marathon_name + ` 및 ` +(vo.marathon_count-1)+ `</span>
+                                        <span class="proName">` + vo.latest_marathon_name + marathonCountText+ `</span>
                                     </div>
                                 </div>
                             </div>
