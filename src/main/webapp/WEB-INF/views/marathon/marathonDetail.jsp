@@ -30,7 +30,7 @@
     <div class="marathonDetailF">
         <div class="marathonDTop">
             <div class="marathonDImg">
-                <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
+                <img src="/img/marathonPoster/${marathon.poster_img}" alt="마라톤 이미지">
             </div>
             <div class="marathonDContent">
                 <div class="marathonDTTop">

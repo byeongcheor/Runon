@@ -23,7 +23,7 @@
                 <div class="marathonDImg">
                     <!-- 이미지 업로드 -->
                     <input type="file" name="posterImage" id="posterImage" accept="image/*" onchange="updateImage(event)">
-                    <img id="marathonPoster" src="/resources/uploadfile/${marathonDetail.poster_img}" alt="마라톤 포스터">
+                    <img id="marathonPoster" src="/img/marathonPoster/${marathonDetail.poster_img}" alt="마라톤 포스터">
                 </div>
                 <div class="marathonDContent">
                     <div class="marathonDTTop">

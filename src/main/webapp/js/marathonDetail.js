@@ -34,17 +34,50 @@ setTimeout(function(){
     let count = parseInt(likeCount.textContent); // 현재 좋아요 수 가져오기
     let liked = false; // 좋아요 상태 플래그
 
+    /// 초기 상태 설정 함수
+    function setInitialLikeState() {
+        fetch(`/marathon/checkLike?usercode=`+usercode1+`&marathon_code=`+marathonId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    liked = true; // 사용자가 이미 좋아요를 눌렀다면
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas');
+                    likeButton.classList.add('clicked');
+                }
 
+                likeCount.textContent = count; // 초기 카운트 업데이트
+            })
+            .catch(error => {
+                console.error('좋아요 상태 확인에 실패했습니다:', error);
+            });
+    }
+    // 페이지 로드 시마다 좋아요 상태 확인
+    setInitialLikeState();
+
+// 좋아요 아이콘 업데이트 함수
+    function updateHeartIcon() {
+        if (liked) {
+            heartIcon.classList.remove('far');
+            heartIcon.classList.add('fas');
+            likeButton.classList.add('clicked');
+        } else {
+            heartIcon.classList.add('far');
+            heartIcon.classList.remove('fas');
+            likeButton.classList.remove('clicked');
+        }
+    }
+
+    // 좋아요 버튼 클릭 이벤트
     likeButton.addEventListener('click', function () {
         console.log('좋아요 버튼 클릭됨', usercode, marathonId); // 추가 로그
-        // 서버에 좋아요 추가 요청
         fetch('/marathon/addLike', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                usercode: usercode1,
+                usercode: usercode,
                 marathon_code: marathonId
             })
         })
@@ -53,18 +86,9 @@ setTimeout(function(){
                 console.log('서버에서 받은 데이터', data);
                 if (data && data.success) {
                     liked = !liked; // 좋아요 상태 토글
-                    if (liked) {
-                        heartIcon.classList.remove('far');
-                        heartIcon.classList.add('fas');
-                        likeButton.classList.add('clicked');
-                        count++;
-                    } else {
-                        heartIcon.classList.remove('fas');
-                        heartIcon.classList.add('far');
-                        likeButton.classList.remove('clicked');
-                        count--;
-                    }
+                    liked ? count++ : count--; // 카운트 업데이트
                     likeCount.textContent = count; // 좋아요 카운트 업데이트
+                    updateHeartIcon(); // 하트 상태 업데이트
                 } else {
                     alert(data.message || '좋아요 추가 실패');
                 }
@@ -72,30 +96,6 @@ setTimeout(function(){
             .catch(error => {
                 console.error('좋아요 추가에 실패했습니다:', error);
             });
-
-        // 초기 상태 설정
-        function setInitialLikeState() {
-            fetch(`/marathon/checkLike?usercode=${usercode}&marathon_code=${marathonId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.liked) {
-                        liked = true; // 사용자가 이미 좋아요를 눌렀다면
-                        heartIcon.classList.remove('far');
-                        heartIcon.classList.add('fas');
-                        likeButton.classList.add('clicked');
-                        count++; // 초기 카운트 설정
-                        likeCount.textContent = count; // 초기 카운트 업데이트
-                    }
-                })
-                .catch(error => {
-                    console.error('좋아요 상태 확인에 실패했습니다:', error);
-                });
-        }
-
-        // 페이지 로드 시 초기 상태 설정
-        document.addEventListener('DOMContentLoaded', setInitialLikeState);
-
-
     });
 
     // 마라톤 거리 옵션 선택

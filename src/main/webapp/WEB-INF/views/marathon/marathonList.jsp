@@ -52,7 +52,6 @@
             <!-- 지역 필터 -->
             <select id="mRegion-filter">
                 <option value="" selected>지역</option> <!-- 기본으로 선택 -->
-                <option value="전체">전체</option>
                 <option value="서울">서울</option>
                 <option value="경기">경기</option>
                 <option value="부산">부산</option>
@@ -89,7 +88,7 @@
                             <div class="marathonC2" onclick="goToDetailPage(${marathon.marathon_code})">
                                 <div class="marathonListI">
                                     <div class="imgBox">
-                                        <img src="/resources/uploadfile/${marathon.poster_img}" alt="마라톤 이미지">
+                                        <img src="/img/marathonPoster/${marathon.poster_img}" alt="마라톤 이미지">
                                     </div>
 
                                     <div class="receiptType">
@@ -119,7 +118,7 @@
             </c:forEach>
         </div>
 
-        <!-- 페이징 UI 추가 -->
+        <!-- 페이징 UI -->
         <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
             <!-- 이전 페이지 버튼 -->
             <c:if test="${pvo.nowPage > 1}">
@@ -129,19 +128,22 @@
             </c:if>
 
             <!-- 페이지 번호 출력 -->
-            <c:forEach var="p" begin="1" end="${pvo.totalPage > 5 ? 5 : pvo.totalPage}">
-                <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
-                    <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
-                </li>
+            <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
+                <c:if test="${p <= pvo.totalPage}">
+                    <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
+                        <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
+                    </li>
+                </c:if>
             </c:forEach>
 
             <!-- 다음 페이지 버튼 -->
-            <c:if test="${pvo.totalPage > 5}">
+            <c:if test="${pvo.nowPage < pvo.totalPage}">
                 <li class="page-item">
-                    <a class="page-link" href="?nowPage=6&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">Next</a>
+                    <a class="page-link" href="?nowPage=${pvo.nowPage + 1}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">&gt;</a>
                 </li>
             </c:if>
         </ul>
+
 
 
     </div>
@@ -228,6 +230,7 @@
             region: addr || null,
             search: searchTerm || null,
             sort1: sortOrder || null
+
         });
         $.ajax({
             url: '/marathon/filter', // 필터링된 데이터를 요청할 엔드포인트
@@ -237,11 +240,13 @@
                 month: month || null,       // 선택한 월
                 addr: addr || null,     // 선택한 지역
                 search: searchTerm || null,  // 검색어
-                sort1: sortOrder || null      // 정렬 기준
+                sort1: sortOrder || null    // 정렬 기준
+
             },
             success: function(response) {
                 console.log("AJAX 응답:", response); // 응답 데이터 확인
                 updateMarathonList(response);
+
             },
             error: function(xhr, status, error) {
                 console.error("AJAX 요청 오류:", status, error);
@@ -273,7 +278,7 @@
                             <div class="marathonC">
                                 <div class="marathonC2" onclick="goToDetailPage(` + marathon.marathon_code + `)">
                                     <div class="marathonListI">
-                                        <img src="/resources/uploadfile/` + marathon.poster_img + `" style="width: 300px; height: 300px;">
+                                        <img src="/img/marathonPoster/` + marathon.poster_img + `" style="width: 300px; height: 300px;">
                                         <div class="receiptType">
                                              <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수 시작 전' ? 'color:green; font-weight: bold;' : '') + `">
                                     ` + marathon.registration_status + `
@@ -300,6 +305,7 @@
 
             $('#marathon-list').append(marathonHTML);
         }
+
     }
 
 

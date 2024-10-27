@@ -801,7 +801,7 @@ public class AdminController {
         if (posterImage != null && !posterImage.isEmpty()) {
             try {
                 // 서버 상대 경로 설정
-                String uploadDir = request.getServletContext().getRealPath("/resources/uploadfile/");
+                String uploadDir = request.getServletContext().getRealPath("/img/marathonPoster/");
 
                 // 업로드 디렉토리가 없으면 생성
                 File dir = new File(uploadDir);
