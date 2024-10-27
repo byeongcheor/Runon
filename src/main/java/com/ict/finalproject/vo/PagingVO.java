@@ -195,14 +195,10 @@ public class PagingVO {
 
     // offset 계산 메서드 추가
     public void calculateOffset() {
-        offset = (nowPage - 1) * onePageRecord;
+        this.offset = (this.nowPage - 1) * this.onePageRecord;
     }
     public void calculateTotalPage() {
-        if (totalRecord == 0) {
-            totalPage = 0;
-        } else {
-            totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
-        }
+        this.totalPage = (int) Math.ceil((double) this.totalRecord / this.onePageRecord);
     }
 
 

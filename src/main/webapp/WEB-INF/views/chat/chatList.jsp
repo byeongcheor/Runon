@@ -3,12 +3,13 @@
 <!-- Bootstrap JS 연결 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- jQuery 연결 -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="/css/chatList.css" type="text/css">
 <!-- 채팅창 영역 -->
 <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
 	<input type='hidden' id=usercode value=${uvo.usercode}>
 	<input type='hidden' id=nickname value=${uvo.nickname}>
+	<input type='hidden' id=gender value=${uvo.gender}>
 </c:forEach>
 <button id="chatButton" class="image-button"></button>
 <div id="chatbox" >
@@ -106,51 +107,53 @@
 	var token = localStorage.getItem("Authorization");
 	var usercode=usercode1;
 	var gender;
-
+	var Authorization = localStorage.getItem("Authorization");
 	/*	var usercode=usercode1;*/
 
 	//채팅연결공통
 
-	setTimeout(function() {
 
-		console.log('User Code:', usercode); // 디버깅용 로그 추가
-		console.log('gender:', gender);
+		setTimeout(function () {
 
-		// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
-		if (!match_yn || match_yn === "undefined") {
-			let storedRoomCode = localStorage.getItem("matchedRoomCode");
-			if (storedRoomCode && storedRoomCode !== "undefined") {
-				match_yn = storedRoomCode;
+			console.log('User Code:', usercode); // 디버깅용 로그 추가
+			console.log('gender:', gender);
+
+			// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
+			if (!match_yn || match_yn === "undefined") {
+				let storedRoomCode = localStorage.getItem("matchedRoomCode");
+				if (storedRoomCode && storedRoomCode !== "undefined") {
+					match_yn = storedRoomCode;
+				} else {
+					console.warn("저장된 방 코드가 없습니다.");
+					return; // 방 코드가 없으면 종료
+				}
 			} else {
-				console.warn("저장된 방 코드가 없습니다.");
-				return; // 방 코드가 없으면 종료
+				// 방 코드가 있을 경우, 로컬 저장소에 저장
+				localStorage.setItem("matchedRoomCode", match_yn);
 			}
-		} else {
-			// 방 코드가 있을 경우, 로컬 저장소에 저장
-			localStorage.setItem("matchedRoomCode", match_yn);
-		}
 
-		// 최종적으로 확인할 방 코드
-		console.log("유효한 방 코드: ", match_yn);
+			// 최종적으로 확인할 방 코드
+			console.log("유효한 방 코드: ", match_yn);
 
-		// 채팅 서버 연결하기
-		chatConnection();
-		// 이전 채팅 내역 불러오기
-		loadChatMessages();
+			// 채팅 서버 연결하기
+			chatConnection(usercode, nickname, match_yn, gender);
+			// 이전 채팅 내역 불러오기
+			loadChatMessages(usercode, match_yn);
 
-		// 서버로 메시지 보내기 (Enter 키)
-		$("#inputMsg").keyup(function(event) {
-			if (event.keyCode === 13) {
-				sendMessageFromInput();
-			}
-		});
 
-		// 서버로 메시지 보내기 (전송 버튼)
-		$("#sendBtn").click(function() {
-			sendMessageFromInput();
-		});
+			// 서버로 메시지 보내기 (Enter 키)
+			$("#inputMsg").keyup(function (event) {
+				if (event.keyCode === 13) {
+					sendMessageFromInput(usercode, nickname, match_yn, gender);
+				}
+			});
 
-	}, 300);
+			// 서버로 메시지 보내기 (전송 버튼)
+			$("#sendBtn").click(function () {
+				sendMessageFromInput(usercode, nickname, match_yn, gender);
+			});
+
+		}, 300);
 
 
 
@@ -186,7 +189,6 @@
 				var jsonMsg = JSON.parse(receiveMsg.body);
 				console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
 
-				console.log('성별:', jsonMsg.gender); // gender 값 확인
 
 				showCatMessage(jsonMsg);
 			});
@@ -201,7 +203,7 @@
 
 
 	// 메시지를 입력창에서 가져와 서버로 전송하는 함수
-	function sendMessageFromInput() {
+	function sendMessageFromInput(usercode, nickname, match_yn, gender) {
 
 		console.log('채팅 입력창:', usercode); // 디버깅용 로그 추가
 
@@ -209,7 +211,7 @@
 		if (inputMsg === "") return false; // 빈 메시지 전송 방지
 
 
-		sendMessage(usercode, nickname, match_yn, inputMsg); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
+		sendMessage(usercode, nickname, match_yn, inputMsg, gender); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
 		$("#inputMsg").val(''); // 입력창 초기화
 	}
 
@@ -243,6 +245,7 @@
 	// 서버로 메시지 전송 함수
 	function sendMessage(usercode, nickname,recipient, content, add_date ,gender) {
 		console.log('메시지 전송:', usercode); // 디버깅용 로그 추가
+		console.log("Sending gender:", gender); // gender 값 확인
 
 		let messageData = {
 			usercode:usercode,
@@ -276,6 +279,7 @@
 			var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
 
 			var gender = data.gender;
+
 			// 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
 			var tag = '';
 
