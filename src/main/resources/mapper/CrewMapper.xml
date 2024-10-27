@@ -19,9 +19,9 @@
     </select>
 
     <select id="crew_teamPhoto" resultType="String">
-        select logo
+        select teamPhoto
         from   crew_write
-        where  teamPhoto = '${param1}'
+        where  crew_write_code = '${param1}'
     </select>
 
     <update id="crew_write_hit_update">
@@ -84,7 +84,7 @@
         and instr(concat(concat(a.addr,' ',a.addr_gu), '@', b.age, '@', b.gender, '@', b.content, '@', a.crew_name), ifnull('${param7}', '')) > 0
         group by a.create_crew_code, a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate, a.create_crew_code,b.crew_write_code
         order by ${param2} desc
-        limit 10 offset ${param1}
+        limit 5 offset ${param1}
     </select>
     <select id="getTotalRecord" resultType="int">
         select count(*)
@@ -100,13 +100,13 @@
     <select id="crewSelectPaging" resultType="com.ict.finalproject.vo.CrewVO">
         select a.create_crew_code ,a.crew_name, a.logo, concat(a.addr,' ',a.addr_gu) as addr, b.gender, b.hits, b.age, b.content,b.crew_write_code
         ,(select count(1) from crew_member_tbl where create_crew_code = a.create_crew_code) as num
-        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code and status = 0) as a_n
+        ,(select count(1) from crew_request_tbl where create_crew_code=a.create_crew_code) as a_n
         from  create_crew_tbl a, crew_write b
         where b.is_delete = 0
         and   a.create_crew_code = b.create_crew_code
         group by a.create_crew_code ,a.crew_name, a.logo,concat(a.addr,' ',a.addr_gu), b.gender, b.hits, b.age, b.content, b.writedate ,a.create_crew_code,b.crew_write_code
         order by b.writedate desc
-        limit 10 offset #{offset}
+        limit 5 offset #{offset}
     </select>
 
     <insert id="crew_insert">
@@ -204,11 +204,13 @@
         CONCAT(a.addr, ' ', a.addr_gu) AS addr,
         DATE_FORMAT(a.writedate, '%Y-%m-%d') AS c_s,
         ${param1} AS b_n,
-        (SELECT COUNT(1) FROM crew_request_tbl WHERE create_crew_code=a.create_crew_code) AS c_n,
+        (SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END FROM crew_request_tbl WHERE create_crew_code = a.create_crew_code AND usercode = ${param1}) AS c_n,
         (SELECT COUNT(1) FROM crew_member_tbl WHERE create_crew_code=${param2}) AS d_n,
         (SELECT AVG(FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25)) FROM user_tbl u JOIN crew_member_tbl cm ON u.usercode = cm.usercode WHERE cm.create_crew_code = ${param2}) AS e_n,
         (SELECT position FROM crew_member_tbl WHERE usercode=${param1} AND create_crew_code=${param2}) AS f_n,
         (SELECT COUNT(1) FROM crew_member_tbl WHERE create_crew_code=a.create_crew_code AND usercode=${param1}) AS g_n,
+        (SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END FROM crew_history_tbl WHERE create_crew_code=${param2} AND usercode=${param1}  AND flag IN (1, 2)) AS h_n,
+        (SELECT COUNT(1) FROM crew_request_tbl WHERE create_crew_code=a.create_crew_code) AS i_n,
         COALESCE(rs.total_score, 0) AS total_score, -- 크루의 총 점수 (없을 시 0)
         COALESCE(rs.crew_rank, 0) AS crew_rank -- 크루의 랭킹 (없을 시 '랭킹 없음')
         FROM
@@ -417,7 +419,7 @@
 
     <select id="crew_app_select" resultType="com.ict.finalproject.vo.CrewVO">
         <![CDATA[
-         select a.nickname,
+        select a.nickname,
             case
             when timestampdiff(minute, b.requested_date , now()) < 1 then '방금 전'
             when timestampdiff(minute, b.requested_date, now()) < 60 then concat(timestampdiff(minute, b.requested_date, now()), '분 전')
@@ -428,11 +430,13 @@
             timestampdiff(year, a.birthdate, curdate()) as b_s, a.addr,
             timestampdiff(year, a.birthdate, curdate()) as a_n, b.status as b_n,
             b.usercode, a.profile_img, c.logo  -- 추가된 필드들
+           , (select coalesce((select flag from crew_history_tbl where usercode = b.usercode  order by withdrawaldate desc limit 1), 0))as d_n
+           , (select coalesce((select DATE_FORMAT(withdrawaldate, '%Y년%m월%d일') from crew_history_tbl where usercode = b.usercode order by withdrawaldate desc   limit 1), ""))as c_s
          from user_tbl a
          join crew_request_tbl b on a.usercode = b.usercode
          join create_crew_tbl c on b.create_crew_code = c.create_crew_code
-         where b.create_crew_code = ${param1}
-         order by b.requested_date desc  -- 최신순 정렬
+         where b.create_crew_code = ${param2}
+         order by b.requested_date desc
     ]]>
     </select>
     <update id="crew_manage_app">

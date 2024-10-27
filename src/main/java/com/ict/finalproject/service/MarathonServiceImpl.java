@@ -126,4 +126,9 @@ public class MarathonServiceImpl implements MarathonService {
         dao.saveMarathon(marathonListVO);
     }
 
+    @Override
+    public List<HospitalVO> getHospitalList(HospitalVO hvo) {
+        return dao.getHospitalList(hvo);
+    }
+
 }

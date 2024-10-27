@@ -165,7 +165,6 @@
     </div>
   </div>
 </div>
-
 <!-- 크루 소유자 위임 모달 -->
 <div id="handoverModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -181,7 +180,6 @@
     </div>
   </div>
 </div>
-
 <!-- 가로 점점점 모달 -->
 <div id="resignModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -269,7 +267,6 @@
     </div>
   </div>
 </div>
-
 <!-- 투표하기 모달 -->
 <div id="voteNowModal" class="custom-modal">
   <div class="custom-modal-content">
@@ -316,7 +313,6 @@
   </div>
 </div>
 
-
 <script>
 const Authorization = localStorage.getItem("Authorization");
 const create_crew_code = ${create_crew_code};
@@ -324,216 +320,213 @@ const user_code = ${user_code};
 const position = ${position};
 var votenum = 4;
 var notice_num;
+    clog('My position : ' + position);
+    clog('My user_code : ' + user_code);
 
 if (position != 1) {
   $('#editCrewBtn').hide();
   $('#vote_delete').hide();
   $('#vote_delete2').hide();
-
-
 }
+
 if (position > 2) {
   $('#voteMake').hide();
   $('#noticeMake').hide();
   $('#vote_update').hide();
   $('#vote_update2').hide();
 }
-
-   clog('My position : ' + position);
-   clog('My user_code : ' + user_code);
-
-    $(document).ready(function() {
-        $('#go_join').hide();
-        $('#member').css('color', 'black');
-        crew_deatil_select();
-        crew_manage_select('');
-        if (position != 1) {
-            $('#wait_cnt').hide();
-        }
-        if (position == 0) {
-            $('#go_join').show();
-            $('#editCrew').hide();
-            $('#editCrewBtn').hide();
-            $('#resignCrew').hide();
-            $('#notice').css('pointer-events', 'none');
-            $('#member').css('pointer-events', 'none');
-            $('.join_info').css('pointer-events', 'none');
-            $('#chatButton').hide();
-
-            // content_right 클릭 시 alert
-            $('.content_right').on('click', function() {
-                alert('맴버만 볼 수 있어요 가입신청해 주세요');
-            });
-        }
-    });
-
-  function crew_deatil_select() {
-       $.ajax({
-          url: '/crew/crew_deatil_select',
-          type: 'post',
-          async: false,
-          data: {
-             Authorization: Authorization,
-             create_crew_code: create_crew_code
-          },
-          success: function(response) {
-              $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
-              $('#crew_name').text(response[0].crew_name);
-              $('#teamNameDisplay').text(response[0].crew_name);
-              $('#crew_ranking').text(response[0].crew_rank + '위  ( ' + response[0].total_score + 'Km )');
-              $('#addr').text(response[0].addr);
-              $('#addr2').text(response[0].addr);
-              $('#crew_info').text(response[0].a_s);
-              $('#member_cnt').text(response[0].d_n + '명');
-              $('#create_date').text(response[0].c_s);
-              $('#member_age_avg').text(response[0].e_n + '세');
-              $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
-          },
-          error: function(e) {
-             console.error('Error: ', e);
-          }
-       });
+$(document).ready(function() {
+    $('#go_join').hide();
+    $('#member').css('color', 'black');
+    crew_deatil_select();
+    crew_manage_select('');
+    if (position != 1) {
+        $('#wait_cnt').hide();
     }
+    if (position == 0) {
+        $('#go_join').show();
+        $('#editCrew').hide();
+        $('#editCrewBtn').hide();
+        $('#resignCrew').hide();
+        $('#notice').css('pointer-events', 'none');
+        $('#member').css('pointer-events', 'none');
+        $('.join_info').css('pointer-events', 'none');
+        $('#chatButton').hide();
 
-   function vote_rud(flag) {
+        // content_right 클릭 시 alert
+        $('.content_right').on('click', function() {
+            alert('맴버만 볼 수 있어요 가입신청해 주세요');
+        });
+    }
+});
 
-          if (flag == 'D') {
-              // 삭제 확인 메시지
-              var confirmDelete = confirm("정말로 투표를 삭제하시겠습니까?");
-              if (!confirmDelete) {
-                  // 사용자가 취소를 누르면 삭제 작업을 중단
-                  return;
-              }
+function crew_deatil_select() {
+   $.ajax({
+      url: '/crew/crew_deatil_select',
+      type: 'post',
+      async: false,
+      data: {
+         Authorization: Authorization,
+         create_crew_code: create_crew_code
+      },
+      success: function(response) {
+          $('#crew_img').attr('src', '/crew_upload/' + response[0].logo);
+          $('#crew_name').text(response[0].crew_name);
+          $('#teamNameDisplay').text(response[0].crew_name);
+          $('#crew_ranking').text(response[0].crew_rank + '위  ( ' + response[0].total_score + 'Km )');
+          $('#addr').text(response[0].addr);
+          $('#addr2').text(response[0].addr);
+          $('#crew_info').text(response[0].a_s);
+          $('#member_cnt').text(response[0].d_n + '명');
+          $('#create_date').text(response[0].c_s);
+          $('#member_age_avg').text(response[0].e_n + '세');
+          $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
+      },
+      error: function(e) {
+         console.error('Error: ', e);
+      }
+   });
+}
+
+function vote_rud(flag) {
+
+      if (flag == 'D') {
+          // 삭제 확인 메시지
+          var confirmDelete = confirm("정말로 투표를 삭제하시겠습니까?");
+          if (!confirmDelete) {
+              // 사용자가 취소를 누르면 삭제 작업을 중단
+              return;
           }
-
-         $.ajax({
-            url: '/crew/vote_rud',
-            type: 'post',
-            async: false,
-            data: {
-               Authorization   : Authorization,
-               create_crew_code: create_crew_code,
-               flag            : flag,
-               vote_num        : $('#vote_num').val(),
-               title           : $('#voteTitle').val(),
-               opt1            : $('#vote1').val(),
-               opt2            : $('#vote2').val(),
-               opt3            : $('#vote3').val(),
-               opt4            : $('#vote4').val(),
-               opt5            : $('#vote5').val(),
-               endDate         : $('#voteDeadline').val()
-            },
-            success: function(response) {
-               if(flag=='R'){
-                   clog(response[0].a_n);
-                   if(response[0].a_n>0){
-                       alert('투표한 인원이 있어서 수정이 불가능합니다.');
-                       return false;
-                   }
-                   $('#voteTitle').val(response[0].subject);
-                   $('#voteDeadline').val(response[0].enddate);
-                   $('#vote1').val(response[0].opt1);
-                   $('#vote2').val(response[0].opt2);
-                   $('#vote3').val(response[0].opt3);
-                   if(response[0].opt4!='' && votenum<5){
-                       addVoteItem();
-                       $('#vote4').val(response[0].opt4);
-                   }
-                   if(response[0].opt5!=''&& votenum<6){
-                       addVoteItem();
-                       $('#vote5').val(response[0].opt5);
-                   }
-                   openVoteModal(flag);
-               }
-               if(flag=='U'){
-                   alert('수정되었습니다.');
-                   closeVoteModal();
-                   closeCustomModal();
-                   $('#notice').click();
-               }
-               if(flag=='D'){
-                   closeCustomModal()
-                   alert('투표가 삭제되었습니다.');
-                   $('#notice').click();
-               }
-            },
-            error: function(e) {
-               console.error('Error: ', e);
-            }
-         });
       }
 
-   function crew_manage_select(element) {
-      var id = element.id === undefined ? 'overview' : element.id;
-      $('[name="crew_select"]').css('color', 'gray');
-      $('#' + id).css('color', 'black');
-      console.log("Selected id: ", id);
-      $.ajax({
-         url: '/crew/crew_manage_select',
-         type: 'post',
-         async: false,
-         data: {
-            Authorization: Authorization,
-            create_crew_code: create_crew_code,
-            id: id
-         },
-         success: function(response) {
-            $('#crew_manage_list').html('');
-            if (id == 'member') {
-               crew_manage_select_member(response);
-               document.querySelector('.section2').style.display = 'none';
-            } else if (id == 'overview') {
-               crew_overview(response);
-               document.querySelector('.section2').style.display = 'block';
-            } else if (id == 'notice') {
-               crew_notice(response);
-               document.querySelector('.section2').style.display = 'none';
-            }
-         },
-         error: function(e) {
-            console.error('Error: ', e);
-         }
-      });
-   }
+     $.ajax({
+        url: '/crew/vote_rud',
+        type: 'post',
+        async: false,
+        data: {
+           Authorization   : Authorization,
+           create_crew_code: create_crew_code,
+           flag            : flag,
+           vote_num        : $('#vote_num').val(),
+           title           : $('#voteTitle').val(),
+           opt1            : $('#vote1').val(),
+           opt2            : $('#vote2').val(),
+           opt3            : $('#vote3').val(),
+           opt4            : $('#vote4').val(),
+           opt5            : $('#vote5').val(),
+           endDate         : $('#voteDeadline').val()
+        },
+        success: function(response) {
+           if(flag=='R'){
+               clog(response[0].a_n);
+               if(response[0].a_n>0){
+                   alert('투표한 인원이 있어서 수정이 불가능합니다.');
+                   return false;
+               }
+               $('#voteTitle').val(response[0].subject);
+               $('#voteDeadline').val(response[0].enddate);
+               $('#vote1').val(response[0].opt1);
+               $('#vote2').val(response[0].opt2);
+               $('#vote3').val(response[0].opt3);
+               if(response[0].opt4!='' && votenum<5){
+                   addVoteItem();
+                   $('#vote4').val(response[0].opt4);
+               }
+               if(response[0].opt5!=''&& votenum<6){
+                   addVoteItem();
+                   $('#vote5').val(response[0].opt5);
+               }
+               openVoteModal(flag);
+           }
+           if(flag=='U'){
+               alert('수정되었습니다.');
+               closeVoteModal();
+               closeCustomModal();
+               $('#notice').click();
+           }
+           if(flag=='D'){
+               closeCustomModal()
+               alert('투표가 삭제되었습니다.');
+               $('#notice').click();
+           }
+        },
+        error: function(e) {
+           console.error('Error: ', e);
+        }
+     });
+}
 
-   function crew_manage_select_member(response) {
-      var list = '';
-      if (response[0].f_n > 0 && response[0].a_n == 1) {
-         list += '<div class="join_info" onClick="go_request_wait()" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
-         list += '   <span id="wait_cnt">';
-         list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
-         list += '   </span>';
-         list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
-         list += '</div>';
-      }
-      for (var i in response) {
-         var imgSrc = response[i].a_s ? response[i].a_s.trim() : 'basicimg.png';
-         list += '<li class="member-item"> ';
-         list += '<div class="item-flex"> ';
-         list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="profile-img">';
-         list += '   <div class="profile-info"> ';
-         list += '     <div class="info-wrapper"> ';
-         list += '      <p class="name">' + response[i].b_s + '</p> ';
-         if (response[i].a_n == 1) {
-            list += '      <div class="label-operator" style="background-color: #e8f7ff; color: #1570ff;  font-weight: 800;">크루장</div> ';
-         }
-         if (response[i].a_n == 2) {
-            list += '      <div class="label-operator">운영진</div> ';
-         }
-         list += '     </div> ';
-         list += '   </div> ';
-         list += '  <div class="menu"> ';
-         list += '   <div class="dropdown"> ';
-         if (user_code != response[i].usercode && response[i].b_n > 0) {
-            list += '<div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname.replace(/\'/g, "\\'") + '\', \'' + response[i].a_n + '\', \'' + (response[i].a_s ? response[i].a_s.trim() : 'basicimg.png') + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div>';         }
-         list += '   </div> ';
-         list += '  </div> ';
-         list += '</div> ';
-         list += '</li> ';
-      }
-      console.log("Generated list: ", list);
-      $('#crew_manage_list').append(list);
-   }
+function crew_manage_select(element) {
+  var id = element.id === undefined ? 'overview' : element.id;
+  $('[name="crew_select"]').css('color', 'gray');
+  $('#' + id).css('color', 'black');
+  console.log("Selected id: ", id);
+  $.ajax({
+     url: '/crew/crew_manage_select',
+     type: 'post',
+     async: false,
+     data: {
+        Authorization: Authorization,
+        create_crew_code: create_crew_code,
+        id: id
+     },
+     success: function(response) {
+        $('#crew_manage_list').html('');
+        if (id == 'member') {
+           crew_manage_select_member(response);
+           document.querySelector('.section2').style.display = 'none';
+        } else if (id == 'overview') {
+           crew_overview(response);
+           document.querySelector('.section2').style.display = 'block';
+        } else if (id == 'notice') {
+           crew_notice(response);
+           document.querySelector('.section2').style.display = 'none';
+        }
+     },
+     error: function(e) {
+        console.error('Error: ', e);
+     }
+  });
+}
+
+function crew_manage_select_member(response) {
+  var list = '';
+  if (response[0].f_n > 0 && response[0].a_n == 1 && position == 1) {
+     list += '<div class="join_info" onClick="go_request_wait()" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">';
+     list += '   <span id="wait_cnt">';
+     list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
+     list += '   </span>';
+     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
+     list += '</div>';
+  }
+  for (var i in response) {
+     var imgSrc = response[i].a_s ? response[i].a_s.trim() : 'basicimg.png';
+     list += '<li class="member-item"> ';
+     list += '<div class="item-flex"> ';
+     list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="profile-img">';
+     list += '   <div class="profile-info"> ';
+     list += '     <div class="info-wrapper"> ';
+     list += '      <p class="name">' + response[i].b_s + '</p> ';
+     if (response[i].a_n == 1) {
+        list += '      <div class="label-operator" style="background-color: #e8f7ff; color: #1570ff;  font-weight: 800;">크루장</div> ';
+     }
+     if (response[i].a_n == 2) {
+        list += '      <div class="label-operator">운영진</div> ';
+     }
+     list += '     </div> ';
+     list += '   </div> ';
+     list += '  <div class="menu"> ';
+     list += '   <div class="dropdown"> ';
+     if (user_code != response[i].usercode && response[i].b_n > 0) {
+        list += '<div class="more-icon" onclick="openCustomModal(' + response[i].usercode + ', \'' + response[i].nickname.replace(/\'/g, "\\'") + '\', \'' + response[i].a_n + '\', \'' + (response[i].a_s ? response[i].a_s.trim() : 'basicimg.png') + '\')"> <img src="/img/dots.png" alt="dots icon" style="width: 20px; height: 20px;"></div>';         }
+     list += '   </div> ';
+     list += '  </div> ';
+     list += '</div> ';
+     list += '</li> ';
+  }
+  // console.log("Generated list: ", list);
+  $('#crew_manage_list').append(list);
+}
 
 function crew_overview(response) {
     var list = '';
@@ -546,8 +539,8 @@ function crew_overview(response) {
 
     var memberCount = 0;
     for (var i = 0; i < response.length; i++) {
-        if (response[i].a_n === 0) {  // a_n이 0인 경우는 주요 멤버
-            if (memberCount >= 4) break;  // 멤버 5명까지만 출력
+        if (response[i].a_n === 0) {
+            if (memberCount >= 4) break;
             var imgSrc = response[i].subject ? response[i].subject.trim() : 'basicimg.png';
             list += '<li class="member-item">';
             list += '<div class="item-flex">';
@@ -565,7 +558,6 @@ function crew_overview(response) {
             memberCount++;
         }
     }
-    // 최신 공지 및 투표 정보 출력
     list += '<div class="join_info" onClick="crew_manage_select(notice)" style="display: flex; justify-content: space-between; margin-top:10px;align-items: center; cursor: pointer;">';
     list += '<div class="overview_title">최신 공지</div>';
     list += '<div class="member_more">전체 보기</div>';
@@ -877,245 +869,249 @@ function uploadImages(event) {
         }
     });
 }
-    // 이미지 삭제
-    function delete_image(notice_num,imageName) {
-        var crewNoticeCode = $('#crew_notice_code').val();
-        $.ajax({
-            url: '/crew/delete_image',
-            type: 'POST',
-            data: {
-                Authorization     : Authorization,
-                img_name   : imageName,
-                notice_num : notice_num
-            },
-            success: function(response) {
-                if (response === 1) {
-                    $('.image-container').filter(function() {
-                      return $(this).data('image-name') === imageName;
-                    }).remove();                } else {
-                    alert('이미지 삭제에 실패했습니다.');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
+
+// 이미지 삭제
+function delete_image(notice_num,imageName) {
+    var crewNoticeCode = $('#crew_notice_code').val();
+    $.ajax({
+        url: '/crew/delete_image',
+        type: 'POST',
+        data: {
+            Authorization     : Authorization,
+            img_name   : imageName,
+            notice_num : notice_num
+        },
+        success: function(response) {
+            if (response === 1) {
+                $('.image-container').filter(function() {
+                  return $(this).data('image-name') === imageName;
+                }).remove();                } else {
+                alert('이미지 삭제에 실패했습니다.');
             }
-        });
-    }
-   function update_notice(notice_num){
-        $.ajax({
-           url: '/crew/update_notice',
-           type: 'POST',
-           data: {
-               Authorization     : Authorization,
-               notice_num : notice_num,
-               subject : $('#notice_detail_title').val(),
-               content : $('#notice_detail_content').val()
-           },
-           success: function(response) {
-                alert('수정 되었습니다.')
-                noticeDetail(notice_num, 1,'Y')
-           },
-           error: function(xhr, status, error) {
-               console.error(error);
-           }
-        });
-   }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
 
-   function notice_delete(notice_num){
-        $.ajax({
-          url: '/crew/delete_notice',
-          type: 'POST',
-          data: {
-              Authorization     : Authorization,
-              notice_num   : notice_num,
-          },
-          success: function(response) {
-               $('#crew_manage_list').html('');
-                alert('삭제 되었습니다.')
-                $('#menu_bar').show();
-                $('#notice').click();
-          },
-          error: function(xhr, status, error) {
-              console.error(error);
-          }
-        });
-   }
+function update_notice(notice_num){
+    $.ajax({
+       url: '/crew/update_notice',
+       type: 'POST',
+       data: {
+           Authorization     : Authorization,
+           notice_num : notice_num,
+           subject : $('#notice_detail_title').val(),
+           content : $('#notice_detail_content').val()
+       },
+       success: function(response) {
+            alert('수정 되었습니다.')
+            noticeDetail(notice_num, 1,'Y')
+       },
+       error: function(xhr, status, error) {
+           console.error(error);
+       }
+    });
+}
 
-    function close_notice_detail(){
-        $('#crew_manage_list').html('');
-        $('#menu_bar').show();
-        $('#notice').click();
-    }
-   function openCustomModal(usercode, nickname, user_position , imgSrc) {
-        console.log("imgSrcimgSrcimgSrcimgSrc",imgSrc)
-        $('#member_img').attr('src', '/resources/uploadfile/' + imgSrc.trim());
-         $('#usercode').val(usercode);
-         $('#member_name').text(nickname);
-         if (position == 1) {
-            $('#manage2').show();
-            $('#manage3').show();
-            $('#out').show();
-         } else {
-            $('#manage2').hide();
-            $('#manage3').hide();
-            $('#out').hide();
-         }
-         if (user_position == 2) $('#manage2').hide();
-         if (user_position == 3) $('#manage3').hide();
-
-         document.getElementById('customModal').style.display = 'block';
+function notice_delete(notice_num){
+    $.ajax({
+      url: '/crew/delete_notice',
+      type: 'POST',
+      data: {
+          Authorization     : Authorization,
+          notice_num   : notice_num,
+      },
+      success: function(response) {
+           $('#crew_manage_list').html('');
+            alert('삭제 되었습니다.')
+            $('#menu_bar').show();
+            $('#notice').click();
+      },
+      error: function(xhr, status, error) {
+          console.error(error);
       }
+    });
+}
 
-   function go_request_wait() {
-       $.ajax({
-           url: '/crew/go_crewApp',  // 서버에 전송할 URL
-           type: 'POST',  // POST 방식으로 전송
+function close_notice_detail(){
+    $('#crew_manage_list').html('');
+    $('#menu_bar').show();
+    $('#notice').click();
+}
+function openCustomModal(usercode, nickname, user_position , imgSrc) {
+    console.log("imgSrcimgSrcimgSrcimgSrc",imgSrc)
+    $('#member_img').attr('src', '/resources/uploadfile/' + imgSrc.trim());
+     $('#usercode').val(usercode);
+     $('#member_name').text(nickname);
+     if (position == 1) {
+        $('#manage2').show();
+        $('#manage3').show();
+        $('#out').show();
+     } else {
+        $('#manage2').hide();
+        $('#manage3').hide();
+        $('#out').hide();
+     }
+     if (user_position == 2) $('#manage2').hide();
+     if (user_position == 3) $('#manage3').hide();
+
+     document.getElementById('customModal').style.display = 'block';
+  }
+
+function go_request_wait() {
+   $.ajax({
+       url: '/crew/go_crewApp',  // 서버에 전송할 URL
+       type: 'POST',  // POST 방식으로 전송
+       data: {
+           Authorization     : Authorization,
+           create_crew_code  : create_crew_code,
+           position          : position
+       },
+       success: function(response) {
+           window.location.href = '/crew/crewApp'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+       },
+       error: function(error) {
+           console.log('에러 발생:', error);
+       }
+   });
+
+}
+
+function crewRevise() {
+    $.ajax({
+        url: '/crew/go_crewRevise',
+        type: 'POST',  // POST 방식으로 전송
+        data: {
+            Authorization    : Authorization,
+            create_crew_code : create_crew_code,
+            user_code        : user_code,
+        },
+        success: function(response) {
+            window.location.href = '/crew/crewRevise';
+        },
+        error: function(error) {
+            console.log('에러 발생:', error);
+        }
+    });
+}
+
+function member_manage(element, flag) {
+  var id = element.id;
+  if(id===undefined)id=flag;
+  var reason = '';
+  var checkedValues = [];
+  if (id == 'report') {
+     $('input[name="report_reason"]:checked').each(function() {
+        checkedValues.push($(this).val());
+     });
+     reason = checkedValues.join(',');
+  }
+  if (id == 'out') {
+      var confirmation = confirm('정말 이 유저를 강퇴하시겠습니까?');
+      if (!confirmation) {
+          return; // 사용자가 취소하면 함수 종료
+      }
+  }
+  $.ajax({
+     url: '/crew/member_manage',
+     type: 'post',
+     async: false,
+     data: {
+        Authorization: Authorization,
+        create_crew_code: create_crew_code,
+        id: id,
+        usercode: $('#usercode').val(),
+        reason: reason,
+        reason_text: $('#report_content').val()
+     },
+     success: function(response) {
+        if (response == 1) alert('운영진으로 추가되었습니다.');
+        if (response == 4) alert('일반크루로 변경되었습니다.');
+        if (response == 2) alert('신고접수가 되었습니다.');
+        if (response == 3) alert('유저가 강퇴되었습니다.');
+        closeCustomModal();
+        closeRejectModal();
+        $('#member').click();
+     },
+     error: function(e) {
+        console.error('Error: ', e);
+     }
+  });
+}
+
+function openRejectModal() {
+  document.getElementById("rejectModal").style.display = "block";
+}
+
+function closeRejectModal() {
+  document.getElementById("rejectModal").style.display = "none";
+}
+
+function confirmRejection() {
+  alert("신고 사유가 제출되었습니다.");
+  closeRejectModal();
+}
+
+document.getElementById("editCrewBtn").addEventListener("click", function() {
+  document.getElementById("informationModal").style.display = "block";
+});
+
+document.getElementById("handoverCrewBtn").addEventListener("click", function() {
+  document.getElementById("informationModal").style.display = "none";
+  document.getElementById("handoverModal").style.display = "block";
+});
+
+function closeHandoverModal() {
+  document.getElementById("handoverModal").style.display = "none";
+  document.getElementById("informationModal").style.display = "block";
+}
+
+function closeCustomModal() {
+  document.getElementById("customModal").style.display = "none";
+  document.getElementById("informationModal").style.display = "none";
+  document.getElementById("resignModal").style.display = "none";
+  document.getElementById("voteNowModal").style.display = "none";
+  document.getElementById("voteResultModal").style.display = "none";
+}
+
+function handoverOwnership() {
+  var selectedRadio = $('input[name="teamOwner"]:checked'); // 체크된 라디오 버튼
+  var usercode = selectedRadio.val(); // 라디오 버튼의 value 값
+  var bsValue = selectedRadio.data('bs'); // 라디오 버튼의 data-bs 값
+
+  if(!confirm(bsValue+"님께 위임하시겠습니까?"))return false;
+
+    $.ajax({
+           url: '/crew/entrust',
+           type: 'POST',
+           async: false,
            data: {
-               Authorization     : Authorization,
-               create_crew_code  : create_crew_code,
-               position          : position
+               Authorization: Authorization,
+               create_crew_code: create_crew_code,
+               usercode: usercode
            },
            success: function(response) {
-               window.location.href = '/crew/crewApp'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+              alert("크루 소유자가 위임되었습니다.");
+              location.reload(true);
            },
-           error: function(error) {
-               console.log('에러 발생:', error);
+           error: function(e) {
+               console.error('Error: ', e);
            }
        });
+  closeHandoverModal();
+  closeCustomModal();
 
-   }
+}
 
-   function crewRevise() {
-        $.ajax({
-            url: '/crew/go_crewRevise',
-            type: 'POST',  // POST 방식으로 전송
-            data: {
-                Authorization    : Authorization,
-                create_crew_code : create_crew_code,
-                user_code        : user_code,
-            },
-            success: function(response) {
-                window.location.href = '/crew/crewRevise';
-            },
-            error: function(error) {
-                console.log('에러 발생:', error);
-            }
-        });
-   }
+function closeNicknameModal() {
+  document.getElementById('nicknameModal').style.display = 'none';
+}
 
-   function member_manage(element, flag) {
-      var id = element.id;
-      if(id===undefined)id=flag;
-      var reason = '';
-      var checkedValues = [];
-      if (id == 'report') {
-         $('input[name="report_reason"]:checked').each(function() {
-            checkedValues.push($(this).val());
-         });
-         reason = checkedValues.join(',');
-      }
-      if (id == 'out') {
-          var confirmation = confirm('정말 이 유저를 강퇴하시겠습니까?');
-          if (!confirmation) {
-              return; // 사용자가 취소하면 함수 종료
-          }
-      }
-      $.ajax({
-         url: '/crew/member_manage',
-         type: 'post',
-         async: false,
-         data: {
-            Authorization: Authorization,
-            create_crew_code: create_crew_code,
-            id: id,
-            usercode: $('#usercode').val(),
-            reason: reason,
-            reason_text: $('#report_content').val()
-         },
-         success: function(response) {
-            if (response == 1) alert('운영진으로 추가되었습니다.');
-            if (response == 4) alert('일반크루로 변경되었습니다.');
-            if (response == 2) alert('신고접수가 되었습니다.');
-            if (response == 3) alert('유저가 강퇴되었습니다.');
-            closeCustomModal();
-            closeRejectModal();
-            $('#member').click();
-         },
-         error: function(e) {
-            console.error('Error: ', e);
-         }
-      });
-   }
-
-   function openRejectModal() {
-      document.getElementById("rejectModal").style.display = "block";
-   }
-
-   function closeRejectModal() {
-      document.getElementById("rejectModal").style.display = "none";
-   }
-
-   function confirmRejection() {
-      alert("신고 사유가 제출되었습니다.");
-      closeRejectModal();
-   }
-
-   document.getElementById("editCrewBtn").addEventListener("click", function() {
-      document.getElementById("informationModal").style.display = "block";
-   });
-
-   document.getElementById("handoverCrewBtn").addEventListener("click", function() {
-      document.getElementById("informationModal").style.display = "none";
-      document.getElementById("handoverModal").style.display = "block";
-   });
-
-   function closeHandoverModal() {
-      document.getElementById("handoverModal").style.display = "none";
-      document.getElementById("informationModal").style.display = "block";
-   }
-   function closeCustomModal() {
-      document.getElementById("customModal").style.display = "none";
-      document.getElementById("informationModal").style.display = "none";
-      document.getElementById("resignModal").style.display = "none";
-      document.getElementById("voteNowModal").style.display = "none";
-      document.getElementById("voteResultModal").style.display = "none";
-   }
-   function handoverOwnership() {
-      var selectedRadio = $('input[name="teamOwner"]:checked'); // 체크된 라디오 버튼
-      var usercode = selectedRadio.val(); // 라디오 버튼의 value 값
-      var bsValue = selectedRadio.data('bs'); // 라디오 버튼의 data-bs 값
-
-      if(!confirm(bsValue+"님께 위임하시겠습니까?"))return false;
-
-        $.ajax({
-               url: '/crew/entrust',
-               type: 'POST',
-               async: false,
-               data: {
-                   Authorization: Authorization,
-                   create_crew_code: create_crew_code,
-                   usercode: usercode
-               },
-               success: function(response) {
-                  alert("크루 소유자가 위임되었습니다.");
-                  location.reload(true);
-               },
-               error: function(e) {
-                   console.error('Error: ', e);
-               }
-           });
-      closeHandoverModal();
-      closeCustomModal();
-
-   }
-
-   function closeNicknameModal() {
-      document.getElementById('nicknameModal').style.display = 'none';
-   }
-
-   function openResignModal(flag) {
-      if(flag!=='U')document.getElementById("resignModal").style.display = "block";
-   }
+function openResignModal(flag) {
+  if(flag!=='U')document.getElementById("resignModal").style.display = "block";
+}
 
 function resignTeam() {
     // 크루탈퇴 확인 메시지
@@ -1190,279 +1186,278 @@ function deleteTeam() {
     }
 }
 
+function addVoteItem() {
+  const voteItems = document.getElementById('voteItems');
+  const newItem = document.createElement('div');
+  newItem.classList.add('vote-item');
 
-   function addVoteItem() {
-      const voteItems = document.getElementById('voteItems');
-      const newItem = document.createElement('div');
-      newItem.classList.add('vote-item');
+  newItem.innerHTML =
+     '<input type="text" class="input-field" name=vote_opt id="vote' + votenum + '" placeholder="항목 입력">' +
+     '<button class="remove-item-button" onclick="removeVoteItem(this)">&times;</button>';
+  voteItems.appendChild(newItem);
+  votenum++;
+  if (votenum > 5) $('#addVoteBtn').hide();
+}
 
-      newItem.innerHTML =
-         '<input type="text" class="input-field" name=vote_opt id="vote' + votenum + '" placeholder="항목 입력">' +
-         '<button class="remove-item-button" onclick="removeVoteItem(this)">&times;</button>';
-      voteItems.appendChild(newItem);
-      votenum++;
-      if (votenum > 5) $('#addVoteBtn').hide();
-   }
+function removeVoteItem(button) {
+  const voteItem = button.parentElement;
+ clog(button);
+  voteItem.remove();
+  votenum--;
+  if (votenum < 6) $('#addVoteBtn').show();
+}
 
-   function removeVoteItem(button) {
-      const voteItem = button.parentElement;
-     clog(button);
-      voteItem.remove();
-      votenum--;
-      if (votenum < 6) $('#addVoteBtn').show();
-   }
+function showVoterList(voters) {
+    // voters를 콤마(,)로 나누어 배열로 변환
+    var voterArray = voters.split(',');
 
-    function showVoterList(voters) {
-        // voters를 콤마(,)로 나누어 배열로 변환
-        var voterArray = voters.split(',');
+    // li 태그로 각 투표자를 나열
+    var listItems = '';
+    voterArray.forEach(function(voter) {
+        listItems += '<li style="margin-left:60px;">' + voter.trim() + '</li>';  // trim()으로 공백 제거
+    });
 
-        // li 태그로 각 투표자를 나열
-        var listItems = '';
-        voterArray.forEach(function(voter) {
-            listItems += '<li style="margin-left:60px;">' + voter.trim() + '</li>';  // trim()으로 공백 제거
-        });
+    // 모달을 보여주고 리스트에 추가
+    document.getElementById('nicknameModal').style.display = 'block';
+    $('#nickname_list').html(listItems);  // nickname_list에 li 태그로 추가
+}
 
-        // 모달을 보여주고 리스트에 추가
-        document.getElementById('nicknameModal').style.display = 'block';
-        $('#nickname_list').html(listItems);  // nickname_list에 li 태그로 추가
+function openVoteModal(flag) {
+  closeCustomModal();
+
+    if(flag=='R'){
+      $('#vote_insert_btn').hide();
+      $('#vote_update_btn').show();
     }
+    else{
+      votenum = 4;
+      $('.remove-item-button').remove();//추가된 칸 지우기
+      $('#vote4').remove();//추가된 칸 지우기
+      $('#vote5').remove();//추가된 칸 지우기
+      $('#vote_insert_btn').show();
+      $('#addVoteBtn').show();
+      $('#vote_update_btn').hide();
+      $('#voteDeadline').val('');
+      $('#voteTitle').val('');
+      $('#vote1').val('');
+      $('#vote2').val('');
+      $('#vote3').val('');
+    }
+  document.getElementById('voteModal').style.display = 'block';
+}
 
-   function openVoteModal(flag) {
-      closeCustomModal();
+function closeVoteModal() {
+  document.getElementById('voteModal').style.display = 'none';
+  openResignModal('U');
+}
 
-        if(flag=='R'){
-          $('#vote_insert_btn').hide();
-          $('#vote_update_btn').show();
-        }
-        else{
-          votenum = 4;
-          $('.remove-item-button').remove();//추가된 칸 지우기
-          $('#vote4').remove();//추가된 칸 지우기
-          $('#vote5').remove();//추가된 칸 지우기
-          $('#vote_insert_btn').show();
-          $('#addVoteBtn').show();
-          $('#vote_update_btn').hide();
-          $('#voteDeadline').val('');
-          $('#voteTitle').val('');
-          $('#vote1').val('');
-          $('#vote2').val('');
-          $('#vote3').val('');
-        }
-      document.getElementById('voteModal').style.display = 'block';
+function submitVote() {
+  const title = document.getElementById('voteTitle').value;
+  const deadline = document.getElementById('voteDeadline').value;
+
+  if (!deadline) {
+     alert('마감시간을 설정해주세요.');
+     return;
+  }
+
+  const currentTime = new Date();
+  const voteDeadlineTime = new Date(deadline);
+  const fiveMinutesInMillis = 10 * 60 * 1000;
+  if (voteDeadlineTime - currentTime < fiveMinutesInMillis) {
+     alert('마감시간은 현재 시간 기준으로 최소 10분 이후여야 합니다. 다시 설정해주세요.');
+     return;
+  }
+
+  $.ajax({
+     url: '/crew/vote_create',
+     type: 'post',
+     async: false,
+     data: {
+        Authorization: Authorization,
+        create_crew_code: create_crew_code,
+        title: title,
+        opt1: $('#vote1').val(),
+        opt2: $('#vote2').val(),
+        opt3: $('#vote3').val(),
+        opt4: $('#vote4').val(),
+        opt5: $('#vote5').val(),
+        endDate: deadline
+     },
+     success: function(response) {
+        alert('투표가 제출되었습니다.');
+        $('#notice').click();
+     },
+     error: function(e) {
+        console.error('Error: ', e);
+     }
+  });
+  closeVoteModal();
+}
+
+function voteNow(vote_num, flag, vote_user_code) {
+   clog('vote_num : ' + vote_num);
+   clog('position : ' + position);
+
+   $('#vote_num').val(vote_num);  // vote_num 설정
+   $('#vote_user_code').val(vote_user_code);  // vote_user_code 설정
+
+   // position이 1이면 특정 버튼만 남기고 나머지 버튼 숨김
+   if (position == 1) {
+       $('#vote_update').show();
+       $('#vote_delete').show();
+       $('#vote_cancel').hide();
+       $('#vote_update2').show();
+       $('#vote_close2').hide();
    }
-
-   function closeVoteModal() {
-      document.getElementById('voteModal').style.display = 'none';
-      openResignModal('U');
-   }
-
-   function submitVote() {
-      const title = document.getElementById('voteTitle').value;
-      const deadline = document.getElementById('voteDeadline').value;
-
-      if (!deadline) {
-         alert('마감시간을 설정해주세요.');
-         return;
-      }
-
-      const currentTime = new Date();
-      const voteDeadlineTime = new Date(deadline);
-      const fiveMinutesInMillis = 10 * 60 * 1000;
-      if (voteDeadlineTime - currentTime < fiveMinutesInMillis) {
-         alert('마감시간은 현재 시간 기준으로 최소 10분 이후여야 합니다. 다시 설정해주세요.');
-         return;
-      }
-
-      $.ajax({
-         url: '/crew/vote_create',
-         type: 'post',
-         async: false,
-         data: {
-            Authorization: Authorization,
-            create_crew_code: create_crew_code,
-            title: title,
-            opt1: $('#vote1').val(),
-            opt2: $('#vote2').val(),
-            opt3: $('#vote3').val(),
-            opt4: $('#vote4').val(),
-            opt5: $('#vote5').val(),
-            endDate: deadline
-         },
-         success: function(response) {
-            alert('투표가 제출되었습니다.');
-            $('#notice').click();
-         },
-         error: function(e) {
-            console.error('Error: ', e);
-         }
-      });
-      closeVoteModal();
-   }
-
-   function voteNow(vote_num, flag, vote_user_code) {
-       clog('vote_num : ' + vote_num);
-       clog('position : ' + position);
-
-       $('#vote_num').val(vote_num);  // vote_num 설정
-       $('#vote_user_code').val(vote_user_code);  // vote_user_code 설정
-
-       // position이 1이면 특정 버튼만 남기고 나머지 버튼 숨김
-       if (position == 1) {
-           $('#vote_update').show();
-           $('#vote_delete').show();
-           $('#vote_cancel').hide();
-           $('#vote_update2').show();
-           $('#vote_close2').hide();
+   // 사용자 본인이면서 position이 2인 경우
+   else if (position == 2) {
+       if (vote_user_code == user_code) {
+           $('#vote_update').show();  // 수정 버튼 보이기
+           $('#vote_update2').show(); // 추가 수정 버튼 보이기
+           $('#vote_close2').removeClass().addClass('vote-btn');
+           $('#vote_submit').css('width', ''); // width 값을 빈 문자열로 설정하여 제거
+       } else {
+           $('#vote_update').hide();  // 수정 버튼 숨기기
+           $('#vote_update2').hide(); // 추가 수정 버튼 숨기기
+           $('#vote_submit').css('width', '100%'); // width 값을 빈 문자열로 설정하여 제거
+           $('#vote_close2').removeClass().addClass('vote-btn');
        }
-       // 사용자 본인이면서 position이 2인 경우
-       else if (position == 2) {
-           if (vote_user_code == user_code) {
-               $('#vote_update').show();  // 수정 버튼 보이기
-               $('#vote_update2').show(); // 추가 수정 버튼 보이기
-               $('#vote_close2').removeClass().addClass('vote-btn');
-               $('#vote_submit').css('width', ''); // width 값을 빈 문자열로 설정하여 제거
-           } else {
-               $('#vote_update').hide();  // 수정 버튼 숨기기
-               $('#vote_update2').hide(); // 추가 수정 버튼 숨기기
-               $('#vote_submit').css('width', '100%'); // width 값을 빈 문자열로 설정하여 제거
-               $('#vote_close2').removeClass().addClass('vote-btn');
+   }
+   // 다른 사용자인 경우, position이 3인 경우
+   else if (position == 3) {
+       $('#vote_update').hide();   // 수정 버튼 숨기기
+       $('#vote_update2').hide();  // 추가 수정 버튼 숨기기
+       $('#vote_close2').show();   // 닫기 버튼 보이기
+       $('#vote_delete').hide();   // 삭제 버튼 숨기기
+       $('#vote_cancel').show();   // 취소 버튼 보이기
+   }
+
+     $.ajax({
+        url: '/crew/vote_select',
+        type: 'post',
+        async: false,
+        data: {
+           Authorization: Authorization,
+           create_crew_code: create_crew_code,
+           vote_num: vote_num
+        },
+        success: function(response) {
+           $('#vote_list').html('');
+           $('#vote_results').html('');
+           if(user_code != response[0].usercode && position!=1)$('#editCrewBtn').hide();
+           var list = '';
+           var list2 = '';
+           list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+           list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+           list += '<div class="vote-options">';
+
+           for (var i = 1; i < 6; i++) {
+              var key = 'opt' + i;
+              if (response[0][key] == '') break;
+
+              var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+
+              list += '<label class="vote-option">';
+              list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
+              list += '    <span>' + response[0][key] + '</span>';
+              list += '</label>';
            }
-       }
-       // 다른 사용자인 경우, position이 3인 경우
-       else if (position == 3) {
-           $('#vote_update').hide();   // 수정 버튼 숨기기
-           $('#vote_update2').hide();  // 추가 수정 버튼 숨기기
-           $('#vote_close2').show();   // 닫기 버튼 보이기
-           $('#vote_delete').hide();   // 삭제 버튼 숨기기
-           $('#vote_cancel').show();   // 취소 버튼 보이기
-       }
+           list += '</div>';
+           $('#vote_list').html(list);
 
-         $.ajax({
-            url: '/crew/vote_select',
-            type: 'post',
-            async: false,
-            data: {
-               Authorization: Authorization,
-               create_crew_code: create_crew_code,
-               vote_num: vote_num
-            },
-            success: function(response) {
-               $('#vote_list').html('');
-               $('#vote_results').html('');
-               if(user_code != response[0].usercode && position!=1)$('#editCrewBtn').hide();
-               var list = '';
-               var list2 = '';
-               list += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-               list += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-               list += '<div class="vote-options">';
+           list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
+           list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
+           list2 += '<div class="vote-results">';
 
-               for (var i = 1; i < 6; i++) {
-                  var key = 'opt' + i;
-                  if (response[0][key] == '') break;
+           for (var i = 1; i < 6; i++) {
+              var arr = ['a', 'b', 'c', 'd', 'e'];
+              var key = 'opt' + i;
+              var key2 = arr[i - 1] + '_s';
 
-                  var checked = (response[0][key] == response[0].f_s) ? "checked" : "";
+              if (response[0][key] == '') break;
+              var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
+              var voters = response[0][key2] ? response[0][key2] : '';
 
-                  list += '<label class="vote-option">';
-                  list += '    <input type="radio" name="voteOption" value="' + response[0][key] + '" ' + checked + '>';
-                  list += '    <span>' + response[0][key] + '</span>';
-                  list += '</label>';
-               }
-               list += '</div>';
-               $('#vote_list').html(list);
+              // 클릭 가능 여부 결정
+              if (arr_length > 0) {
+                  list2 += '<div class="result-row" style="cursor: pointer;" onclick="showVoterList(\'' + voters + '\')">';
+              } else {
+                  list2 += '<div class="result-row">';
+              }
+              list2 += '    <span>' + response[0][key] + '</span>';
+              list2 += '    <span>' + arr_length + '명</span>';
+              list2 += '</div>';
+              list2 += '<div class="progress-bar">';
+              list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+              list2 += '</div>';
+           }
+           list2 += '</div>';
+           $('#vote_results').html(list2);
 
-               list2 += '<span class="modal-subtitle">' + response[0].subject + '</span>';
-               list2 += '<p class="modal-deadline">' + response[0].enddate + ' 종료</p>';
-               list2 += '<div class="vote-results">';
+           if (response[0].f_s ===null&&flag==0) {
+              document.getElementById('voteNowModal').style.display = 'block';
+           }
+            if (flag == 9) {
+                $('#vote_update2').hide();
+                $('#vote_live').html('');
+                $('#vote_live').html('<strong>투표 결과</strong>');
+                $('#vote_close2').removeClass().addClass('handover-btn2');
+                $('#vote_delete2').removeClass().addClass('handover-btn');
+            } else if (flag == 2 && vote_user_code == user_code) {
+                     $('#vote_update2').show();
+                     $('#vote_close2').removeClass().addClass('vote-btn');
 
-               for (var i = 1; i < 6; i++) {
-                  var arr = ['a', 'b', 'c', 'd', 'e'];
-                  var key = 'opt' + i;
-                  var key2 = arr[i - 1] + '_s';
-
-                  if (response[0][key] == '') break;
-                  var arr_length = response[0][key2] ? response[0][key2].split(',').length : 0;
-                  var voters = response[0][key2] ? response[0][key2] : '';
-
-                  // 클릭 가능 여부 결정
-                  if (arr_length > 0) {
-                      list2 += '<div class="result-row" style="cursor: pointer;" onclick="showVoterList(\'' + voters + '\')">';
-                  } else {
-                      list2 += '<div class="result-row">';
-                  }
-                  list2 += '    <span>' + response[0][key] + '</span>';
-                  list2 += '    <span>' + arr_length + '명</span>';
-                  list2 += '</div>';
-                  list2 += '<div class="progress-bar">';
-                  list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
-                  list2 += '</div>';
-               }
-               list2 += '</div>';
-               $('#vote_results').html(list2);
-
-               if (response[0].f_s ===null&&flag==0) {
-                  document.getElementById('voteNowModal').style.display = 'block';
-               }
-                if (flag == 9) {
-                    $('#vote_update2').hide();
-                    $('#vote_live').html('');
-                    $('#vote_live').html('<strong>투표 결과</strong>');
-                    $('#vote_close2').removeClass().addClass('handover-btn2');
-                    $('#vote_delete2').removeClass().addClass('handover-btn');
-                } else if (flag == 2 && vote_user_code == user_code) {
-                         $('#vote_update2').show();
-                         $('#vote_close2').removeClass().addClass('vote-btn');
-
-                } else {
-                    $('#vote_live').html('');
-                    $('#vote_live').html('<strong>투표 현황</strong>');
-                    $('#vote_close2').removeClass().addClass('handover-btn2');
-                }
-               if(flag==9||flag==1){
-                  document.getElementById('voteResultModal').style.display = 'block';
-               }
-
-            },
-            error: function(e) {
-               console.error('Error: ', e);
-            }
-         });
-      }
-
-   function submitVoteNow() {
-      var selectedOption = $('input[name="voteOption"]:checked').val();
-
-      // 선택된 옵션이 없을 경우 경고창을 띄움
-      if (!selectedOption) {
-         alert('투표할 항목을 선택해주세요.');
-         return false; // 함수 종료, 서버에 요청하지 않음
-      }
-
-      $.ajax({
-         url: '/crew/vote_insert',
-         type: 'post',
-         async: false,
-         data: {
-            Authorization: Authorization,
-            selectedOption: selectedOption,
-            vote_num: $('#vote_num').val()
-         },
-         success: function(response) {
-            if (response == 0) {
-               alert('이미 투표하셨습니다.');
-               return false;
             } else {
-               alert('투표가 제출되었습니다.');
-               voteNow($('#vote_num').val(), 1);
-               $('#notice').click();
+                $('#vote_live').html('');
+                $('#vote_live').html('<strong>투표 현황</strong>');
+                $('#vote_close2').removeClass().addClass('handover-btn2');
             }
-         },
-         error: function(e) {
-            console.error('Error: ', e);
-         }
-      });
-      document.getElementById('voteNowModal').style.display = 'none';
-      document.getElementById('voteResultModal').style.display = 'block';
-   }
+           if(flag==9||flag==1){
+              document.getElementById('voteResultModal').style.display = 'block';
+           }
+
+        },
+        error: function(e) {
+           console.error('Error: ', e);
+        }
+    });
+}
+
+function submitVoteNow() {
+  var selectedOption = $('input[name="voteOption"]:checked').val();
+
+  // 선택된 옵션이 없을 경우 경고창을 띄움
+  if (!selectedOption) {
+     alert('투표할 항목을 선택해주세요.');
+     return false; // 함수 종료, 서버에 요청하지 않음
+  }
+
+  $.ajax({
+     url: '/crew/vote_insert',
+     type: 'post',
+     async: false,
+     data: {
+        Authorization: Authorization,
+        selectedOption: selectedOption,
+        vote_num: $('#vote_num').val()
+     },
+     success: function(response) {
+        if (response == 0) {
+           alert('이미 투표하셨습니다.');
+           return false;
+        } else {
+           alert('투표가 제출되었습니다.');
+           voteNow($('#vote_num').val(), 1);
+           $('#notice').click();
+        }
+     },
+     error: function(e) {
+        console.error('Error: ', e);
+     }
+  });
+  document.getElementById('voteNowModal').style.display = 'none';
+  document.getElementById('voteResultModal').style.display = 'block';
+}
 
 <!-- 공지사항 등록 -->
 
@@ -1541,127 +1536,100 @@ function resetNoticeForm() {
     $('#previewContainer').html(''); // 미리보기 이미지 리셋
 }
 
-   function updateVoteResults(votes) {
-      let totalVotes = votes.reduce(function(acc, vote) {
-         return acc + vote.count;
-      }, 0);
 
-      $.each(votes, function(index, vote) {
-         let percentage = (vote.count / totalVotes) * 100;
+function openNoticeModal() {
+  closeCustomModal();
+  document.getElementById('noticeCreateModal').style.display = 'block';
+}
 
-         $(`#progress-${vote.id}`).css({
-            width: percentage + '%',
-            backgroundColor: 'orange'
-         });
+function closeNoticeModal() {
+  document.getElementById('noticeCreateModal').style.display = 'none';
+  document.getElementById('resignModal').style.display = 'block';
+}
 
-         $(`#count-${vote.id}`).text(vote.count + '명');
-      });
-   }
+function deletePreview() {
+  document.getElementById('previewContainer').style.display = 'none';
+  document.getElementById('imagePreview').src = '';
+}
 
-   let votes = [
-      { id: 'vote1', count: 1 },
-      { id: 'vote2', count: 3 },
-      { id: 'vote3', count: 0 },
-      { id: 'vote4', count: 0 }
-   ];
+function previewImages(event) {
+  const previewContainer = document.getElementById('previewContainer');
+  const files = Array.from(event.target.files);
 
-   $(document).ready(function() {
-      updateVoteResults(votes);
-   });
+  files.forEach(file => {
+     const reader = new FileReader();
+     reader.onload = function(e) {
+        const imageContainer = document.createElement('div');
+        imageContainer.style.position = 'relative';
 
-   function openNoticeModal() {
-      closeCustomModal();
-      document.getElementById('noticeCreateModal').style.display = 'block';
-   }
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        imageContainer.appendChild(img);
 
-   function closeNoticeModal() {
-      document.getElementById('noticeCreateModal').style.display = 'none';
-      document.getElementById('resignModal').style.display = 'block';
-   }
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '지우기';
+        deleteButton.classList.add('delete-btn');
+        deleteButton.onclick = function() {
+           imageContainer.remove();
+        };
 
-   function deletePreview() {
-      document.getElementById('previewContainer').style.display = 'none';
-      document.getElementById('imagePreview').src = '';
-   }
+        imageContainer.appendChild(deleteButton);
+        previewContainer.appendChild(imageContainer);
+     };
+     reader.readAsDataURL(file);
+  });
+}
+// 크루 위임 맴버 불러오기
+function crew_manage_handover(element) {
+   var id = element.id;
+   const user_code = ${user_code}; // 공백 제거 후 전역변수에서 가져오기
+   console.log("Selected id: ", id);
 
-   function previewImages(event) {
-      const previewContainer = document.getElementById('previewContainer');
-      const files = Array.from(event.target.files);
+    $.ajax({
+        url: '/crew/crew_manage_select',
+        type: 'post',
+        async: false,
+        data: {
+            Authorization: Authorization,
+            create_crew_code: create_crew_code,
+            id: id
+        },
+        success: function(response) {
+            $('#crew_handover_list').html(''); // 기존 내용을 비움
+            var list = '';
 
-      files.forEach(file => {
-         const reader = new FileReader();
-         reader.onload = function(e) {
-            const imageContainer = document.createElement('div');
-            imageContainer.style.position = 'relative';
+            if (id == 'handoverCrewBtn') {
+                // user_code와 동일한 user를 제외하고 position이 2인 사용자만 필터링
+                var filteredResponse = response.filter(function(item) {
+                    return String(item.usercode).trim() !== String(user_code).trim() && item.a_n == 2; // usercode 다르고 position이 2인 경우만
+                });
 
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            imageContainer.appendChild(img);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = '지우기';
-            deleteButton.classList.add('delete-btn');
-            deleteButton.onclick = function() {
-               imageContainer.remove();
-            };
-
-            imageContainer.appendChild(deleteButton);
-            previewContainer.appendChild(imageContainer);
-         };
-         reader.readAsDataURL(file);
-      });
-   }
-    // 크루 위임 맴버 불러오기
-    function crew_manage_handover(element) {
-       var id = element.id;
-       const user_code = ${user_code}; // 공백 제거 후 전역변수에서 가져오기
-       console.log("Selected id: ", id);
-
-        $.ajax({
-            url: '/crew/crew_manage_select',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization: Authorization,
-                create_crew_code: create_crew_code,
-                id: id
-            },
-            success: function(response) {
-                $('#crew_handover_list').html(''); // 기존 내용을 비움
-                var list = '';
-
-                if (id == 'handoverCrewBtn') {
-                    // user_code와 동일한 user를 제외하고 position이 2인 사용자만 필터링
-                    var filteredResponse = response.filter(function(item) {
-                        return String(item.usercode).trim() !== String(user_code).trim() && item.a_n == 2; // usercode 다르고 position이 2인 경우만
-                    });
-
-                    // 필터링된 결과가 없을 경우 처리
-                    if (filteredResponse.length === 0) {
-                        list = '<p>위임할 멤버가 없습니다</p>';  // 멤버가 없을 때 표시할 메시지
-                    } else {
-                        // 필터링된 멤버가 있을 경우 리스트 생성
-                        for (var i in filteredResponse) {
-                          var imgSrc = filteredResponse[i].a_s ? filteredResponse[i].a_s.trim() : 'basicimg.png';
-                            list += '<label class="team-member"> ';
-                            list += '<input type="radio" name="teamOwner" value="' + filteredResponse[i].usercode + '" data-bs="' + filteredResponse[i].b_s + '"> ';
-                            list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="team-profile"> ';
-                            list += '   <span class="team-name"> ' + filteredResponse[i].b_s + '</span> ';
-                            if (filteredResponse[i].a_n < 3) {
-                                list += '      <div class="label-operator" style="margin-bottom:4px;">운영진</div> ';
-                            }
-                            list += '</label>';
+                // 필터링된 결과가 없을 경우 처리
+                if (filteredResponse.length === 0) {
+                    list = '<p>위임할 멤버가 없습니다</p>';  // 멤버가 없을 때 표시할 메시지
+                } else {
+                    // 필터링된 멤버가 있을 경우 리스트 생성
+                    for (var i in filteredResponse) {
+                      var imgSrc = filteredResponse[i].a_s ? filteredResponse[i].a_s.trim() : 'basicimg.png';
+                        list += '<label class="team-member"> ';
+                        list += '<input type="radio" name="teamOwner" value="' + filteredResponse[i].usercode + '" data-bs="' + filteredResponse[i].b_s + '"> ';
+                        list += '   <img src="/resources/uploadfile/' + imgSrc + '" class="team-profile"> ';
+                        list += '   <span class="team-name"> ' + filteredResponse[i].b_s + '</span> ';
+                        if (filteredResponse[i].a_n < 3) {
+                            list += '      <div class="label-operator" style="margin-bottom:4px;">운영진</div> ';
                         }
+                        list += '</label>';
                     }
-                    console.log("Generated list: ", list);
-                    $('#crew_handover_list').append(list); // 리스트 또는 메시지 추가
                 }
-            },
-            error: function(e) {
-                console.error('Error: ', e);
+                console.log("Generated list: ", list);
+                $('#crew_handover_list').append(list); // 리스트 또는 메시지 추가
             }
-        });
-    }
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+}
 
 function go_crew_detail() {
     $.ajax({

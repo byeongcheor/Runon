@@ -53,9 +53,13 @@ public class MarathonController {
     @GetMapping("/marathonList")
     public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
 
+
+
+
         // 전체 레코드 수를 세고, 페이징 정보를 설정
         int totalRecord = service.totalRecord(pvo);
         pvo.setTotalRecord(totalRecord);
+       //받은것 표시 에러면 주석
         pvo.calculateTotalPage(); // TotalPage 계산
         pvo.calculateOffset(); // 오프셋 계산
         // 페이징을 적용한 마라톤 목록 조회
@@ -66,6 +70,7 @@ public class MarathonController {
         System.out.println("Marathon List Size: " + list.size());
 
         // 전체 페이지 수 계산
+        //여기도 에러면 주석
         int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
         pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
 
@@ -286,6 +291,22 @@ public class MarathonController {
         }
         return result; // JSON 형태로 응답
     }
+
+    @PostMapping("/hospitalList")
+    @ResponseBody
+    public Map<String, Object> hospitalList(HospitalVO hvo) {
+        Map<String, Object> map = new HashMap<>();
+        /* 확인완료System.out.println(hvo);*/
+        List<HospitalVO> hvoList=service.getHospitalList(hvo);
+        /* 확인완료 System.out.println(hvoList);*/
+
+        map.put("hvoList", hvoList);
+        return map;
+    }
+
+
+
+
 
 
 }

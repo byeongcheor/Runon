@@ -83,7 +83,7 @@
                 <ul class="rank-list">
                     <c:forEach var="rank" items="${ranking}">
                         <li>
-                            <span class="grade" id="grade">${rank.ranking}등</span>
+                            <span class="grade" id="grade" style="">${rank.ranking}등</span>
                             <img src="/resources/uploadfile/${rank.profile_img}" alt="프로필 이미지" class="profile_img">
                             <div class="rank-info">
                                 <span class="rank-name">${rank.nickname}</span>
@@ -312,7 +312,7 @@
                 var list='';
                 for (var i in result) {
                     list+='<li>';
-                    list+='<span class="grade" id="grade">'+result[i].ranking+'등</span>';
+                    list+='<span class="grade" id="grade" style="">'+result[i].ranking+'등</span>';
                     list+='<img src="/resources/uploadfile/'+result[i].profile_img+'" alt="프로필 이미지" class="profile_img">';
                     list+='   <div class="rank-info">';
                     list+='      <span class="rank-name">'+result[i].nickname+'</span>';

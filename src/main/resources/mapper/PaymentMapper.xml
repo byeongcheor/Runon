@@ -166,7 +166,7 @@
         </foreach>
     </update>
     <update id="updatePay">
-        update payment_tbl set payment_status=2, refund_amount=refund_amount where is_completed=1 and paymentKey=#{paymentKey}
+        update payment_tbl set payment_status=2, refund_amount=${refund_amount} where is_completed=1 and paymentKey=#{paymentKey}
     </update>
     <select id="selectorderCodes" resultType="Integer">
         select order_code from payment_detail_tbl where payment_detail_id in
@@ -181,7 +181,7 @@
         </foreach>
     </update>
     <update id="updatePoint">
-        update point_tbl set mypoint= mypoint+${return_discount} where usercode=(select usercode from payment_tbl where paymentKey=CAST(#{paymentKey} AS CHAR))
+        update point_tbl set mypoint= mypoint+${point} where usercode=(select usercode from payment_tbl where paymentKey=CAST(#{paymentKey} AS CHAR))
     </update>
     <insert id="insertPoint">
         insert into point_change_tbl (point_change,point_code) values((#{return_discount}),(select point_code from point_tbl where usercode=(select usercode from payment_tbl where paymentKey=CAST(#{paymentKey} AS CHAR))))
