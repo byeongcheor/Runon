@@ -30,4 +30,5 @@ public interface MarathonService {
     void updateMarathon(MarathonListVO marathon);
     boolean deleteMarathon(int marathonCode);
     void saveMarathon(MarathonListVO marathonListVO);
+
 }
