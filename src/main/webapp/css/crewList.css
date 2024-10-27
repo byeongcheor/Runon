@@ -4,8 +4,9 @@
 
 
 #crew_body{
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
+    margin-top:15px;
 }
 
 #bannerBox{
@@ -41,7 +42,7 @@
 }
 
 .crew_list{
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
 }
 .list_item{
@@ -52,6 +53,7 @@
     justify-content: normal;
     border-bottom: 0.5px solid lightgrey;
     padding: 20px;
+    width:100%;
 }
 .profileBox{
     width: 63px;
@@ -119,7 +121,7 @@
     color: white;
 }
 .crew_search{
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
 }
 .searchForm{

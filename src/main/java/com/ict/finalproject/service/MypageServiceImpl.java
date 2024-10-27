@@ -226,5 +226,10 @@ public class MypageServiceImpl implements MypageService{
         dao.updateQnAStatus(qna_status, qna_code);
     }
 
+    @Override
+    public int isinCrew(int usercode) {
+        return dao.isinCrew(usercode);
+    }
+
 
 }

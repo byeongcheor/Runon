@@ -62,28 +62,13 @@ public class CrewController {
         int totalRecord = service.totalRecord(pvo);
 
         pvo.setTotalRecord(totalRecord);
-        pvo.setOnePageRecord(10);
-        pvo.setTotalPage((int) Math.ceil((double) totalRecord / 10));
+        pvo.setOnePageRecord(5);
+        pvo.setTotalPage((int) Math.ceil((double) totalRecord / 5));
         List<CrewVO> list = service.crewSelectPaging(pvo);
 
-        // 추가: chatList 가져오는 로직
-        List<CrewVO> chatList = service.getCrewList();  // 크루 리스트를 가져오는 서비스
-
-        // 로그 추가
-        log.info("mateChat 호출됨");
-
-        if (chatList != null && !chatList.isEmpty()) {
-            for (CrewVO crew : chatList) {
-                log.info("Crew Name: " + crew.getCrew_name()); // 로깅 사용
-            }
-        } else {
-            log.warn("크루 목록을 가져오지 못했습니다."); // 로깅 사용
-        }
-        //
         Integer user_code = (Integer) session.getAttribute("user_code");
         model.addAttribute("list", list);
         model.addAttribute("pvo", pvo);
-        model.addAttribute("chatList", chatList);  // 추가: chatList를 모델에 추가
         model.addAttribute("user_code", user_code);
         return "crew/crewList";
     }
@@ -104,12 +89,11 @@ public class CrewController {
         // 한 페이지당 보여줄 레코드 수 설정
 
         // offset 계산
-        int offset = (page > 0) ? (page - 1) * 10 : 0;
+        int offset = (page > 0) ? (page - 1) * 5 : 0;
 
         // 전체 레코드 수를 계산하여 totalPage 계산
         int totalRecord = service.getTotalRecord(orderby, gender, age, addr, addr_gu, searchWord);
-        int totalPage = (int) Math.ceil((double) totalRecord / 10);
-        System.out.println("totalPage::::::::::" + totalPage);
+        int totalPage = (int) Math.ceil((double) totalRecord /5);
 
         // 서비스 호출 (데이터와 함께 페이징 정보 포함)
         List<CrewVO> list = service.search_crewList(offset, orderby, gender, age, addr, addr_gu, searchWord);
@@ -284,6 +268,7 @@ public class CrewController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //System.out.println( "crew_write_detail:::::"+ crew_write_detail);
         return crew_write_detail;
     }
 
@@ -415,8 +400,15 @@ public class CrewController {
                 fileName = uuid.toString() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
                 Path path = Paths.get(uploadDir + File.separator + fileName);
                 Files.copy(file.getInputStream(), path);
+                System.out.println("fileName:1111111:::"+fileName);
             } else {
-                fileName = service.crew_teamPhoto(crew_write_code);
+                // 기존 파일명을 가져옴
+                String existingFileName = service.crew_teamPhoto(crew_write_code);
+                if (existingFileName != null) {
+                    fileName = existingFileName;
+                }
+
+                System.out.println("fileName::222222222::"+fileName);
             }
             String age = String.join(",", arr_age);
             service.crew_write_update(crew_write_code, user_code, fileName, age, gender, content);
@@ -574,8 +566,9 @@ public class CrewController {
         user_name = jwtUtil.setTokengetUsername(token);
         user_code = service.usercodeSelect(user_name);
         List<CrewVO> crew_app_select = null;
+
         try {
-            crew_app_select = service.crew_app_select(crewCode);
+            crew_app_select = service.crew_app_select(user_code, crewCode);
         } catch (Exception e) {
             e.printStackTrace();
         }

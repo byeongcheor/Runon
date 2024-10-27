@@ -127,16 +127,43 @@
 <!--        where pm.usercode = #{usercode}-->
 <!--        order by pm.payment_code desc-->
 <!--        limit #{offset}, #{limit}-->
-        SELECT *
-        FROM (
-        SELECT pm.*, pd.orderId,
-        ROW_NUMBER() OVER (PARTITION BY pd.orderId ORDER BY pm.payment_code DESC) AS rn
-        FROM payment_tbl pm
-        JOIN payment_detail_tbl pd ON pm.payment_code = pd.payment_code
-        WHERE pm.usercode = #{usercode}
-        ) AS subquery
-        WHERE rn = 1
-        ORDER BY payment_code DESC
+<!--        SELECT *-->
+<!--        FROM (-->
+<!--        SELECT pm.*, pd.orderId,-->
+<!--        ROW_NUMBER() OVER (PARTITION BY pd.orderId ORDER BY pm.payment_code DESC) AS rn-->
+<!--        FROM payment_tbl pm-->
+<!--        JOIN payment_detail_tbl pd ON pm.payment_code = pd.payment_code-->
+<!--        WHERE pm.usercode = #{usercode} and pm.is_completed =1-->
+<!--        ) AS subquery-->
+<!--        WHERE rn = 1-->
+<!--        ORDER BY payment_code DESC-->
+<!--        limit #{offset}, #{limit}-->
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        MAX(m.marathon_count) AS marathon_count
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status != 0 AND pd.is_deleted = 0
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0
+        AND u.usercode = #{usercode}
+        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
         limit #{offset}, #{limit}
     </select>
     <select id="getTotalOrder">
@@ -296,4 +323,9 @@
         set qna_status = #{param1}
         where qna_code = #{param2}
     </update>
+    <select id="isinCrew">
+        select count(*)
+        from create_crew_tbl
+        where usercode=#{param}
+    </select>
 </mapper>

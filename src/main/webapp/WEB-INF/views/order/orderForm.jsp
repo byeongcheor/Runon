@@ -34,7 +34,9 @@
             <c:forEach var="order" items="${Cvo}">
                 <div class="oneline">
                     <div class="ticket">
-                        <img src="/img/marathonPoster/${order.poster_img}"/>
+                        <div style="width:80px;height: 80px; border-radius: 10px;">
+                            <img src="/img/marathonPoster/${order.poster_img}" style="width:100%; height:100%; object-fit: cover;border-radius: 10px;"/>
+                        </div>
                         <span class="marathonT">${order.marathon_name}</span>
                     </div>
                     <div class="num">${order.quantity}</div>

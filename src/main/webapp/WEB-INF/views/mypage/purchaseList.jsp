@@ -25,7 +25,7 @@
     .body_container{
         background-color: white;
         width: 900px;
-        height: 1100px;
+        height: auto;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
     }
@@ -208,7 +208,7 @@
          white-space: nowrap;
          overflow: hidden;
          text-overflow: ellipsis;
-         width: 200px;
+         width: 250px;
      }
 </style>
 <script>
@@ -245,16 +245,16 @@
                         } else {
                             vo.is_completed = "주문취소";
                         }
-
+                        var marathonCountText = (vo.marathon_count > 1) ? ` 및 ...` : '';
                         tag += `
                         <div class="orderP2">
                             <div class="orderP3">
-                                <span>` + vo.created_date + `</span>
+                                <span>` + vo.completed_date + `</span>
                             </div>
                             <div class="orderPd">
                                 <div class="orderPdImg">
                                     <div class="orderPdN">
-                                        <span class="proName">` + vo.total_amount + `/` + vo.discount_amount + `</span>
+                                        <span class="proName">` + vo.latest_marathon_name + marathonCountText+ `</span>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +262,7 @@
                                 <span>` + vo.payment_method + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span>` + vo.is_completed + `</span>
+                                <span>` + vo.total_amount + `</span>
                             </div>
                             <div class="orderStatus">
                                 <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails('`+vo.orderId+`')">주문상세</button></span>
@@ -351,9 +351,9 @@
             </div>
             <div class="orderPt">
                 <span>날짜</span>
-                <span>주문금액/할인금액</span>
+                <span>상품명</span>
                 <span>결제방식</span>
-                <span>주문상태</span>
+                <span>주문금액</span>
                 <span></span>
             </div>
             <div class="orderP" id="orderlist">

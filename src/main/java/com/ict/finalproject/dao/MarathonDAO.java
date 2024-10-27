@@ -33,4 +33,5 @@ public interface MarathonDAO {
     int deleteMarathon(int marathonCode);
     void saveMarathon(MarathonListVO marathonListVO);
 
+    public List<HospitalVO> getHospitalList(HospitalVO hvo);
 }

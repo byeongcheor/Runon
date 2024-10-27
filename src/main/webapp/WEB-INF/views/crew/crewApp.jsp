@@ -184,6 +184,8 @@ $('#no').hide();
                     if (response[i].b_n == 0) list += '승인을 기다리고있어요';
                     if (response[i].b_n == 1) list += '가입을 승인했어요 ';
                     if (response[i].b_n == 9) list += '신청을 거절했어요 ';
+                    if (response[i].d_n == 1) list += '<br><span class="team__request" style="color:red">'+response[i].c_s + '에 강퇴된 유저입니다.</span>';
+                    if (response[i].d_n == 2) list += '<br><span class="team__request" style="color:red">'+response[i].c_s + '에 탈퇴한 유저입니다.</span>';
                     list+='           </span> ';
                     list += '	  </div> ';
                     list += '	</a> ';

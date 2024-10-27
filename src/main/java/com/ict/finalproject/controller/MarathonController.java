@@ -53,9 +53,15 @@ public class MarathonController {
     @GetMapping("/marathonList")
     public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
 
+
+
+
         // 전체 레코드 수를 세고, 페이징 정보를 설정
         int totalRecord = service.totalRecord(pvo);
         pvo.setTotalRecord(totalRecord);
+       //받은것 표시 에러면 주석
+        pvo.calculateTotalPage(); // TotalPage 계산
+        pvo.calculateOffset(); // 오프셋 계산
 
         // 전체 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
@@ -77,8 +83,12 @@ public class MarathonController {
         // 로그 추가
         System.out.println("Total Record: " + totalRecord);
         System.out.println("Marathon List Size: " + list.size());
-        System.out.println("Total Pages: " + totalPages);
         System.out.println("Current Page: " + pvo.getNowPage());
+        // 전체 페이지 수 계산
+        //여기도 에러면 주석
+//        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+//        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
+
 
         // 모델에 데이터 추가
         model.addAttribute("list", list);
@@ -245,7 +255,6 @@ public class MarathonController {
             @RequestParam(required = false, defaultValue = "") String addr,
             @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(required = false, defaultValue = "0") Integer sort1, // Integer로 변경
-            @RequestParam(required = false, defaultValue = "1") Integer nowPage,  // 현재 페이지 파라미터 추가
             PagingVO pvo) {
 
 
@@ -256,7 +265,7 @@ public class MarathonController {
         pvo.setRegion(addr);
         pvo.setSearch(search); // search 값 설정
         pvo.setSort1(sort1);
-        pvo.setNowPage(nowPage);  // 요청된 현재 페이지 설정
+
 
         // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
         int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
@@ -278,7 +287,7 @@ public class MarathonController {
         Map<String, Object> result = new HashMap<>();
         result.put("totalRecord", totalRecord);
         result.put("totalPage", totalPages);
-        result.put("nowPage", nowPage);
+
         result.put("filteredMarathons", filteredMarathons);
 
 
@@ -337,7 +346,6 @@ public class MarathonController {
         }
         return result; // JSON 형태로 응답
     }
-
     @PostMapping("/addMarathonToCart")
     public Map<String, Object> addMarathonToCart(@RequestBody CartVO cartVO) {
         Map<String, Object> result = new HashMap<>();
@@ -356,6 +364,22 @@ public class MarathonController {
         }
         return result; // JSON 형태로 응답
     }
+
+    @PostMapping("/hospitalList")
+    @ResponseBody
+    public Map<String, Object> hospitalList(HospitalVO hvo) {
+        Map<String, Object> map = new HashMap<>();
+        /* 확인완료System.out.println(hvo);*/
+        List<HospitalVO> hvoList=service.getHospitalList(hvo);
+        /* 확인완료 System.out.println(hvoList);*/
+
+        map.put("hvoList", hvoList);
+        return map;
+    }
+
+
+
+
 
 
 }
