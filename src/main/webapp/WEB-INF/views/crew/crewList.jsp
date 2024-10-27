@@ -94,13 +94,13 @@
         <div class="list_wrapper">
             <ul id="crew_list">
                 <c:forEach var="cvo" items="${list}">
-                    <li class="list_item" onClick="crew_page_detail(${cvo.create_crew_code},${cvo.crew_write_code})">
+                    <li class="list_item">
                         <div class="crew_profileimage">
                             <div class="profileBox">
                                 <img src="/crew_upload/${cvo.logo}" class="profileImg">
                             </div>
                         </div>
-                        <div class="crew_content">
+                        <div class="crew_content" onClick="crew_page_detail(${cvo.create_crew_code},${cvo.crew_write_code})">
                             <div class="crew_title">
                                 <span class="crewname"style=" font-weight: bold; font-size:16px;"><b>${cvo.crew_name}</b></span>
                                 <span class="count">🏃‍♀️${cvo.num}<span>

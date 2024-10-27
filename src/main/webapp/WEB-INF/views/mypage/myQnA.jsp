@@ -20,7 +20,6 @@
     .body_container{
         background-color: white;
         width: 1000px;
-        height: 900px;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
         padding: 30px;
@@ -106,7 +105,6 @@
         border: 1px solid #d9e0e6;
         background-color: #f8fafb;
         width: 100%;
-        height: 200px;
         border-radius: 16px;
         padding: 14px 15px;
         font-size: 16px;
@@ -366,7 +364,7 @@
                         <div>
                             <div>관리자답변</div>
                             <div>
-                                <textarea style="height: auto;" name="answer" id="answer1"  readonly></textarea>
+                                <textarea style="height: 250px;" name="answer" id="answer1"  readonly></textarea>
                             </div>
                         </div>
 

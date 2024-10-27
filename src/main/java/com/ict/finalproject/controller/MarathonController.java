@@ -62,17 +62,33 @@ public class MarathonController {
        //받은것 표시 에러면 주석
         pvo.calculateTotalPage(); // TotalPage 계산
         pvo.calculateOffset(); // 오프셋 계산
+
+        // 전체 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
+
+        // 현재 페이지가 전체 페이지보다 클 경우, 마지막 페이지로 설정
+        if (pvo.getNowPage() > totalPages) {
+            pvo.setNowPage(totalPages);
+        } else if (pvo.getNowPage() < 1) {
+            pvo.setNowPage(1);
+        }
+        // 페이지 오프셋 설정
+        int offset = (pvo.getNowPage() - 1) * pvo.getOnePageRecord();
+        pvo.setOffset(offset);
+
         // 페이징을 적용한 마라톤 목록 조회
         List<MarathonListVO> list = service.marathonSelectPaging(pvo);
 
         // 로그 추가
         System.out.println("Total Record: " + totalRecord);
         System.out.println("Marathon List Size: " + list.size());
-
+        System.out.println("Current Page: " + pvo.getNowPage());
         // 전체 페이지 수 계산
         //여기도 에러면 주석
-        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
-        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
+//        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+//        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
+
 
         // 모델에 데이터 추가
         model.addAttribute("list", list);
@@ -81,7 +97,57 @@ public class MarathonController {
         return "marathon/marathonList";
     }
 
+    @GetMapping("/marathonListP")
+    @ResponseBody
+    public Map<String, Object> marathonListP(
+            @RequestParam(value = "nowPage", defaultValue = "1") int nowPage,
+            @RequestParam(value = "searchKey", required = false) String searchKey,
+            @RequestParam(value = "searchWord", required = false) String searchWord,
+            @RequestParam(value = "addr", required = false) String addr) {
 
+        Map<String, Object> response = new HashMap<>();
+
+        // PagingVO 설정
+        PagingVO pvo = new PagingVO();
+        pvo.setNowPage(nowPage);
+        pvo.setSearchKey(searchKey);
+        pvo.setSearchWord(searchWord);
+        pvo.setAddr(addr);
+
+        // 전체 레코드 수 설정
+        int totalRecord = service.totalRecord(pvo);
+        pvo.setTotalRecord(totalRecord);
+
+        // 전체 페이지 수 계산 및 설정
+        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+        pvo.setTotalPage(totalPages);
+
+        // 현재 페이지가 전체 페이지보다 큰 경우, 마지막 페이지로 설정
+        if (pvo.getNowPage() > totalPages) {
+            pvo.setNowPage(totalPages);
+        } else if (pvo.getNowPage() < 1) {
+            pvo.setNowPage(1);
+        }
+
+        // 페이지 오프셋 설정
+        pvo.calculateOffset();
+
+        // 페이징을 적용한 마라톤 목록 조회
+        List<MarathonListVO> list = service.marathonSelectPaging(pvo);
+
+        // 확인을 위해 로그 출력
+        System.out.println("Total Record: " + totalRecord);
+        System.out.println("Marathon List Size: " + list.size());
+        System.out.println("Total Pages: " + totalPages);
+        System.out.println("Current Page: " + pvo.getNowPage());
+
+        // 응답 데이터 설정
+        response.put("filteredMarathons", list); // 필터링된 마라톤 목록
+        response.put("totalPage", pvo.getTotalPage()); // 총 페이지 수
+        response.put("nowPage", pvo.getNowPage()); // 현재 페이지
+
+        return response;
+    }
 
     @GetMapping("/marathonDetail/{marathonCode}")
     public String marathonDetail(@PathVariable("marathonCode") int marathonCode, Model model, HttpServletRequest request){
@@ -200,21 +266,28 @@ public class MarathonController {
         pvo.setSearch(search); // search 값 설정
         pvo.setSort1(sort1);
 
-        // 페이지 번호와 레코드 수 설정
-        pvo.setNowPage(1); // 기본적으로 첫 페이지로 설정, 필요 시 변경 가능
-        pvo.calculateOffset(); // 오프셋 계산
-
-        // 입력값 로그 출력 (디버깅 용)
-        log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort1);
 
         // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
         int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
         pvo.setTotalRecord(totalRecord);
 
+        // 전체 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+        pvo.setTotalPage(totalPages);  // 전체 페이지 수 설정
+        pvo.calculateOffset();  // 오프셋 계산
+
         List<MarathonListVO> filteredMarathons = service.filterMarathons(year, month, addr, search, pvo, sort1);
+
+
+        // 입력값 로그 출력 (디버깅 용)
+        log.info("필터링 파라미터 - year: {}, month: {}, region: {}, search: {}, sort: {}", year, month, addr, search, sort1);
+
+
         // 결과를 저장할 Map을 초기화합니다.
         Map<String, Object> result = new HashMap<>();
         result.put("totalRecord", totalRecord);
+        result.put("totalPage", totalPages);
+
         result.put("filteredMarathons", filteredMarathons);
 
 
