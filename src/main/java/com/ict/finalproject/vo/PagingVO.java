@@ -195,11 +195,16 @@ public class PagingVO {
 
     // offset 계산 메서드 추가
     public void calculateOffset() {
-        this.offset = (this.nowPage - 1) * this.onePageRecord;
+        offset = (nowPage - 1) * onePageRecord;
     }
     public void calculateTotalPage() {
-        this.totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
+        if (totalRecord == 0) {
+            totalPage = 0;
+        } else {
+            totalPage = (int) Math.ceil((double) totalRecord / onePageRecord);
+        }
     }
+
 
     // 대표 지역 추출 메서드
     public String getMainLocation() {

@@ -22,25 +22,14 @@
 					<div id="checkboxlist" ></div>
 					<div id="searchbar">
 						<!--검색조건 -->
-						<select class="form-select" id="BoardSearchValue" name="BoardSearchValue" style="width: 110px;" onchange="changeOption()">
-							<option value="all_code">
-								전체
-							</option>
-							<option value="marathon_name">
-								마라톤명
-							</option>
-						</select>
-						<select class="form-select" id="BoardSearchValue2" name="BoardSearchValue2" style="width: 130px;" onchange="changeOption()">
-							<option value="is_active">
-								활성화여부
-							</option>
-							<option value="is_deleted">
-								삭제여부
-							</option>
+						<select class="form-select" id="BoardSearchValue" name="BoardSearchValue" style="width: 120px;" onchange="changeOption()">
+							<option value="marathon_name">마라톤명</option>
+							<option value="is_active">활성화여부</option>
+							<option value="is_deleted">삭제여부</option>
 						</select>
 						<div id="searchbox">
 							<!--검색어입력 -->
-							<input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)" placeholder="검색어를 입력하세요"/>
+							<input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)"/>
 							<div type="button" id="searchbutton" class="btn btn-m search" onclick="searchbutton()">
 								<i class="fa-solid fa-magnifying-glass fa-2x"></i>
 							</div>

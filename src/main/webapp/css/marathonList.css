@@ -16,8 +16,10 @@
 }
 .marathon-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 최소 너비 300px, 가용 공간에 맞게 자동 조정 */
+    grid-template-columns: repeat(4, minmax(0, 1fr)); /* 항상 4개로 고정 */
+
     margin: 40px auto;
+    max-width: 1400px; /* 전체 너비 제한 */
 }
 /* 화면이 작아질 때의 설정 */
 @media (max-width: 1200px) { /* 최대 1200px 이하에서 */

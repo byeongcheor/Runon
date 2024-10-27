@@ -18,7 +18,7 @@ public interface CrewDAO {
     public List<CrewVO> crew_manage_notice(int crewCode, int user_code);
     public List<CrewVO> crew_write_detail_check(int crew_write_code );
     public List<CrewVO> getCrewInfo(int create_crew_code );
-    public List<CrewVO> crew_app_select(int crew_code);
+    public List<CrewVO> crew_app_select(int crew_app_select, int crew_code);
     public List<CrewVO> vote_detail(int vote_num);
     public List<CrewVO> notice_detail(int notice_num);
     public List<CrewVO> search_crewList(int offset, String orderby, String gender , String age, String addr, String addr_gu, String searchWord);

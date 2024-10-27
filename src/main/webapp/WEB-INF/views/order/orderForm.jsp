@@ -34,7 +34,9 @@
             <c:forEach var="order" items="${Cvo}">
                 <div class="oneline">
                     <div class="ticket">
-                        <img src="/img/marathonPoster/${order.poster_img}"/>
+                        <div style="width:80px;height: 80px; border-radius: 10px;">
+                            <img src="/img/marathonPoster/${order.poster_img}" style="width:100%; height:100%; object-fit: cover;border-radius: 10px;"/>
+                        </div>
                         <span class="marathonT">${order.marathon_name}</span>
                     </div>
                     <div class="num">${order.quantity}</div>
@@ -60,37 +62,64 @@
         <div class="titles">기존 마라톤신청서</div>
 
             <div id="marathonForm">
-                <h2 style="text-align: center">마라톤신청서 작성</h2>
-                <div>
-                    <label for="name">이름:</label>
-                    <input type="text" id="name" name="name" maxlength="30" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="name">이름</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="name" name="name" maxlength="30" required />
+                    </div>
                 </div>
-                <div>
-                    <label for="tel">전화번호:</label>
-                    <input type="tel" id="tel" name="tel" maxlength="15" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="tel">전화번호</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="tel" id="tel" name="tel" maxlength="15" required />
+                    </div>
                 </div>
-                <div>
-                    <label for="addr">주소:</label>
-                    <input type="text" id="addr" name="addr" maxlength="100" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="addr">주소</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="addr" name="addr" maxlength="100" required />
+                    </div>
                 </div>
-                <div>
-                    <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="addr_details">상세 주소</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                    </div>
                 </div>
-                <div>
-                    <label for="gender">성별:</label>
-                    <select id="gender" name="gender" required>
-                        <option value="M">남성</option>
-                        <option value="F">여성</option>
-                    </select>
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="gender">성별</label>
+                    </div>
+                    <div class="maraR">
+                        <select id="gender" name="gender" required>
+                            <option value="M">남성</option>
+                            <option value="F">여성</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label for="birth_date">생년월일:</label>
-                    <input type="date" id="birth_date" name="birth_date" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="birth_date">생년월일</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="date" id="birth_date" name="birth_date" required />
+                    </div>
                 </div>
-                <div>
-                    <label for="size">사이즈:</label>
-                    <input type="text" id="size" name="size" maxlength="30" required />
+                <div class="maraT">
+                    <div class="maraL">
+                        <label for="size">사이즈</label>
+                    </div>
+                    <div class="maraR">
+                        <input type="text" id="size" name="size" maxlength="30" required />
+                    </div>
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
@@ -180,21 +209,10 @@
         }
 
         if (inputPoints > mypoint) {
-            alert("  보유 포인트보다 많은 포인트를 사용할 수 없습니다.");
-            if (mypoint< 100||mypoint<0){
-                alert("100포인트 이상부터 사용 가능합니다.");
-                inputPoints=0;
-                document.getElementById("pointInput").value = "";
-                return;
-            }else{
-                if (mypoint>totalAmount*1){
-                    inputPoints = totalAmount * 0.1 ;
-                }else{
-                    inputPoints=mypoint;
-                }
-            }
-        }
-        else{
+            alert("  보유 포인트보다 많은 포인트를 사용할 수 없습니다\n총 결제 금액의 10%보다 많은 포인트를 사용할 수 없습니다.");
+            inputPoints = totalAmount * 0.1 ;
+
+        }else{
             if (inputPoints > availableAmount*0.1) {
                 alert("총 결제 금액의 10%보다 많은 포인트를 사용할 수 없습니다.");
                 inputPoints = availableAmount*0.1;
@@ -224,16 +242,7 @@
             availableAmount = totalAmount - usedPoints; // 사용 가능한 총액 계산
 
             usemypoint = mypoint >= availableAmount ? availableAmount : mypoint;
-            if (usemypoint>100){
-                if (availableAmount<usedPoints){
-                    usedPoints = usemypoint*0.1;
-                }
-                else{
-                    usedPoints= usemypoint;
-                }
-            }else{
-                alert("100P단위로 사용가능합니다");
-            }
+            usedPoints = usemypoint*0.1;
             realamount=totalAmount-usedPoints;
             // 사용된 포인트 업데이트
 
@@ -309,5 +318,4 @@
             alert("100포인트 단위로 사용 가능합니다.");
         }
     }
-
 </script>

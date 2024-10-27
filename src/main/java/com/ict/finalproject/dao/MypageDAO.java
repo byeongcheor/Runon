@@ -19,7 +19,8 @@ public interface MypageDAO {
     public int insertDelUser(int usercode);
     public int delFromUser(int usercode);
     public int delFromPoint(int usercode);
-
+    //회원탈퇴시 가입된 크루 있는지
+    public int isinCrew(int usercode);
     //주문목록리스트
     public List<PaymentVO> selectOrderAll(@Param("usercode") int usercode,
                                         @Param("offset") int offset,

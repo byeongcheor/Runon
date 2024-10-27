@@ -359,6 +359,7 @@
 			return; // usercode가 정의되지 않은 경우 함수를 종료
 		}
 
+
 		// 사용자 코드를 파라미터로 전송
 		fetch('/chat/reportHistory?usercode=' + usercode)
 				.then(response => response.json())
@@ -368,51 +369,87 @@
 
 					data.forEach(report => {
 						const reportItem = document.createElement('div');
-						// CSS 클래스 추가
 						reportItem.classList.add('report-item'); // 클래스를 추가합니다.
-						reportList.appendChild(reportItem);
 
 						// 신고 내용
 						const contentElement = document.createElement('div');
-						contentElement.innerText = '신고 내용: ' + report.report_content;
+						contentElement.innerHTML = '<strong>신고 내용: </strong>' + report.report_content;
 
 						// 신고 이유
 						const reasonElement = document.createElement('div');
-						reasonElement.innerText = '신고 이유: ' + report.report_reason;
+						reasonElement.innerHTML = '<strong>신고 이유: </strong>' + report.report_reason;
 
 						// 신고 날짜
 						const dateElement = document.createElement('div');
-						dateElement.innerText = '신고 날짜: ' + report.report_date;
+						dateElement.innerHTML = '<strong>신고 날짜: </strong>' + report.report_date;
 
 						// 신고 상태
 						const statusElement = document.createElement('div');
-						const statusText = report.report_status === 1 ? '신고 내역 처리 완료' : '신고 내역 처리 중';
-						statusElement.innerHTML = '신고 내역 상황: <span id="reportStatusText">' + statusText + '</span>';
-						// 처리 완료 버튼 (버튼을 직접 생성하지 않고 상태를 업데이트할 수 있음)
-						// 여기에서 신고 상태 업데이트를 위한 버튼을 생성하는 대신, 다른 UI 요소에서 호출할 수 있습니다.
+						const statusText = report.report_status === 1 ? '처리 완료' : '처리 중';
+						statusElement.innerHTML = '<strong>신고 내역 상황: </strong> <span>' + statusText + '</span>';
+
+						// 색상 설정: 처리 완료는 파란색, 처리 중은 빨간색
+						statusElement.querySelector('span').style.color = report.report_status === 1 ? 'blue' : 'red';
+						// // 신고 처리 버튼 추가 (처리 중인 경우)
+						// if (report.report_status === 0) { // 0은 '처리 중' 상태를 나타낸다고 가정
+						// 	const processButton = document.createElement('button');
+						// 	processButton.innerText = '처리하기'; // 버튼 텍스트
+						// 	processButton.classList.add('btn', 'btn-warning'); // Bootstrap 스타일 클래스 추가
+						// 	processButton.onclick = function() {
+						// 		// 신고 처리 로직 (예: API 호출)
+						// 		handleReport(report.report_id); // report_id가 필요하다고 가정
+						// 	};
+						// 	statusElement.appendChild(processButton);
+						// }
+
 						// 각각의 요소를 reportItem에 추가
 						reportItem.appendChild(contentElement);
 						reportItem.appendChild(reasonElement);
 						reportItem.appendChild(dateElement);
 						reportItem.appendChild(statusElement);
-						// 신고 상태가 '처리 완료'로 변경된 경우
-						if (report.report_status === 1) {
-							// '신고 내역 처리 완료'라는 텍스트를 업데이트
-							statusElement.querySelector('#reportStatusText').innerText = '신고 내역 처리 완료';
-						}
 
 						// 최종적으로 reportList에 추가
 						reportList.appendChild(reportItem);
 					});
 
-					// 모달 띄우기
-					$('#reportHistoryModal').modal('show');
+
+
+					document.getElementById('reportHistoryModal').style.display = 'block';
+
+
+					reportHistoryModal.style.display = 'block';
 				})
 				.catch(error => {
+					console.error('신고 내역 로딩 중 오류 발생:', error);
+				});
 
+// 신고 처리 로직 함수 예시
+
+
+	}
+	function handleReport(reportId) {
+		// 신고 처리 API 호출 예시
+		fetch('/chat/processReport?id=' + reportId, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						alert('신고가 처리되었습니다.');
+						// 여기에서 필요한 후처리 (예: 모달 닫기, 상태 업데이트 등)
+						$('#reportHistoryModal').modal('hide');
+						// 다시 신고 내역을 불러오거나 상태를 업데이트하는 로직 추가 가능
+					} else {
+						alert('신고 처리에 실패했습니다: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('신고 처리 중 오류 발생:', error);
 				});
 	}
-
 
 	function toggleSendReportButton() {
 		const checkboxes = document.querySelectorAll('.message-checkbox:checked'); // 체크된 체크박스 탐색
@@ -551,40 +588,7 @@
 		}
 
 		// 모달 닫기
-		function closeModal() {
-			reportModal.style.display = 'none';
 
-			// 체크박스 해제
-			const checkboxes = document.querySelectorAll('.message-checkbox');
-			checkboxes.forEach(checkbox => {
-				checkbox.checked = false;
-				checkbox.style.display = 'none';  // 신고 후 다시 숨기기
-			});
-
-			// 신고 사유 필드 초기화
-			document.getElementById('reportReason').value = '';
-
-			// 신고 버튼 다시 전송 버튼으로 변경
-			document.getElementById('sendBtn').style.display = 'inline';
-			reportBtn.style.display = 'none';
-		}
-
-		// X 버튼 클릭 시 모달 닫기 (기존 코드)
-		closeModalButton.onclick = function() {
-			closeModal(); // 이미 정의된 closeModal 함수 호출
-		};
-		// 신고 내역 모달의 X 버튼 클릭 시 닫기
-		closeReportHistoryModalButton.onclick = function() {
-			closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
-		};
-		// 신고 내역 모달의 X 버튼 클릭 시 닫기
-		if (closeReportHistoryModalButton) { // 버튼이 존재하는지 확인
-			closeReportHistoryModalButton.onclick = function() {
-				closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
-			};
-		} else {
-			console.error('신고 내역 모달 닫기 버튼이 존재하지 않습니다.'); // 디버깅 메시지
-		}
 		// 외부 클릭 시 신고 모달 닫기
 		window.onclick = function(event) {
 			if (event.target === reportModal) {
@@ -595,10 +599,6 @@
 		};
 
 
-		function closeReportHistoryModal() {
-			const reportHistoryModal = document.getElementById('reportHistoryModal');
-			reportHistoryModal.style.display = 'none'; // 신고 내역 모달 숨기기
-		}
 
 		// 외부 클릭 시 모달 닫기
 		window.onclick = function (event) {
@@ -631,4 +631,46 @@
 	});
 
 
+	function closeReportHistoryModal() {
+		const reportHistoryModal = document.getElementById('reportHistoryModal');
+
+
+		reportHistoryModal.style.display = 'none'; // 신고 내역 모달 숨기기
+	}
+
+
+	function closeModal() {
+		reportModal.style.display = 'none';
+
+		// 체크박스 해제
+		const checkboxes = document.querySelectorAll('.message-checkbox');
+		checkboxes.forEach(checkbox => {
+			checkbox.checked = false;
+			checkbox.style.display = 'none';  // 신고 후 다시 숨기기
+		});
+
+		// 신고 사유 필드 초기화
+		document.getElementById('reportReason').value = '';
+
+		// 신고 버튼 다시 전송 버튼으로 변경
+		document.getElementById('sendBtn').style.display = 'inline';
+		reportBtn.style.display = 'none';
+	}
+
+	// X 버튼 클릭 시 모달 닫기 (기존 코드)
+	closeModalButton.onclick = function() {
+		closeModal(); // 이미 정의된 closeModal 함수 호출
+	};
+	// 신고 내역 모달의 X 버튼 클릭 시 닫기
+			closeReportHistoryModalButton.onclick = function() {
+                closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
+            };
+	// 신고 내역 모달의 X 버튼 클릭 시 닫기
+/*	if (closeReportHistoryModalButton) { // 버튼이 존재하는지 확인
+		closeReportHistoryModalButton.onclick = function() {
+			closeReportHistoryModal(); // 신고 내역 모달 닫기 함수 호출
+		};
+	} else {
+		console.error('신고 내역 모달 닫기 버튼이 존재하지 않습니다.'); // 디버깅 메시지
+	}*/
 </script>

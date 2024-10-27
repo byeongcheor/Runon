@@ -40,6 +40,8 @@ public class CrewVO {
     private int e_n;
     private int f_n;
     private int g_n;
+    private int h_n;
+    private int i_n;
     private int is_active;
     private int is_deleted;
     private int is_updated;

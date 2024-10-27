@@ -1,6 +1,6 @@
 var boardSearchType = null;
 var boardSearchValue = null;
-var boardSearchType2 = null;
+
 
 setTimeout(function() {
     var page;
@@ -16,18 +16,21 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
     var BoardData = {
         page: page,
         searchKey: boardSearchType,
-        searchKey2: boardSearchType2,
         searchWord: boardSearchValue
     };
-
-    if (boardSearchType && boardSearchValue) {
-        BoardData.searchKey = boardSearchType;
-        BoardData.searchWord = boardSearchValue;
+    // 마라톤명 검색이 있을 경우
+    if (boardSearchType === "marathon_name" && boardSearchValue) {
+        BoardData.searchKey = boardSearchType; // 마라톤명으로 검색
+        BoardData.searchWord = boardSearchValue; // 검색어 설정
     }
-    // 활성화 여부 또는 삭제 여부 검색
-    if (boardSearchType2 && boardSearchValue) {
-        BoardData.searchKey2 = boardSearchType2;
-        BoardData.searchWord2 = boardSearchValue;  // 추가로 검색어를 전달
+    // 활성화 여부 또는 삭제 여부 검색이 있을 경우
+    if (boardSearchType === "is_active" && boardSearchValue) {
+        BoardData.searchKey = boardSearchType;
+        BoardData.searchWord = boardSearchValue === "Y" ? 1 : 0; // "Y"일 때 1, "N"일 때 0
+    }
+    if (boardSearchType === "is_deleted" && boardSearchValue) {
+        BoardData.searchKey = boardSearchType;
+        BoardData.searchWord = boardSearchValue === "Y" ? 1 : 0; // "Y"일 때 1, "N"일 때 0
     }
 
     $.ajax({
@@ -35,21 +38,22 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
         type: "post",
         data: BoardData,
         success: function(r) {
-
+            console.log("Total Records: ", r.pvo.totalRecord);
+            console.log("Total Pages: ", r.pvo.totalPage);
             var BoardList = r.list;
             var pVO = r.pvo;
-            var logininfo = r.Avo;
-
-
-
+            if (r.list.length > 0) {
+                // 결과값이 존재할 때 검색어 초기화
+                document.getElementById("searchtext").value = ""; // 검색어 입력 필드의 ID가 'searchInput'인 경우
+            }
 
             var downloadbuttontag = `<input type="button" value="게시글 리스트 받기" onClick="excelDownload()"/>`;
             document.getElementById("downloadbutton").innerHTML = downloadbuttontag;
             document.getElementById("downloadbutton").style.display = "block";
 
-            // 추가된 부분: 글 작성하기 버튼 추가
+            //작성하기 버튼 생성
             var writeButtonHtml  = `<input type="button" value="글 작성하기" onClick="writePost()"/>`;
-            document.getElementById("writebutton").innerHTML += writeButtonHtml; // 기존 버튼 다음에 추가
+            document.getElementById("writebutton").innerHTML = writeButtonHtml; // 기존 버튼을 덮어씀
             document.getElementById("writebutton").style.display = "block";
 
             var tag = "<li><div id='board_title2'><div class='board_code'>마라톤번호</div><div class='marathon_name'>마라톤명</div>";
@@ -88,17 +92,35 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
             document.getElementById("BoardList").innerHTML = tag;
 
             var paginationTag = "";
+            var totalPages = Math.ceil(pVO.totalRecord / pVO.onePageRecord); // 총 페이지 수 계산
+
+
+// 이전 버튼
             if (pVO.nowPage > 1) {
                 paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadBoardPage(" + (pVO.nowPage - 1) + ");'>Previous</a></li>";
             }
-            for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+
+// 페이지 번호 표시 (현재 페이지를 기준으로 최대 5페이지까지 표시)
+            var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+            var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+            }
+
+            for (var p = startPage; p <= endPage; p++) {
                 paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadBoardPage(" + p + ");'>" + p + "</a></li>";
             }
+
+// 다음 버튼
             if (pVO.nowPage < pVO.totalPage) {
                 paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadBoardPage(" + (pVO.nowPage + 1) + ");'>Next</a></li>";
             }
 
+
+// 페이징 태그 삽입
             $(".pagination").html(paginationTag);
+
 
         },
         error: function (xhr, status, error) {
@@ -117,25 +139,30 @@ function editMarathon(marathonCode) {
     window.location.href = '/adminPages/boardEdit/marathonCode/' + marathonCode;
 }
 
+// 검색 버튼 클릭 시 호출되는 함수
 function searchbutton() {
-    boardSearchType = document.getElementById("BoardSearchValue").value;
-    boardSearchType2 = document.getElementById("BoardSearchValue2").value;
-    boardSearchValue = document.getElementById("searchtext").value;
+    const boardSearchType = document.getElementById("BoardSearchValue").value; // 선택된 검색 조건
+    const boardSearchValue = document.getElementById("searchtext").value; // 검색어
 
     // 콘솔 로그를 추가하여 디버깅
     console.log("Search Type:", boardSearchType);
-    console.log("Search Type 2:", boardSearchType2);
     console.log("Search Value:", boardSearchValue);
 
     // 조건에 따라 검색어를 어떻게 처리할지 정의
+    let searchType = null;
+
     if (boardSearchType === "marathon_name") {
-        alert("마라톤명 검색:" + boardSearchValue);
-    } else if (boardSearchType2 === "is_active" || boardSearchType2 === "is_deleted") {
-        alert(boardSearchType2 + " 상태로 검색: " + boardSearchValue);
+        searchType = "marathon_name"; // 마라톤명 검색
+    } else if (boardSearchType === "is_active") {
+        searchType = "is_active"; // 활성화 여부 검색
+    } else if (boardSearchType === "is_deleted") {
+        searchType = "is_deleted"; // 삭제 여부 검색
     }
 
-    loadBoardPage(1, boardSearchType, boardSearchType2, boardSearchValue);
+    // 검색을 수행
+    loadBoardPage(1, boardSearchType, null, boardSearchValue); // searchKey2를 null로 설정
 }
+
 
 
 function enterKey(event) {
@@ -167,27 +194,17 @@ function deleteBoard(marathonCode) {
 }
 
 function changeOption() {
-    var searchValue = document.getElementById("BoardSearchValue").value;
-    var searchValue2 = document.getElementById("BoardSearchValue2").value;
+    const searchValue = document.getElementById('BoardSearchValue').value;
+    const searchText = document.getElementById('searchtext');
 
-    // 마라톤명이 선택된 경우
-    if (searchValue === "marathon_name") {
-        document.getElementById("searchtext").placeholder = "마라톤명을 입력하세요";
-        document.getElementById("searchtext").style.width = "300px";
-        document.getElementById("BoardSearchValue2").style.display = "block"; // 활성화 여부/삭제 여부 셀렉트 박스 보여줌
+    // 선택된 검색 조건에 따라 placeholder 변경
+    if (searchValue === 'marathon_name') {
+        searchText.placeholder = '마라톤명을 입력하세요';
+    } else if (searchValue === 'is_active') {
+        searchText.placeholder = '활성화 여부 (Y/N)';
+    } else if (searchValue === 'is_deleted') {
+        searchText.placeholder = '삭제 여부 (Y/N)';
     }
-
-    // 활성화 여부가 선택된 경우
-    else if (searchValue2 === "is_active") {
-        document.getElementById("searchtext").placeholder = "Y:활성화 N:비활성화";
-        document.getElementById("BoardSearchValue").style.display = "none"; // 마라톤명 셀렉트 박스 숨김
-    }
-    // 삭제 여부가 선택된 경우
-    else if (searchValue2 === "is_deleted") {
-        document.getElementById("searchtext").placeholder = "Y:삭제됨 N:삭제되지 않음";
-        document.getElementById("BoardSearchValue").style.display = "none"; // 마라톤명 셀렉트 박스 숨김
-    }
-
     document.getElementById("searchtext").focus();
 }
 

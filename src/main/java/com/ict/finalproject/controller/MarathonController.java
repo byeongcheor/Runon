@@ -59,13 +59,20 @@ public class MarathonController {
         // 전체 레코드 수를 세고, 페이징 정보를 설정
         int totalRecord = service.totalRecord(pvo);
         pvo.setTotalRecord(totalRecord);
-
+       //받은것 표시 에러면 주석
+        pvo.calculateTotalPage(); // TotalPage 계산
+        pvo.calculateOffset(); // 오프셋 계산
         // 페이징을 적용한 마라톤 목록 조회
         List<MarathonListVO> list = service.marathonSelectPaging(pvo);
 
         // 로그 추가
         System.out.println("Total Record: " + totalRecord);
         System.out.println("Marathon List Size: " + list.size());
+
+        // 전체 페이지 수 계산
+        //여기도 에러면 주석
+        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
 
         // 모델에 데이터 추가
         model.addAttribute("list", list);

@@ -30,7 +30,7 @@ public interface CrewService {
 
     public List<CrewVO> getCrewInfo(int create_crew_code);
 
-    public List<CrewVO> crew_app_select(int crew_code);
+    public List<CrewVO> crew_app_select(int user_code, int crew_code);
 
     public List<CrewVO> vote_detail(int vote_num);
 

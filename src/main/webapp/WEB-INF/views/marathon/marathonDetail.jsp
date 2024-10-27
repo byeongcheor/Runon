@@ -13,15 +13,12 @@
 <!-- 커스텀 스타일 시트 연결 -->
 <link rel="stylesheet" href="/css/marathonDetail.css" type="text/css">
 <script>
-
     const marathonItem = document.getElementById('marathonDItem');
     const marathonId = ${marathon.marathon_code}; // 선택한 마라톤의 ID
     // JSP/Thymeleaf에서 전달받은 위도와 경도 값을 자바스크립트 변수에 할당
     var latitude = '${marathon.lat}';  // 위도
     var longitude = '${marathon.lon}'; // 경도
     var marathonName = '${marathon.marathon_name}'; // 마라톤 이름
-
-
 </script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=05ef55fc6b73294aca4c220a11e58311&libraries=services"></script>
 
@@ -71,7 +68,7 @@
                             <span id="likeCount" class="like-count">${marathon.like_count}</span> <!-- 좋아요 수 -->
                         </div>
                         <button class="MC">장바구니</button>
-                        <button class="MP">바로구매</button>
+                        <button type="button" id="buyNowButton" class="MP">바로구매</button>
                     </div>
                 </div>
             </div>
