@@ -22,7 +22,7 @@
 
         <div id="ticket_cart" class="ticket_cart">
 
-
+            Lodding
 
         </div>
     </div>
