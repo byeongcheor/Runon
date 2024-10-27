@@ -24,25 +24,6 @@
 <!--헤더 스크롤-->
 <script>
 
-    var responseData;
-    function test(){
-        var token=localStorage.getItem("Authorization");
-        if (token !=""&& token!=null){
-            $.ajax({
-                url:"/test",
-                type:"post",
-                data:{Authorization:token},
-                success:function (r){
-                    responseData=r;
-                    console.log("ajax확인"+r);
-                    //test2(r)
-                }
-            });
-        }
-        //전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
-        console.log("전역변수로 설정확인"+responseData);
-    }
-
    function mypage() {
       console.log("111");
       $.ajax({
@@ -57,10 +38,6 @@
          }
       });
       // 전역으로 설정가능하지만 실행순서가 ajax가 늦게 실행되 처음 누르면 null 두번째부터 값이 제대로 전달
-   }
-
-   function test2(r) {
-      // test2 기능 추가할 부분
    }
 
 function mate() {
@@ -129,12 +106,12 @@ function crew() {
                     <li><a class="menus" onclick="crew()">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>
                     <li><a class="menus" href="/cart/cart">CART</a></li>
-                    <li><a class="menus" href="/mypage/myHome">MY</a></li>
+                    <li id="mypage"><a onclick="mypagelogin()">MY</a></li>
                     <%--<li> <a href="/oauth2/authorization/google">google</a></li>--%>
                     <li id="login"><a onclick="openLoginPopup()" style="color: #d1ff33">LOGIN</a></li>
 
                     <li id="logout"><a onclick="logout2()" style="color: #d1ff33">LOGOUT</a></li>
-                    <li><a class="menus" href="/adminPages/adminHome">ADMIN</a></li>
+                    <li id="as"></li>
 
                 </ul>
             </nav>

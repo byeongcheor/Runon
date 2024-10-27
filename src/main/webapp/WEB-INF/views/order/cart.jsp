@@ -22,6 +22,8 @@
 
         <div id="ticket_cart" class="ticket_cart">
 
+            Lodding
+
         </div>
     </div>
     <div class="cartBottom">
@@ -40,7 +42,7 @@
     </div>
     <div class="orderC">
         <div class="shoppingC">
-            <a href="/order/cart"><span>돌아가기</span></a>
+            <a href="/marathon/marathonList"><span>돌아가기</span></a>
         </div>
         <div class="checkOrder">
             <button class="button" id="orderButton" onclick="goOrder()">선택 상품 주문하기</button>

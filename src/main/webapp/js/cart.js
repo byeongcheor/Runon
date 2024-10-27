@@ -165,55 +165,69 @@ function updateTotalAmount(cartCode, amount, isChecked) {
     document.getElementById('totalAmounts').innerText=totalAmounts .toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
 }
 function cartload(){
-    $.ajax({
-        url:"/cart/cart",
-        type:"POST",
-        data: {
-            usercode: usercode1,
-        },
-        success: function(r) {
-            cart = r.cartItems;
+    if (usercode1!=0 &&usercode1!=""&&usercode1!=null) {
+        $.ajax({
+            url: "/cart/cart",
+            type: "POST",
+            data: {
+                usercode: usercode1,
+            },
+            success: function (r) {
+                cart = r.cartItems;
+                if (r.cartItems != "" && r.cartItems != null) {
+                    var cnt = 0;
+                    var tag = "<div class='tipoff'>";
+                    cart.forEach(function (cart) {
+                        var price = cart.price
+                        var amount = (cart.price * cart.quantity);
+                        var tagprice = price.toLocaleString('ko-KR', {style: 'currency', currency: 'KRW'});
+                        var tagamount = amount.toLocaleString('ko-KR', {style: 'currency', currency: 'KRW'})
+                        cnt += amount;
+                        tag += '<div class="oneline">' +
+                            '<input type="hidden" id="productId" name="productId" value="' + cart.marathon_code + '">';
+                        tag += '<div class="checkB"><input type="checkbox" name="itemCheckbox" class="itemCheckbox" id="itemCheckbox" value="' + cart.cart_code + '" onclick="updateTotalAmount(\'' + cart.cart_code + '\', \'' + amount + '\', this.checked)"></div>';
+                        tag += '<div class="ticket"><img src="/img/marathonPoster/' + cart.poster_img + '" alt="마라톤 포스터" class="marathonP"><span class="marathonT">' + cart.marathon_name + '</span></div>';
+                        tag += '<div class="marathonC">' +
+                            '<div class="counter-container">' +
+                            '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';
+                        tag += '<span id="number">' + cart.quantity + '</span>';
+                        tag += '<button onclick="increase(1, ' + cart.cart_code + ')">+</button>';
+                        tag += '</div></div>' +
+                            '<div class="price">' + tagprice + '</div>' +
+                            '<div class="amount">' + tagamount + '</div>' +
+                            '</div>';
 
-            var cnt=0;
-            var tag="<div class='tipoff'>";
-            cart.forEach(function (cart) {
-                var price=cart.price
-                var amount=(cart.price*cart.quantity);
-                var tagprice=price.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
-                var tagamount=amount.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' })
-                cnt+=amount;
-                tag+='<div class="oneline">' +
-                    '<input type="hidden" id="productId" name="productId" value="'+cart.marathon_code+'">';
-                tag+=   '<div class="checkB"><input type="checkbox" name="itemCheckbox" class="itemCheckbox" id="itemCheckbox" value="'+cart.cart_code+'" onclick="updateTotalAmount(\'' + cart.cart_code + '\', \'' + amount + '\', this.checked)"></div>';
-                tag+=   '<div class="ticket"><img src="/img/marathonPoster/'+cart.poster_img+'" alt="마라톤 포스터" class="marathonP"><span class="marathonT">'+cart.marathon_name+ '</span></div>';
-                tag+=   '<div class="marathonC">'+
-                    '<div class="counter-container">' +
-                    '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';
-                tag += '<span id="number">' + cart.quantity + '</span>';
-                tag += '<button onclick="increase(1, ' + cart.cart_code + ')">+</button>' ;
-                tag+=           '</div></div>' +
-                    '<div class="price">'+tagprice+'</div>' +
-                    '<div class="amount">'+tagamount+'</div>' +
-                    '</div>';
-
-            });
-            tag+="</div>";
-            document.getElementById('ticket_cart').innerHTML = tag;
-
-
-            const checkboxes = document.querySelectorAll('.itemCheckbox');
-            console.log(checkboxes);
-            // 모든 항목을 기본적으로 선택
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = true;
-
-            });
+                    });
+                    tag += "</div>";
+                } else {
+                    var tag = "<h3>장바구니에 담은 상품이 없습니다.</h3>";
+                }
+                document.getElementById('ticket_cart').innerHTML = tag;
 
 
-            document.getElementById('amount').innerText = cnt.toLocaleString('ko-KR', { style: 'currency', currency: 'KRW' });
-            updateTotalAmount( cart.cart_code, cnt , this.checked)
-        }
-    });
+                const checkboxes = document.querySelectorAll('.itemCheckbox');
+                console.log(checkboxes);
+                // 모든 항목을 기본적으로 선택
+                checkboxes.forEach((checkbox) => {
+                    checkbox.checked = true;
+
+                });
+
+
+                document.getElementById('amount').innerText = cnt.toLocaleString('ko-KR', {
+                    style: 'currency',
+                    currency: 'KRW'
+                });
+                updateTotalAmount(cart.cart_code, cnt, this.checked)
+            }
+        });
+    }
+    else{
+        var tag = "<h3>장바구니에 담은 상품이 없습니다.</h3>";
+        tag+="<div>로그인을 하시면, 장바구니에 보관된 상품을 확인하실 수 있습니다.</div>"
+        document.getElementById('ticket_cart').innerHTML = tag;
+    }
+
 }
 function goOrder(){
     const checkedItems = document.querySelectorAll('.itemCheckbox:checked');
@@ -250,4 +264,7 @@ function goOrder(){
     document.body.appendChild(form);
     form.submit();  // 폼 전송
 
+}
+function logins(){
+    window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }

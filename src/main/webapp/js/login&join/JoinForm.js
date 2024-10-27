@@ -173,7 +173,8 @@ function formCheck(){
     }
     var birthdate = document.getElementById("birthdate").value;
 
-    var brrthregEx=/^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+    var brrthregEx = /^(\d{4})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+
     if (!brrthregEx.test(birthdate)){
         alert("생년월일이 잘못되었습니다.");
         return false;

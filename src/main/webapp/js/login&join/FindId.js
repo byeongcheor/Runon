@@ -70,14 +70,14 @@ function findpw(){
                 var username= selectedValue;
                 var url="http://192.168.1.154:7942/loginjoin/changepw/"+token;
                 console.log(url);
-      /*          emailjs.send('gmail',"template_2msjhhl", {
+                emailjs.send('gmail',"template_2msjhhl", {
                     to_name:username,
                     message:url
                 })   .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                 }, function(error) {
                     console.log('FAILED...', error);
-                });*/
+                });
             }
         });
     } else {
