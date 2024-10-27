@@ -105,8 +105,8 @@
         <div class="hospital">
             <h2>마라톤대회 길찾기</h2>
             <div id="map" style="width:800px;height:600px;"></div>
-            <!-- 병원 버튼 추가 -->
-            <%--            <button id="hospitalButton" style="margin-top: 10px;">주변 병원 보기</button>--%>
+            <button onclick="panToUserLocation()">지도 중심좌표 부드럽게 이동시키기</button>
+
         </div>
 
     </div>

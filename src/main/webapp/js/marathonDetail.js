@@ -1,3 +1,5 @@
+
+
 setTimeout(function(){
     usercode=usercode1;// 실제 사용자 코드 가져오기
     /*  username=username1;*/
@@ -257,240 +259,240 @@ setTimeout(function(){
         // 마라톤 리스트 페이지로 이동
         window.location.href = '/marathon/marathonList'; // 또는 사용자가 원래 있던 페이지로 이동
     });
-    map();
+    initializeMap();
 },300);
 
+var map;
+function initializeMap() {
+    var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 
-    function map() {
-        var infowindow = new kakao.maps.InfoWindow({zIndex: 1});
+    var mapContainer = document.getElementById('map'),
+        mapOption = {
+            center: new kakao.maps.LatLng(latitude, longitude),
+            level: 4
+        };
 
-        var mapContainer = document.getElementById('map'),
-            mapOption = {
-                center: new kakao.maps.LatLng(latitude, longitude),
-                level: 4
-            };
+    // 전역 변수 map에 Kakao Map 객체 할당
+    map = new kakao.maps.Map(mapContainer, mapOption);
 
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+    var imageSrc = '/img/runmaker.png',
+        imageSize = new kakao.maps.Size(64, 69),
+        imageOption = { offset: new kakao.maps.Point(27, 69) };
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-        var imageSrc = '/img/runmaker.png',
-            imageSize = new kakao.maps.Size(64, 69),
-            imageOption = { offset: new kakao.maps.Point(27, 69) };
-        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+    var userMarker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(latitude, longitude),
+        image: markerImage
+    });
+    userMarker.setMap(map);
 
-        var userMarker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(latitude, longitude),
-            image: markerImage
-        });
-        userMarker.setMap(map);
+    // Ajax 요청으로 병원 목록 가져오기
+    $.ajax({
+        url: "/marathon/hospitalList",
+        type: "post",
+        data: {
+            latitude: latitude,
+            longitude: longitude
+        },
+        success: function(r) {
+            var hospitals = r.hvoList;
+            hospitals.forEach(function(hospital) {
+                displayMarker(hospital);
+            });
+        }
+    });
 
-        // Ajax 요청으로 병원 목록 가져오기
-        $.ajax({
-            url: "/marathon/hospitalList",
-            type: "post",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            },
-            success: function(r) {
-                var hospitals = r.hvoList;
+    // 병원 위치에 마커와 툴팁을 표시하는 함수
+    function displayMarker(hospital) {
+        var position = new kakao.maps.LatLng(hospital.latitude, hospital.longitude);
+        var tooltipMarker = new TooltipMarker(position, hospital.name);
+        tooltipMarker.setMap(map);
 
-                // 병원 목록을 지도에 표시
-                hospitals.forEach(function(hospital) {
-                    displayMarker(hospital);
-                });
-            }
-        });
+        var markerTracker = new MarkerTracker(map, tooltipMarker);
+        markerTracker.run();
+    }
+}
 
-        // 병원 위치에 마커와 툴팁을 표시하는 함수
-        function displayMarker(hospital) {
-            var position = new kakao.maps.LatLng(hospital.latitude, hospital.longitude);
+// 버튼 클릭 시 내 위치로 이동하는 함수
+function panToUserLocation() {
+    if (map) {
+        var userPosition = new kakao.maps.LatLng(latitude, longitude);
+        map.setCenter(userPosition);
+    } else {
+        console.error("Map 객체가 초기화되지 않았습니다.");
+    }
+}
 
-            // 툴팁 마커 생성
-            var tooltipMarker = new TooltipMarker(position, hospital.name);
-            tooltipMarker.setMap(map);
+// TooltipMarker 함수
+function TooltipMarker(position, tooltipText) {
+    this.position = position;
+    var node = this.node = document.createElement('div');
+    node.className = 'node';
 
-            // MarkerTracker를 사용하여 지도 밖에 있는 마커를 추적
-            var markerTracker = new MarkerTracker(map, tooltipMarker);
-            markerTracker.run();
+    var tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.appendChild(document.createTextNode(tooltipText));
+    node.appendChild(tooltip);
+
+    node.onmouseover = function() {
+        tooltip.style.display = 'block';
+    };
+    node.onmouseout = function() {
+        tooltip.style.display = 'none';
+    };
+}
+
+TooltipMarker.prototype = new kakao.maps.AbstractOverlay;
+
+TooltipMarker.prototype.onAdd = function() {
+    var panel = this.getPanels().overlayLayer;
+    panel.appendChild(this.node);
+};
+
+TooltipMarker.prototype.onRemove = function() {
+    this.node.parentNode.removeChild(this.node);
+};
+
+TooltipMarker.prototype.draw = function() {
+    var projection = this.getProjection();
+    var point = projection.pointFromCoords(this.position);
+
+    var width = this.node.offsetWidth;
+    var height = this.node.offsetHeight;
+
+    this.node.style.left = (point.x - width / 2) + "px";
+    this.node.style.top = (point.y - height / 2) + "px";
+};
+
+TooltipMarker.prototype.getPosition = function() {
+    return this.position;
+};
+
+// MarkerTracker 함수
+function MarkerTracker(map, target) {
+    var OUTCODE = { INSIDE: 0, TOP: 8, RIGHT: 2, BOTTOM: 4, LEFT: 1 };
+    var BOUNDS_BUFFER = 30;
+    var CLIP_BUFFER = 40;
+
+    var tracker = document.createElement('div');
+    tracker.className = 'tracker';
+
+    var icon = document.createElement('div');
+    icon.className = 'icon';
+
+    var balloon = document.createElement('div');
+    balloon.className = 'balloon';
+
+    tracker.appendChild(balloon);
+    tracker.appendChild(icon);
+
+    map.getNode().appendChild(tracker);
+
+    tracker.onclick = function() {
+        map.setCenter(target.getPosition());
+        setVisible(false);
+    };
+
+    function tracking() {
+        var proj = map.getProjection();
+        var bounds = map.getBounds();
+        var extBounds = extendBounds(bounds, proj);
+
+        if (extBounds.contain(target.getPosition())) {
+            setVisible(false);
+        } else {
+            var pos = proj.containerPointFromCoords(target.getPosition());
+            var center = proj.containerPointFromCoords(map.getCenter());
+
+            var sw = proj.containerPointFromCoords(bounds.getSouthWest());
+            var ne = proj.containerPointFromCoords(bounds.getNorthEast());
+
+            var top = ne.y + CLIP_BUFFER;
+            var right = ne.x - CLIP_BUFFER;
+            var bottom = sw.y - CLIP_BUFFER;
+            var left = sw.x + CLIP_BUFFER;
+
+            var clipPosition = getClipPosition(top, right, bottom, left, center, pos);
+
+            tracker.style.top = clipPosition.y + 'px';
+            tracker.style.left = clipPosition.x + 'px';
+
+            var angle = getAngle(center, pos);
+            balloon.style.cssText +=
+                '-ms-transform: rotate(' + angle + 'deg);' +
+                '-webkit-transform: rotate(' + angle + 'deg);' +
+                'transform: rotate(' + angle + 'deg);';
+
+            setVisible(true);
         }
     }
 
-    // TooltipMarker 함수
-    function TooltipMarker(position, tooltipText) {
-        this.position = position;
-        var node = this.node = document.createElement('div');
-        node.className = 'node';
+    function extendBounds(bounds, proj) {
+        var sw = proj.pointFromCoords(bounds.getSouthWest());
+        var ne = proj.pointFromCoords(bounds.getNorthEast());
 
-        var tooltip = document.createElement('div');
-        tooltip.className = 'tooltip';
-        tooltip.appendChild(document.createTextNode(tooltipText));
-        node.appendChild(tooltip);
+        sw.x -= BOUNDS_BUFFER;
+        sw.y += BOUNDS_BUFFER;
 
-        node.onmouseover = function() {
-            tooltip.style.display = 'block';
-        };
-        node.onmouseout = function() {
-            tooltip.style.display = 'none';
-        };
+        ne.x += BOUNDS_BUFFER;
+        ne.y -= BOUNDS_BUFFER;
+
+        return new kakao.maps.LatLngBounds(
+            proj.coordsFromPoint(sw),
+            proj.coordsFromPoint(ne)
+        );
     }
 
-    TooltipMarker.prototype = new kakao.maps.AbstractOverlay;
-
-    TooltipMarker.prototype.onAdd = function() {
-        var panel = this.getPanels().overlayLayer;
-        panel.appendChild(this.node);
-    };
-
-    TooltipMarker.prototype.onRemove = function() {
-        this.node.parentNode.removeChild(this.node);
-    };
-
-    TooltipMarker.prototype.draw = function() {
-        var projection = this.getProjection();
-        var point = projection.pointFromCoords(this.position);
-
-        var width = this.node.offsetWidth;
-        var height = this.node.offsetHeight;
-
-        this.node.style.left = (point.x - width / 2) + "px";
-        this.node.style.top = (point.y - height / 2) + "px";
-    };
-
-    TooltipMarker.prototype.getPosition = function() {
-        return this.position;
-    };
-
-    // MarkerTracker 함수
-    function MarkerTracker(map, target) {
-        var OUTCODE = {
-            INSIDE: 0,
-            TOP: 8,
-            RIGHT: 2,
-            BOTTOM: 4,
-            LEFT: 1
-        };
-        var BOUNDS_BUFFER = 30;
-        var CLIP_BUFFER = 40;
-
-        var tracker = document.createElement('div');
-        tracker.className = 'tracker';
-
-        var icon = document.createElement('div');
-        icon.className = 'icon';
-
-        var balloon = document.createElement('div');
-        balloon.className = 'balloon';
-
-        tracker.appendChild(balloon);
-        tracker.appendChild(icon);
-
-        map.getNode().appendChild(tracker);
-
-        tracker.onclick = function() {
-            map.setCenter(target.getPosition());
-            setVisible(false);
-        };
-
-        function tracking() {
-            var proj = map.getProjection();
-            var bounds = map.getBounds();
-            var extBounds = extendBounds(bounds, proj);
-
-            if (extBounds.contain(target.getPosition())) {
-                setVisible(false);
-            } else {
-                var pos = proj.containerPointFromCoords(target.getPosition());
-                var center = proj.containerPointFromCoords(map.getCenter());
-
-                var sw = proj.containerPointFromCoords(bounds.getSouthWest());
-                var ne = proj.containerPointFromCoords(bounds.getNorthEast());
-
-                var top = ne.y + CLIP_BUFFER;
-                var right = ne.x - CLIP_BUFFER;
-                var bottom = sw.y - CLIP_BUFFER;
-                var left = sw.x + CLIP_BUFFER;
-
-                var clipPosition = getClipPosition(top, right, bottom, left, center, pos);
-
-                tracker.style.top = clipPosition.y + 'px';
-                tracker.style.left = clipPosition.x + 'px';
-
-                var angle = getAngle(center, pos);
-                balloon.style.cssText +=
-                    '-ms-transform: rotate(' + angle + 'deg);' +
-                    '-webkit-transform: rotate(' + angle + 'deg);' +
-                    'transform: rotate(' + angle + 'deg);';
-
-                setVisible(true);
-            }
+    function getClipPosition(top, right, bottom, left, inner, outer) {
+        function calcOutcode(x, y) {
+            var outcode = OUTCODE.INSIDE;
+            if (x < left) outcode |= OUTCODE.LEFT;
+            else if (x > right) outcode |= OUTCODE.RIGHT;
+            if (y < top) outcode |= OUTCODE.TOP;
+            else if (y > bottom) outcode |= OUTCODE.BOTTOM;
+            return outcode;
         }
 
-        function extendBounds(bounds, proj) {
-            var sw = proj.pointFromCoords(bounds.getSouthWest());
-            var ne = proj.pointFromCoords(bounds.getNorthEast());
+        var ix = inner.x, iy = inner.y, ox = outer.x, oy = outer.y;
+        var code = calcOutcode(ox, oy);
 
-            sw.x -= BOUNDS_BUFFER;
-            sw.y += BOUNDS_BUFFER;
-
-            ne.x += BOUNDS_BUFFER;
-            ne.y -= BOUNDS_BUFFER;
-
-            return new kakao.maps.LatLngBounds(
-                proj.coordsFromPoint(sw),
-                proj.coordsFromPoint(ne)
-            );
+        while (true) {
+            if (!code) break;
+            if (code & OUTCODE.TOP) { ox += (ix - ox) / (iy - oy) * (top - oy); oy = top; }
+            else if (code & OUTCODE.RIGHT) { oy += (iy - oy) / (ix - ox) * (right - ox); ox = right; }
+            else if (code & OUTCODE.BOTTOM) { ox += (ix - ox) / (iy - oy) * (bottom - oy); oy = bottom; }
+            else if (code & OUTCODE.LEFT) { oy += (iy - oy) / (ix - ox) * (left - ox); ox = left; }
+            code = calcOutcode(ox, oy);
         }
 
-        function getClipPosition(top, right, bottom, left, inner, outer) {
-            function calcOutcode(x, y) {
-                var outcode = OUTCODE.INSIDE;
-                if (x < left) outcode |= OUTCODE.LEFT;
-                else if (x > right) outcode |= OUTCODE.RIGHT;
-                if (y < top) outcode |= OUTCODE.TOP;
-                else if (y > bottom) outcode |= OUTCODE.BOTTOM;
-                return outcode;
-            }
-
-            var ix = inner.x, iy = inner.y, ox = outer.x, oy = outer.y;
-            var code = calcOutcode(ox, oy);
-
-            while (true) {
-                if (!code) break;
-                if (code & OUTCODE.TOP) { ox += (ix - ox) / (iy - oy) * (top - oy); oy = top; }
-                else if (code & OUTCODE.RIGHT) { oy += (iy - oy) / (ix - ox) * (right - ox); ox = right; }
-                else if (code & OUTCODE.BOTTOM) { ox += (ix - ox) / (iy - oy) * (bottom - oy); oy = bottom; }
-                else if (code & OUTCODE.LEFT) { oy += (iy - oy) / (ix - ox) * (left - ox); ox = left; }
-                code = calcOutcode(ox, oy);
-            }
-
-            return { x: ox, y: oy };
-        }
-
-        function getAngle(center, target) {
-            var dx = target.x - center.x;
-            var dy = center.y - target.y;
-            return ((-Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360 | 0) + 90;
-        }
-
-        function setVisible(visible) {
-            tracker.style.display = visible ? 'block' : 'none';
-        }
-
-        function hideTracker() {
-            setVisible(false);
-        }
-
-        this.run = function() {
-            kakao.maps.event.addListener(map, 'zoom_start', hideTracker);
-            kakao.maps.event.addListener(map, 'zoom_changed', tracking);
-            kakao.maps.event.addListener(map, 'center_changed', tracking);
-            tracking();
-        };
-
-        this.stop = function() {
-            kakao.maps.event.removeListener(map, 'zoom_start', hideTracker);
-            kakao.maps.event.removeListener(map, 'zoom_changed', tracking);
-            kakao.maps.event.removeListener(map, 'center_changed', tracking);
-            setVisible(false);
-        };
+        return { x: ox, y: oy };
     }
+
+    function getAngle(center, target) {
+        var dx = target.x - center.x;
+        var dy = center.y - target.y;
+        return ((-Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360 | 0) + 90;
+    }
+
+    function setVisible(visible) {
+        tracker.style.display = visible ? 'block' : 'none';
+    }
+
+    function hideTracker() {
+        setVisible(false);
+    }
+
+    this.run = function() {
+        kakao.maps.event.addListener(map, 'zoom_start', hideTracker);
+        kakao.maps.event.addListener(map, 'zoom_changed', tracking);
+        kakao.maps.event.addListener(map, 'center_changed', tracking);
+        tracking();
+    };
+
+    this.stop = function() {
+        kakao.maps.event.removeListener(map, 'zoom_start', hideTracker);
+        kakao.maps.event.removeListener(map, 'zoom_changed', tracking);
+        kakao.maps.event.removeListener(map, 'center_changed', tracking);
+        setVisible(false);
+    };
+}

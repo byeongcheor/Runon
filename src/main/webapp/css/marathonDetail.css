@@ -263,8 +263,8 @@
     background-image:url("../img/hospitals.png") ;
     background-size: contain;
     cursor: pointer;
-    width: 64px;
-    height: 64px;
+    width: 34px;
+    height: 34px;
 }
 
 .tooltip {
@@ -279,6 +279,8 @@
     border-radius: 5px;
     white-space: nowrap;
     display: none;
+    z-index: 10;
+    opacity: 1;
 }
 
 .tracker {
@@ -302,8 +304,8 @@
 
 .balloon {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 34px;
+    height: 34px;
     /*background-image: url("/img/hospitals.png");*/
     background-image:url("../img/hospitals2.png") ;
     background-size: contain;

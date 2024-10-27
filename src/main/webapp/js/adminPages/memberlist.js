@@ -171,7 +171,7 @@ function userdetail(usercode){
             var delete_role=r.Avo.permission_delete;
 
 
-            var usertag = `<div id='userprofile'><img src="../../profileImg/` + users.profile_img + `"/>`;
+            var usertag = `<div id='userprofile'><img src="/resources/uploadfile/` + users.profile_img + `"/>`;
 
             if ((AdminRole<2&&delete_role==1&&users.role!="ROLE_ADMIN" )||Admincode==0  && users.usercode!=104){
 
