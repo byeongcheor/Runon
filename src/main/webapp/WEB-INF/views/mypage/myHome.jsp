@@ -260,6 +260,7 @@
     function openDeleteProfileModal(){
         var modal = document.getElementById("profileDeleteModal");
         if(modal){
+
             modal.style.display="block";
         }else{
             console.error("실패");
@@ -280,6 +281,7 @@
                 if(r==1){
                     alert("안전하게 회원탈퇴 되었습니다.");
                     closeDeleteProfileModal();
+                    localStorage.clear();
                     location.href="/";
                 }else{
                     alert("비밀번호가 일치하지 않습니다.");

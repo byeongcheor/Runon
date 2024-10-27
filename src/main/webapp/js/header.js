@@ -13,10 +13,6 @@ function openLoginPopup() {
     window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }
 window.onload=function(){
-
-
-console.log("1");
-
  ToKen=localStorage.getItem("Authorization");
     if (ToKen!=null &&ToKen!="" ){
         ToKen=ToKen.substring(7);
@@ -32,12 +28,22 @@ console.log("1");
             // 유저정보 담기
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
-            console.log('h1');
+            console.log(r.mvo.role);
+            if (r.mvo.role!="ROLE_USER"){
+                var tag="<a class=\"menus\" href=\"/adminPages/adminHome\">ADMIN</a>";
+                document.getElementById("as").innerHTML=tag;
+            }
+            var mypagTag="";
+            if (r.mvo!=null &&r.mvo!="") {
+                mypagTag='<a class="menus" href="/mypage/myHome">MY</a>';
+                document.getElementById("mypage").innerHTML=mypagTag;
+            }
+
         }
 
     });
 
-    }   else{
+    } else {
         document.getElementById("logout").style.display="none";
     }
 
@@ -81,4 +87,9 @@ console.log("1");
         }
     });*/
 };
+function mypagelogin(){
+    alert("로그인하신후 접근가능합니다 ");
+    window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
+
+}
 

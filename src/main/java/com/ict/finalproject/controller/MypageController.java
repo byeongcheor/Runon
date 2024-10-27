@@ -208,10 +208,12 @@ public class MypageController {
 //    }
     @PostMapping("/mypage/complete")
     public ModelAndView complete(
-            @RequestParam("orderId")String orderId
+            @RequestParam("orderId")String orderId,
+            @RequestParam("payment_method")String payment_method
     ){
         ModelAndView mav = new ModelAndView();
         mav.addObject("orderId", orderId);
+        mav.addObject("payment_method", payment_method);
         mav.setViewName("mypage/viewOrderDetail");
         return mav;
     }

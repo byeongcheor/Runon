@@ -123,11 +123,18 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
                 var paginationTag="";
 
 
-                if (pVO.nowpage>1){
+                if (pVO.nowPage>1){
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage - 1) +
                         ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>Previous</a></li>";
                 }
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                }
+                // 페이지 번호 출력
+                for (var p = startPage; p <= endPage; p++) {
                     if (p <= pVO.totalPage) {
                         paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadPayList(" + p
                             + ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>" + p + "</a></li>";
@@ -184,6 +191,8 @@ function detail(orderId,payment_method){
             <div><div id="cancelOkbutton"></div>
             <button id="cancelbutton" type="button" onclick="cancel('`+Cvo[0].paymentKey+`')">주문취소</button></div>`;
             document.getElementById("orderStN").innerHTML=orderIdTag;
+
+
             var orderListTag="";
           /*  console.log(Cvo);*/
             Cvo.forEach(function (cvo){

@@ -49,7 +49,7 @@ function emailauthentication(){
     r=result
     console.log(result);
     //opener인 join.jsp에 있는 userid필드의 값을 셋팅
-    emailjs.send('gmail', 'template_nqlgrpr', {
+/*    emailjs.send('gmail', 'template_nqlgrpr', {
         to_name: username,
         message: result
     })
@@ -57,7 +57,7 @@ function emailauthentication(){
             console.log('SUCCESS!', response.status, response.text);
         }, function(error) {
             console.log('FAILED...', error);
-        });
+        });*/
     if($("#hiddenbox2").css("display")=="none") {
         $("#hiddenbox2").css("display", "block");
     }

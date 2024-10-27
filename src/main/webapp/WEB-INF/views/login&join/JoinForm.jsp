@@ -30,7 +30,7 @@
             </div>
             <div class="joinN">생년월일</div>
             <div class="joinI">
-                <input type="text" name="birthdate" id="birthdate" placeholder="yymmdd형식으로 입력해주세요."/>
+                <input type="text" name="birthdate" id="birthdate" placeholder="yyyymmdd형식으로 입력해주세요."/>
             </div>
             <div class="joinN">닉네임</div>
             <div class="joinI">
