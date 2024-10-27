@@ -30,4 +30,8 @@ public interface MarathonService {
     void updateMarathon(MarathonListVO marathon);
     boolean deleteMarathon(int marathonCode);
     void saveMarathon(MarathonListVO marathonListVO);
+
+    //병원 위도경도
+    public List<HospitalVO> getHospitalList(HospitalVO hvo);
+
 }

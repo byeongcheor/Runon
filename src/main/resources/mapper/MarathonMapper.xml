@@ -189,5 +189,14 @@
         VALUES
         (#{marathon_name}, 1, #{total_distance}, #{entry_fee}, #{poster_img}, #{event_date}, #{addr}, #{registration_start_date}, #{registration_end_date}, #{marathon_content}, 0, #{lat}, #{lon});
     </insert>
-
+    <select id="getHospitalList" resultType="com.ict.finalproject.vo.HospitalVO">
+        SELECT name, latitude, longitude,
+        ST_Distance_Sphere(
+        point(longitude, latitude),
+        point(#{longitude}, #{latitude})
+        ) AS distance
+        FROM hospital_tbl
+        ORDER BY distance
+        LIMIT 30;
+    </select>
 </mapper>

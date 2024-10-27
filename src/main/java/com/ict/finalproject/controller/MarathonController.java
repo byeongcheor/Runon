@@ -285,7 +285,17 @@ public class MarathonController {
         return result; // JSON 형태로 응답
     }
 
+    @PostMapping("/hospitalList")
+    @ResponseBody
+    public Map<String, Object> hospitalList(HospitalVO hvo) {
+        Map<String, Object> map = new HashMap<>();
+        /* 확인완료System.out.println(hvo);*/
+        List<HospitalVO> hvoList=service.getHospitalList(hvo);
+        /* 확인완료 System.out.println(hvoList);*/
 
+        map.put("hvoList", hvoList);
+        return map;
+    }
 
 
 
