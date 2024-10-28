@@ -201,6 +201,8 @@ function cartload(){
                     tag += "</div>";
                 } else {
                     var tag = "<h3>장바구니에 담은 상품이 없습니다.</h3>";
+                    document.getElementById("totalAmounts").innerText="0원";
+                    document.getElementById("amount").innerText="0원";
                 }
                 document.getElementById('ticket_cart').innerHTML = tag;
 
