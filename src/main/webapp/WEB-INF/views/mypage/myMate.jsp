@@ -165,7 +165,7 @@
             },success: function(r){
                 var tag="";
                 var pvo=r.pvo;
-                console.log(r);
+                /*console.log(r);*/
                 if(r.member.length == 0){
                     tag += `
                         <div class="row" style="text-align: center; margin-top: 40px;">
@@ -206,7 +206,7 @@
 
             },error: function(e){
                 alert("다시 로드 해주세요.");
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }
@@ -215,13 +215,13 @@
     function openReport(offender, matchingroomcode){
         document.getElementById("usercodeReport").value = offender;
         document.getElementById("matchingroom").value = matchingroomcode;
-        console.log("신고할 사람:"+ offender);
+       /* console.log("신고할 사람:"+ offender);*/
         var modal = document.getElementById("uploadReport");
         if(modal) {
-            console.log(offender);
+            /*console.log(offender);*/
             modal.style.display = "block";
         }else{
-            console.log("안열림");
+            /*console.log("안열림");*/
         }
     }
     //신고하기 모달닫기
@@ -239,7 +239,7 @@
         if(modal) {
             modal.style.display = "block";
         }else{
-            console.log("안열림");
+            /*console.log("안열림");*/
         }
     }
     //신고내역 모달닫기
@@ -272,11 +272,11 @@
             contentType: false,
             processData: false
             ,success: function(r){
-                console.log(r);
-                alert("성공");
+                /*console.log(r);*/
+                /*alert("성공");*/
                 closeReport();
             },error: function(e){
-                alert("실패");
+                /*alert("실패");*/
             }
         });
         return false;
@@ -295,10 +295,10 @@
                 if(r.exists){
                     var datas = r.data;
                     alert("기존에 작성한 신고내역이 있습니다.");
-                    console.log(r.data);
+                   /* console.log(r.data);*/
                     var result = datas.report_status;
                     var adminresult = datas.report_result;
-                    console.log(adminresult);
+                   /* console.log(adminresult);*/
                     if(result == 0){
                         document.getElementById("resultstatus").value = "관리자가 신고내역 처리중";
                         document.getElementById("report_result").style.display = "none";
@@ -322,7 +322,7 @@
                 }
             },error: function(e){
                 alert("신고여부 확인 중 오류")
-                console.log(e);
+              /*  console.log(e);*/
             }
         })
     }

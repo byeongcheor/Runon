@@ -11,18 +11,18 @@ var marathon_namesString="";
 var index=0;
 var cart_codes=[];
 setTimeout(function () {
-    console.log(marathon_names);
+   /* console.log(marathon_names);*/
     if (marathon_names.length>=1){
         for(var i=0;i<1;i++){
             marathon_namesString+=marathon_names[i];
         }
-        console.log(marathon_namesString);
+       /* console.log(marathon_namesString);*/
         index=marathon_names.length-1;
     }
     if (index!=0){
         marathon_namesString= marathon_namesString+" 그외 "+index;
     }
-    console.log(marathon_namesString);
+    /*console.log(marathon_namesString);*/
     main();
 
     $.ajax({
@@ -34,7 +34,7 @@ setTimeout(function () {
         success: function (r) {
             var pvo = r.pvo;
             mypoint = pvo.mypoint;
-            console.log("포인트: " + r);
+            /*console.log("포인트: " + r);*/
             var tag = `
                 <div><b>보유 포인트:</b> <span id="userPoints">` + pvo.mypoint.toLocaleString('ko-KR') + `P</span></div><br>
                 <b>사용 포인트:</b><input type="text" id="pointInput" value="0p" placeholder="100p부터 사용가능" onfocusout="usePoints()" onfocus="test()" />
@@ -74,7 +74,7 @@ function selectMarathonForm() {
             usercode: usercode1
         },
         success: function (r) {
-            console.log(r);
+         /*   console.log(r);*/
             MFvo = r.MFvo;
             if (MFvo != null && MFvo != "") {
                 var tag = `
@@ -269,7 +269,7 @@ async function main() {
     const observer = new MutationObserver(async function (mutations) {
         mutations.forEach(async function (mutation) {
             if (mutation.type === 'childList' || mutation.type === 'characterData') {
-                console.log("totalAmounts의 값이 변경되었습니다:", totalAmountElement.innerText);
+              /*  console.log("totalAmounts의 값이 변경되었습니다:", totalAmountElement.innerText);*/
 
                 const newTotalAmount = Number(totalAmountElement.innerText.replace(/[^0-9]/g, ''));
                 const newDiscount = Number(testpoint.value); // 사용한 포인트 (할인 값)
@@ -280,7 +280,7 @@ async function main() {
                     value: newTotalAmount - newDiscount,
                 });
 
-                console.log("새로운 금액:", newTotalAmount - newDiscount);
+              /*  console.log("새로운 금액:", newTotalAmount - newDiscount);*/
             }
         });
     });
@@ -310,10 +310,10 @@ async function main() {
                 cart_codes:cart_codes //결제한 카트코드
             }),
             function(r){
-                console.log("확인");
+              /*  console.log("확인");*/
             }
         });
-        console.log(count);
+      /*  console.log(count);*/
 
         await widgets.requestPayment({
             orderId: orderId,

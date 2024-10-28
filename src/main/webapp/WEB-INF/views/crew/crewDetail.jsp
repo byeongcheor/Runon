@@ -359,7 +359,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                 }
             },
             error: function(e) {
-                console.error('Error: ', e);
+               /* console.error('Error: ', e);*/
             }
         });
     }
@@ -384,7 +384,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                 else alert('이미 가입신청 되어있습니다.');
             },
             error: function(e) {
-                console.error('Error: ', e);
+             /*   console.error('Error: ', e);*/
             }
         });
     }
@@ -429,8 +429,8 @@ $('#prevBtnInCreateModal').on('click', function() {
                 }
             },
             error: function(error) {
-                console.log(error);
-                alert('가입 신청 중 오류가 발생했습니다.');
+           /*     console.log(error);
+                alert('가입 신청 중 오류가 발생했습니다.');*/
             }
         });
     }
@@ -450,7 +450,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                     window.location.href = '/crew/crewList';
                 },
                 error: function(e) {
-                    console.error('Error: ', e);
+                   /* console.error('Error: ', e);*/
                 }
             });
         } else {
@@ -482,7 +482,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                $('#region2').prop('disabled', true);
             },
             error: function(e) {
-                console.error('Error: ', e);
+               /* console.error('Error: ', e);*/
             }
         });
     }
@@ -516,7 +516,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                 }
             },
             error: function(e) {
-                console.error('Error: ', e);
+               /* console.error('Error: ', e);*/
             }
         });
     }
@@ -558,7 +558,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                 setTimeout(function() { crew_detail_select(); }, 100); // 업데이트된 내용을 다시 불러오는 함수
             },
             error: function(error) {
-                console.log(error);
+               /* console.log(error);*/
                 alert('크루 모집 수정 중 오류가 발생했습니다.');
             }
         });
@@ -575,7 +575,7 @@ $('#prevBtnInCreateModal').on('click', function() {
                 window.location.href = '/crew/crewManage';
             },
             error: function(error) {
-                console.log('에러 발생:', error);
+   /*             console.log('에러 발생:', error);*/
             }
         });
     }

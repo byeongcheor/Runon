@@ -179,7 +179,7 @@
                     `;
                 }else{
                     $.each(r.list, function (i, vo) {
-                        console.log(vo);
+                       /* console.log(vo);*/
                         var dateresult = vo.result_date;
                         if (dateresult == null) {
                             dateresult = "";
@@ -237,7 +237,7 @@
                 $(".pagination").html(paginationTag);
 
             }, error: function (e) {
-                alert(e);
+               /* alert(e);*/
             }
         });
     }
@@ -248,7 +248,7 @@
             modal.style.display="block";
 
         }else{
-            console.error("실패");
+           /* console.error("실패");*/
         }
     }
     function closeUploadModal(){
@@ -256,7 +256,7 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
     function submitUploadForm(){
@@ -303,7 +303,7 @@
                     location.reload();
                 }, error: function (e) {
                     alert("파일업로드 실패..");
-                    console.log(e);
+                 /*   console.log(e);*/
                 }
             });
         return false;

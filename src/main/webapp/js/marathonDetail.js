@@ -90,11 +90,11 @@ setTimeout(function(){
                     likeCount.textContent = count; // 좋아요 카운트 업데이트
                     updateHeartIcon(); // 하트 상태 업데이트
                 } else {
-                  /*  alert(data.message || '좋아요 추가 실패');*/
+                    alert(data.message || '좋아요 추가 실패');
                 }
             })
             .catch(error => {
-              /*  console.error('좋아요 추가에 실패했습니다:', error);*/
+                console.error('좋아요 추가에 실패했습니다:', error);
             });
     });
 

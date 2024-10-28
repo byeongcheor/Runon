@@ -385,7 +385,7 @@ function crew_deatil_select() {
           $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
       },
       error: function(e) {
-         console.error('Error: ', e);
+         /*console.error('Error: ', e);*/
       }
    });
 }
@@ -453,7 +453,7 @@ function vote_rud(flag) {
            }
         },
         error: function(e) {
-           console.error('Error: ', e);
+           /*console.error('Error: ', e);*/
         }
      });
 }
@@ -462,7 +462,7 @@ function crew_manage_select(element) {
   var id = element.id === undefined ? 'overview' : element.id;
   $('[name="crew_select"]').css('color', 'gray');
   $('#' + id).css('color', 'black');
-  console.log("Selected id: ", id);
+/*  console.log("Selected id: ", id);*/
   $.ajax({
      url: '/crew/crew_manage_select',
      type: 'post',
@@ -826,7 +826,7 @@ function noticeDetail(notice_num, flag, YN) {
                 });
             },
             error: function(error) {
-                console.log('에러 발생:', error);
+               /* console.log('에러 발생:', error);*/
             }
         });
     }
@@ -867,7 +867,7 @@ function uploadImages(event) {
             }
         },
         error: function(xhr, status, error) {
-            alert("파일 업로드 실패: " + error);
+           /* alert("파일 업로드 실패: " + error);*/
         }
     });
 }
@@ -892,7 +892,7 @@ function delete_image(notice_num,imageName) {
             }
         },
         error: function(xhr, status, error) {
-            console.error(error);
+            /*console.error(error);*/
         }
     });
 }
@@ -1458,7 +1458,7 @@ function submitVoteNow() {
         }
      },
      error: function(e) {
-        console.error('Error: ', e);
+      /*  console.error('Error: ', e);*/
      }
   });
   document.getElementById('voteNowModal').style.display = 'none';
@@ -1508,7 +1508,7 @@ function submitNotice() {
         processData: false, // FormData 사용 시 false로 설정
         contentType: false, // FormData 사용 시 false로 설정
         success: function(response) {
-            console.log("서버 응답:", response);
+            /*console.log("서버 응답:", response);*/
             if (response === 1) {
                 alert('공지사항이 성공적으로 등록되었습니다.');
                 closeNoticeModal(); // 모달 닫기
@@ -1523,7 +1523,7 @@ function submitNotice() {
             }
         },
         error: function(error) {
-            console.error("오류 발생:", error);
+          /*  console.error("오류 발생:", error);*/
             alert('공지사항 등록 중 오류가 발생했습니다.');
         }
     });
@@ -1589,7 +1589,7 @@ function previewImages(event) {
 function crew_manage_handover(element) {
    var id = element.id;
    const user_code = ${user_code}; // 공백 제거 후 전역변수에서 가져오기
-   console.log("Selected id: ", id);
+ /*  console.log("Selected id: ", id);*/
 
     $.ajax({
         url: '/crew/crew_manage_select',
@@ -1627,12 +1627,12 @@ function crew_manage_handover(element) {
                         list += '</label>';
                     }
                 }
-                console.log("Generated list: ", list);
+           /*     console.log("Generated list: ", list);*/
                 $('#crew_handover_list').append(list); // 리스트 또는 메시지 추가
             }
         },
         error: function(e) {
-            console.error('Error: ', e);
+            /*console.error('Error: ', e);*/
         }
     });
 }
@@ -1649,7 +1649,7 @@ function go_crew_detail() {
             window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
         },
         error: function(error) {
-            console.log('에러 발생:', error);
+            /*console.log('에러 발생:', error);*/
         }
     });
 }
