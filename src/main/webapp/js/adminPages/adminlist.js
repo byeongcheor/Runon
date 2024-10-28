@@ -4,7 +4,29 @@ var adminSearchType2=null;
 var adminSearchValue2=null;
 setTimeout(function(){
     var page;
-    loadAdminPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+                if (role!="ROLE_USER"){
+                    loadAdminPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
 
                     },100);
 function loadAdminPage(page,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2){

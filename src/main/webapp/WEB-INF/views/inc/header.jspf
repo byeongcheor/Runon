@@ -101,7 +101,7 @@ function crew() {
                     <a href="/"><img src="/img/logo3.png" id="logoimage"/></a>
                 </div>
                 <ul>
-                    <li><a href="/marathon/marathonList">MARATHON</a></li>
+                    <li><a class="menus" href="/marathon/marathonList">MARATHON</a></li>
                     <li><a class="menus" onclick="mate()">MATE</a></li>
                     <li><a class="menus" onclick="crew()">CREW</a></li>
                     <li><a class="menus" href="/notice/fnaList">NOTICE</a></li>

@@ -4,7 +4,32 @@ var searchType2=null;
 var searchValue2=null;
 setTimeout(function(){
     var page;
-    reloadPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    reloadPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
 
 },100)
 
@@ -126,6 +151,7 @@ function reloadPage(page,searchType,searchValue,searchType2,searchValue2){
                 });
             }else{
                 alert("권한이 없습니다.");
+                window.location.href="/adminPages/adminHome";
             }
 
         }
@@ -175,6 +201,9 @@ function userdetail(usercode){
             var AdminRole=r.Avo.role;
             var Admincode=r.Avo.admin_code;
             var delete_role=r.Avo.permission_delete;
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
 
 
             var usertag = `<div id='userprofile'><img src="/resources/uploadfile/` + users.profile_img + `"/>`;
@@ -184,7 +213,7 @@ function userdetail(usercode){
                 usertag+=`<div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>`;
             }
                 usertag+=`<div>`;
-            if (users.is_disabled==0&&users.role=="ROLE_USER"){
+            if ((users.is_disabled==0&&users.role=="ROLE_USER"&&deleted=="1")||Admincode=="0"){
             usertag+= `
                     <form method="post"  onsubmit="return disableUser(`+users.usercode+`)">
                         <select id="stopDuration">
@@ -197,7 +226,7 @@ function userdetail(usercode){
                     </form>
                     `;
 
-            }else if(users.role=="ROLE_USER"){
+            }else if((users.role=="ROLE_USER"&&edit=="1")||Admincode=="0"){
                 usertag+=`
                 <div>정지된 유저입니다 <br/>
                 정지시작:`+users.disabled_start_date+`<br/>
@@ -247,7 +276,7 @@ function userdetail(usercode){
                     <div class="onelow">
                         <div id="addrdetail"><b>상세주소:</b>`+users.addr_details+`</div>
                     </div>`;
-            }else if (users.zip_code!=null&&(AdminRole<2||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
+            }else if (users.zip_code!=null&&(AdminRole<3||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
                 if (users.addr.length>5) {
                     var userAddr = users.addr.substring(0, users.addr.length - 5) + '*****';
                 }else{

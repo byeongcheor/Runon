@@ -4,8 +4,30 @@ var reportSearchType2=null;
 var page=0;
 var now;
 setTimeout(function(){
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
 
-    loadReportPage(page);
+
+                if (role!="ROLE_USER"){
+                    loadReportPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
 
 },300);
 function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValue){
@@ -109,7 +131,11 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
                 }
 
                 $(".pagination").html(paginationTag);
+            }else{
+                alert("접근권환이 없습니다 상위관리자한테 문의하세요");
+                window.location.href="/adminPages/adminHome";
             }
+
         },
         error:function(e){
             console.error(e);
@@ -160,12 +186,18 @@ function detail(report_code){
         url:"/adminPages/reportDetail",
         type:"post",
         data:{
-            report_code:report_code
+            report_code:report_code,
+            usercode:usercode1
         },
         success:function(r) {
             document.getElementById("reportreply").innerHTML="";
             reports = r.rvo;
             var replys=r.reply;
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
+
+
 
             var tag ="  <div id=\"reportDetails\"><div style='margin-bottom: 20px;'><h3>상세내역</h3></div>";
             tag+="<div><div class='detailTitle'>신고이유</div><div class='detailContent'>"+reports.report_reason+"</div></div>";
@@ -181,7 +213,7 @@ function detail(report_code){
             }else{
                 tag+="<div>첨부사진:없음</div>";
             }
-            if (reports.report_status!=1){
+            if (reports.report_status!=1 && cerate=="1" && edit=="1" && deleted=="1"){
                 tag+="</div><div class='handleBtn' onclick='reportReply()'>처리하기</div></div>"
             }
             document.getElementById("reportdetailbackground").style.display="block";

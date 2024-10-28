@@ -72,9 +72,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/css/**", "/js/**","/img/**").permitAll()
-                        .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp").permitAll()
+                        .requestMatchers("/login", "/", "/join", "/home","/WEB-INF/views/home.jsp","/WEB-INF/views/adminPages/adminHome.jsp").permitAll()
                         //.requestMatchers("/adminPages/adminHome").hasRole("ADMIN")
-                        //.requestMatchers("/mate/mate").authenticated()
+                      /*  .requestMatchers("/mate/mate").authenticated()*/
 //                        .requestMatchers("링크명").authenticated()
                         .anyRequest().permitAll());
 
@@ -85,7 +85,7 @@ public class SecurityConfig {
                         //.anyRequest().authenticated());
 
         http
-                /*.oauth2Login(Customizer.withDefaults());*/
+               /* .oauth2Login(Customizer.withDefaults());*/
                 .oauth2Login((oauth2) -> oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(coustomOAuth2UserService))));
         http
                 .oauth2Login((oauth2) -> oauth2
@@ -136,7 +136,7 @@ public class SecurityConfig {
 
                             response.addHeader("Authorization", "Bearer " + token);
                             response.addHeader("refreshToken", "Bearer " + refreshToken);
-                          /*  response.sendRedirect("/callback");*/
+                            response.sendRedirect("/callback");
                             response.setContentType("text/html");
                             response.getWriter().write(
                                     "<html>" +
@@ -164,7 +164,6 @@ public class SecurityConfig {
                         })
 
                 );
-
 
 
         http

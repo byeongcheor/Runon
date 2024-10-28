@@ -131,9 +131,15 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     @Transactional(rollbackFor = Exception.class)
     public int UpdateUser(AdminsVO Avo, MemberVO mvo) {
         int a= dao.UpdateUsertbl(mvo);
-        int b= dao.UpdateAdmintbl(Avo);
-        if (a !=1 || b!=1){
-            return 0;
+        AdminsVO result= dao.selectAdmin(mvo.getUsercode());
+        System.out.println(result);
+        if (result==null){
+            int b= dao.insertAdmintbl(Avo);
+            if (a !=1 || b!=1){
+                return 0;
+            }
+        }else{
+            dao.updateAdmintbl(Avo);
         }
         return 1;
     }
@@ -567,6 +573,11 @@ public class AdminPagesServiceImpl implements AdminPagesService {
     @Override
     public List<MarathonListVO> selectBoardWithSearchForStatus(PagingVO pvo) {
         return dao.selectBoardWithSearchForStatus(pvo);
+    }
+
+    @Override
+    public String selectRole(int usercode) {
+        return dao.selectRole(usercode);
     }
     //
 
