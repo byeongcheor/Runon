@@ -67,8 +67,8 @@
                             </button>
                             <span id="likeCount" class="like-count">${marathon.like_count}</span> <!-- 좋아요 수 -->
                         </div>
-                        <button class="MC">장바구니</button>
-                        <button type="button" id="buyNowButton" class="MP">바로구매</button>
+                        <button class="MC" data-start-date="${marathon.registration_start_date}" data-end-date="${marathon.registration_end_date}">장바구니</button>
+                        <button type="button" id="buyNowButton" class="MP"  data-start-date="${marathon.registration_start_date}" data-end-date="${marathon.registration_end_date}">바로구매</button>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
         </div>
         <!-- 지도 표시할 영역 -->
         <div class="hospital" style="position: relative;">
-            <h2>마라톤대회 길찾기</h2>
+            <h2>마라톤대회 위치 및 주변 응급병원</h2>
             <div id="map" style="width:800px;height:600px;position: relative;"></div>
             <button onclick="panToUserLocation()" style="background-color: transparent; border: none;position: absolute; top: 11%; z-index: 10;"><img src="/img/checkpoint.png" style="width:30px; height: 30px;"></button>
         </div>
