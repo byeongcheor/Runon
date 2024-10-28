@@ -11,7 +11,7 @@ function FindPws2(){
     }
     const regExpUsername = /^\w{4,12}[@][A-Za-z]{2,8}[.][A-Za-z]{2,3}([.][A-Za-z]{2,3})?$/;
     if(document.getElementById("username").value==""){//아이디를 입력하지않았을때
-        alert("아이디를 입력후 중복검사하세요.");
+        alert("아이디를 입력후 찾기를 해주세요.");
         document.getElementById("username").focus();
         return false;
 
@@ -34,7 +34,7 @@ function FindPws2(){
 
         },
         error:function(e){
-            console.log("예외발생",e);
+          /*  console.log("예외발생",e);*/
         }
 
     });
@@ -52,21 +52,22 @@ function findpw(username){
             },
             success:function(r){
                 var token=r.token;
-                console.log(token);
+                /*console.log(token);*/
                 var url="http://192.168.1.154:7942/loginjoin/changepw/"+token;
-                console.log(url);
-                /*          emailjs.send('gmail',"template_2msjhhl", {
+               /* console.log(url);*/
+                          emailjs.send('gmail',"template_2msjhhl", {
                               to_name:username,
                               message:url
                           })   .then(function(response) {
                               console.log('SUCCESS!', response.status, response.text);
                           }, function(error) {
                               console.log('FAILED...', error);
-                          });*/
+                          });
                 alert("이메일을 확인해주세요.");
-                window.close();
+
             }
         });
+       /* window.close();*/
     }
 
 

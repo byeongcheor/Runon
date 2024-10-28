@@ -295,7 +295,7 @@
     <div class="custom-modal-footer">
       <button class="vote-btn" id=vote_update2 onclick="vote_rud('R')">수정</button>
       <button class="vote-btn" id=vote_delete2 onclick="vote_rud('D')">삭제</button>
-      <button class="handover-btn2" id=vote_close2 onclick="closeCustomModal()">닫기</button>
+      <button class="vote-btn" id=vote_close2 onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -318,6 +318,7 @@ const Authorization = localStorage.getItem("Authorization");
 const create_crew_code = ${create_crew_code};
 const user_code = ${user_code};
 const position = ${position};
+const flag = ${flag};
 var votenum = 4;
 var notice_num;
     clog('My position : ' + position);
@@ -358,6 +359,7 @@ $(document).ready(function() {
             alert('맴버만 볼 수 있어요 가입신청해 주세요');
         });
     }
+    if(flag==1)$('#member').click();
 });
 
 function crew_deatil_select() {
@@ -383,7 +385,7 @@ function crew_deatil_select() {
           $('#teamImage').attr('src', '/crew_upload/' + response[0].logo);
       },
       error: function(e) {
-         console.error('Error: ', e);
+         /*console.error('Error: ', e);*/
       }
    });
 }
@@ -451,7 +453,7 @@ function vote_rud(flag) {
            }
         },
         error: function(e) {
-           console.error('Error: ', e);
+           /*console.error('Error: ', e);*/
         }
      });
 }
@@ -460,7 +462,7 @@ function crew_manage_select(element) {
   var id = element.id === undefined ? 'overview' : element.id;
   $('[name="crew_select"]').css('color', 'gray');
   $('#' + id).css('color', 'black');
-  console.log("Selected id: ", id);
+/*  console.log("Selected id: ", id);*/
   $.ajax({
      url: '/crew/crew_manage_select',
      type: 'post',
@@ -496,7 +498,7 @@ function crew_manage_select_member(response) {
      list += '   <span id="wait_cnt">';
      list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
      list += '   </span>';
-     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
+     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:2px; margin-right:65px; margin-top:3px;">';
      list += '</div>';
   }
   for (var i in response) {
@@ -824,7 +826,7 @@ function noticeDetail(notice_num, flag, YN) {
                 });
             },
             error: function(error) {
-                console.log('에러 발생:', error);
+               /* console.log('에러 발생:', error);*/
             }
         });
     }
@@ -865,7 +867,7 @@ function uploadImages(event) {
             }
         },
         error: function(xhr, status, error) {
-            alert("파일 업로드 실패: " + error);
+           /* alert("파일 업로드 실패: " + error);*/
         }
     });
 }
@@ -890,7 +892,7 @@ function delete_image(notice_num,imageName) {
             }
         },
         error: function(xhr, status, error) {
-            console.error(error);
+            /*console.error(error);*/
         }
     });
 }
@@ -1387,13 +1389,18 @@ function voteNow(vote_num, flag, vote_user_code) {
               list2 += '    <span>' + response[0][key] + '</span>';
               list2 += '    <span>' + arr_length + '명</span>';
               list2 += '</div>';
+              var b = arr_length/response[0].a_n;
+              b = (Math.round(b * 100) / 100)*100;
+              clog(b);
               list2 += '<div class="progress-bar">';
-              list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+              list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: '+b+'%;"></div>';
               list2 += '</div>';
            }
            list2 += '</div>';
            $('#vote_results').html(list2);
-
+           clog(flag);
+           clog(vote_user_code);
+           clog(user_code);
            if (response[0].f_s ===null&&flag==0) {
               document.getElementById('voteNowModal').style.display = 'block';
            }
@@ -1403,10 +1410,10 @@ function voteNow(vote_num, flag, vote_user_code) {
                 $('#vote_live').html('<strong>투표 결과</strong>');
                 $('#vote_close2').removeClass().addClass('handover-btn2');
                 $('#vote_delete2').removeClass().addClass('handover-btn');
-            } else if (flag == 2 && vote_user_code == user_code) {
-                     $('#vote_update2').show();
-                     $('#vote_close2').removeClass().addClass('vote-btn');
-
+            } else if (flag == 1 && vote_user_code == user_code) {
+                $('#vote_update2').show();
+                $('#vote_close2').removeClass().addClass('vote-btn');
+                 $('#vote_delete2').removeClass().addClass('vote-btn');
             } else {
                 $('#vote_live').html('');
                 $('#vote_live').html('<strong>투표 현황</strong>');
@@ -1452,7 +1459,7 @@ function submitVoteNow() {
         }
      },
      error: function(e) {
-        console.error('Error: ', e);
+      /*  console.error('Error: ', e);*/
      }
   });
   document.getElementById('voteNowModal').style.display = 'none';
@@ -1502,7 +1509,7 @@ function submitNotice() {
         processData: false, // FormData 사용 시 false로 설정
         contentType: false, // FormData 사용 시 false로 설정
         success: function(response) {
-            console.log("서버 응답:", response);
+            /*console.log("서버 응답:", response);*/
             if (response === 1) {
                 alert('공지사항이 성공적으로 등록되었습니다.');
                 closeNoticeModal(); // 모달 닫기
@@ -1517,7 +1524,7 @@ function submitNotice() {
             }
         },
         error: function(error) {
-            console.error("오류 발생:", error);
+          /*  console.error("오류 발생:", error);*/
             alert('공지사항 등록 중 오류가 발생했습니다.');
         }
     });
@@ -1583,7 +1590,7 @@ function previewImages(event) {
 function crew_manage_handover(element) {
    var id = element.id;
    const user_code = ${user_code}; // 공백 제거 후 전역변수에서 가져오기
-   console.log("Selected id: ", id);
+ /*  console.log("Selected id: ", id);*/
 
     $.ajax({
         url: '/crew/crew_manage_select',
@@ -1621,12 +1628,12 @@ function crew_manage_handover(element) {
                         list += '</label>';
                     }
                 }
-                console.log("Generated list: ", list);
+           /*     console.log("Generated list: ", list);*/
                 $('#crew_handover_list').append(list); // 리스트 또는 메시지 추가
             }
         },
         error: function(e) {
-            console.error('Error: ', e);
+            /*console.error('Error: ', e);*/
         }
     });
 }
@@ -1643,7 +1650,7 @@ function go_crew_detail() {
             window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
         },
         error: function(error) {
-            console.log('에러 발생:', error);
+            /*console.log('에러 발생:', error);*/
         }
     });
 }

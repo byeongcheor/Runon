@@ -3,8 +3,8 @@ setTimeout(function(){
 
 
 
-    console.log(usercode1);
-    console.log(orderId);
+/*    console.log(usercode1);
+    console.log(orderId);*/
     $.ajax({
         url:"/payment/completed",
         type:"post",
@@ -13,7 +13,7 @@ setTimeout(function(){
             usercode:usercode1
         },
         success:function(r){
-            console.log(r.Cvo);
+      /*      console.log(r.Cvo);*/
             var Cvo=r.Cvo;
             var allCvo=r.Cvo[0];
             var orderIdTag=` <span>주문</span>
@@ -54,11 +54,14 @@ setTimeout(function(){
 
         },
         error:function(e){
-            console.error(e);
-            console.log("실패");
+          /*  console.error(e);
+            console.log("실패");*/
         }
     });
 
 
 
 },400);
+function gomain(){
+    window.location.href="/";
+}

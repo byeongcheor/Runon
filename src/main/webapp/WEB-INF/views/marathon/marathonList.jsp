@@ -94,7 +94,7 @@
                                     <div class="receiptType">
                                         <span style="
                                         <c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>
-                                        <c:if test='${marathon.registration_status == "접수 시작 전"}'>color:green; font-weight: bold;</c:if>
+                                        <c:if test='${marathon.registration_status == "접수준비중"}'>color:green; font-weight: bold;</c:if>
                                                 ">
                                                 ${marathon.registration_status}
                                         </span>
@@ -130,7 +130,7 @@
             <!-- 페이지 번호 출력 -->
             <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
                 <c:if test="${p <= pvo.totalPage}">
-                    <li class='page-item <c:if test="${p == pvo.nowPage}">active</c:if>'>
+                    <li class="page-item <c:if test="${p == pvo.nowPage}">active</c:if>">
                         <a class="page-link" href="?nowPage=${p}&searchKey=${pvo.searchKey}&searchWord=${pvo.searchWord}&addr=${pvo.addr}">${p}</a>
                     </li>
                 </c:if>
@@ -154,28 +154,6 @@
         window.location.href = '/marathon/marathonDetail/' + marathonCode;
     }
 
-    // 페이지 링크 클릭 시 AJAX로 페이지 전환
-    $(document).on('click', '.page-link', function(event) {
-        event.preventDefault();  // 링크의 기본 동작(새로고침)을 막음
-
-        const url = $(this).attr('href');  // 링크에서 URL 가져오기
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(response) {
-                // 서버에서 받아온 데이터를 특정 div에 업데이트
-                $('#marathon-list').html($(response).find('#marathon-list').html());
-
-                // 페이징도 업데이트
-
-                $('#paging').html($(response).find('#paging').html());
-            },
-            error: function() {
-                alert('페이지 로딩 중 오류가 발생했습니다.');
-            }
-        });
-    });
 
     ///필터 검색
 
@@ -259,8 +237,9 @@
         console.log('서버에서 받은 데이터:', data); // 서버 응답 확인
         // 필터링된 데이터와 총 레코드 수를 처리하는 UI 업데이트 로직을 작성합니다.
         // const totalRecord = data.totalRecord;
+        var pVO = data.pvo;
+        console.log('pVO:', pVO.totalRecord);
         const marathons = data.filteredMarathons || []; // 기본값으로 빈 배열 설정
-
         // UI에 마라톤 리스트 업데이트 로직 추가
         // 예: 리스트를 비우고 새로 추가
         $('#marathon-list').empty(); // 마라톤 리스트가 있는 DOM 요소의 ID에 맞게 변경
@@ -280,7 +259,7 @@
                                     <div class="marathonListI">
                                         <img src="/img/marathonPoster/` + marathon.poster_img + `" style="width: 300px; height: 300px;">
                                         <div class="receiptType">
-                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수 시작 전' ? 'color:green; font-weight: bold;' : '') + `">
+                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수준비중' ? 'color:green; font-weight: bold;' : '') + `">
                                     ` + marathon.registration_status + `
                                 </span>
                                         </div>
@@ -304,6 +283,48 @@
             });
 
             $('#marathon-list').append(marathonHTML);
+
+
+            // 필터링 조건을 가져옵니다.
+            let searchKey = $("#searchKey").val();
+            let searchWord = $("#searchWord").val();
+            let addr = $("#addr").val();
+
+            // 페이징 태그 생성
+            let paginationTag = "";
+            const totalPages = Math.ceil(pVO.totalRecord / pVO.onePageRecord);
+
+            // 이전 버튼
+            if (pVO.nowPage > 1) {
+                paginationTag += "<li class='page-item'>" +
+                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + (pVO.nowPage - 1) + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>&lt;</a>" +
+                    "</li>";
+            }
+
+            // 페이지 번호 표시
+            let startPage = Math.max(1, pVO.nowPage - 2);
+            let endPage = Math.min(startPage + 4, totalPages);
+
+            // 시작 페이지 조정
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let p = startPage; p <= endPage; p++) {
+                paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'>" +
+                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + p + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>" + p + "</a>" +
+                    "</li>";
+            }
+
+            // 다음 버튼
+            if (pVO.nowPage < totalPages) {
+                paginationTag += "<li class='page-item'>" +
+                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + (pVO.nowPage + 1) + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>&gt;</a>" +
+                    "</li>";
+            }
+
+            // 페이징 태그 삽입
+            $("#paging").html(paginationTag);
         }
 
     }

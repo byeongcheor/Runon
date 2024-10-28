@@ -4,8 +4,30 @@ var reportSearchType2=null;
 var page=0;
 var now;
 setTimeout(function(){
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
 
-    loadReportPage(page);
+
+                if (role!="ROLE_USER"){
+                    loadReportPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
 
 },300);
 function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValue){
@@ -25,7 +47,7 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
 
     }
     now=page;
-    console.log(page);
+    /*console.log(page);*/
     if (usercode1){
         ReportData.usercode=usercode1;
     }
@@ -85,11 +107,18 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
                 var paginationTag="";
 
 
-                if (pVO.nowpage>1){
+                if (pVO.nowPage>1){
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadReportPage(" + (pVO.nowPage - 1) +
                         ", reportSearchType,reportSearchType2,reportSearchValue);'>Previous</a></li>";
                 }
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                }
+                // 페이지 번호 출력
+                for (var p = startPage; p <= endPage; p++) {
                     if (p <= pVO.totalPage) {
                         paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadReportPage(" + p
                             + ", reportSearchType,reportSearchType2,reportSearchValue);'>" + p + "</a></li>";
@@ -102,7 +131,11 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
                 }
 
                 $(".pagination").html(paginationTag);
+            }else{
+                alert("접근권환이 없습니다 상위관리자한테 문의하세요");
+                window.location.href="/adminPages/adminHome";
             }
+
         },
         error:function(e){
             console.error(e);
@@ -113,7 +146,7 @@ function searchbutton(){
     reportSearchType=document.getElementById("reportSearchValue").value;
     reportSearchType2=document.getElementById("reportSearchValue2").value;
     reportSearchValue=document.getElementById("searchtext").value;
-    alert(reportSearchType2+":"+reportSearchValue);
+/*    alert(reportSearchType2+":"+reportSearchValue);*/
     loadReportPage(1,reportSearchType,reportSearchType2,reportSearchValue);
 
 
@@ -148,17 +181,23 @@ function reset(){
 }
 var reports;
 function detail(report_code){
-    alert(report_code);
+/*    alert(report_code);*/
     $.ajax({
         url:"/adminPages/reportDetail",
         type:"post",
         data:{
-            report_code:report_code
+            report_code:report_code,
+            usercode:usercode1
         },
         success:function(r) {
             document.getElementById("reportreply").innerHTML="";
             reports = r.rvo;
             var replys=r.reply;
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
+
+
 
             var tag ="  <div id=\"reportDetails\"><div style='margin-bottom: 20px;'><h3>상세내역</h3></div>";
             tag+="<div><div class='detailTitle'>신고이유</div><div class='detailContent'>"+reports.report_reason+"</div></div>";
@@ -174,7 +213,7 @@ function detail(report_code){
             }else{
                 tag+="<div>첨부사진:없음</div>";
             }
-            if (reports.report_status!=1){
+            if (reports.report_status!=1 && cerate=="1" && edit=="1" && deleted=="1"){
                 tag+="</div><div class='handleBtn' onclick='reportReply()'>처리하기</div></div>"
             }
             document.getElementById("reportdetailbackground").style.display="block";
@@ -231,8 +270,8 @@ function addreply(){
 
     var is_disabled = document.getElementById("is_disabled").value
     var content = document.getElementById("content").value
-    console.log("테스트:"+is_disabled);
-    console.log("테스트2:"+content);
+    /*console.log("테스트:"+is_disabled);
+    console.log("테스트2:"+content);*/
     var reply={}
     reply=reports;
     reply.is_disabled=is_disabled;
@@ -243,7 +282,7 @@ function addreply(){
         type:"post",
         data:reply,
         success:function(r){
-            console.log("성공");
+          /*  console.log("성공");*/
             var rvo=r.rvo;
             var tag=`
             <div><h3>신고결과</h3></div>
@@ -254,7 +293,7 @@ function addreply(){
            <!-- <div><div id="updateReply" ><button>확인</button><button>취소</button></div><button id="updatebutton" onclick="updateReply()">수정</button></div>-->`;
             document.getElementById("reportreply").innerHTML=tag;
             document.getElementById("addreply").style.display="none";
-            console.log("왜 null이야"+now);
+           /* console.log("왜 null이야"+now);*/
             loadReportPage(now,reportSearchType,reportSearchType2,reportSearchValue);
         }
     });

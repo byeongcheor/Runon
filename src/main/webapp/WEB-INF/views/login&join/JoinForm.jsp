@@ -9,7 +9,7 @@
         <div class="joinMain">
             <div class="joinN">아이디<span>(이메일)</span></div>
             <div class="joinI">
-                <input type="text" name="username" id="username" minlength="8" maxlength="30" placeholder="이메일 주소를 입력해 주십시오." onkeyup="setKeyCheck()" />
+                <input type="text" style="width:240px;"name="username" id="username" minlength="8" maxlength="30" placeholder="이메일 주소를 입력해 주십시오." onkeyup="setKeyCheck()" />
                 <input type="button" id="idCheck" value="아이디중복검사" onclick="idDoubleCheck()"/>
                 <input type="hidden" id="chk" value="N"><!-- N: 중복검사안함, Y 중복검사함 -->
             </div>
@@ -23,14 +23,14 @@
             </div>
             <div class="joinN">이름</div>
             <div class="joinI">
-                <input type="text" name="name" id="name" placeholder="이름을 입력해주세요"/>
-                <input type="button" value=" 남 " id="genderm" onclick="gendercheck(this.value)"/>
-                <input type="button" value=" 여 " id="genderw" onclick="gendercheck(this.value)"/>
+                <input type="text" style="width:230px;" name="name" id="name" placeholder="이름을 입력해주세요"/>
+                <input type="button" style="width:50px;"value=" 남 " id="genderm" onclick="gendercheck(this.value)"/>
+                <input type="button" style="width:50px;" value=" 여 " id="genderw" onclick="gendercheck(this.value)"/>
                 <input type="hidden" name="gender" id="gender" value=""/>
             </div>
             <div class="joinN">생년월일</div>
             <div class="joinI">
-                <input type="text" name="birthdate" id="birthdate" placeholder="yymmdd형식으로 입력해주세요."/>
+                <input type="text" name="birthdate" id="birthdate" placeholder="yyyymmdd형식으로 입력해주세요."/>
             </div>
             <div class="joinN">닉네임</div>
             <div class="joinI">
@@ -57,7 +57,7 @@
             </div>
             <div class="joinN">주소</div>
             <div class="joinI">
-                <input type="text" name="addr" id="addr" style="width:70%" placeholder="주소를 입력해주세요"/>
+                <input type="text" name="addr" id="addr" placeholder="주소를 입력해주세요"/>
             </div>
             <div class="joinN">상세주소</div>
             <div class="joinI">

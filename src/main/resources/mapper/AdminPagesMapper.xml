@@ -237,6 +237,9 @@
         LIMIT  #{onePageRecord} offset #{offset}
     </select>
     <select id="selectAdminRole" resultType="com.ict.finalproject.vo.AdminsVO">
+        select *from admin_tbl where usercode=#{usercode} and is_deleted=0
+    </select>
+    <select id="selectAdmin" resultType="com.ict.finalproject.vo.AdminsVO">
         select *from admin_tbl where usercode=#{usercode}
     </select>
     <update id="updateRole">
@@ -274,9 +277,12 @@
     <update id="UpdateUsertbl">
         update user_tbl set role="ROLE_ADMIN" where usercode=#{usercode}
     </update>
-    <insert id="UpdateAdmintbl">
+    <insert id="insertAdmintbl">
         insert into admin_tbl(role,usercode) values(3,#{usercode})
     </insert>
+    <update id="updateAdmintbl">
+        update admin_tbl set role=3,is_deleted=0,deleted_date=null where usercode=#{usercode}
+    </update>
     <update id="userroleDown">
         update user_tbl set role="ROLE_USER" where usercode=#{usercode}
     </update>
@@ -462,31 +468,29 @@
         FROM user_tbl;
     </select>
     <select id="getNewPayment" resultType="com.ict.finalproject.vo.AdminPaymentVO">
-    <!--    select o.order_code as order_code,
-            m.marathon_name as marathon_name,
-            o.real_amount as real_amount,
-            u.nickname as nickname,
-            p.completed_date as completed_date
-        from
-            payment_tbl p
-        join order_tbl o on p.order_code = o.order_code
-        join marathon_list_tbl m on o.marathon_code = m.marathon_code
-        join user_tbl u on o.usercode=u.usercode
-        where p.is_completed=1
-        order by p.completed_date desc
-        limit 5;-->
         SELECT
         pd.orderId,
-        p.real_amount,
-        p.completed_date,
-        u.nickname as nickname,
-        p.usercode,
-        pd.order_code
+        p.total_amount,
+        u.nickname,
+        p.completed_date
         FROM payment_tbl p
-        join user_tbl u on p.usercode=u.usercode
+        JOIN user_tbl u ON p.usercode = u.usercode
         JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
-        ORDER BY p.payment_code
-        LIMIT 5    </select>
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status != 0 AND pd.is_deleted = 0
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0
+        GROUP BY pd.orderId, u.nickname, p.total_amount,p.completed_date
+        ORDER BY p.completed_date desc
+        LIMIT 5
+    </select>
     <select id="getQnaList" resultType="com.ict.finalproject.vo.QnAVO">
         select q.qna_code,u.nickname,q.qna_subject,q.writedate from
         qna_tbl q
@@ -709,18 +713,23 @@
             JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code  <!-- orderId 검색을 위해 payment_detail_tbl 조인 -->
         </if>
         <where>
-            is_completed=1 and pd.is_deleted = 0 and p.is_deleted
+            p.is_completed = 1
+            AND p.is_deleted = 0
+            <if test="searchKey == 'orderId'">
+                AND pd.is_deleted = 0
+            </if>
             <if test="searchKey != null and !searchKey.isEmpty()">
                 <if test="searchKey == 'orderId'">
-                    and pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+                    AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
                 </if>
                 <if test="searchKey == 'nickname'">
-                   and u.usercode IN (
+                    AND u.usercode IN (
                     SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
                     )
                 </if>
             </if>
         </where>
+
 
     </select>
     <select id="getPaymentSearchList" resultType="com.ict.finalproject.vo.PaymentVO">
@@ -731,23 +740,33 @@
         p.payment_method,
         p.completed_date,
         m.latest_marathon_name,
-        CONCAT(IFNULL(m.marathon_count - 1, 0)) AS marathon_count
-        FROM payment_tbl p
-        JOIN user_tbl u ON p.usercode = u.usercode
-        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count  -- MAX로 감싸서 집계함
+        FROM
+        payment_tbl p
+        JOIN
+        user_tbl u ON p.usercode = u.usercode
+        JOIN
+        payment_detail_tbl pd ON p.payment_code = pd.payment_code
         JOIN (
         SELECT
         pd.payment_code,
         pd.orderId,
         MAX(mt.marathon_name) AS latest_marathon_name,
         COUNT(mt.marathon_name) AS marathon_count
-        FROM payment_detail_tbl pd
-        JOIN order_tbl o ON pd.order_code = o.order_code
-        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
-        WHERE status != 0 AND pd.is_deleted = 0
-        GROUP BY pd.payment_code, pd.orderId
-        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
-        WHERE p.is_deleted = 0
+        FROM
+        payment_detail_tbl pd
+        JOIN
+        order_tbl o ON pd.order_code = o.order_code
+        JOIN
+        marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE
+        status != 0 AND pd.is_deleted = 0
+        GROUP BY
+        pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code
+        AND pd.orderId = m.orderId
+        WHERE
+        p.is_deleted = 0
         <if test="searchKey != null and !searchKey.isEmpty()">
             <if test="searchKey == 'orderId'">
                 AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
@@ -758,7 +777,8 @@
                 )
             </if>
         </if>
-        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+        GROUP BY
+        pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
         <if test="schedule != null and !schedule.isEmpty()">
             ORDER BY ${schedule} ${sort}
         </if>
@@ -846,6 +866,7 @@
                 and q.qna_status = #{searchKey2}
             </if>
         </where>
+        order by writedate desc
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="getQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
@@ -854,6 +875,7 @@
         join user_tbl u on q.usercode = u.usercode
         left join answer_tbl a on q.qna_code = a.qna_code
         where q.is_deleted=0
+        order by writedate desc
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="getQnaDetail" resultType="com.ict.finalproject.vo.QnAVO">
@@ -979,11 +1001,9 @@
 <!--        LIMIT #{onePageRecord} OFFSET #{offset}-->
 <!--    </select>-->
 
-
-
-
-
-
+<select id="selectRole">
+    select role from user_tbl where usercode=#{usercode}
+</select>
 
 
 </mapper>

@@ -44,13 +44,14 @@ function formCheck(event){
                             const refreshToken = xhr.getResponseHeader('refreshToken');
                             localStorage.setItem("refresh",refreshToken);
                             localStorage.setItem("Authorization",token);
-                            opener.window.location.reload();
+
                             if (window.opener) {
                                 const parentUrl = window.opener.location.href;
                                 const parentFileName = parentUrl.substring(parentUrl.lastIndexOf('/') + 1);
                                 console.log(parentFileName);
                                 if(parentFileName=='crewList')crew();
                             }
+                            opener.window.location.reload();
                             window.close();
                         },
                         error:function (e){
@@ -68,7 +69,7 @@ function formCheck(event){
             },
             error:function (e){
 
-                console.log(e.message);
+               /* console.log(e.message);*/
             }
         });
 
@@ -76,11 +77,12 @@ function formCheck(event){
 
 
 }
-    function joinPopup(){
-        window.open('/JoinForm', 'JoinForm', 'width=600, height=850 ,left=1200, top=150');
-
-
+function joinPopup() {
+    const popup = window.open('/JoinForm', 'JoinForm', 'width=600,height=980,left=1200,top=150,resizable=yes');
+    if (popup) {
+        popup.resizeTo(600, 980);
     }
+}
 function findIdPopup(){
     window.open('/login&join/FindId', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
 }

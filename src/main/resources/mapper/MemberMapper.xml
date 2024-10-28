@@ -41,7 +41,7 @@
     </update>
 
     <select id="getUsers" resultType="com.ict.finalproject.vo.MemberVO">
-        select username,usercode from user_tbl where username=#{param1}
+        select username,usercode,role from user_tbl where username=#{param1}
     </select>
     <select id="disableCheck" resultType="com.ict.finalproject.vo.MemberVO">
         select password,is_disabled,disabled_date ,disabled_start_date from user_tbl where username=#{param1}

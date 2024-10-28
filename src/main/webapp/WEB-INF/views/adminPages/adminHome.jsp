@@ -95,7 +95,38 @@
                             <li>Lodding</li>
                         </ul>
                     </div>
+
                 </div>
+
+                <div id="qnadetailbackground">
+                    <div id="qnadetail">
+                        <div  id="closedetail" style="text-align: right;"><i onclick="closedetail()" class="fa-regular fa-circle-xmark fa-3x"></i></div>
+                        <div id="usermain">
+                        </div>
+
+                        <div id="qnacontent">
+                            <div id="reportDetails">
+                                <div><h3>문의내역</h3></div>
+                                <div id="report">
+                                    <div>제목:더미 신고 사유 1</div>
+                                    <div>닉네임:nickname</div>
+                                    <div>아이디:admin@naver.com</div>
+                                    <div>접수상태</div>
+                                    <div>접수일:2024-10-22</div>
+                                    <div>내용:
+                                        <div>집가고싶다</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="addreply">
+                        </div>
+                        <div id="qnareply">
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

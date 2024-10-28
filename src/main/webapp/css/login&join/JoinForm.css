@@ -1,85 +1,190 @@
-body{
-    animation: none;background-color: black;
+body {
+    animation: none;
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    position: relative;
 }
-.joinFrm>.loginTop>img{
-    width: 350px;
-}
-.joinFrm{
-    width: 500px;  margin: 0 auto; overflow:auto;
 
+body::before {
+    content: "";
+    background-image: url('/img/푸터배경.png');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.95; /* 배경 이미지의 투명도 설정 */
+    z-index: -1;
 }
-.joinN ,.joinT{
-    color: white;
+.joinFrm > .loginTop > img {
+    width: 240px;
 }
-.joinMain>* {
-    margin-left:60px;
+
+.joinFrm {
+    width: 500px;
+    margin: 0 auto;
+    overflow: auto;
 }
+
+.joinN, .joinT {
+    color: #ddd;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.5), 1px -1px 1px rgba(0, 0, 0, 0.5), -1px 1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.joinMain > * {
+    margin-left: 71px;
+}
+
 .joinFrm h1 {
     text-align: center;
     margin: 20px 0 20px;
 }
-.joinI input[type="text"]{
-    width: 250px; padding: 8px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.joinI input[type="password"]{
-    width: 250px; padding: 8px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.joinT select{
-    padding: 8px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.joinT input{
-    padding: 8px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.joinT :focus{
-    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-.joinZ input{
-    padding: 8px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.joinZ :focus{
-    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-.joinI input[type="text"]:focus{
-    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-.joinI input[type="password"]:focus{
-    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-.joinI input[type="button"]{
-    color: #fff; background: #FFA500;
-    border-style: none;
-    padding: 7px;  border-radius: 10px;
-}
-.joinZ input[type="button"]{
-    color: #fff; background: #FFA500;
-    border-style: none;
-    padding: 7px; border-radius: 10px;
-}
-.joinS input[type="submit"]{
-    width: 380px;
-    color: #fff; background: #FFA500;
-    border-style: none;
-    padding: 9px;  border-radius: 10px;
-    margin-top:10px;
+
+.joinI input[type="text"] {
+    width: 340px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
 }
 
-header,footer{display:none;}
-.info{
+.joinI input[type="password"] {
+    width: 340px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
+}
+
+.joinT select {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
+    width: 103px;
+    text-align: center;
+}
+
+.joinT input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
+    width: 103px;
+    text-align: center;
+}
+
+.joinT :focus {
+    border: 3px solid #ccff33;
+    outline: none;
+}
+
+.joinZ input[type="text"] {
+    width: 240px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
+}
+
+.joinZ :focus {
+    border: 3px solid #ccff33;
+    outline: none;
+}
+
+.joinZ input[type="button"],
+.joinI input[type="button"],
+#genderm,
+#genderw,
+.joinS input[type="submit"] {
+    color: black;
+    background: #ccff33;
+    border-style: none;
+    padding: 10px;
+    border-radius: 10px;
+    transition: background 0.3s, color 0.3s; /* 부드러운 전환 효과 */
+    width: 100px;
+}
+
+.joinI input[type="text"]:focus {
+    width: 340px;
+    border: 3px solid #ccff33;
+    outline: none;
+}
+
+.joinI input[type="password"]:focus {
+    border: 3px solid #ccff33;
+    outline: none;
+}
+
+.joinI input[type="button"] {
+    color: black;
+    background: #ccff33;
+    border-style: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.joinZ input[type="button"] {
+    color: black;
+    background: #ccff33;
+    border-style: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.joinS input[type="submit"] {
+    width: 340px;
+    color: black;
+    background: #ccff33;
+    font-size: 16px;
+    border-style: none;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+/* 버튼 호버 상태 */
+.joinZ input[type="button"]:hover,
+.joinI input[type="button"]:hover,
+#genderm:hover,
+#genderw:hover,
+.joinS input[type="submit"]:hover {
+    background: black;
+    color: white;
+    border: 1px solid white;
+}
+
+/* 버튼 클릭(활성) 상태 */
+.joinZ input[type="button"]:active,
+.joinI input[type="button"]:active,
+#genderm:active,
+#genderw:active,
+.joinS input[type="submit"]:active {
+    background: black;
+    color: white;
+    border: 1px solid white;
+}
+
+header, footer {
+    display: none;
+}
+
+.info {
     display: flex;
 }
-#nickCheck{
+
+#nickCheck {
     color: red;
 }
-#genderm,#genderw{
-    background-color: #FFCC66;
-}
 
+#genderm,
+#genderw {
+    color: black;
+    background: #ccff33;
+    padding: 10px;
+}

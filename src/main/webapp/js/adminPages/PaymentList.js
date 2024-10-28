@@ -9,7 +9,37 @@ var page=0;
 var now;
 
 setTimeout(function() {
-    loadPayList(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    star();
+                    loadPayList(page);
+
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
+}, 100);
+
+function star(){
     document.getElementById('amountSortBtn').addEventListener('click', function () {
         var icon = this.querySelector('i');
         schedule="total_amount";// button 내의 i 태그 선택
@@ -21,12 +51,12 @@ setTimeout(function() {
         if (isAmountDescending) {
 
             sort = 'desc';  // 내림차순 (비싼 순)
-            console.log("금액순: 내림차순");
+            /*console.log("금액순: 내림차순");*/
             icon.classList.remove('fa-arrow-up-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-down-wide-short');  // 내림차순 아이콘 추가
         } else {
             sort = 'asc';  // 오름차순 (저렴한 순)
-            console.log("금액순: 오름차순");
+            /*console.log("금액순: 오름차순");*/
             icon.classList.remove('fa-arrow-down-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-up-wide-short');  // 오름차순 아이콘 추가
         }
@@ -46,20 +76,20 @@ setTimeout(function() {
         if (isLatestDescending) {
 
             sort = 'desc';  // 내림차순 (최신 순)
-            console.log("최신순: 내림차순");
+            /*console.log("최신순: 내림차순");*/
             icon.classList.remove('fa-arrow-up-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-down-wide-short');  // 내림차순 아이콘 추가
         } else {
             sort = 'asc';  // 오름차순 (과거 순)
-            console.log("최신순: 오름차순");
+            /* console.log("최신순: 오름차순");*/
             icon.classList.remove('fa-arrow-down-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-up-wide-short');  // 오름차순 아이콘 추가
         }
         isLatestDescending = !isLatestDescending;
         loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);// 상태 반전
     });
-}, 400);
 
+}
 function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
     if (page==0){
         page=1;
@@ -87,7 +117,7 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
             var PayVo=r.Payvo;
             var pVO=r.pvo;
             var avo=r.Avo;
-            if(avo.role<2||avo.admin_code==0){
+            if(avo.role<1||avo.admin_code==0){
                 var tag = "<li>" +
                     "<div id='payment_title2'>" +
                     "<div class='orderId'>주문번호</div>" +
@@ -123,11 +153,18 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
                 var paginationTag="";
 
 
-                if (pVO.nowpage>1){
+                if (pVO.nowPage>1){
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadPayList(" + (pVO.nowPage - 1) +
                         ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>Previous</a></li>";
                 }
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                }
+                // 페이지 번호 출력
+                for (var p = startPage; p <= endPage; p++) {
                     if (p <= pVO.totalPage) {
                         paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadPayList(" + p
                             + ", PaymentSearchType,PaymentSearchValue,schedule,sort);'>" + p + "</a></li>";
@@ -142,7 +179,11 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
                 $(".pagination").html(paginationTag);
 
 
+            }else{
+                alert("접근권한이 없습니다");
+                window.location.href="/adminPages/adminHome";
             }
+
         }
     });
 
@@ -157,7 +198,7 @@ function enterKey(event) {
 function searchbutton(){
     PaymentSearchType=document.getElementById("CertificateSearchValue").value;
     PaymentSearchValue=document.getElementById("searchtext").value;
-    alert(PaymentSearchType+":"+PaymentSearchValue);
+/*    alert(PaymentSearchType+":"+PaymentSearchValue);*/
     loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);
 
 
@@ -167,7 +208,7 @@ function reset(){
 }
 var cnt=0;
 function detail(orderId,payment_method){
-    console.log(payment_method);
+  /*  console.log(payment_method);*/
     $.ajax({
         url:"/payment/completed",
         type:"post",
@@ -178,12 +219,21 @@ function detail(orderId,payment_method){
         success:function(r){
             var Cvo=r.Cvo;
             var allCvo=r.Cvo[0];
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
             cnt=0;
             var orderIdTag=` <div><span>주문</span>
             <span>주문번호: `+Cvo[0].orderId+`</span></div>
-            <div><div id="cancelOkbutton"></div>
-            <button id="cancelbutton" type="button" onclick="cancel('`+Cvo[0].paymentKey+`')">주문취소</button></div>`;
+            <div><div id="cancelOkbutton"></div>`;
+            if(deleted=="1"){
+                orderIdTag+=`<button id="cancelbutton" type="button" onclick="cancel('`+Cvo[0].paymentKey+`')">주문취소</button>`;
+            }
+
+            orderIdTag+=`</div>`;
             document.getElementById("orderStN").innerHTML=orderIdTag;
+
+
             var orderListTag="";
           /*  console.log(Cvo);*/
             Cvo.forEach(function (cvo){
@@ -272,8 +322,8 @@ function cancelOk(paymentKey){
     const checkedValues = Array.from(elements)
         .filter(checkbox => checkbox.checked)
         .map(checkbox => checkbox.value);
-    alert(checkedValues);
-    alert(paymentKey);
+/*    alert(checkedValues);
+    alert(paymentKey);*/
     $.ajax({
         url:"/payment/cancelpayment",
         type:"post",
@@ -293,13 +343,13 @@ function cancelOk(paymentKey){
             pdvo.forEach(function(pdvo){
                 total+=pdvo.total_amount;
             });
-            console.log("총금액"+real_amount);
-            console.log("총사용포인트"+discount_amount);
+           /* console.log("총금액"+real_amount);
+            console.log("총사용포인트"+discount_amount);*/
             if (pdvo[0].discount_amount!=0&&pdvo[0].discount_amount!=""&&pdvo[0].discount_amount!=null){
                 discount = total/(pdvo[0].discount_amount + pdvo[0].real_amount);
             }
-            console.log("환불신청금액"+total);
-            console.log('퍼센트'+discount);
+           /* console.log("환불신청금액"+total);
+            console.log('퍼센트'+discount);*/
 
             return_discount=Math.round(discount_amount*discount);
             return_amount=Math.round(total-return_discount);
@@ -308,8 +358,8 @@ function cancelOk(paymentKey){
             if (real_amount==total-discount_amount){
                 return_amount=real_amount;
                 return_discount=discount_amount;
-                console.log("환불할 all포인트"+return_discount);
-                console.log("환불할 all금액"+return_amount);
+              /*  console.log("환불할 all포인트"+return_discount);
+                console.log("환불할 all금액"+return_amount);*/
 
             }/*else if (real_amount<total-discount_amount){
                 return_amount=real_amount;
@@ -332,7 +382,7 @@ function cancelOk(paymentKey){
                     cancelAmount:return_amount
                 }),
                 success:function(r){
-                    console.log(r);
+                   /* console.log(r);*/
                     var refund_amount=r.balanceAmount;
                     $.ajax({
                         url:"/payment/refund",
@@ -350,7 +400,7 @@ function cancelOk(paymentKey){
                         }
                     });
                 },error:function(e){
-                    console.log(e);
+                    /*console.log(e);*/
                 }
 
             });

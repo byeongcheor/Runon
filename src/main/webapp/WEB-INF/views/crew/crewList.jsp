@@ -63,7 +63,6 @@
                 </select>
                 <select class="form-select" name="search" id="addr" onchange="select_box_change2();">
                     <option value="">지역</option>
-                    <option value="">전체</option>
                     <option value="서울">서울</option>
                     <option value="경기">경기</option>
                     <option value="부산">부산</option>
@@ -86,7 +85,14 @@
                 <input type="text" name="searchWord" id="searchWord" />
                 <button type="submit" class="btn btn-outline-secondary" onClick="crew_list_select()">Search</button>
             </div>
-            <button class="add-btn" onClick="crew_page(1)"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            <c:if test="${user_code != 0}">
+                <button class="add-btn" onClick="crew_page(1)"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            </c:if>
+            <c:if test="${user_code == 0}">
+                <button class="add-btn" onClick="login()">➕</button>
+            </c:if>
+
+
         </div>
     </div>
 
@@ -204,7 +210,6 @@
                                 <label for="city" class="form-label">도시</label>
                                 <select class="form-control text-center" name="city" id="city" onchange="select_box_change3('1');">
                                     <option value="" selected>지역</option> <!-- 기본으로 선택 -->
-                                    <option value="" selected>전체</option>
                                     <option value="서울">서울</option>
                                     <option value="경기">경기</option>
                                     <option value="부산">부산</option>
@@ -279,7 +284,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createNewTeamModalLabel">어떤 걸 하시겠어요?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id=plus_modal></button>
                 </div>
                 <div class="modal-body" id="crew_page">
                 </div>
@@ -301,7 +306,6 @@
                             <label for="city" class="form-label">도시</label>
                             <select class="form-control text-center" id="city2" name="city" onchange="select_box_change3('2');">
                                 <option value="" selected>지역</option> <!-- 기본으로 선택 -->
-                                <option value="" selected>전체</option>
                                 <option value="서울">서울</option>
                                 <option value="경기">경기</option>
                                 <option value="부산">부산</option>
@@ -457,7 +461,7 @@
 var Authorization = localStorage.getItem("Authorization");
 var clog=console.log;
 var usercode=${user_code};
-clog('usercode : '+usercode);
+/*clog('usercode : '+usercode);*/
 
 
     var seoulDistricts = [
@@ -626,7 +630,7 @@ clog('usercode : '+usercode);
         }
 
         $('#addr_gu').html('');
-        var list = '<option value="">전체</option>';
+        var list = '';
 
         if ($('#addr').val() == '서울') {
             seoulDistricts.forEach(function (district) {
@@ -736,6 +740,10 @@ clog('usercode : '+usercode);
     });
 
   function crew_list_select(panging) {
+    if(usercode==0){
+        alert('로그인을 해주세요');
+        return false;
+    }
     var list = '';
     // 페이지 번호 그대로 전달 (offset 계산은 서버에서 처리)
     var page = (panging === undefined || panging <= 0) ? 1 : panging;
@@ -894,10 +902,16 @@ clog('usercode : '+usercode);
 
         // 활동 지역, 주요 나이대, 성별 선택 여부 확인
         var city = $('#city').val();
+        var region = $('#region').val();
         var ageChecked = $('input[name="age[]"]:checked').length > 0;
         var genderChecked = $('input[name="gender"]:checked').length > 0;
 
         if (!city) {
+            alert('활동하는 도시를 선택해주세요.');
+            return false;
+        }
+
+        if (!region) {
             alert('활동하는 지역을 선택해주세요.');
             return false;
         }
@@ -930,8 +944,8 @@ clog('usercode : '+usercode);
              }
             },
             error: function(error) {
-                console.log(error);
-                alert('크루 생성 중 오류가 발생했습니다.');
+                /*console.log(error);
+                alert('크루 생성 중 오류가 발생했습니다.');*/
             }
         });
     }
@@ -985,6 +999,11 @@ clog('usercode : '+usercode);
 
     });
     function crew_page(flag) {
+       if(usercode==0){
+           alert('로그인을 해주세요');
+           $('#plus_modal').click();
+           return false;
+       }
         var list = '';
         $('#crew_page').html('');
         $('#team_list').html('');
@@ -1121,7 +1140,7 @@ clog('usercode : '+usercode);
 
            var form = $('#crew_write_add')[0];
            var formData = new FormData(form);
-            clog(form);
+        /*    clog(form);*/
             var ageChecked = $('input[name="age[]3"]:checked').length > 0;
             var genderChecked = $('input[name="gender3"]:checked').length > 0;
             var teamIntro = $('#teamIntro3').val().trim();

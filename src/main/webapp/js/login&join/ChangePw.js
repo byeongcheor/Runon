@@ -1,5 +1,5 @@
 function changePw(){
-    alert(username);
+    /*alert(username);*/
     var newpw=document.getElementById("newpw").value;
     var newpw2=document.getElementById("newpw2").value;
     if(newpw==''){
@@ -22,7 +22,7 @@ function changePw(){
             alert("비밀번호가 재설정되었습니다");
             window.location.href="/";
         },error:function(e){
-            console.log("예외"+e);
+           /* console.log("예외"+e);*/
         }
     });
 }

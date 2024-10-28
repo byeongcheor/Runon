@@ -20,12 +20,13 @@
                     </div>
                     <div id="searchbar">
                         <select class="form-select" id="CertificateSearchValue" name="CertificateSearchValue"onchange="changeOption()" >
-                            <option value="nickname">
-                                닉네임
-                            </option>
                             <option value="orderId">
                                 주문번호
                             </option>
+                            <option value="nickname">
+                                닉네임
+                            </option>
+
                         </select>
                         <div id="searchbox">
                             <input type="text" id="searchtext" name="searchtext" onkeydown="enterKey(event)" />

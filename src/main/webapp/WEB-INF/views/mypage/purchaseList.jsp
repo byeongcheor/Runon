@@ -265,7 +265,7 @@
                                 <span>` + vo.total_amount + `</span>
                             </div>
                             <div class="orderStatus">
-                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails('`+vo.orderId+`')">주문상세</button></span>
+                                <span><button type="button" class="btn btn-outline-secondary" onclick="orderDetails('`+vo.orderId+`','`+vo.payment_method+`')">주문상세</button></span>
                             </div>
                         </div>
                     `;
@@ -302,7 +302,7 @@
     }
 </script>
 <script>
-    function orderDetails(orderId){
+    function orderDetails(orderId,payment_method){
         var orderId = orderId;
         $.ajax({
             url: "/mypage/viewOrderDetails",
@@ -325,6 +325,11 @@
                     orderIdInput.name = "orderId";
                     orderIdInput.value = orderId;
                     form.appendChild(orderIdInput);
+                    let payment_methodInput = document.createElement("input");
+                    payment_methodInput.type = "hidden";
+                    payment_methodInput.name = "payment_method";
+                    payment_methodInput.value = payment_method;
+                    form.appendChild(payment_methodInput);
 
                     // 동적으로 생성한 폼을 문서에 추가하고 제출
                     document.body.appendChild(form);
@@ -332,7 +337,7 @@
                 }
             },error: function(e){
                 alert("다시 로드해주세요.");
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }

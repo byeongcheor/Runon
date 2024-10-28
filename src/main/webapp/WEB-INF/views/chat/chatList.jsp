@@ -3,12 +3,13 @@
 <!-- Bootstrap JS 연결 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- jQuery 연결 -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="/css/chatList.css" type="text/css">
 <!-- 채팅창 영역 -->
 <c:forEach var="uvo" items="${userselect}"><!--유저 정보 가져오기 아이디값은 무조건 줘야 된다.-->
 	<input type='hidden' id=usercode value=${uvo.usercode}>
 	<input type='hidden' id=nickname value=${uvo.nickname}>
+	<input type='hidden' id=gender value=${uvo.gender}>
 </c:forEach>
 <button id="chatButton" class="image-button"></button>
 <div id="chatbox" >
@@ -96,7 +97,7 @@
 
 
 <script>
-	console.log("Chat List Size: ${chatList.size()}");
+	/*console.log("Chat List Size: ${chatList.size()}");*/
 </script>
 <script>
 	var match_yn="${vo.match_yn}";
@@ -106,94 +107,95 @@
 	var token = localStorage.getItem("Authorization");
 	var usercode=usercode1;
 	var gender;
-
+	var Authorization = localStorage.getItem("Authorization");
 	/*	var usercode=usercode1;*/
 
 	//채팅연결공통
 
-	setTimeout(function() {
 
-		console.log('User Code:', usercode); // 디버깅용 로그 추가
-		console.log('gender:', gender);
+		setTimeout(function () {
 
-		// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
-		if (!match_yn || match_yn === "undefined") {
-			let storedRoomCode = localStorage.getItem("matchedRoomCode");
-			if (storedRoomCode && storedRoomCode !== "undefined") {
-				match_yn = storedRoomCode;
+		/*	console.log('User Code:', usercode); // 디버깅용 로그 추가
+			console.log('gender:', gender);*/
+
+			// 매칭 방 코드 설정 (필요한 로직으로 대체 가능)
+			if (!match_yn || match_yn === "undefined") {
+				let storedRoomCode = localStorage.getItem("matchedRoomCode");
+				if (storedRoomCode && storedRoomCode !== "undefined") {
+					match_yn = storedRoomCode;
+				} else {
+					/*console.warn("저장된 방 코드가 없습니다.");*/
+					return; // 방 코드가 없으면 종료
+				}
 			} else {
-				console.warn("저장된 방 코드가 없습니다.");
-				return; // 방 코드가 없으면 종료
+				// 방 코드가 있을 경우, 로컬 저장소에 저장
+				localStorage.setItem("matchedRoomCode", match_yn);
 			}
-		} else {
-			// 방 코드가 있을 경우, 로컬 저장소에 저장
-			localStorage.setItem("matchedRoomCode", match_yn);
-		}
 
-		// 최종적으로 확인할 방 코드
-		console.log("유효한 방 코드: ", match_yn);
+			// 최종적으로 확인할 방 코드
+			/*console.log("유효한 방 코드: ", match_yn);*/
 
-		// 채팅 서버 연결하기
-		chatConnection();
-		// 이전 채팅 내역 불러오기
-		loadChatMessages();
+			// 채팅 서버 연결하기
+			chatConnection(usercode, nickname, match_yn, gender);
+			// 이전 채팅 내역 불러오기
+			loadChatMessages(usercode, match_yn);
 
-		// 서버로 메시지 보내기 (Enter 키)
-		$("#inputMsg").keyup(function(event) {
-			if (event.keyCode === 13) {
-				sendMessageFromInput();
-			}
-		});
 
-		// 서버로 메시지 보내기 (전송 버튼)
-		$("#sendBtn").click(function() {
-			sendMessageFromInput();
-		});
+			// 서버로 메시지 보내기 (Enter 키)
+			$("#inputMsg").keyup(function (event) {
+				if (event.keyCode === 13) {
+					sendMessageFromInput(usercode, nickname, match_yn, gender);
+				}
+			});
 
-	}, 300);
+			// 서버로 메시지 보내기 (전송 버튼)
+			$("#sendBtn").click(function () {
+				sendMessageFromInput(usercode, nickname, match_yn, gender);
+			});
+
+		}, 300);
 
 
 
 	// 채팅 서버와 연결하는 함수
 	function chatConnection() {
-		console.log('채팅서버 연결:', usercode); // 디버깅용 로그 추가
+		/*console.log('채팅서버 연결:', usercode);*/ // 디버깅용 로그 추가
 
 
 		if (!usercode) {
-			console.error("usercode를 가져올 수 없습니다.");
+			/*console.error("usercode를 가져올 수 없습니다.");*/
 			return;
 		}
 		// 매칭 방 코드가 0일 경우 채팅 연결 차단
 		if (match_yn === 0) {
-			console.warn("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
+		/*	console.warn("매칭을 완료한 후 채팅을 이용할 수 있습니다.");*/
 			alert("매칭을 완료한 후 채팅을 이용할 수 있습니다.");
 			return; // 채팅 연결을 막음
 		}
 
-		console.log("매칭 방 코드: ", match_yn);
+		/*console.log("매칭 방 코드: ", match_yn);*/
 		socket = new SockJS("/chat"); // WebSocket 엔드포인트와 연결
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function(frame) {
-			console.log('WebSocket 연결 성공:', frame);
-			console.log(usercode, nickname);
+		/*	console.log('WebSocket 연결 성공:', frame);
+			console.log(usercode, nickname);*/
 
 
 
 			// 방 코드에 따라 구독 경로 설정
-			console.log('방 코드에 따라:', usercode); // 디버깅용 로그 추가
+		/*	console.log('방 코드에 따라:', usercode); // 디버깅용 로그 추가*/
 			stompClient.subscribe("/topic/messages/"+match_yn, function(receiveMsg) {
-				console.log('receiveMsg->',receiveMsg);
+			/*	console.log('receiveMsg->',receiveMsg);*/
 				var jsonMsg = JSON.parse(receiveMsg.body);
-				console.log("서버에서 수신한 메시지:", jsonMsg); // 수신한 메시지 확인
+			/*	console.log("서버에서 수신한 메시지:", jsonMsg);*/ // 수신한 메시지 확인
 
-				console.log('성별:', jsonMsg.gender); // gender 값 확인
 
 				showCatMessage(jsonMsg);
 			});
 			// 서버로 메시지 전송 (닉네임 접속 알림)
 			sendMessage(usercode, nickname, match_yn, nickname + "님이 접속하였습니다.");
 		}, function(error) {
-			console.error("WebSocket 연결 실패:", error);
+			/*console.error("WebSocket 연결 실패:", error);*/
 		});
 	}
 
@@ -201,25 +203,25 @@
 
 
 	// 메시지를 입력창에서 가져와 서버로 전송하는 함수
-	function sendMessageFromInput() {
+	function sendMessageFromInput(usercode, nickname, match_yn, gender) {
 
-		console.log('채팅 입력창:', usercode); // 디버깅용 로그 추가
+	/*	console.log('채팅 입력창:', usercode); // 디버깅용 로그 추가*/
 
 		var inputMsg = $("#inputMsg").val(); // 입력한 메시지
 		if (inputMsg === "") return false; // 빈 메시지 전송 방지
 
 
-		sendMessage(usercode, nickname, match_yn, inputMsg); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
+		sendMessage(usercode, nickname, match_yn, inputMsg, gender); // 로그인한 회원의 닉네임과 방 코드로 메시지 전송
 		$("#inputMsg").val(''); // 입력창 초기화
 	}
 
 	// 메시지 불러오기 함수
 	function loadChatMessages() {
 
-		console.log('메시지 불러오기:', usercode); // 디버깅용 로그 추가
+	/*	console.log('메시지 불러오기:', usercode); // 디버깅용 로그 추가*/
 
 		if (match_yn === 0) {
-			console.warn("매칭 방 코드가 0이므로 이전 메시지를 불러오지 않습니다.");
+		/*	console.warn("매칭 방 코드가 0이므로 이전 메시지를 불러오지 않습니다.");*/
 			return; // 함수 종료
 		}
 
@@ -227,14 +229,14 @@
 			url: "/message/chat/" + match_yn, // match_yn은 매칭된 방 코드
 			type: "GET",
 			success: function(data) {
-				console.log("서버에서 받은 메시지들:", data);
+			/*	console.log("서버에서 받은 메시지들:", data);*/
 				// 받은 메시지를 화면에 표시
 				data.forEach(function(message) {
 					showCatMessage(message); // 각 메시지를 화면에 표시
 				});
 			},
 			error: function(error) {
-				console.error("메시지 불러오기 실패:", error);
+				/*console.error("메시지 불러오기 실패:", error);*/
 			}
 		});
 	}
@@ -242,7 +244,8 @@
 
 	// 서버로 메시지 전송 함수
 	function sendMessage(usercode, nickname,recipient, content, add_date ,gender) {
-		console.log('메시지 전송:', usercode); // 디버깅용 로그 추가
+	/*	console.log('메시지 전송:', usercode); // 디버깅용 로그 추가
+		console.log("Sending gender:", gender); // gender 값 확인*/
 
 		let messageData = {
 			usercode:usercode,
@@ -257,9 +260,9 @@
 		if (socket.readyState === WebSocket.OPEN) {
 			// 각 방 코드에 맞는 경로로 메시지 전송
 			stompClient.send("/message/chat/" + match_yn, {}, JSON.stringify(messageData));
-			console.log("메시지가 전송되었습니다.");
+			/*console.log("메시지가 전송되었습니다.");*/
 		} else {
-			console.error("WebSocket 연결이 완료되지 않았습니다. 연결 상태:", socket.readyState);
+		/*	console.error("WebSocket 연결이 완료되지 않았습니다. 연결 상태:", socket.readyState);*/
 		}
 
 	}
@@ -276,6 +279,7 @@
 			var nickname = data.nickname; // 메시지 데이터에서 닉네임을 추출
 
 			var gender = data.gender;
+
 			// 메시지를 화면에 렌더링하기 위한 HTML 태그 생성
 			var tag = '';
 
@@ -355,7 +359,7 @@
 	//신고내역보기
 	function showReportHistory() {
 		if (!usercode) {
-			console.error('User code is not defined.');
+			/*console.error('User code is not defined.');*/
 			return; // usercode가 정의되지 않은 경우 함수를 종료
 		}
 
@@ -420,7 +424,7 @@
 					reportHistoryModal.style.display = 'block';
 				})
 				.catch(error => {
-					console.error('신고 내역 로딩 중 오류 발생:', error);
+				/*	console.error('신고 내역 로딩 중 오류 발생:', error);*/
 				});
 
 // 신고 처리 로직 함수 예시
@@ -443,11 +447,11 @@
 						$('#reportHistoryModal').modal('hide');
 						// 다시 신고 내역을 불러오거나 상태를 업데이트하는 로직 추가 가능
 					} else {
-						alert('신고 처리에 실패했습니다: ' + data.message);
+						/*alert('신고 처리에 실패했습니다: ' + data.message);*/
 					}
 				})
 				.catch(error => {
-					console.error('신고 처리 중 오류 발생:', error);
+				/*	console.error('신고 처리 중 오류 발생:', error);*/
 				});
 	}
 
@@ -496,7 +500,7 @@
 			// 신고 모달 열기
 			reportModal.style.display = 'block';
 
-			console.log('Selected messages:', messageDetails); // 체크된 메시지 내용을 확인
+			/*console.log('Selected messages:', messageDetails); // 체크된 메시지 내용을 확인*/
 
 
 			// 첫 번째 선택된 메시지 가져오기
@@ -557,7 +561,7 @@
 
 
 				// 신고를 서버로 전송
-				console.log('Report Data:', reportData);
+				/*console.log('Report Data:', reportData);*/
 				fetch('/chat/report', {
 					method: 'POST',
 					headers: {
@@ -579,7 +583,7 @@
 							// showReportHistory(); // 신고 내역 보여주기
 						})
 						.catch(error => {
-							console.error('Error:', error);
+							/*console.error('Error:', error);*/
 							alert('신고 접수에 실패했습니다.');
 						});
 

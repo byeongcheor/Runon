@@ -121,7 +121,7 @@ var create_crew_code;
                 }
             },
             error: function(e) {
-                console.error('Error: ', e);
+                /*console.error('Error: ', e);*/
             }
         });
     }
@@ -165,7 +165,7 @@ var create_crew_code;
                 $('#team_list').append(list);
             },
             error: function(e) {
-                console.error('Error: ', e);
+                /*console.error('Error: ', e);*/
             }
         });
     }
@@ -185,7 +185,7 @@ var create_crew_code;
                 window.location.reload();
             },
             error: function(e) {
-                console.error('Error: ', e);
+                /*console.error('Error: ', e);*/
             }
         });
     }
@@ -205,7 +205,7 @@ var create_crew_code;
                  window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
              },
              error: function(error) {
-                 console.log('에러 발생:', error);
+                 /*console.log('에러 발생:', error);*/
              }
          });
          $('#createNewTeamModal').modal('hide');

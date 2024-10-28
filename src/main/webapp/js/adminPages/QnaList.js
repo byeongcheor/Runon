@@ -3,8 +3,37 @@ var qnaSearchValue=null;
 var qnaSearchType2=null;
 var page=0;
 var now;
+var cerate;
+var deleted;
+var edit;
+var adminz;
 setTimeout(function(){
-    loadQnaPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    loadQnaPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
 },300);
 
 function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
@@ -33,6 +62,11 @@ function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
             var QnaList=r.QnaList;
             var pVO=r.pvo;
             var admin=r.Avo;
+            cerate=r.Avo.permission_add
+            deleted=r.Avo.permission_delete;
+            adminz=r.Avo.admin_code;
+            edit=r.Avo.permission_edit;
+
             if(admin.role<4||admin.admin_code==0){
                 var tag = "<li><div id='qna_title2'><div class='qna_code'>문의번호</div><div  class='nickname '>문의자 </div>";
                 tag += "<div class='qna_subject'>제목</div><div class='writedate'>작성일</div>";
@@ -59,11 +93,18 @@ function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
                 var paginationTag="";
 
 
-                if (pVO.nowpage>1){
+                if (pVO.nowPage>1){
                     paginationTag += "<li class='page-item'><a class='page-link' href='javascript:loadQnaPage(" + (pVO.nowPage - 1) +
                         ", qnaSearchType,qnaSearchType2,qnaSearchValue);'>Previous</a></li>";
                 }
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                }
+                // 페이지 번호 출력
+                for (var p = startPage; p <= endPage; p++){
                     if (p <= pVO.totalPage) {
                         paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadQnaPage(" + p
                             + ", qnaSearchType,qnaSearchType2,qnaSearchValue);'>" + p + "</a></li>";
@@ -83,7 +124,7 @@ function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
             }//success끝
         },
         error:function(e){
-            console.log("에러발생"+e);
+           /* console.log("에러발생"+e);*/
 
         }
     });
@@ -95,7 +136,7 @@ function searchbutton(){
     qnaSearchType=document.getElementById("reportSearchValue").value;
     qnaSearchType2=document.getElementById("reportSearchValue2").value;
     qnaSearchValue=document.getElementById("searchtext").value;
-    alert(qnaSearchType+":"+qnaSearchValue);
+    /*alert(qnaSearchType+":"+qnaSearchValue);*/
     loadQnaPage(1,qnaSearchType,qnaSearchType2,qnaSearchValue);
 
 
@@ -140,23 +181,27 @@ function detail(qna_code){
                 </div>   
             </div>
             `;
-            if (qvo.qna_status==0){
+            if ((qvo.qna_status==0&&cerate=="1")||adminz==0){
                 Dtag+="<div><button id='answerbutton' type='button' onclick='answer(\""+qvo.qna_code+"\")'>답변하기</button></div>"
-            }if (qvo.qna_status==1){
+            }else{
                 document.getElementById("addreply").innerHTML="";
             }
-            if (answer!=null&&answer!=""){
-               var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
-               answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
-               document.getElementById("qnareply").innerHTML=answertag;
 
+            if (answer!=null&&answer!=""){
+                var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
+                if (edit=="1"||adminz==0){
+                   answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+
+
+                }
+                document.getElementById("qnareply").innerHTML=answertag;
             }
             document.getElementById("qnacontent").innerHTML=Dtag;
             document.getElementById("qnadetailbackground").style.display="block";
             loadQnaPage(now,qnaSearchType,qnaSearchType2,qnaSearchValue);
         },
         error:function(e){
-            console.log("예외발생"+e);
+          /*  console.log("예외발생"+e);*/
         }
     });
 }
@@ -187,7 +232,7 @@ function insertAnswer(qna_code){
 
         },
         error:function(e){
-            console.log("예외발생"+e);
+            /*console.log("예외발생"+e);*/
         }
     });
 }
@@ -204,7 +249,7 @@ function updateanswer(qna_code){
     document.getElementById("qnareply").innerHTML="";
     var tag=`<div> <textarea id='updatecontent' name='updatecontent'>`+content+`</textarea> 
         </div> <div> <button type='button' id='updateAnswer' onclick='updateAnswer("`+qna_code+`")'>수정하기</button> </div>`
-    alert(content);
+   /* alert(content);*/
     document.getElementById("addreply").innerHTML=tag;
 
 
@@ -224,7 +269,7 @@ function updateAnswer(qna_code){
             detail(qna_code);
         },
         error:function(e){
-            console.log(e);
+           /* console.log(e);*/
         }
 
        });

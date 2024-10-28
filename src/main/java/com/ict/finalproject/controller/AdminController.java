@@ -480,8 +480,15 @@ public class AdminController {
 
     @PostMapping("/reportDetail")
     @ResponseBody
-    public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code){
+    public Map<String,Object>reportDetail(@RequestParam("report_code")int report_code,
+                                          @RequestParam(value = "usercode",required = false )Integer usercodeva){
+
         Map<String,Object> map=new HashMap<>();
+        if (usercodeva!=null&&usercodeva!=0) {
+            int usercode=usercodeva.intValue();
+            AdminsVO avo = service.selectAdminRole(usercode);
+            map.put("Avo", avo);
+        }
         ReportVO rvo=service.getReportDetail(report_code);
         ReportReplyVO RRvo=service.getReportReplys(report_code);
         System.out.println(RRvo);
@@ -881,7 +888,7 @@ public class AdminController {
 
         if (posterImage != null && !posterImage.isEmpty()) {
             try {
-                String uploadDir = request.getServletContext().getRealPath("/resources/uploadfile/");
+                String uploadDir = request.getServletContext().getRealPath("/img/marathonPoster/");
                 File dir = new File(uploadDir);
                 if (!dir.exists()) {
                     dir.mkdirs();
@@ -919,6 +926,14 @@ public class AdminController {
         map.put("list", list);
         return map;
     }
+    @PostMapping("/checkuser")
+    @ResponseBody
+    public Map<String,Object> checkuser(@RequestParam("usercode")int usercode){
+        Map<String, Object> map = new HashMap<>();
+        String role=service.selectRole(usercode);
+        map.put("role", role);
+        return map;
 
+    }
 
 }

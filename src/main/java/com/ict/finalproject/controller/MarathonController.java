@@ -54,28 +54,28 @@ public class MarathonController {
     public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
 
 
-
-
         // 전체 레코드 수를 세고, 페이징 정보를 설정
         int totalRecord = service.totalRecord(pvo);
+        System.out.println("11lll:"+totalRecord);
+
         pvo.setTotalRecord(totalRecord);
        //받은것 표시 에러면 주석
         pvo.calculateTotalPage(); // TotalPage 계산
         pvo.calculateOffset(); // 오프셋 계산
 
-        // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
-        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
+//        // 전체 페이지 수 계산
+//        int totalPages = (int) Math.ceil((double) totalRecord / pvo.getOnePageRecord());
+//        pvo.setTotalPage(totalPages); // 전체 페이지 수 설정
 
-        // 현재 페이지가 전체 페이지보다 클 경우, 마지막 페이지로 설정
-        if (pvo.getNowPage() > totalPages) {
-            pvo.setNowPage(totalPages);
+        // 현재 페이지가 전체 페이지보다 크면 마지막 페이지로 설정
+        if (pvo.getNowPage() > pvo.getTotalPage()) {
+            pvo.setNowPage(pvo.getTotalPage());
         } else if (pvo.getNowPage() < 1) {
             pvo.setNowPage(1);
         }
-        // 페이지 오프셋 설정
-        int offset = (pvo.getNowPage() - 1) * pvo.getOnePageRecord();
-        pvo.setOffset(offset);
+//        // 페이지 오프셋 설정
+//        int offset = (pvo.getNowPage() - 1) * pvo.getOnePageRecord();
+//        pvo.setOffset(offset);
 
         // 페이징을 적용한 마라톤 목록 조회
         List<MarathonListVO> list = service.marathonSelectPaging(pvo);
@@ -269,6 +269,7 @@ public class MarathonController {
 
         // 총 레코드 수를 구하고 필터링된 목록을 가져옵니다.
         int totalRecord = service.getFilteredTotalRecord(year, month, addr, search);
+        System.out.println("Total Record: " + totalRecord);
         pvo.setTotalRecord(totalRecord);
 
         // 전체 페이지 수 계산
@@ -287,7 +288,7 @@ public class MarathonController {
         Map<String, Object> result = new HashMap<>();
         result.put("totalRecord", totalRecord);
         result.put("totalPage", totalPages);
-
+        result.put("pvo", pvo);
         result.put("filteredMarathons", filteredMarathons);
 
 

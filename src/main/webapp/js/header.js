@@ -13,10 +13,6 @@ function openLoginPopup() {
     window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
 }
 window.onload=function(){
-
-
-console.log("1");
-
  ToKen=localStorage.getItem("Authorization");
     if (ToKen!=null &&ToKen!="" ){
         ToKen=ToKen.substring(7);
@@ -32,12 +28,22 @@ console.log("1");
             // 유저정보 담기
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
-            console.log('h1');
+           /* console.log(r.mvo.role);*/
+            if (r.mvo.role!="ROLE_USER"){
+                var tag="<a class=\"menus\" href=\"/adminPages/adminHome\">ADMIN</a>";
+                document.getElementById("as").innerHTML=tag;
+            }
+            var mypagTag="";
+            if (r.mvo!=null &&r.mvo!="") {
+                mypagTag='<a class="menus" href="/mypage/myHome">MY</a>';
+                document.getElementById("mypage").innerHTML=mypagTag;
+            }
+
         }
 
     });
 
-    }   else{
+    } else {
         document.getElementById("logout").style.display="none";
     }
 
@@ -54,7 +60,7 @@ console.log("1");
             success: function (response) {
                 // 정상적으로 권한이 확인되면 페이지 이동
 
-                console.log(response);
+               /* console.log(response);*/
                 window.location.href = $(event.currentTarget).attr('href');
             },
             complete: function () {
@@ -65,20 +71,25 @@ console.log("1");
         }// 테스트용으로 클릭 확인
     });
 
-  /*  $(document).one('click', '.menus', function (event) {
+    $(document).one('click', '.menus', function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
-        alert($(this).attr("href"));
+
         if ($(this).attr("href") != null) {
-            alert("넘어가기전");
+
             $.ajax({
                 url: $(this).attr('href'),
                 type: 'GET',
                 success: function (response) {
-                    alert("링크넘어가기!");
+
                     window.location.href = $(event.currentTarget).attr('href');
                 }
             });
         }
-    });*/
+    });
 };
+function mypagelogin(){
+    alert("로그인하신후 접근가능합니다 ");
+    window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
+
+}
 

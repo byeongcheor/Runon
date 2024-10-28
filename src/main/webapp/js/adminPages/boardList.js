@@ -4,7 +4,30 @@ var boardSearchValue = null;
 
 setTimeout(function() {
     var page;
-    loadBoardPage(page);
+
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+                if (role!="ROLE_USER"){
+                    loadBoardPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
 }, 200);
 
 function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue) {
@@ -16,7 +39,8 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
     var BoardData = {
         page: page,
         searchKey: boardSearchType,
-        searchWord: boardSearchValue
+        searchWord: boardSearchValue,
+        usercode:usercode1
     };
     // 마라톤명 검색이 있을 경우
     if (boardSearchType === "marathon_name" && boardSearchValue) {
@@ -38,30 +62,46 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
         type: "post",
         data: BoardData,
         success: function(r) {
-            console.log("Total Records: ", r.pvo.totalRecord);
-            console.log("Total Pages: ", r.pvo.totalPage);
+          /*  console.log("Total Records: ", r.pvo.totalRecord);
+            console.log("Total Pages: ", r.pvo.totalPage);*/
             var BoardList = r.list;
             var pVO = r.pvo;
+            var roles=r.Avo.role;
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
+            console.log(roles);
             if (r.list.length > 0) {
                 // 결과값이 존재할 때 검색어 초기화
                 document.getElementById("searchtext").value = ""; // 검색어 입력 필드의 ID가 'searchInput'인 경우
             }
+            if (roles<3||r.pvo.admin_code==0){
+                if (roles<2||r.pvo.admin_code==0){
+                    var downloadbuttontag = `<input type="button" value="게시글 리스트 받기" onClick="excelDownload()"/>`;
+                    document.getElementById("downloadbutton").innerHTML = downloadbuttontag;
+                    document.getElementById("downloadbutton").style.display = "block";
+                }
+                //작성하기 버튼 생성
+                if (cerate=="1"||r.pvo.admin_code==0){
+                    var writeButtonHtml  = `<input type="button" value="글 작성하기" onClick="writePost()"/>`;
+                    document.getElementById("writebutton").innerHTML = writeButtonHtml; // 기존 버튼을 덮어씀
+                    document.getElementById("writebutton").style.display = "block";
+                }
 
-            var downloadbuttontag = `<input type="button" value="게시글 리스트 받기" onClick="excelDownload()"/>`;
-            document.getElementById("downloadbutton").innerHTML = downloadbuttontag;
-            document.getElementById("downloadbutton").style.display = "block";
-
-            //작성하기 버튼 생성
-            var writeButtonHtml  = `<input type="button" value="글 작성하기" onClick="writePost()"/>`;
-            document.getElementById("writebutton").innerHTML = writeButtonHtml; // 기존 버튼을 덮어씀
-            document.getElementById("writebutton").style.display = "block";
-
+            }
             var tag = "<li><div id='board_title2'><div class='board_code'>마라톤번호</div><div class='marathon_name'>마라톤명</div>";
             tag += "<div class='created_date'>생성날짜</div><div class='activation_date'>활성화 여부</div>";
             tag += "<div class='deleted_date'>삭제 여부</div><div class='deleted_date'>삭제 완료일</div>"; // 삭제 완료일 추가
-            tag += "<div class='edit_button'>수정</div><div class='delete_button'>삭제</div>";
+            if (roles<3||r.pvo.admin_code==0){
+                if (edit== "1"||r.pvo.admin_code==0){
+                    tag += "<div class='edit_button'>수정</div>";
+                }
+                if (deleted== "1" ||r.pvo.admin_code==0){
+                    tag +="<div class='delete_button'>삭제</div>";
+                }
+            }
             tag += "</div></li>";
-            console.log("BoardData:", BoardData); // AJAX 호출 전에 추가
+            /*console.log("BoardData:", BoardData); // AJAX 호출 전에 추가*/
 
             BoardList.forEach(function (board) {
                 tag += "<li><div class='board_title3'><div class='marathon_code'>" + board.marathon_code + "</div>";
@@ -82,10 +122,15 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
                 } else {
                     tag += "<div class='deleted_date'>N/A</div>";
                 }
-
-                // 수정 및 삭제 버튼
-                tag += "<div class='edit_button'><button class='btn btn-outline-success' onClick='editMarathon(" + board.marathon_code + ")'>수정</button></div>";
-                tag += "<div class='delete_button'><button class='btn btn-outline-danger' onClick='deleteBoard(" + board.marathon_code + ")'>삭제</button></div>";
+                if(roles<3){
+                    // 수정 및 삭제 버튼
+                    if (edit=="1"||r.pvo.admin_code==0){
+                        tag += "<div class='edit_button'><button class='btn btn-outline-success' onClick='editMarathon(" + board.marathon_code + ")'>수정</button></div>";
+                    }
+                    if (deleted=="1"||r.pvo.admin_code==0){
+                        tag += "<div class='delete_button'><button class='btn btn-outline-danger' onClick='deleteBoard(" + board.marathon_code + ")'>삭제</button></div>";
+                    }
+                }
                 tag += "</div></li>";
             });
 
@@ -145,8 +190,8 @@ function searchbutton() {
     const boardSearchValue = document.getElementById("searchtext").value; // 검색어
 
     // 콘솔 로그를 추가하여 디버깅
-    console.log("Search Type:", boardSearchType);
-    console.log("Search Value:", boardSearchValue);
+/*    console.log("Search Type:", boardSearchType);
+    console.log("Search Value:", boardSearchValue);*/
 
     // 조건에 따라 검색어를 어떻게 처리할지 정의
     let searchType = null;
@@ -178,7 +223,7 @@ function deleteBoard(marathonCode) {
             method: 'POST' // 'DELETE' 대신 'POST'로 변경
         })
             .then((response) => {
-                console.log(response);
+                /*console.log(response);*/
                 if (response.ok) {
                     alert("삭제되었습니다.");
                     location.reload(); // 페이지 새로고침
@@ -187,9 +232,11 @@ function deleteBoard(marathonCode) {
                 }
             })
             .catch(error => {
-                console.error('삭제 중 오류 발생:', error);
-                alert("삭제 중 오류가 발생했습니다.");
+               /* console.error('삭제 중 오류 발생:', error);
+                alert("삭제 중 오류가 발생했습니다.");*/
             });
+    }else{
+        alert("삭제를 취소하셨습니다");
     }
 }
 
@@ -218,7 +265,7 @@ function excelDownload(){
         url:"/adminPages/boardListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+          /*  console.log/!*("서버에서 받아온 값 ",r);*!/*/
             download(r);
         }
     });

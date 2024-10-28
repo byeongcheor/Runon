@@ -4,7 +4,32 @@ var searchType2=null;
 var searchValue2=null;
 setTimeout(function(){
     var page;
-    reloadPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    reloadPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
 
 },100)
 
@@ -97,9 +122,14 @@ function reloadPage(page,searchType,searchValue,searchType2,searchValue2){
                         if (pVO.nowPage > 1) {
                             paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pVO.nowPage - 1) + ", searchType, searchValue,searchType2,searchValue2);'>Previous</a></li>";
                         }
+                        var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                        var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
 
+                        if (endPage - startPage < 4) {
+                            startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                        }
                         // 페이지 번호 출력
-                        for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                        for (var p = startPage; p <= endPage; p++) {
                             if (p <= pVO.totalPage) {
                                 paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ", searchType, searchValue,searchType2,searchValue2);'>" + p + "</a></li>";
                             }
@@ -115,11 +145,13 @@ function reloadPage(page,searchType,searchValue,searchType2,searchValue2){
 
                     },
                     error: function (e) {
-                        console.log(e);
+                        /*console.log(e);*/
+
                     }
                 });
             }else{
                 alert("권한이 없습니다.");
+                window.location.href="/adminPages/adminHome";
             }
 
         }
@@ -133,7 +165,7 @@ function excelDownload(){
         url:"/adminPages/uListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+            /*console.log("서버에서 받아온 값 ",r);*/
             download(r);
         }
     });
@@ -169,6 +201,9 @@ function userdetail(usercode){
             var AdminRole=r.Avo.role;
             var Admincode=r.Avo.admin_code;
             var delete_role=r.Avo.permission_delete;
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
 
 
             var usertag = `<div id='userprofile'><img src="/resources/uploadfile/` + users.profile_img + `"/>`;
@@ -178,7 +213,7 @@ function userdetail(usercode){
                 usertag+=`<div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>`;
             }
                 usertag+=`<div>`;
-            if (users.is_disabled==0&&users.role=="ROLE_USER"){
+            if ((users.is_disabled==0&&users.role=="ROLE_USER"&&deleted=="1")||Admincode=="0"){
             usertag+= `
                     <form method="post"  onsubmit="return disableUser(`+users.usercode+`)">
                         <select id="stopDuration">
@@ -191,7 +226,7 @@ function userdetail(usercode){
                     </form>
                     `;
 
-            }else if(users.role=="ROLE_USER"){
+            }else if((users.role=="ROLE_USER"&&edit=="1")||Admincode=="0"){
                 usertag+=`
                 <div>정지된 유저입니다 <br/>
                 정지시작:`+users.disabled_start_date+`<br/>
@@ -241,7 +276,7 @@ function userdetail(usercode){
                     <div class="onelow">
                         <div id="addrdetail"><b>상세주소:</b>`+users.addr_details+`</div>
                     </div>`;
-            }else if (users.zip_code!=null&&(AdminRole<2||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
+            }else if (users.zip_code!=null&&(AdminRole<3||Admincode==0)&& users.addr!=null &&users.addr_details!=null){
                 if (users.addr.length>5) {
                     var userAddr = users.addr.substring(0, users.addr.length - 5) + '*****';
                 }else{
@@ -313,7 +348,7 @@ function userdetail(usercode){
             document.getElementById("userpay").innerHTML=paytag;
 
         },error:function(e){
-            console.log("에러발생"+e);
+            /*console.log("에러발생"+e);*/
         }
 
 
@@ -323,7 +358,7 @@ function closedetail(){
     document.getElementById("userdetailbackground").style.display="none";
 }
 function userdel(delusercode){
-    alert(delusercode);
+/*    alert(delusercode);*/
     $.ajax({
         url:"/adminPages/deluser",
         type:"post",
@@ -332,12 +367,12 @@ function userdel(delusercode){
         },
         success:function(r){
             //오는것 확인
-            alert("삭제상태:"+r);
+            alert("유저를 탈퇴시켰습니다");
 
         },
         error:function(e){
-            console.log(e);
-            alert("실패");
+           /* console.log(e);*/
+         /*   alert("실패");*/
         }
     });
 }
@@ -361,7 +396,7 @@ function disableUser(disablecode){
 
 
         },error:function(e){
-            console.log("예외발생"+e);
+            /*console.log("예외발생"+e);*/
         }
 
 
@@ -369,7 +404,7 @@ function disableUser(disablecode){
     });
 }
 function enableUser(enableUsercode){
-    alert(enableUsercode);
+   /* alert(enableUsercode);*/
     $.ajax({
         url:"/adminPages/enableUser",
         type:"post",
@@ -381,7 +416,7 @@ function enableUser(enableUsercode){
             alert("정지가 풀렸습니다.");
         }
         ,error:function (e){
-            console.log(e);
+          /*  console.log(e);*/
         }
     })
 
@@ -437,8 +472,8 @@ function selectExcel(){
     document.querySelectorAll(".checkbox:checked").forEach(function(checkbox){
        selectedVlaues.push(checkbox.value);
     });
-    console.log("선택된값 체크"+selectedVlaues);
-    console.log(selectedVlaues);
+    /*console.log("선택된값 체크"+selectedVlaues);
+    console.log(selectedVlaues);*/
     if (selectedVlaues.length==0){
         alert("선택된값이 없습니다");
         return false;
@@ -449,11 +484,11 @@ function selectExcel(){
         contentType:"application/json",
         data:JSON.stringify({usercodes:selectedVlaues}),
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+           /* console.log("서버에서 받아온 값 ",r);*/
             download(r);
         },
         error:function(e){
-           console.log(e);
+           /*console.log(e);*/
         }
 
     });

@@ -20,8 +20,8 @@
             success: function(r){
                 location.href="/mypage/myQnA";
             },error: function(e){
-                alert("이동실패..");
-                console.log(e);
+              /*  alert("이동실패..");
+                console.log(e);*/
             }
         })
     }
@@ -38,8 +38,8 @@
                 location.href = "/mypage/myMate";
             },
             error: function(e) {
-                console.log(e);
-                alert("으으");
+            /*    console.log(e);*/
+               /* alert("으으");*/
             }
         });
     }
@@ -51,12 +51,12 @@
                 type: "Post",
                 data: {username:username},
                 success: function(r) {
-                    alert("성공");
+                   /* alert("성공");*/
                     location.href = "/mypage/certificateList";
                 },
                 error: function(e) {
-                    console.log(e);
-                    alert("으으");
+                   /* console.log(e);
+                    alert/!*("으으");*!/*/
                 }
             });
 
@@ -69,7 +69,7 @@
             modal.style.display="block";
 
         }else{
-            console.error("실패");
+           /* console.error("실패");*/
         }
     }
     //마라톤신청서수정모달닫기
@@ -78,7 +78,7 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
     //마라톤신청서모달열기
@@ -88,7 +88,7 @@
             modal.style.display="block";
 
         }else{
-            console.error("실패");
+            /*console.error("실패");*/
         }
     }
     //마라톤신청서모달닫기
@@ -97,7 +97,7 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
 
@@ -110,7 +110,7 @@
                 if(r.exists){
                     var datas=r.data;
                     alert("기존에 작성한 신청서가 있습니다.")
-                    console.log(r.data);
+                    /*console.log(r.data);*/
                     var modal = document.getElementById("editMarathonFormModal");
                     if(modal){
                         document.getElementById("rname").value = datas.name;
@@ -131,7 +131,7 @@
                     openMarathonFormModal();
                 }
             },error: function (e){
-                console.log(e);
+               /* console.log(e);*/
             }
         })
     }
@@ -150,7 +150,7 @@
             privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
             media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
         };
-        console.log(formData);
+        /*console.log(formData);*/
         var token = localStorage.getItem("Authorization");
         if(token != "" && token != null) {
             $.ajax({
@@ -174,7 +174,7 @@
                     closeMarathonFormModal();
                     //location.reload();
                 }, error: function (e) {
-                    console.log(e);
+                   /* console.log(e);*/
                     alert("마라톤신청서 작성이 실패했습니다.");
                     return false;
 
@@ -210,7 +210,7 @@
                 location.reload();
             },error: function(e){
                 alert("신청서 수정에 실패했습니다.");
-                console.log(e);
+                /*console.log(e);*/
             }
         });
         return false;
@@ -243,7 +243,7 @@
                 location.reload();
             },error: function (e){
                 alert("신청서 삭제에 실패했습니다.");
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }
@@ -253,22 +253,23 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
     //회원탈퇴 모달띄우기
     function openDeleteProfileModal(){
         var modal = document.getElementById("profileDeleteModal");
         if(modal){
+
             modal.style.display="block";
         }else{
-            console.error("실패");
+            /*console.error("실패");*/
         }
     }
     //회원탈퇴 폼 전송
     function submitDeleteProfile(){
         var deletePassword = document.getElementById("deletePassword").value;
-        console.log(deletePassword);
+        /*console.log(deletePassword);*/
         $.ajax({
             url: "/mypage/deleteProfile",
             type: "post",
@@ -280,13 +281,14 @@
                 if(r==1){
                     alert("안전하게 회원탈퇴 되었습니다.");
                     closeDeleteProfileModal();
+                    localStorage.clear();
                     location.href="/";
                 }else{
                     alert("비밀번호가 일치하지 않습니다.");
                 }
             },error: function(e){
                 alert("회원탈퇴에 실패했습니다. 가입되어있는 크루가 있는지 확인해주세요.");
-                console.log(e);
+                /*console.log(e);*/
             }
         });
         return false;
@@ -297,7 +299,7 @@
         if (modal) {
             modal.style.display = "block";  // 모달을 화면에 보이도록 설정
         } else {
-            console.error("Modal element not found: " + modalId);
+          /*  console.error("Modal element not found: " + modalId);*/
         }
     }
     // 회원정보수정 모달 닫기
@@ -306,7 +308,7 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+           /* console.error("Modal element not found: " + modalId);*/
         }
     }
     //회원정보 모달 띄우기
@@ -319,7 +321,7 @@
                 usercode: usercode1
             },
             success: function (r) {
-                console.log(r);
+                /*console.log(r);*/
                 // 서버에서 받은 데이터를 폼에 채워 넣기
                 document.getElementById("username_editProfile").value = r.username;
                 document.getElementById("name_editProfile").value = r.name;
@@ -348,7 +350,7 @@
             },
             error: function (e) {
                 alert("회원정보를 불러오는데 실패했습니다.");
-                console.log(e);
+               /* console.log(e);*/
             }
         });
     }
@@ -407,8 +409,8 @@
                }
 
             },error: function(e){
-               alert(e);
-               alert(여기안옴);
+               /*alert(e);
+               alert(여기안옴);*/
             }
         });
 
@@ -427,7 +429,7 @@
                 //location.href=r;
                 location.href="/mypage/purchaseList";
             },error:function (e){
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }
@@ -455,7 +457,7 @@
                     location.reload();
                 },error(e){
                     alert("프로필 변경이 실패했습니다.");
-                    console.log(e);
+                    /*console.log(e);*/
                 }
             })
         }

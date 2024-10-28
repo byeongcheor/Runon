@@ -27,7 +27,8 @@ public class JoinServiceImpl implements JoinService {
             System.out.println("User already exists!");
             return  0;  // 이미 사용자가 있으면 저장하지 않음
         }
-
+        String birthdate=vo.getBirthdate();
+        
 
 
         // 비밀번호 암호화

@@ -4,7 +4,29 @@ var adminSearchType2=null;
 var adminSearchValue2=null;
 setTimeout(function(){
     var page;
-    loadAdminPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+                if (role!="ROLE_USER"){
+                    loadAdminPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
 
                     },100);
 function loadAdminPage(page,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2){
@@ -144,7 +166,14 @@ function loadAdminPage(page,adminSearchType,adminSearchValue,adminSearchType2,ad
                 }
 
                 // 페이지 번호 출력
-                for (var p = pVO.startPageNum; p <= pVO.startPageNum + pVO.onePageNum - 1; p++) {
+                var startPage = Math.max(1, pVO.nowPage - 2); // 시작 페이지
+                var endPage = Math.min(startPage + 4, pVO.totalPage); // 끝 페이지
+
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4); // 시작 페이지가 1보다 작으면 조정
+                }
+                // 페이지 번호 출력
+                for (var p = startPage; p <= endPage; p++) {
                     if (p <= pVO.totalPage) {
                         paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:loadAdminPage(" + p + ", adminSearchType, adminSearchValue);'>" + p + "</a></li>";
                     }
@@ -196,7 +225,7 @@ function blockhidden(){
 function searchbutton(){
     adminSearchType=document.getElementById("adminSearchValue").value;
     adminSearchValue=document.getElementById("searchtext").value;
-    alert(adminSearchType+":"+adminSearchValue);
+/*    alert(adminSearchType+":"+adminSearchValue);*/
     loadAdminPage(1,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2);
     document.getElementById("searchtext").value="";
 
@@ -226,7 +255,7 @@ function excelDownload(){
         url:"/adminPages/AdminListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+            /*console.log("서버에서 받아온 값 ",r);*/
             download(r);
         }
     });
@@ -281,8 +310,8 @@ function adminRoleUpdate(admincode,usercode){
             usercode:usercode
         },
         success:function(r){
-            alert(adminSearchType);
-            alert(adminSearchValue+"1"+adminSearchType2+"3"+adminSearchValue2);
+          /*  alert(adminSearchType);
+            alert(adminSearchValue+"1"+adminSearchType2+"3"+adminSearchValue2);*/
 
             loadAdminPage(1,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2);
 

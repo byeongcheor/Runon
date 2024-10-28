@@ -19,7 +19,7 @@ function nicknamecheck(){
 
                 }else {
                     tag="닉네임을 이미 사용중입니다";
-                    document.getElementById("nickCheck").style.color="red"
+                    document.getElementById("nickCheck").style.color="#FF4500"
                     document.getElementById("nickChk").value="N";
                     document.getElementById("nickCheck").innerText=tag;
                 }
@@ -31,7 +31,7 @@ function nicknamecheck(){
 
         });
     }
-    document.getElementById("nickCheck").style.color="red";
+    document.getElementById("nickCheck").style.color="#FF4500";
     document.getElementById("nickCheck").innerText="닉네임을 입력해주세요";
 
 }
@@ -90,7 +90,7 @@ function idDoubleCheck(){
     else{//아이디를 입력했을때
         var username = document.getElementById("username").value;
         //           "매핑주소?username=ddd"                          창이름       옵션
-        window.open("/idDoubleCheck?username="+username, "idCheck","width=460, height=300, left=700,top=100,resizable=no");
+        window.open("/idDoubleCheck?username="+username, "idCheck","width=500, height=500, left=700,top=100,resizable=no");
     }
 }
 
@@ -173,23 +173,26 @@ function formCheck(){
     }
     var birthdate = document.getElementById("birthdate").value;
 
-    var brrthregEx=/^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+    var brrthregEx = /^(\d{4})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+
     if (!brrthregEx.test(birthdate)){
         alert("생년월일이 잘못되었습니다.");
         return false;
     }
     return true;
 }
-function gendercheck(gender){
-
-    if (gender==" 남 "){
-        document.getElementById("genderm").style.background="#FFA500";
-        document.getElementById("genderw").style.background="#FFCC66";
-        document.getElementById("gender").value="남";
-    }else if (gender==" 여 "){
-        document.getElementById("genderw").style.background="#FFA500";
-        document.getElementById("genderm").style.background="#FFCC66";
-        document.getElementById("gender").value="여";
+function gendercheck(gender) {
+    if (gender == " 남 ") {
+        document.getElementById("genderm").style.background = "black";
+        document.getElementById("genderm").style.color = "white";
+        document.getElementById("genderw").style.background = "#ccff33";
+        document.getElementById("genderw").style.color = "black";
+        document.getElementById("gender").value = "남";
+    } else if (gender == " 여 ") {
+        document.getElementById("genderw").style.background = "black";
+        document.getElementById("genderw").style.color = "white";
+        document.getElementById("genderm").style.background = "#ccff33";
+        document.getElementById("genderm").style.color = "black";
+        document.getElementById("gender").value = "여";
     }
-
 }

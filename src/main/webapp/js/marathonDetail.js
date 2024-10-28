@@ -120,33 +120,29 @@ setTimeout(function(){
     marathonSize.addEventListener('change', updateTotalPrice);
 
     // 장바구니 버튼 클릭 시
-    cartButton.addEventListener('click', function() {
+    document.querySelector('.MC').addEventListener('click', function() {
         const itemPrice = parseInt(marathonItem.value); // 선택한 상품 가격
-        // 선택한 마라톤의 ID
         const sizeSelected = marathonSize.value !== '0'; // 사이즈 선택 여부 확인
 
 
         // 대회 접수 마감 여부 확인
-        const currentDate = new Date(); // 현재 날짜
-        const registrationStartDate = new Date('${marathon.registration_start_date}'); // JSP에서 날짜 값을 가져옴
-        const registrationEndDate = new Date('${marathon.registration_end_date}'); // JSP에서 날짜 값을 가져옴
+        const currentDate = new Date();
+        const registrationStartDate = new Date(document.querySelector('.MC').getAttribute('data-start-date'));
+        const registrationEndDate = new Date(document.querySelector('.MC').getAttribute('data-end-date'));
 
-        // 접수 시작 전 여부 확인
         if (currentDate < registrationStartDate) {
-            alert('접수 시작 전입니다.'); // 접수 시작 전 알림
-            return; // 장바구니에 담는 동작 중단
+            alert('접수 시작 전입니다.');
+            return;
         }
 
-        // 접수 마감 여부 확인
         if (currentDate > registrationEndDate) {
-            alert('접수 마감 됐습니다.'); // 접수 마감 알림
-            return; // 장바구니에 담는 동작 중단
+            alert('접수 마감 됐습니다.');
+            return;
         }
+
 
         // 필수 항목 모두 선택 확인
         if (itemPrice > 0 && sizeSelected && usercode) {
-            // 장바구니에 담을 데이터를 서버로 전송
-
             const cartData = {
                 price: itemPrice,
                 marathon_code: marathonId,
@@ -195,26 +191,22 @@ setTimeout(function(){
         const sizeSelected = marathonSize.value !== '0'; // 사이즈 선택 여부 확인
 
         // 대회 접수 마감 여부 확인
-        const currentDate = new Date(); // 현재 날짜
-        const registrationStartDate = new Date('${marathon.registration_start_date}'); // JSP에서 날짜 값을 가져옴
-        const registrationEndDate = new Date('${marathon.registration_end_date}'); // JSP에서 날짜 값을 가져옴
+        const currentDate = new Date();
+        const registrationStartDate = new Date(document.getElementById('buyNowButton').getAttribute('data-start-date'));
+        const registrationEndDate = new Date(document.getElementById('buyNowButton').getAttribute('data-end-date'));
 
-        // 접수 시작 전 여부 확인
         if (currentDate < registrationStartDate) {
-            alert('접수 시작 전입니다.'); // 접수 시작 전 알림
-            return; // 구매 동작 중단
+            alert('접수 시작 전입니다.');
+            return;
         }
 
-        // 접수 마감 여부 확인
         if (currentDate > registrationEndDate) {
-            alert('접수 마감 됐습니다.'); // 접수 마감 알림
-            return; // 구매 동작 중단
+            alert('접수 마감 됐습니다.');
+            return;
         }
 
 
-        // 필수 항목 모두 선택 확인
         if (itemPrice > 0 && sizeSelected && usercode) {
-            // 장바구니에 담을 데이터를 서버로 전송
             const cartData = {
                 price: itemPrice,
                 marathon_code: marathonId,

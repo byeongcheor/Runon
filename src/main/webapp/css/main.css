@@ -384,3 +384,6 @@ body{
 
 
 
+body{
+    animation: fadein 4s;
+}
