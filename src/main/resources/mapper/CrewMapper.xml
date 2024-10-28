@@ -665,6 +665,7 @@
         where v.usercode = b.usercode
         and v.vote_code = a.vote_code
         and v.selected_option = a.opt5) as e_s  -- opt5에 투표한 사람들
+        ,(select count(1) from voter_tbl where vote_code = ${param2}) as a_n
         from vote_tbl a
         where a.vote_code = ${param2}
     </select>
@@ -811,7 +812,7 @@
     <update id="entrust2">
         update crew_member_tbl
         set
-         position = 2
+        position = 2
         ,updatedate = now()
         where  create_crew_code = ${param2}
         and    usercode = ${param1}
@@ -820,8 +821,8 @@
     <update id="entrust3">
         update crew_member_tbl
         set
-          position = 1
-          ,updatedate = now()
+        position = 1
+        ,updatedate = now()
         where  create_crew_code = ${param2}
         and    usercode = ${param1}
     </update>

@@ -295,7 +295,7 @@
     <div class="custom-modal-footer">
       <button class="vote-btn" id=vote_update2 onclick="vote_rud('R')">수정</button>
       <button class="vote-btn" id=vote_delete2 onclick="vote_rud('D')">삭제</button>
-      <button class="handover-btn2" id=vote_close2 onclick="closeCustomModal()">닫기</button>
+      <button class="vote-btn" id=vote_close2 onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -318,6 +318,7 @@ const Authorization = localStorage.getItem("Authorization");
 const create_crew_code = ${create_crew_code};
 const user_code = ${user_code};
 const position = ${position};
+const flag = ${flag};
 var votenum = 4;
 var notice_num;
     clog('My position : ' + position);
@@ -358,6 +359,7 @@ $(document).ready(function() {
             alert('맴버만 볼 수 있어요 가입신청해 주세요');
         });
     }
+    if(flag==1)$('#member').click();
 });
 
 function crew_deatil_select() {
@@ -1387,13 +1389,18 @@ function voteNow(vote_num, flag, vote_user_code) {
               list2 += '    <span>' + response[0][key] + '</span>';
               list2 += '    <span>' + arr_length + '명</span>';
               list2 += '</div>';
+              var b = arr_length/response[0].a_n;
+              b = (Math.round(b * 100) / 100)*100;
+              clog(b);
               list2 += '<div class="progress-bar">';
-              list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: 0%;"></div>';
+              list2 += '    <div id="progress-vote' + i + '" class="progress" style="width: '+b+'%;"></div>';
               list2 += '</div>';
            }
            list2 += '</div>';
            $('#vote_results').html(list2);
-
+           clog(flag);
+           clog(vote_user_code);
+           clog(user_code);
            if (response[0].f_s ===null&&flag==0) {
               document.getElementById('voteNowModal').style.display = 'block';
            }
@@ -1403,10 +1410,9 @@ function voteNow(vote_num, flag, vote_user_code) {
                 $('#vote_live').html('<strong>투표 결과</strong>');
                 $('#vote_close2').removeClass().addClass('handover-btn2');
                 $('#vote_delete2').removeClass().addClass('handover-btn');
-            } else if (flag == 2 && vote_user_code == user_code) {
-                     $('#vote_update2').show();
-                     $('#vote_close2').removeClass().addClass('vote-btn');
-
+            } else if (flag == 1 && vote_user_code == user_code) {
+                $('#vote_update2').show();
+                $('#vote_close2').removeClass().addClass('vote-btn');
             } else {
                 $('#vote_live').html('');
                 $('#vote_live').html('<strong>투표 현황</strong>');

@@ -21,6 +21,9 @@
         <div class="content-full">
             <div class="join-container">
                 <section class="menu-container">
+                    <span class="left_img" onclick="go_crew_manage()">
+                        <img src="/img/left.png" style="width: 25px; height: 25px; ">
+                    </span>
                     <div class="menu-title">
                         <div class="crew_profileimage">
                             <div class="profileBox">
@@ -259,4 +262,25 @@ function confirmRejection() {
     // 거절 확인 로직 (선택된 사유 확인 등)
     alert('거절 사유가 선택되었습니다.');
 }
+
+function go_crew_manage() {
+        $.ajax({
+            url: '/crew/go_crewManage',  // 서버에 전송할 URL
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization: Authorization,  // 토큰 또는 기타 데이터
+                create_crew_code: crew_code,  // 전송할 데이터
+                flag: 1  // 전송할 데이터
+            },
+            success: function(response) {
+                window.location.href = '/crew/crewManage'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
+        $('#createNewTeamModal').modal('hide');
+    }
+
+
 </script>
