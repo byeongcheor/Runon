@@ -90,7 +90,7 @@ function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
             }//success끝
         },
         error:function(e){
-            console.log("에러발생"+e);
+           /* console.log("에러발생"+e);*/
 
         }
     });
@@ -102,7 +102,7 @@ function searchbutton(){
     qnaSearchType=document.getElementById("reportSearchValue").value;
     qnaSearchType2=document.getElementById("reportSearchValue2").value;
     qnaSearchValue=document.getElementById("searchtext").value;
-    alert(qnaSearchType+":"+qnaSearchValue);
+    /*alert(qnaSearchType+":"+qnaSearchValue);*/
     loadQnaPage(1,qnaSearchType,qnaSearchType2,qnaSearchValue);
 
 
@@ -163,7 +163,7 @@ function detail(qna_code){
             loadQnaPage(now,qnaSearchType,qnaSearchType2,qnaSearchValue);
         },
         error:function(e){
-            console.log("예외발생"+e);
+          /*  console.log("예외발생"+e);*/
         }
     });
 }
@@ -194,7 +194,7 @@ function insertAnswer(qna_code){
 
         },
         error:function(e){
-            console.log("예외발생"+e);
+            /*console.log("예외발생"+e);*/
         }
     });
 }
@@ -211,7 +211,7 @@ function updateanswer(qna_code){
     document.getElementById("qnareply").innerHTML="";
     var tag=`<div> <textarea id='updatecontent' name='updatecontent'>`+content+`</textarea> 
         </div> <div> <button type='button' id='updateAnswer' onclick='updateAnswer("`+qna_code+`")'>수정하기</button> </div>`
-    alert(content);
+   /* alert(content);*/
     document.getElementById("addreply").innerHTML=tag;
 
 
@@ -231,7 +231,7 @@ function updateAnswer(qna_code){
             detail(qna_code);
         },
         error:function(e){
-            console.log(e);
+           /* console.log(e);*/
         }
 
        });

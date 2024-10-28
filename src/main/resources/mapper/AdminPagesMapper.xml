@@ -462,19 +462,6 @@
         FROM user_tbl;
     </select>
     <select id="getNewPayment" resultType="com.ict.finalproject.vo.AdminPaymentVO">
-    <!--    select o.order_code as order_code,
-            m.marathon_name as marathon_name,
-            o.real_amount as real_amount,
-            u.nickname as nickname,
-            p.completed_date as completed_date
-        from
-            payment_tbl p
-        join order_tbl o on p.order_code = o.order_code
-        join marathon_list_tbl m on o.marathon_code = m.marathon_code
-        join user_tbl u on o.usercode=u.usercode
-        where p.is_completed=1
-        order by p.completed_date desc
-        limit 5;-->
         SELECT
         pd.orderId,
         p.real_amount,
@@ -486,7 +473,8 @@
         join user_tbl u on p.usercode=u.usercode
         JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
         ORDER BY p.payment_code
-        LIMIT 5    </select>
+        LIMIT 5
+    </select>
     <select id="getQnaList" resultType="com.ict.finalproject.vo.QnAVO">
         select q.qna_code,u.nickname,q.qna_subject,q.writedate from
         qna_tbl q
@@ -846,6 +834,7 @@
                 and q.qna_status = #{searchKey2}
             </if>
         </where>
+        order by writedate desc
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="getQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
@@ -854,6 +843,7 @@
         join user_tbl u on q.usercode = u.usercode
         left join answer_tbl a on q.qna_code = a.qna_code
         where q.is_deleted=0
+        order by writedate desc
         LIMIT #{onePageRecord} OFFSET #{offset}
     </select>
     <select id="getQnaDetail" resultType="com.ict.finalproject.vo.QnAVO">

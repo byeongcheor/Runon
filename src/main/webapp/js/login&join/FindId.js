@@ -26,7 +26,7 @@ function FindIds2(){
         },
         success:function(r){
             var usernames=r.usernames;
-            console.log(usernames);
+            /*console.log(usernames);*/
             if (usernames!=null&&usernames!=""){
                 var tag=" <ul>";
                 usernames.forEach(function(usernames,index){
@@ -45,7 +45,7 @@ function FindIds2(){
 
             },
         error:function(e){
-            console.log("예외발생",e);
+          /*  console.log("예외발생",e);*/
         }
 
     });
@@ -74,14 +74,14 @@ function findpw(){
                     to_name:username,
                     message:url
                 })   .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
+                   /* console.log('SUCCESS!', response.status, response.text);*/
                 }, function(error) {
-                    console.log('FAILED...', error);
+                    /*console.log('FAILED...', error);*/
                 });
             }
         });
     } else {
-        alert("선택된 값이 없습니다.");
+        alert("선택된 아이디가 없습니다.");
     }
 
 

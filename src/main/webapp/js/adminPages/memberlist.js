@@ -120,7 +120,8 @@ function reloadPage(page,searchType,searchValue,searchType2,searchValue2){
 
                     },
                     error: function (e) {
-                        console.log(e);
+                        /*console.log(e);*/
+
                     }
                 });
             }else{
@@ -138,7 +139,7 @@ function excelDownload(){
         url:"/adminPages/uListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+            /*console.log("서버에서 받아온 값 ",r);*/
             download(r);
         }
     });
@@ -318,7 +319,7 @@ function userdetail(usercode){
             document.getElementById("userpay").innerHTML=paytag;
 
         },error:function(e){
-            console.log("에러발생"+e);
+            /*console.log("에러발생"+e);*/
         }
 
 
@@ -328,7 +329,7 @@ function closedetail(){
     document.getElementById("userdetailbackground").style.display="none";
 }
 function userdel(delusercode){
-    alert(delusercode);
+/*    alert(delusercode);*/
     $.ajax({
         url:"/adminPages/deluser",
         type:"post",
@@ -337,12 +338,12 @@ function userdel(delusercode){
         },
         success:function(r){
             //오는것 확인
-            alert("삭제상태:"+r);
+            alert("유저를 탈퇴시켰습니다");
 
         },
         error:function(e){
-            console.log(e);
-            alert("실패");
+           /* console.log(e);*/
+         /*   alert("실패");*/
         }
     });
 }
@@ -366,7 +367,7 @@ function disableUser(disablecode){
 
 
         },error:function(e){
-            console.log("예외발생"+e);
+            /*console.log("예외발생"+e);*/
         }
 
 
@@ -374,7 +375,7 @@ function disableUser(disablecode){
     });
 }
 function enableUser(enableUsercode){
-    alert(enableUsercode);
+   /* alert(enableUsercode);*/
     $.ajax({
         url:"/adminPages/enableUser",
         type:"post",
@@ -386,7 +387,7 @@ function enableUser(enableUsercode){
             alert("정지가 풀렸습니다.");
         }
         ,error:function (e){
-            console.log(e);
+          /*  console.log(e);*/
         }
     })
 
@@ -442,8 +443,8 @@ function selectExcel(){
     document.querySelectorAll(".checkbox:checked").forEach(function(checkbox){
        selectedVlaues.push(checkbox.value);
     });
-    console.log("선택된값 체크"+selectedVlaues);
-    console.log(selectedVlaues);
+    /*console.log("선택된값 체크"+selectedVlaues);
+    console.log(selectedVlaues);*/
     if (selectedVlaues.length==0){
         alert("선택된값이 없습니다");
         return false;
@@ -454,11 +455,11 @@ function selectExcel(){
         contentType:"application/json",
         data:JSON.stringify({usercodes:selectedVlaues}),
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+           /* console.log("서버에서 받아온 값 ",r);*/
             download(r);
         },
         error:function(e){
-           console.log(e);
+           /*console.log(e);*/
         }
 
     });

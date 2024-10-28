@@ -474,7 +474,7 @@ function newPayment(){
             var Avo=r.Avo;
             //최신 결제내역
             if (Avo.role<3||Avo.admin_code==0){
-                var buttontag="<div id=\"addlist\" > </div><div><button type=\"button\">더보기</button></div>";
+                var buttontag="<div id=\"addlist\" > </div><div><button onclick='payment()' type=\"button\">더보기</button></div>";
                 document.getElementById("buttonhidden").innerHTML=buttontag;
                 var tag="<ul><li class='oneline paymenttitle'><div class='nickname'>닉네임</div>";
                 tag += "<div class='marathon_name'>주문번호</div><div class='real_amount'>총가격</div>";
@@ -495,7 +495,7 @@ function newPayment(){
             //답변 대기중인 Q&A 리스트
             var qnalist=r.qnalist;
             //console.log(qnalist);
-            var qnahiddenbrnTag="<div class='chartHead'><div class='chartTitle'><div id=\"addlist2\" > QnAList &nbsp; (답변대기중) </div></div><div><button type=\"button\">더보기</button></div></div>";
+            var qnahiddenbrnTag="<div class='chartHead'><div class='chartTitle'><div id=\"addlist2\" > QnAList &nbsp; (답변대기중) </div></div><div><button type=\"button\" onclick='qnaclick()'>더보기</button></div></div>";
             document.getElementById("qnahiddenbtn").innerHTML=qnahiddenbrnTag;
             var qnaTag="<ul><li class='oneline qnatitle'><div class='qna_code'>고유번호</div>";
             qnaTag += "<div class='qna_subject'>QnA제목</div><div class='nickname'>작성자</div>";
@@ -579,7 +579,7 @@ function yearsTop5Marathon(year,annualSales){
                         },
                         title: {
                             display: true, // 타이틀 표시
-                            text: `${year}년 총액: ${totalSalesAmount.toLocaleString('ko-KR')}원`, // 총액 표시
+                            text: `${year}년 top3 총액: ${totalSalesAmount.toLocaleString('ko-KR')}원`, // 마총액 표시
                         },
                         tooltip: {
                             callbacks: {
@@ -591,7 +591,7 @@ function yearsTop5Marathon(year,annualSales){
                             }
                         }
                     },onClick:function(){
-
+                       /* console.log("값확인"+apdatas);*/
                         if(annualSales){
                             annualSales.destroy();
                         }
@@ -608,7 +608,7 @@ function yearsTop5Marathon(year,annualSales){
 
 
     });//ajax끝
-}
+}const apdatas=[];
 function yearsamount(){
     if (annualSales) {
         annualSales.destroy(); // 기존 차트 제거
@@ -618,11 +618,12 @@ function yearsamount(){
         type:"post",
         success:function(r){
             var APlist=r.APlist;
+            /*console.log(APlist);*/
             let annualSales;
             const currentYear = new Date().getFullYear();
             const backgroundColors = [];
             const borderColors = [];
-            const apdatas=[];
+
             const aplabels=[];
             //연도별 매출액
             for (let i =APlist.length-1;i>=0;i--){
@@ -637,7 +638,6 @@ function yearsamount(){
                     borderColors.push('rgba(75, 192, 192, 0.8)');
                 }
             }
-
 
             const apconfig = {
                 type: "bar",
@@ -662,6 +662,8 @@ function yearsamount(){
                         if (activeElements.length > 0) { // 클릭한 요소가 있을 경우
                             const clickedIndex = activeElements[0].index; // 클릭한 요소의 인덱스
                             const label = this.data.labels[clickedIndex]; // 클릭한 범례의 라벨
+                            /*console.log(annualSales);*/
+                            var yearstotalamount=0;
 
                             yearsTop5Marathon(label,annualSales); // 클릭 시 함수 호출
                         }
@@ -678,4 +680,10 @@ function yearsamount(){
             annualSales = new Chart(document.getElementById("annualSales"), apconfig);
                 }
             });
+}
+function payment(){
+    window.location.href="/adminPages/PaymentList";
+}
+function qnaclick(){
+    window.location.href="/adminPages/QnaList";
 }

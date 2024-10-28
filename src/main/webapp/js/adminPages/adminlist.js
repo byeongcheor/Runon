@@ -203,7 +203,7 @@ function blockhidden(){
 function searchbutton(){
     adminSearchType=document.getElementById("adminSearchValue").value;
     adminSearchValue=document.getElementById("searchtext").value;
-    alert(adminSearchType+":"+adminSearchValue);
+/*    alert(adminSearchType+":"+adminSearchValue);*/
     loadAdminPage(1,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2);
     document.getElementById("searchtext").value="";
 
@@ -233,7 +233,7 @@ function excelDownload(){
         url:"/adminPages/AdminListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+            /*console.log("서버에서 받아온 값 ",r);*/
             download(r);
         }
     });
@@ -288,8 +288,8 @@ function adminRoleUpdate(admincode,usercode){
             usercode:usercode
         },
         success:function(r){
-            alert(adminSearchType);
-            alert(adminSearchValue+"1"+adminSearchType2+"3"+adminSearchValue2);
+          /*  alert(adminSearchType);
+            alert(adminSearchValue+"1"+adminSearchType2+"3"+adminSearchValue2);*/
 
             loadAdminPage(1,adminSearchType,adminSearchValue,adminSearchType2,adminSearchValue2);
 
