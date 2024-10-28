@@ -20,10 +20,10 @@
     <div class="content-body">
         <div class="content-full">
             <div class="join-container">
+                <span class="left_img" onclick="go_crew_manage()">
+                    <img src="/img/left.png" style="width: 40px; height: 35px; ">
+                </span>
                 <section class="menu-container">
-                    <span class="left_img" onclick="go_crew_manage()">
-                        <img src="/img/left.png" style="width: 25px; height: 25px; ">
-                    </span>
                     <div class="menu-title">
                         <div class="crew_profileimage">
                             <div class="profileBox">

@@ -498,7 +498,7 @@ function crew_manage_select_member(response) {
      list += '   <span id="wait_cnt">';
      list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
      list += '   </span>';
-     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
+     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:2px; margin-right:65px; margin-top:3px;">';
      list += '</div>';
   }
   for (var i in response) {

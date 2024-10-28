@@ -19,4 +19,4 @@
         <div class='find'>
             <a onclick="joinPopup()">회원가입</a>/<a onclick="findIdPopup()">아이디찾기</a>/<a onclick="findPwdPopup()">비밀번호찾기</a>
         </div>
-</div>
+    </div>

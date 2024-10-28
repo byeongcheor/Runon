@@ -1,46 +1,51 @@
 body{
-    animation: none;background-color: black;
+    animation: none;
+    background-image: url(/img/loginback.jpg);
+    background-size: cover;
+    background-position: center;
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    filter: opacity(0.85);
 }
+
 header,footer{display:none;}
 
 .findIdFrm{
-    width: 350px;  margin: 0 auto;
-    /*overflow-y:auto;*/
+    width: 300px;  margin: 0 auto;
+    margin: -20px auto;
+
 }
 .findIdFrm h1{
-    text-align: center; margin: 50px 0 30px;
+      text-align: center; margin: 30px 0 0px;
 }
+
 .findIdFrm input[type="text"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
-}
-.findIdFrm input[type="password"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
-}
-.findIdFrm input[type="password"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
+    width: 300px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 3px solid #ddd;  font-size:16px;
 }
 .findIdFrm input[type="text"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-.FindIdTop a{
-    color: white;
+    border: 3px solid #ccff33;
+    outline: none;
 }
 
-.find{
+.findBtn{
+    width: 300px; color:black; background: #ccff33; font-size:16px;
+    border-style: none;
+    padding: 10px; margin: 10px 0; border-radius: 10px;
+}
+
+.findIdMid {
+    color: #ddd;
     text-align: center;
-    padding: 10px; margin: 10px 0;
-    color:#696969;
+    margin: 15px 0;
+    font-size: 26px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.5), 1px -1px 1px rgba(0, 0, 0, 0.5), -1px 1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
 
-}
-.find a:link, .find a:visited{
-    color:#696969;
-}
-.find a:hover{
-    color: #87CEEB;
-    font-weight: bold;
+.findIdTop img{
+    margin: 50px 0 0px;
+    width: 240px;
 }
 

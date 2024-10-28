@@ -77,11 +77,12 @@ function formCheck(event){
 
 
 }
-    function joinPopup(){
-        window.open('/JoinForm', 'JoinForm', 'width=600, height=850 ,left=1200, top=150');
-
-
+function joinPopup() {
+    const popup = window.open('/JoinForm', 'JoinForm', 'width=600,height=980,left=1200,top=150,resizable=yes');
+    if (popup) {
+        popup.resizeTo(600, 980);
     }
+}
 function findIdPopup(){
     window.open('/login&join/FindId', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
 }

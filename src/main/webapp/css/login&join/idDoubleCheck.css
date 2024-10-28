@@ -1,44 +1,111 @@
-header,footer{display:none;}
-.idCheck1 input[type="submit"],.idCheck1 input[type="button"]{
-    color: #fff; background: #FFA500;
-    border-style: none;
-    padding: 5px;  border-radius: 10px;
-}
-
-.idCheck2 input[type="text"]{
-    padding: 3px; margin-bottom: 10px; border-radius: 10px;
-    border: 2px solid #ddd;
-}
-.idCheck2 input[type="text"]:focus{
-    border: 2px solid #FFA500; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
-}
-
-.idCheck2 input[type="submit"]{
-    color: #fff; background: #FFA500;
-    border-style: none;
-    padding: 5px;  border-radius: 10px;
-
-}
-.idCheck2{
-    display: flex; /* Flexbox 사용 */
-    justify-content: center; /* 수평 가운데 정렬 */
-
-}
-.idCheck1{
-    text-align: center;
-    margin-top: 10%;
-    color: white;
-    height: 100%;
-
-}
-body{
-    background-color: black;
-    animation: none;
-    height: 100%;
-
-}
-#hiddenbox,#hiddenbox2{
+header, footer {
     display: none;
 }
 
+body {
+    animation: none;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/img/푸터배경.png');
+    background-size: cover;
+    background-position: center;
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+.idCheck1 {
+    text-align: center; /* 텍스트 왼쪽 정렬 */
+    margin: 8% 0;
+    color: white;
+    height: auto;
+}
+
+.idCheck1 input[type="submit"],
+.idCheck1 input[type="button"]{
+    color: black;
+    background: #ccff33; /* 기본 배경색 */
+    border-style: none;
+    padding: 8px;
+    margin-top:15px;
+    border-radius: 10px;
+    transition: background 0.3s, color 0.3s; /* 부드러운 전환 효과 */
+    width: 150px;
+}
+.idCheck2 input[type="submit"] {
+    color: black;
+    background: #ccff33; /* 기본 배경색 */
+    border-style: none;
+    padding: 7px;
+    border-radius: 10px;
+    transition: background 0.3s, color 0.3s; /* 부드러운 전환 효과 */
+    width: 110px;
+    height:35px;
+}
+
+
+#emailcode{
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    width:190px;
+    border: 2px solid #ddd;
+}
+
+/* 버튼 호버 상태 */
+.idCheck1 input[type="submit"]:hover,
+.idCheck1 input[type="button"]:hover,
+.idCheck2 input[type="submit"]:hover {
+    background: black;
+    color: white;
+    border: 1px solid white;
+}
+
+/* 버튼 클릭(활성) 상태 */
+.idCheck1 input[type="submit"]:active,
+.idCheck1 input[type="button"]:active,
+.idCheck2 input[type="submit"]:active {
+    background: black;
+    color: white;
+}
+
+.idCheck2 {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    margin: 0;
+    padding: 0;
+    padding-left: 40px;
+}
+.joinN {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.idCheck2 form {
+    display: flex;
+    gap: 10px;
+}
+
+.idCheck2 input[type="text"] {
+    width: 340px;
+    padding: 7px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 3px solid #ddd;
+}
+
+.idCheck2 input[type="text"]:focus {
+    border: 3px solid #ccff33;
+    outline: none;
+}
+
+
+
+#hiddenbox, #hiddenbox2 {
+    display: none;
+}
+
+.joinN {
+    color: #ddd;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.5), 1px -1px 1px rgba(0, 0, 0, 0.5), -1px 1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
