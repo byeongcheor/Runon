@@ -94,7 +94,7 @@
                                     <div class="receiptType">
                                         <span style="
                                         <c:if test='${marathon.registration_status == "접수마감"}'>color:red;</c:if>
-                                        <c:if test='${marathon.registration_status == "접수 시작 전"}'>color:green; font-weight: bold;</c:if>
+                                        <c:if test='${marathon.registration_status == "접수준비중"}'>color:green; font-weight: bold;</c:if>
                                                 ">
                                                 ${marathon.registration_status}
                                         </span>
@@ -259,7 +259,7 @@
                                     <div class="marathonListI">
                                         <img src="/img/marathonPoster/` + marathon.poster_img + `" style="width: 300px; height: 300px;">
                                         <div class="receiptType">
-                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수 시작 전' ? 'color:green; font-weight: bold;' : '') + `">
+                                             <span style="` + (marathon.registration_status == '접수마감' ? 'color:red;' : marathon.registration_status == '접수준비중' ? 'color:green; font-weight: bold;' : '') + `">
                                     ` + marathon.registration_status + `
                                 </span>
                                         </div>

@@ -1,12 +1,35 @@
 var CertificateSearchType=null;
 var CertificateSearchValue=null;
 var CertificateSearchType2=null;
-
+var cerate;
+var deleted;
+var edit;
 var page=0;
 var now;
 
 setTimeout(function(){
-    CertificateList(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+                if (role!="ROLE_USER"){
+                    CertificateList(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
 
 },400);
 function CertificateList(page,CertificateSearchType,CertificateSearchType2,CertificateSearchValue){
@@ -35,7 +58,9 @@ function CertificateList(page,CertificateSearchType,CertificateSearchType2,Certi
             var Cvo=r.Cvo;
             var pVO=r.pvo;
             var avo=r.Avo;
-
+            cerate=r.Avo.permission_add;
+            deleted=r.Avo.permission_delete;
+            edit=r.Avo.permission_edit;
          /*   if (avo.role<2 ||avo.admin_code==0) {
 
                 var downloadbuttontag=`<input type="button" value="인증신청리스트받기" onClick="excelDownload()"/>`;
@@ -156,8 +181,9 @@ function detail(certificate_code){
             document.getElementById("CertificateDetails").innerHTML=tag;
             document.getElementById("Certificatedetailbackground").style.display="block";
             if (Cvo.result_status=="처리중"){
-                var buttonTag="<button type='button' id='approveBtn' onclick='blockbutton(\""+certificate_code+"\",\""+Cvo.crew_member_code+"\")'>승인하기</button>";
-                var selectTag=`  <div>
+                if (cerate=="1"&&edit=="1"&&deleted=="1") {
+                    var buttonTag = "<button type='button' id='approveBtn' onclick='blockbutton(\"" + certificate_code + "\",\"" + Cvo.crew_member_code + "\")'>승인하기</button>";
+                    var selectTag = `  <div>
                        <label class="form-label">점수부여</label>
 
                         <div id="radiobuttons">
@@ -171,8 +197,10 @@ function detail(certificate_code){
                             <label class="form_label" for="value40">40Km</label>
                         </div>
                     </div>`;
-                document.getElementById("certificate").innerHTML=selectTag;
-                document.getElementById("addButton").innerHTML=buttonTag;
+                    document.getElementById("certificate").innerHTML = selectTag;
+                    document.getElementById("addButton").innerHTML = buttonTag;
+                }
+
             }else{   document.getElementById("Certificatedetailbackground").style.display="block";                document.getElementById("addButton").innerHTML=buttonTag;
                 document.getElementById("addButton").innerHTML="";
 

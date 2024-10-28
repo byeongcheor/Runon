@@ -293,14 +293,20 @@
     -webkit-box-align: center;
     align-items: center;
 }
-.shoppingC span {
+
+.shoppingC a {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     color: black;
-}
-.shoppingC a {
     text-decoration: none;
+    width: 100%;
+    height: 100%;
+    line-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center
+
 }
 .checkOrder button{
     cursor: pointer;

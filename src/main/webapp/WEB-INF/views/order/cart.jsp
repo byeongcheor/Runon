@@ -35,14 +35,14 @@
             <li>총 주문 금액 </li>
         </ul>
         <ul class="payP" id="totalAmountDisplay">
-            <li id="amount">00원</li>
-            <li id="totalAmounts">00원</li>
+            <li id="amount">0원</li>
+            <li id="totalAmounts">0원</li>
         </ul>
 
     </div>
     <div class="orderC">
         <div class="shoppingC">
-            <a href="/marathon/marathonList"><span>돌아가기</span></a>
+            <a href="/marathon/marathonList">돌아가기</a>
         </div>
         <div class="checkOrder">
             <button class="button" id="orderButton" onclick="goOrder()">선택 상품 주문하기</button>

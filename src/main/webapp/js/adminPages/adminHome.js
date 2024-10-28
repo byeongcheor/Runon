@@ -2,7 +2,10 @@ let myChart; // 전역 변수로 차트 객체를 선언
 let Memchart;
 let Memlist;
 let annualSales;
-$(document).ready(function () {
+var cerate;
+var deleted;
+var edit;
+function  start() {
     if(Memchart){
         Memchart.destroy();
     }
@@ -155,9 +158,32 @@ $(document).ready(function () {
         }
     })
 
-});//여기가 로드할때 시작하는 함수 끝
+};//여기가 로드할때 시작하는 함수 끝
 setTimeout(function(){
-    newPayment();
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+    $.ajax({
+        url:"/adminPages/checkuser",
+        type:"post",
+        data:{
+            usercode:usercode1
+        },success:function(r){
+            var role=r.role;
+
+
+            if (role!="ROLE_USER"){
+                start();
+                newPayment();
+            }else{
+                window.location.href="/";
+            }
+
+
+        }
+    })
+
+    }else{
+        window.location.href="/";
+    }
 },100);
 // 차트 생성 함수
 function createLineChart(labels, data) {
@@ -472,6 +498,9 @@ function newPayment(){
 
             var apaylist=r.APaylist;
             var Avo=r.Avo;
+            cerate=r.Avo.permission_add;
+            deleted=r.Avo.permission_delete;
+            edit=r.Avo.permission_edit;
             //최신 결제내역
             if (Avo.role<3||Avo.admin_code==0){
                 var buttontag="<div id=\"addlist\" > </div><div><button onclick='payment()' type=\"button\">더보기</button></div>";
@@ -480,9 +509,9 @@ function newPayment(){
                 tag += "<div class='marathon_name'>주문번호</div><div class='real_amount'>총가격</div>";
                 tag += "<div class='completed_date'>결제완료일</div></li>";
                 apaylist.forEach(function(apay){
-                    tag+="<li class='oneline alink'><a href='#'><div class='nickname'>"+apay.nickname+"</div>";
+                    tag+="<li class='oneline alink'><a onclick='copyText(\""+apay.orderId+"\")'><div class='nickname'>"+apay.nickname+"</div>";
                     tag+="<div class='marathon_name'>"+apay.orderId+"</div>";
-                    tag+="<div class='real_amount'>"+apay.real_amount+"</div>";
+                    tag+="<div class='real_amount'>"+apay.total_amount+"</div>";
                     tag+="<div class='completed_date'>"+apay.completed_date+"</div></a></li>";
                 });
                 tag+="</ul>";
@@ -501,7 +530,7 @@ function newPayment(){
             qnaTag += "<div class='qna_subject'>QnA제목</div><div class='nickname'>작성자</div>";
             qnaTag += "<div class='writedate'>작성일</div></li>";
             qnalist.forEach(function(list){
-               qnaTag +="<li class='oneline alink'><a href='#'><div class='qna_code'>"+list.qna_code+"</div>";
+               qnaTag +="<li class='oneline alink'><a onclick='detail(\""+list.qna_code+"\")'><div class='qna_code'>"+list.qna_code+"</div>";
                qnaTag +="<div = class='qna_subject'>"+list.qna_subject+"</div>";
                qnaTag +="<div class='nickname'>"+list.nickname+"</div>";
                qnaTag +="<div class='writedate'>"+list.writedate+"</div></a></li>";
@@ -686,4 +715,152 @@ function payment(){
 }
 function qnaclick(){
     window.location.href="/adminPages/QnaList";
+}
+
+function detail(qna_code){
+  /*  alert(qna_code);*/
+    document.getElementById("qnareply").innerHTML="";
+    $.ajax({
+        url:"/adminPages/qnaDetail",
+        type:"post",
+        data: {
+            qna_code:qna_code
+        },
+        success:function(r){
+            var qvo=r.qvo;
+            var answer=r.AnswerVO;
+
+            var Dtag=`
+             <div id="reportDetails">
+                <div style="margin-bottom: 20px;"><h3>문의내역</h3></div>
+                <div id="report">
+                    <div><div>제목</div><div class="detailContent">`+qvo.qna_subject+`</div></div>
+                    <div><div>닉네임</div><div class="detailContent">`+qvo.nickname+`</div></div>
+                    <div><div>아이디</div><div class="detailContent">`+qvo.username+`</div></div>
+                    `;
+            if (qvo.qna_status==1){
+                Dtag+= `<div><div>접수상태</div><div class="detailContent"><span style="color: tomato">답변완료</span></div></div>`;
+            }else{
+                Dtag+= `<div><div>접수상태</div><div class="detailContent"><span style="color: tomato">접수중</span></div></div>`;
+            }
+            Dtag+=`<div><div>접수일</div><div class="detailContent">`+qvo.writedate+`</div></div>
+                    <div><div>내용</div>
+                        <div class="detailContent" style="height: auto;">`+qvo.qna_content+`</div>
+                    </div>
+                </div>   
+            </div>
+            `;
+            if (qvo.qna_status==0&&cerate=="1"){
+                Dtag+="<div><button id='answerbutton' type='button' onclick='answer(\""+qvo.qna_code+"\")'>답변하기</button></div>"
+            }else{
+                document.getElementById("addreply").innerHTML="";
+            }
+            if (answer!=null&&answer!=""){
+                var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
+                if (edit=="1"){
+                    answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+                }
+                document.getElementById("qnareply").innerHTML=answertag;
+
+            }
+            document.getElementById("qnacontent").innerHTML=Dtag;
+            document.getElementById("qnadetailbackground").style.display="block";
+            loadQnaPage(now,qnaSearchType,qnaSearchType2,qnaSearchValue);
+        },
+        error:function(e){
+            /*  console.log("예외발생"+e);*/
+        }
+    });
+}
+function closedetail(){
+    document.getElementById("qnadetailbackground").style.display="none";
+}function answer(qna_code) {
+    // 확인완료 alert(qna_code);
+    document.getElementById("answerbutton").style.display="none";
+    var buttonTag= " <div> <textarea id='answercontent' name='answercontent'></textarea> </div> <div> <button type='button' id='insertAnswer' onclick='insertAnswer(\""+qna_code+"\")'>확인</button> </div>";
+    document.getElementById("addreply").innerHTML=buttonTag;
+    document.getElementById("addreply").style.display="block";
+}
+function insertAnswer(qna_code){
+    //확인완료alert(qna_code);
+    var content=document.getElementById("answercontent").value;
+    //확인완 alert(content);
+
+    $.ajax({
+        url:"/adminPages/insertAnswer",
+        type:"post",
+        data:{
+            qna_code:qna_code,
+            usercode:usercode1,
+            content:content
+        }
+        ,
+        success:function(r){
+
+            detail(qna_code);
+            loadQnaPage(now,qnaSearchType,qnaSearchType2,qnaSearchValue);
+
+        },
+        error:function(e){
+            /*console.log("예외발생"+e);*/
+        }
+    });
+}
+
+function closedetail(){
+    document.getElementById("qnadetailbackground").style.display="none";
+}
+function updateanswer(qna_code){
+    //오는것확인 alert(qna_code);
+    var content=document.getElementById("answercontent").innerText;
+    document.getElementById("qnareply").innerHTML="";
+    var tag=`<div> <textarea id='updatecontent' name='updatecontent'>`+content+`</textarea> 
+        </div> <div> <button type='button' id='updateAnswer' onclick='updateAnswer("`+qna_code+`")'>수정하기</button> </div>`
+    /* alert(content);*/
+    document.getElementById("addreply").innerHTML=tag;
+}
+function updateAnswer(qna_code){
+    var newcontent = document.getElementById("updatecontent").value;
+    $.ajax({
+        url:"/adminPages/updateAnswer",
+        type:"post",
+        data:{
+            qna_code:qna_code,
+            usercode:usercode1,
+            content:newcontent
+
+        },
+        success:function(r){
+            detail(qna_code);
+        },
+        error:function(e){
+            /* console.log(e);*/
+        }
+
+    });
+}
+function copyText(orderId) {
+
+
+    const text = orderId+"";
+
+    // 클립보드 복사 지원 여부 확인
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                alert("텍스트가 복사되었습니다! \n 더보기를 누르시고 검색해주세요.");
+            })
+            .catch(err => {
+                console.error("텍스트 복사 실패:", err);
+            });
+    } else {
+        // 입력 필드를 통한 대체 복사
+        const tempInput = document.createElement("input");
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("텍스트가 복사되었습니다! \n  더보기를 누르시고 검색해주세요.");
+    }
 }

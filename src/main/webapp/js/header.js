@@ -71,21 +71,21 @@ window.onload=function(){
         }// 테스트용으로 클릭 확인
     });
 
-  /*  $(document).one('click', '.menus', function (event) {
+    $(document).one('click', '.menus', function (event) {
         event.preventDefault(); // 링크의 기본 동작 방지
-        alert($(this).attr("href"));
+
         if ($(this).attr("href") != null) {
-            alert("넘어가기전");
+
             $.ajax({
                 url: $(this).attr('href'),
                 type: 'GET',
                 success: function (response) {
-                    alert("링크넘어가기!");
+
                     window.location.href = $(event.currentTarget).attr('href');
                 }
             });
         }
-    });*/
+    });
 };
 function mypagelogin(){
     alert("로그인하신후 접근가능합니다 ");

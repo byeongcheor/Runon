@@ -103,7 +103,7 @@
         </div>
         <!-- 지도 표시할 영역 -->
         <div class="hospital" style="position: relative;">
-            <h2>마라톤대회 위치 및 주변 응급병원</h2>
+            <h2>마라톤대회 위치 및 주변 응급시설</h2>
             <div id="map" style="width:800px;height:600px;position: relative;"></div>
             <button onclick="panToUserLocation()" style="background-color: transparent; border: none;position: absolute; top: 11%; z-index: 10;"><img src="/img/checkpoint.png" style="width:30px; height: 30px;"></button>
         </div>

@@ -1,5 +1,6 @@
 package com.ict.finalproject.controller;
 
+import com.ict.finalproject.service.AdminPagesService;
 import com.ict.finalproject.service.PaymentService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,8 @@ import java.util.Map;
 public class PaymentController {
     @Autowired
     private PaymentService service;
-
+    @Autowired
+    private AdminPagesService adminPagesService;
 
     @ResponseBody
     @PostMapping("/payment/insertpayment")
@@ -87,9 +89,16 @@ public class PaymentController {
     }
     @PostMapping("/payment/completed")
     @ResponseBody
-    public Map<String,Object>complete(@RequestParam("orderId")String orderId){
+    public Map<String,Object>complete(@RequestParam("orderId")String orderId,
+                                      @RequestParam(value = "usercode",required = false)Integer usercodeValue){
         Map<String,Object> map=new HashMap<>();
         //System.out.println(orderId);
+        if (usercodeValue!=null&&usercodeValue>0){
+            int usercode=usercodeValue.intValue();
+            AdminsVO Avo=adminPagesService.selectAdminRole(usercode);
+            map.put("Avo",Avo);
+
+        }
         List<CompleteVO>Cvo=new ArrayList<>();
         Cvo=service.selectCvoList(orderId);
         map.put("Cvo",Cvo);

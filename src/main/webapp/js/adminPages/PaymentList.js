@@ -9,7 +9,37 @@ var page=0;
 var now;
 
 setTimeout(function() {
-    loadPayList(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    star();
+                    loadPayList(page);
+
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
+}, 100);
+
+function star(){
     document.getElementById('amountSortBtn').addEventListener('click', function () {
         var icon = this.querySelector('i');
         schedule="total_amount";// button 내의 i 태그 선택
@@ -51,15 +81,15 @@ setTimeout(function() {
             icon.classList.add('fa-arrow-down-wide-short');  // 내림차순 아이콘 추가
         } else {
             sort = 'asc';  // 오름차순 (과거 순)
-           /* console.log("최신순: 오름차순");*/
+            /* console.log("최신순: 오름차순");*/
             icon.classList.remove('fa-arrow-down-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-up-wide-short');  // 오름차순 아이콘 추가
         }
         isLatestDescending = !isLatestDescending;
         loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);// 상태 반전
     });
-}, 400);
 
+}
 function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
     if (page==0){
         page=1;
@@ -87,7 +117,7 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
             var PayVo=r.Payvo;
             var pVO=r.pvo;
             var avo=r.Avo;
-            if(avo.role<2||avo.admin_code==0){
+            if(avo.role<1||avo.admin_code==0){
                 var tag = "<li>" +
                     "<div id='payment_title2'>" +
                     "<div class='orderId'>주문번호</div>" +
@@ -149,7 +179,11 @@ function loadPayList(page,PaymentSearchType,PaymentSearchValue,schedule,sort) {
                 $(".pagination").html(paginationTag);
 
 
+            }else{
+                alert("접근권한이 없습니다");
+                window.location.href="/adminPages/adminHome";
             }
+
         }
     });
 
@@ -185,11 +219,18 @@ function detail(orderId,payment_method){
         success:function(r){
             var Cvo=r.Cvo;
             var allCvo=r.Cvo[0];
+            var cerate=r.Avo.permission_add;
+            var deleted=r.Avo.permission_delete;
+            var edit=r.Avo.permission_edit;
             cnt=0;
             var orderIdTag=` <div><span>주문</span>
             <span>주문번호: `+Cvo[0].orderId+`</span></div>
-            <div><div id="cancelOkbutton"></div>
-            <button id="cancelbutton" type="button" onclick="cancel('`+Cvo[0].paymentKey+`')">주문취소</button></div>`;
+            <div><div id="cancelOkbutton"></div>`;
+            if(deleted=="1"){
+                orderIdTag+=`<button id="cancelbutton" type="button" onclick="cancel('`+Cvo[0].paymentKey+`')">주문취소</button>`;
+            }
+
+            orderIdTag+=`</div>`;
             document.getElementById("orderStN").innerHTML=orderIdTag;
 
 

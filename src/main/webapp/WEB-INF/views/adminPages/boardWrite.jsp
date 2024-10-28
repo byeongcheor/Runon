@@ -55,7 +55,7 @@
 							</li> <!-- 대회 날짜 -->
 							<li class="list-group-item"><strong><img src="/img/e.png"/> 장소: </strong> <input type="text" name="addr" >
 							</li> <!-- 장소 -->
-							<li class="list-group-item"><strong><img src="/img/f.png"/> 종목: </strong>  <input type="text" name="total_distance" readonly>
+<%--							<li class="list-group-item"><strong><img src="/img/f.png"/> 종목: </strong>  <input type="text" name="total_distance" readonly>--%>
 							</li> <!-- 종목 -->
 						</ul>
 					</div>
