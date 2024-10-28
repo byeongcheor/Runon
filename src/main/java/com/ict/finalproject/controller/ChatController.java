@@ -3,10 +3,7 @@ package com.ict.finalproject.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ict.finalproject.jwt.JWTUtil;
-import com.ict.finalproject.service.ChatService;
-import com.ict.finalproject.service.CrewService;
-import com.ict.finalproject.service.MateService;
-import com.ict.finalproject.service.ReportService;
+import com.ict.finalproject.service.*;
 import com.ict.finalproject.vo.CrewVO;
 import com.ict.finalproject.vo.MessageVO;
 import com.ict.finalproject.vo.ReportVO;
@@ -18,6 +15,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -63,6 +62,7 @@ public class ChatController {
         System.out.println(match_yn);
         try {
             log.info("Received message for match_yn {}: {}", match_yn, vo.toString());
+            log.info("Received gender: {}", vo.getGender()); // gender 값 확인
             vo.setRecipient(String.valueOf(match_yn));  // 방 코드 설정
 
             // 방 코드가 0일 경우 메시지 전송 차단

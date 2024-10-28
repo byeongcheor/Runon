@@ -462,6 +462,7 @@ public class CrewController {
     @ResponseBody
     public String go_crewManage(@RequestParam("Authorization") String token,
                                 @RequestParam("create_crew_code") int create_crew_code,
+                                @RequestParam(value = "flag", defaultValue = "0") int flag,
                                 HttpSession session) {
         // 토큰 처리 및 기타 데이터 처리
         token = token.substring("Bearer ".length());
@@ -471,6 +472,7 @@ public class CrewController {
         System.out.println("usercode : "+usercode);
         session.setAttribute("create_crew_code", create_crew_code);
         session.setAttribute("user_code", usercode);
+        session.setAttribute("flag", flag);
         return "success";
     }
 
@@ -479,11 +481,13 @@ public class CrewController {
 
         Integer create_crew_code = (Integer) session.getAttribute("create_crew_code");
         Integer user_code = (Integer) session.getAttribute("user_code");
+        Integer flag = (Integer) session.getAttribute("flag");
         Integer position = service.position_select(user_code, create_crew_code);
 
         model.addAttribute("create_crew_code", create_crew_code);
         model.addAttribute("user_code", user_code);
         model.addAttribute("position", position);
+        model.addAttribute("flag", flag);
         return "crew/crewManage"; // 이동할 JSP 페이지
     }
 

@@ -34,7 +34,6 @@
         <div class="select-section">
             <div class="select-box-container">
                 <div class="select-box" id="marathonSelect">
-
                     <p>내 대회 <span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;">&nbsp;▼</span></p>
                     <ul class="dropdown-menu options-list" id="options_list">
                     </ul>
@@ -206,6 +205,7 @@
         setTimeout(function() {
             // 드롭다운을 토글하는 함수
             function toggleDropdown(box) {
+                clog(box);
                 $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
                 $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
             }
@@ -361,6 +361,7 @@
     }
 
 function matching() {
+    $('.select-box').removeClass('active');
     var marathonValue = $('#marathonSelect').data('selected-value');
     var participationCountValue = $('#participationCountSelect').data('selected-value');
     var mateCountValue = $('#mateCountSelect').data('selected-value');
