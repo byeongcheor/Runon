@@ -881,7 +881,7 @@ public class AdminController {
 
         if (posterImage != null && !posterImage.isEmpty()) {
             try {
-                String uploadDir = request.getServletContext().getRealPath("/resources/uploadfile/");
+                String uploadDir = request.getServletContext().getRealPath("/img/marathonPoster/");
                 File dir = new File(uploadDir);
                 if (!dir.exists()) {
                     dir.mkdirs();

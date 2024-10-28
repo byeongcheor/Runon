@@ -55,7 +55,7 @@ public class MarathonListVO {
             LocalDateTime now = LocalDateTime.now();
 
             if (now.isBefore(startDate)) {
-                return "접수 시작 전"; // 접수 시작 전 상태
+                return "접수준비중"; // 접수 시작 전 상태
             } else if (now.isAfter(endDate)) {
                 return "접수마감"; // 접수 마감 상태
             } else {
