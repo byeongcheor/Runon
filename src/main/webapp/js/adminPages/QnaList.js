@@ -3,8 +3,37 @@ var qnaSearchValue=null;
 var qnaSearchType2=null;
 var page=0;
 var now;
+var cerate;
+var deleted;
+var edit;
+var adminz;
 setTimeout(function(){
-    loadQnaPage(page);
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+        $.ajax({
+            url:"/adminPages/checkuser",
+            type:"post",
+            data:{
+                usercode:usercode1
+            },success:function(r){
+                var role=r.role;
+
+
+                if (role!="ROLE_USER"){
+                    loadQnaPage(page);
+                }else{
+                    window.location.href="/";
+                }
+
+
+            }
+        })
+
+    }else{
+        window.location.href="/";
+    }
+
+
+
 },300);
 
 function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
@@ -33,6 +62,11 @@ function loadQnaPage(page,qnaSearchType,qnaSearchType2,qnaSearchValue){
             var QnaList=r.QnaList;
             var pVO=r.pvo;
             var admin=r.Avo;
+            cerate=r.Avo.permission_add
+            deleted=r.Avo.permission_delete;
+            adminz=r.Avo.admin_code;
+            edit=r.Avo.permission_edit;
+
             if(admin.role<4||admin.admin_code==0){
                 var tag = "<li><div id='qna_title2'><div class='qna_code'>문의번호</div><div  class='nickname '>문의자 </div>";
                 tag += "<div class='qna_subject'>제목</div><div class='writedate'>작성일</div>";
@@ -147,16 +181,20 @@ function detail(qna_code){
                 </div>   
             </div>
             `;
-            if (qvo.qna_status==0){
+            if ((qvo.qna_status==0&&cerate=="1")||adminz==0){
                 Dtag+="<div><button id='answerbutton' type='button' onclick='answer(\""+qvo.qna_code+"\")'>답변하기</button></div>"
-            }if (qvo.qna_status==1){
+            }else{
                 document.getElementById("addreply").innerHTML="";
             }
-            if (answer!=null&&answer!=""){
-               var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
-               answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
-               document.getElementById("qnareply").innerHTML=answertag;
 
+            if (answer!=null&&answer!=""){
+                var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
+                if (edit=="1"||adminz==0){
+                   answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+
+
+                }
+                document.getElementById("qnareply").innerHTML=answertag;
             }
             document.getElementById("qnacontent").innerHTML=Dtag;
             document.getElementById("qnadetailbackground").style.display="block";

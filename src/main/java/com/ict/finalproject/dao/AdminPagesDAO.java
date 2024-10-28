@@ -58,7 +58,8 @@ public interface AdminPagesDAO {
     //여기까지
     //유저&관리자테이블에서 등급변환
     public int UpdateUsertbl(MemberVO mvo);
-    public int UpdateAdmintbl(AdminsVO vo);
+    public int insertAdmintbl(AdminsVO vo);
+    public void updateAdmintbl(AdminsVO vo);
     //여기까지 세트
 
     //관리자 강등
@@ -173,4 +174,9 @@ public interface AdminPagesDAO {
 
     // 검색 조건에 따른 게시물 목록을 가져오는 메서드
     List<MarathonListVO> selectBoardWithSearchForStatus(PagingVO pvo);
+
+
+    public String selectRole(int usercode);
+
+    public AdminsVO selectAdmin(int usercode);
 }

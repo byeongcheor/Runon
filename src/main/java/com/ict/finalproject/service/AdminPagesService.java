@@ -142,4 +142,6 @@ public interface AdminPagesService {
     int getSearchBoardRecordForStatus(PagingVO pvo);
     // 검색 조건에 따른 게시물 목록을 가져오는 메서드
     List<MarathonListVO> selectBoardWithSearchForStatus(PagingVO pvo);
+
+    public String selectRole(int usercode);
 }

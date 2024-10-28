@@ -2,7 +2,10 @@ let myChart; // 전역 변수로 차트 객체를 선언
 let Memchart;
 let Memlist;
 let annualSales;
-$(document).ready(function () {
+var cerate;
+var deleted;
+var edit;
+function  start() {
     if(Memchart){
         Memchart.destroy();
     }
@@ -155,9 +158,32 @@ $(document).ready(function () {
         }
     })
 
-});//여기가 로드할때 시작하는 함수 끝
+};//여기가 로드할때 시작하는 함수 끝
 setTimeout(function(){
-    newPayment();
+    if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
+    $.ajax({
+        url:"/adminPages/checkuser",
+        type:"post",
+        data:{
+            usercode:usercode1
+        },success:function(r){
+            var role=r.role;
+
+
+            if (role!="ROLE_USER"){
+                start();
+                newPayment();
+            }else{
+                window.location.href="/";
+            }
+
+
+        }
+    })
+
+    }else{
+        window.location.href="/";
+    }
 },100);
 // 차트 생성 함수
 function createLineChart(labels, data) {
@@ -472,6 +498,9 @@ function newPayment(){
 
             var apaylist=r.APaylist;
             var Avo=r.Avo;
+            cerate=r.Avo.permission_add;
+            deleted=r.Avo.permission_delete;
+            edit=r.Avo.permission_edit;
             //최신 결제내역
             if (Avo.role<3||Avo.admin_code==0){
                 var buttontag="<div id=\"addlist\" > </div><div><button onclick='payment()' type=\"button\">더보기</button></div>";
@@ -721,14 +750,16 @@ function detail(qna_code){
                 </div>   
             </div>
             `;
-            if (qvo.qna_status==0){
+            if (qvo.qna_status==0&&cerate=="1"){
                 Dtag+="<div><button id='answerbutton' type='button' onclick='answer(\""+qvo.qna_code+"\")'>답변하기</button></div>"
-            }if (qvo.qna_status==1){
+            }else{
                 document.getElementById("addreply").innerHTML="";
             }
             if (answer!=null&&answer!=""){
                 var answertag= "<div>답변</div><div id='answercontent' class='detailContent'>"+answer.answer_content+"</div>";
-                answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+                if (edit=="1"){
+                    answertag += "<div><button type='button' id='editBtn' onclick='updateanswer(\""+qna_code+"\")'>수정하기</button></div>"
+                }
                 document.getElementById("qnareply").innerHTML=answertag;
 
             }
@@ -830,6 +861,6 @@ function copyText(orderId) {
         tempInput.select();
         document.execCommand("copy");
         document.body.removeChild(tempInput);
-        alert("텍스트가 복사되었습니다! \n 더보기를 누르시고 검색해주세요.");
+        alert("텍스트가 복사되었습니다! \n  더보기를 누르시고 검색해주세요.");
     }
 }

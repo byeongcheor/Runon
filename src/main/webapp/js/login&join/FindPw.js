@@ -64,9 +64,10 @@ function findpw(username){
                               console.log('FAILED...', error);
                           });
                 alert("이메일을 확인해주세요.");
-                window.close();
+
             }
         });
+       /* window.close();*/
     }
 
 

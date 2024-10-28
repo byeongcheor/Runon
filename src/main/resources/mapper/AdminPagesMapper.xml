@@ -237,6 +237,9 @@
         LIMIT  #{onePageRecord} offset #{offset}
     </select>
     <select id="selectAdminRole" resultType="com.ict.finalproject.vo.AdminsVO">
+        select *from admin_tbl where usercode=#{usercode} and is_deleted=0
+    </select>
+    <select id="selectAdmin" resultType="com.ict.finalproject.vo.AdminsVO">
         select *from admin_tbl where usercode=#{usercode}
     </select>
     <update id="updateRole">
@@ -274,9 +277,12 @@
     <update id="UpdateUsertbl">
         update user_tbl set role="ROLE_ADMIN" where usercode=#{usercode}
     </update>
-    <insert id="UpdateAdmintbl">
+    <insert id="insertAdmintbl">
         insert into admin_tbl(role,usercode) values(3,#{usercode})
     </insert>
+    <update id="updateAdmintbl">
+        update admin_tbl set role=3,is_deleted=0,deleted_date=null where usercode=#{usercode}
+    </update>
     <update id="userroleDown">
         update user_tbl set role="ROLE_USER" where usercode=#{usercode}
     </update>
@@ -995,11 +1001,9 @@
 <!--        LIMIT #{onePageRecord} OFFSET #{offset}-->
 <!--    </select>-->
 
-
-
-
-
-
+<select id="selectRole">
+    select role from user_tbl where usercode=#{usercode}
+</select>
 
 
 </mapper>

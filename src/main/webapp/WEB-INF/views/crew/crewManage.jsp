@@ -295,7 +295,7 @@
     <div class="custom-modal-footer">
       <button class="vote-btn" id=vote_update2 onclick="vote_rud('R')">수정</button>
       <button class="vote-btn" id=vote_delete2 onclick="vote_rud('D')">삭제</button>
-      <button class="vote-btn" id=vote_close2 onclick="closeCustomModal()">닫기</button>
+      <button class="handover-btn2" id=vote_close2 onclick="closeCustomModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -498,7 +498,7 @@ function crew_manage_select_member(response) {
      list += '   <span id="wait_cnt">';
      list += response[0].f_n + ' 명이 승인을 기다리고있어요.';
      list += '   </span>';
-     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:5px; margin-right:65px; margin-top:3px;">';
+     list += '   <img src="/img/way.png" style="width: 26px; height: 26px; padding:2px; margin-right:65px; margin-top:3px;">';
      list += '</div>';
   }
   for (var i in response) {
@@ -1398,9 +1398,7 @@ function voteNow(vote_num, flag, vote_user_code) {
            }
            list2 += '</div>';
            $('#vote_results').html(list2);
-           clog(flag);
-           clog(vote_user_code);
-           clog(user_code);
+
            if (response[0].f_s ===null&&flag==0) {
               document.getElementById('voteNowModal').style.display = 'block';
            }
