@@ -18,8 +18,8 @@
     var match_yn = ${match_yn};
     var num = ${num};
     // 콘솔에 gender와 usercode 값 출력
-    console.log("Gender value received from parent window: ", gender);
-    console.log("Usercode value received from parent window: ", usercode);
+   /* console.log("Gender value received from parent window: ", gender);
+    console.log("Usercode value received from parent window: ", usercode);*/
 
     function profile_draw(gender) {
         var list = '';
@@ -58,11 +58,11 @@
                     window.opener.$('#img'+num).attr('src', '/img/'+img_gender+profileValue+'.png');
                     window.close();  // 팝업 창 닫기
                } else {
-                   console.log('Profile saving failed, result:', result);
+                   /*console.log('Profile saving failed, result:', result);*/
                }
            },
            error:function(e){
-               console.error('Error occurred while sending profile click:', e);
+              /* console.error('Error occurred while sending profile click:', e);*/
            }
        });
    }

@@ -22,18 +22,18 @@ async function confirm() {
 
     if (!response.ok) {
         // TODO: 결제 실패 비즈니스 로직을 구현하세요.
-        console.log(json);
+       /* console.log(json);*/
         window.location.href = `/fail?message=${json.message}&code=${json.code}`;
     }
 
     // TODO: 결제 성공 비즈니스 로직을 구현하세요.
     // console.log(json);
-    console.log("json확인"+JSON.stringify(json));
-    console.log("requestData확인"+JSON.stringify(requestData));
+  /*  console.log("json확인"+JSON.stringify(json));
+    console.log("requestData확인"+JSON.stringify(requestData));*/
     return json;
 }
 confirm().then(function (data) {
-    console.log(data);
+   /* console.log(data);*/
     //결제금액
     var total_Amount=data.balanceAmount;
 
@@ -96,11 +96,11 @@ confirm().then(function (data) {
             form.submit();
         },
         error: function(xhr, status, error) {
-            console.error("결제 실패: " + error);
+         /*   console.error("결제 실패: " + error);
             console.log(error);
             console.log(status);
             console.log(xhr);
-            alert("결제 중 오류가 발생했습니다. 다시 시도해주세요.");
+            alert("결제 중 오류가 발생했습니다. 다시 시도해주세요.");*/
         }
     });
 

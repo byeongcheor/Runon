@@ -162,7 +162,7 @@ $('#no').hide();
                 create_crew_code : crew_code
             },
             success: function(response) {
-                console.log("response--->>",response)
+                /*console.log("response--->>",response)*/
              $('#crew_logo').attr('src', '/crew_upload/' + response[0].logo);
              $('#crew_name').text(response[0].crew_name+'/멤버관리');
                 for (var i in response) {
@@ -276,7 +276,7 @@ function go_crew_manage() {
                 window.location.href = '/crew/crewManage'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
             },
             error: function(error) {
-                console.log('에러 발생:', error);
+              /*  console.log('에러 발생:', error);*/
             }
         });
         $('#createNewTeamModal').modal('hide');

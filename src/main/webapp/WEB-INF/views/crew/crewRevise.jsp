@@ -118,8 +118,8 @@ const user_code = ${user_code};
 const create_crew_code = ${create_crew_code};
 
 // 받은 값을 콘솔로 출력하여 확인
-console.log('user_code: ' + user_code);
-console.log('create_crew_code: ' + create_crew_code);
+/*console.log('user_code: ' + user_code);
+console.log('create_crew_code: ' + create_crew_code);*/
 
 // 페이지 로드 시 도시 리스트를 불러오는 함수
 $(document).ready(function() {
@@ -187,7 +187,7 @@ function loadCrewInfo() {
             }
         },
         error: function(error) {
-            console.log(error);
+          /*  console.log(error);*/
             alert('크루 정보를 불러오는 중 오류가 발생했습니다.');
         }
     });
@@ -242,7 +242,7 @@ function submitCrewInfo() {
         processData: false,  // FormData 사용 시 false로 설정
         contentType: false,  // FormData 사용 시 false로 설정
         success: function(response) {
-         console.log("responseresponse->>", response)
+    /*     console.log("responseresponse->>", response)*/
         if (response === 1) {
             alert('이미 사용중인 크루가 있습니다. 다른 이름을 선택하세요.');
             } else if (response === 0) {
@@ -252,7 +252,7 @@ function submitCrewInfo() {
             }
         },
         error: function(error) {
-            console.log(error);
+            /*console.log(error);*/
             alert('크루 정보 수정 중 오류가 발생했습니다.');
         }
     });

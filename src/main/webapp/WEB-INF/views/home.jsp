@@ -72,7 +72,7 @@
             } );
 
          },error: function (e){
-            console.log(e);
+            /*console.log(e);*/
          }
       })
       //첫번째 섹션
@@ -101,7 +101,7 @@
             document.getElementById("marathon1").innerHTML = tag;
          },
          error: function (e){
-            console.log(e);
+           /* console.log(e);*/
          }
       })
       //두번째섹션
@@ -129,7 +129,7 @@
             })
             document.getElementById("event").innerHTML = tag;
          },error: function(e){
-            console.log(e);
+            /*console.log(e);*/
          }
       })
    },100);

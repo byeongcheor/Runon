@@ -38,8 +38,8 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
         type: "post",
         data: BoardData,
         success: function(r) {
-            console.log("Total Records: ", r.pvo.totalRecord);
-            console.log("Total Pages: ", r.pvo.totalPage);
+          /*  console.log("Total Records: ", r.pvo.totalRecord);
+            console.log("Total Pages: ", r.pvo.totalPage);*/
             var BoardList = r.list;
             var pVO = r.pvo;
             if (r.list.length > 0) {
@@ -61,7 +61,7 @@ function loadBoardPage(page, boardSearchType, boardSearchType2, boardSearchValue
             tag += "<div class='deleted_date'>삭제 여부</div><div class='deleted_date'>삭제 완료일</div>"; // 삭제 완료일 추가
             tag += "<div class='edit_button'>수정</div><div class='delete_button'>삭제</div>";
             tag += "</div></li>";
-            console.log("BoardData:", BoardData); // AJAX 호출 전에 추가
+            /*console.log("BoardData:", BoardData); // AJAX 호출 전에 추가*/
 
             BoardList.forEach(function (board) {
                 tag += "<li><div class='board_title3'><div class='marathon_code'>" + board.marathon_code + "</div>";
@@ -145,8 +145,8 @@ function searchbutton() {
     const boardSearchValue = document.getElementById("searchtext").value; // 검색어
 
     // 콘솔 로그를 추가하여 디버깅
-    console.log("Search Type:", boardSearchType);
-    console.log("Search Value:", boardSearchValue);
+/*    console.log("Search Type:", boardSearchType);
+    console.log("Search Value:", boardSearchValue);*/
 
     // 조건에 따라 검색어를 어떻게 처리할지 정의
     let searchType = null;
@@ -178,7 +178,7 @@ function deleteBoard(marathonCode) {
             method: 'POST' // 'DELETE' 대신 'POST'로 변경
         })
             .then((response) => {
-                console.log(response);
+                /*console.log(response);*/
                 if (response.ok) {
                     alert("삭제되었습니다.");
                     location.reload(); // 페이지 새로고침
@@ -187,9 +187,11 @@ function deleteBoard(marathonCode) {
                 }
             })
             .catch(error => {
-                console.error('삭제 중 오류 발생:', error);
-                alert("삭제 중 오류가 발생했습니다.");
+               /* console.error('삭제 중 오류 발생:', error);
+                alert("삭제 중 오류가 발생했습니다.");*/
             });
+    }else{
+        alert("삭제를 취소하셨습니다");
     }
 }
 
@@ -218,7 +220,7 @@ function excelDownload(){
         url:"/adminPages/boardListDownload",
         type:"post",
         success:function(r){
-            console.log("서버에서 받아온 값 ",r);
+          /*  console.log/!*("서버에서 받아온 값 ",r);*!/*/
             download(r);
         }
     });

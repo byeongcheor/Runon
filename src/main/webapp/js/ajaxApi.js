@@ -51,13 +51,13 @@ $(document).ready(function () {
                                 $('body').html(response);
                             },
                             error: function (xhr, status, error) {
-                                console.error('재시도 실패:', status, error);
+                               /* console.error('재시도 실패:', status, error);*/
                               /*  alert("재시도 실패");*/
                                 logout();  // 재시도 실패 시 로그아웃
                             }
                         });
                     } else {
-                        console.log('토큰 갱신 실패, 로그아웃 처리');
+                       /* console.log('토큰 갱신 실패, 로그아웃 처리');*/
                         logout();  // 토큰 갱신 실패 시 로그아웃 처리
                     }
                 }
@@ -137,7 +137,7 @@ async function obtainNewAccessToken() {
 
 // 로그아웃 함수 정의
 function logout() {
-    console.log("사용자를 로그아웃 처리합니다.");
+    /*console.log("사용자를 로그아웃 처리합니다.");*/
     // 여기서 실제로 로그아웃 처리 (예: 로컬 스토리지 제거, 페이지 리다이렉트 등)
     localStorage.removeItem('Authorization');
     localStorage.removeItem('refresh');
@@ -148,7 +148,7 @@ function logout() {
 }
 // 로그아웃 함수 정의
 function logout2() {
-    console.log("사용자를 로그아웃 처리합니다.");
+/*    console.log("사용자를 로그아웃 처리합니다.");*/
     // 여기서 실제로 로그아웃 처리 (예: 로컬 스토리지 제거, 페이지 리다이렉트 등)
     localStorage.removeItem('Authorization');
     localStorage.removeItem('refresh');

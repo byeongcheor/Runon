@@ -461,7 +461,7 @@
 var Authorization = localStorage.getItem("Authorization");
 var clog=console.log;
 var usercode=${user_code};
-clog('usercode : '+usercode);
+/*clog('usercode : '+usercode);*/
 
 
     var seoulDistricts = [
@@ -944,8 +944,8 @@ clog('usercode : '+usercode);
              }
             },
             error: function(error) {
-                console.log(error);
-                alert('크루 생성 중 오류가 발생했습니다.');
+                /*console.log(error);
+                alert('크루 생성 중 오류가 발생했습니다.');*/
             }
         });
     }
@@ -1140,7 +1140,7 @@ clog('usercode : '+usercode);
 
            var form = $('#crew_write_add')[0];
            var formData = new FormData(form);
-            clog(form);
+        /*    clog(form);*/
             var ageChecked = $('input[name="age[]3"]:checked').length > 0;
             var genderChecked = $('input[name="gender3"]:checked').length > 0;
             var teamIntro = $('#teamIntro3').val().trim();

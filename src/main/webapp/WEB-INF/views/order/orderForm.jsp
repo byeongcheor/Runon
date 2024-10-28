@@ -175,7 +175,7 @@
 
 <script>
     totalAmount = ${totalAmount};
-    console.log("Total Amount: " + totalAmount);
+    /*console.log("Total Amount: " + totalAmount);*/
     function test(){
         resetInput();
 

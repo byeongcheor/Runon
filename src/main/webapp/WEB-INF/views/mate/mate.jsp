@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/slick.css" type="text/css">
-    <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">
+    <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">--%>
     <link rel="stylesheet" href="/css/main.css" type="text/css">
     <link rel="stylesheet" href="/css/mate.css" type="text/css">
-    <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
+<%--    <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>--%>
      <%@ include file="/WEB-INF/views/chat/chatList.jsp"%>
 
 
@@ -205,7 +205,7 @@
         setTimeout(function() {
             // 드롭다운을 토글하는 함수
             function toggleDropdown(box) {
-                clog(box);
+              /*  clog(box);*/
                 $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
                 $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
             }

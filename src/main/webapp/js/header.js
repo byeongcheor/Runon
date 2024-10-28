@@ -28,7 +28,7 @@ window.onload=function(){
             // 유저정보 담기
             usercode1=r.mvo.usercode;
             username1=r.mvo.username;
-            console.log(r.mvo.role);
+           /* console.log(r.mvo.role);*/
             if (r.mvo.role!="ROLE_USER"){
                 var tag="<a class=\"menus\" href=\"/adminPages/adminHome\">ADMIN</a>";
                 document.getElementById("as").innerHTML=tag;
@@ -60,7 +60,7 @@ window.onload=function(){
             success: function (response) {
                 // 정상적으로 권한이 확인되면 페이지 이동
 
-                console.log(response);
+               /* console.log(response);*/
                 window.location.href = $(event.currentTarget).attr('href');
             },
             complete: function () {

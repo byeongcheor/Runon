@@ -120,13 +120,13 @@ function searchbutton(){
     CertificateSearchType=document.getElementById("CertificateSearchValue").value;
     CertificateSearchType2=document.getElementById("CertificateSearchValue2").value;
     CertificateSearchValue=document.getElementById("searchtext").value;
-    alert(CertificateSearchType+":"+CertificateSearchValue);
+    /*alert(CertificateSearchType+":"+CertificateSearchValue);*/
     CertificateList(1,CertificateSearchType,CertificateSearchType2,CertificateSearchValue);
 
 
 }
 function detail(certificate_code){
-    alert(certificate_code);
+  /*  alert(certificate_code);*/
     $.ajax({
         url:"/adminPages/certificateDetail",
         type:"post",
@@ -135,7 +135,7 @@ function detail(certificate_code){
         },
         success:function(r){
             var Cvo=r.Cvo;
-            console.log(Cvo.result_status)
+            /*console.log(Cvo.result_status);*/
 
             var tag=`
                 <div style="margin-bottom: 20px;"><h3>상세내역</h3></div>
@@ -185,8 +185,8 @@ function detail(certificate_code){
 }
 function blockbutton(certificate_code,crew_member_code){
     const selectedValue = getSelectedRadioValue();
-    console.log("Selected radio value is: " + selectedValue);
-    console.log(crew_member_code);
+   /* console.log("Selected radio value is: " + selectedValue);
+    console.log(crew_member_code);*/
     var datas={certificate_code:certificate_code,
         selectedValue:selectedValue
 
@@ -199,14 +199,14 @@ function blockbutton(certificate_code,crew_member_code){
         type:"post",
         data:datas,
         success:function(r){
-            console.log(r);
+         /*   console.log(r);*/
             if (r.a!=0){
                 document.getElementById("certificate").innerHTML="<div style='margin-top: 20px; color: tomato;'>인증이 완료된 신청입니다</div>";
                 document.getElementById("addButton").innerHTML="";
                 CertificateList(now,CertificateSearchType,CertificateSearchType2,CertificateSearchValue);
 
             }
-            alert("성공");
+            alert("성공적으로 인증을 완료시켰습니다");
         }
     });
 

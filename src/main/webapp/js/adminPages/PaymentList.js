@@ -21,12 +21,12 @@ setTimeout(function() {
         if (isAmountDescending) {
 
             sort = 'desc';  // 내림차순 (비싼 순)
-            console.log("금액순: 내림차순");
+            /*console.log("금액순: 내림차순");*/
             icon.classList.remove('fa-arrow-up-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-down-wide-short');  // 내림차순 아이콘 추가
         } else {
             sort = 'asc';  // 오름차순 (저렴한 순)
-            console.log("금액순: 오름차순");
+            /*console.log("금액순: 오름차순");*/
             icon.classList.remove('fa-arrow-down-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-up-wide-short');  // 오름차순 아이콘 추가
         }
@@ -46,12 +46,12 @@ setTimeout(function() {
         if (isLatestDescending) {
 
             sort = 'desc';  // 내림차순 (최신 순)
-            console.log("최신순: 내림차순");
+            /*console.log("최신순: 내림차순");*/
             icon.classList.remove('fa-arrow-up-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-down-wide-short');  // 내림차순 아이콘 추가
         } else {
             sort = 'asc';  // 오름차순 (과거 순)
-            console.log("최신순: 오름차순");
+           /* console.log("최신순: 오름차순");*/
             icon.classList.remove('fa-arrow-down-wide-short');  // 기존 클래스 제거
             icon.classList.add('fa-arrow-up-wide-short');  // 오름차순 아이콘 추가
         }
@@ -164,7 +164,7 @@ function enterKey(event) {
 function searchbutton(){
     PaymentSearchType=document.getElementById("CertificateSearchValue").value;
     PaymentSearchValue=document.getElementById("searchtext").value;
-    alert(PaymentSearchType+":"+PaymentSearchValue);
+/*    alert(PaymentSearchType+":"+PaymentSearchValue);*/
     loadPayList(1,PaymentSearchType,PaymentSearchValue,schedule,sort);
 
 
@@ -174,7 +174,7 @@ function reset(){
 }
 var cnt=0;
 function detail(orderId,payment_method){
-    console.log(payment_method);
+  /*  console.log(payment_method);*/
     $.ajax({
         url:"/payment/completed",
         type:"post",
@@ -281,8 +281,8 @@ function cancelOk(paymentKey){
     const checkedValues = Array.from(elements)
         .filter(checkbox => checkbox.checked)
         .map(checkbox => checkbox.value);
-    alert(checkedValues);
-    alert(paymentKey);
+/*    alert(checkedValues);
+    alert(paymentKey);*/
     $.ajax({
         url:"/payment/cancelpayment",
         type:"post",
@@ -302,13 +302,13 @@ function cancelOk(paymentKey){
             pdvo.forEach(function(pdvo){
                 total+=pdvo.total_amount;
             });
-            console.log("총금액"+real_amount);
-            console.log("총사용포인트"+discount_amount);
+           /* console.log("총금액"+real_amount);
+            console.log("총사용포인트"+discount_amount);*/
             if (pdvo[0].discount_amount!=0&&pdvo[0].discount_amount!=""&&pdvo[0].discount_amount!=null){
                 discount = total/(pdvo[0].discount_amount + pdvo[0].real_amount);
             }
-            console.log("환불신청금액"+total);
-            console.log('퍼센트'+discount);
+           /* console.log("환불신청금액"+total);
+            console.log('퍼센트'+discount);*/
 
             return_discount=Math.round(discount_amount*discount);
             return_amount=Math.round(total-return_discount);
@@ -317,8 +317,8 @@ function cancelOk(paymentKey){
             if (real_amount==total-discount_amount){
                 return_amount=real_amount;
                 return_discount=discount_amount;
-                console.log("환불할 all포인트"+return_discount);
-                console.log("환불할 all금액"+return_amount);
+              /*  console.log("환불할 all포인트"+return_discount);
+                console.log("환불할 all금액"+return_amount);*/
 
             }/*else if (real_amount<total-discount_amount){
                 return_amount=real_amount;
@@ -341,7 +341,7 @@ function cancelOk(paymentKey){
                     cancelAmount:return_amount
                 }),
                 success:function(r){
-                    console.log(r);
+                   /* console.log(r);*/
                     var refund_amount=r.balanceAmount;
                     $.ajax({
                         url:"/payment/refund",
@@ -359,7 +359,7 @@ function cancelOk(paymentKey){
                         }
                     });
                 },error:function(e){
-                    console.log(e);
+                    /*console.log(e);*/
                 }
 
             });

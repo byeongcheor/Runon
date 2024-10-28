@@ -337,7 +337,7 @@
                 }
             },error: function(e){
                 alert("다시 로드해주세요.");
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }

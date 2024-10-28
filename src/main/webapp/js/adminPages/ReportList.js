@@ -25,7 +25,7 @@ function loadReportPage(page,reportSearchType,reportSearchType2,reportSearchValu
 
     }
     now=page;
-    console.log(page);
+    /*console.log(page);*/
     if (usercode1){
         ReportData.usercode=usercode1;
     }
@@ -120,7 +120,7 @@ function searchbutton(){
     reportSearchType=document.getElementById("reportSearchValue").value;
     reportSearchType2=document.getElementById("reportSearchValue2").value;
     reportSearchValue=document.getElementById("searchtext").value;
-    alert(reportSearchType2+":"+reportSearchValue);
+/*    alert(reportSearchType2+":"+reportSearchValue);*/
     loadReportPage(1,reportSearchType,reportSearchType2,reportSearchValue);
 
 
@@ -155,7 +155,7 @@ function reset(){
 }
 var reports;
 function detail(report_code){
-    alert(report_code);
+/*    alert(report_code);*/
     $.ajax({
         url:"/adminPages/reportDetail",
         type:"post",
@@ -238,8 +238,8 @@ function addreply(){
 
     var is_disabled = document.getElementById("is_disabled").value
     var content = document.getElementById("content").value
-    console.log("테스트:"+is_disabled);
-    console.log("테스트2:"+content);
+    /*console.log("테스트:"+is_disabled);
+    console.log("테스트2:"+content);*/
     var reply={}
     reply=reports;
     reply.is_disabled=is_disabled;
@@ -250,7 +250,7 @@ function addreply(){
         type:"post",
         data:reply,
         success:function(r){
-            console.log("성공");
+          /*  console.log("성공");*/
             var rvo=r.rvo;
             var tag=`
             <div><h3>신고결과</h3></div>
@@ -261,7 +261,7 @@ function addreply(){
            <!-- <div><div id="updateReply" ><button>확인</button><button>취소</button></div><button id="updatebutton" onclick="updateReply()">수정</button></div>-->`;
             document.getElementById("reportreply").innerHTML=tag;
             document.getElementById("addreply").style.display="none";
-            console.log("왜 null이야"+now);
+           /* console.log("왜 null이야"+now);*/
             loadReportPage(now,reportSearchType,reportSearchType2,reportSearchValue);
         }
     });

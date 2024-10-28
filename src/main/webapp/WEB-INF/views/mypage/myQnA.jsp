@@ -202,7 +202,7 @@
                 $(".pagination").html(paginationTag);
 
             },error:function (e){
-                alert(e);
+                /*alert(e);*/
             }
         });
     }
@@ -254,8 +254,8 @@
                 closeModal();
                 location.reload();
             },error: function(e){
-                alert("실패");
-                console.log(e);
+                /*alert("실패");
+                console.log(e);*/
             }
         });
         return false;
@@ -289,7 +289,7 @@
                 usercode: usercode1,
                 qna_code: qna_code
             },success: function(r){
-                console.log(r);
+                /*console.log(r);*/
                 document.getElementById("subject1").value = r.qna_subject;
                 document.getElementById("content1").value = r.qna_content;
                 if(r.answer_content){
@@ -298,7 +298,7 @@
                 openViewQnA();
             },error: function(e){
                 alert("조회실패..");
-                console.log(e);
+               /* console.log(e);*/
             }
         })
         return false;
