@@ -70,6 +70,11 @@ setTimeout(function(){
 
     // 좋아요 버튼 클릭 이벤트
     likeButton.addEventListener('click', function () {
+        // 로그인 여부 확인
+        if (!usercode) {  // usercode가 없을 경우
+            alert('로그인 후 이용해주세요.'); // 로그인 후 이용 알림
+            return;  // 로그인하지 않았으면 좋아요 요청을 보내지 않음
+        }
         console.log('좋아요 버튼 클릭됨', usercode, marathonId); // 추가 로그
         fetch('/marathon/addLike', {
             method: 'POST',
