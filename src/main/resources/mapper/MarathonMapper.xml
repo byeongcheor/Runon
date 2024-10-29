@@ -38,7 +38,7 @@
                 hit DESC
             </when>
             <otherwise>
-                event_date DESC
+                hit DESC
             </otherwise>
         </choose>
         LIMIT #{onePageRecord} OFFSET #{offset}

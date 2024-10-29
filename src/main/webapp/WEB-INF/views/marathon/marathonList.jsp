@@ -144,8 +144,6 @@
             </c:if>
         </ul>
 
-
-
     </div>
 </div>
 <script>
@@ -174,19 +172,19 @@
             }
 
             // 필터링된 데이터를 가져오는 AJAX 요청
-            fetchFilteredData(year, month, addr, searchTerm);
+            fetchFilteredData(year, month, addr, searchTerm, 1);
 
         });
 
 
         // 조회순 클릭 이벤트
         $('#sort-view').on('click', function() {
-            fetchFilteredData(null, null, null, null, '2');
+            fetchFilteredData(null, null, null, null, '2', 1);
         });
 
         // 좋아요순 클릭 이벤트
         $('#sort-like').on('click', function() {
-            fetchFilteredData(null, null, null, null, '1');
+            fetchFilteredData(null, null, null, null, '1', 1);
         });
     });
 
@@ -198,7 +196,7 @@
     });
 
 
-    function fetchFilteredData(year, month, addr, searchTerm, sortOrder) {
+    function fetchFilteredData(year, month, addr, searchTerm, sortOrder, p) {
         // 검색어 출력
         console.log(addr+"----------------")
         console.log('검색어:', searchTerm); // 여기에 추가합니다.
@@ -207,9 +205,10 @@
             month: month || null,
             region: addr || null,
             search: searchTerm || null,
-            sort1: sortOrder || null
-
+            sort1: sortOrder || null,
+            nowPage:p,
         });
+
         $.ajax({
             url: '/marathon/filter', // 필터링된 데이터를 요청할 엔드포인트
             method: 'GET',
@@ -218,7 +217,8 @@
                 month: month || null,       // 선택한 월
                 addr: addr || null,     // 선택한 지역
                 search: searchTerm || null,  // 검색어
-                sort1: sortOrder || null    // 정렬 기준
+                sort1: sortOrder || null,// 정렬 기준
+                nowPage:p,
 
             },
             success: function(response) {
@@ -233,12 +233,12 @@
         });
     }
 
-    function updateMarathonList(data) {
+    function updateMarathonList(data, year, month, addr, searchTerm, sortOrder) {
         console.log('서버에서 받은 데이터:', data); // 서버 응답 확인
         // 필터링된 데이터와 총 레코드 수를 처리하는 UI 업데이트 로직을 작성합니다.
         // const totalRecord = data.totalRecord;
         var pVO = data.pvo;
-        console.log('pVO:', pVO.totalRecord);
+        console.log('pVO:', pVO);
         const marathons = data.filteredMarathons || []; // 기본값으로 빈 배열 설정
         // UI에 마라톤 리스트 업데이트 로직 추가
         // 예: 리스트를 비우고 새로 추가
@@ -267,7 +267,7 @@
                                     <div class="marathonListContent">
                                         <span>📍 ` + marathon.mainLocation + `</span>
                                         <div class="mTitle">` + marathon.marathon_name + `</div>
-                                        <div class="mPrice">` + marathon.entry_fee + `원</div>
+                                        <div class="mPrice">` + marathon.entry_fee + `</div>
                                         <div class="mSubject">
                                             <div class="mH">
                                                 <span>👀 ` + marathon.hit + `&nbsp;❤️ ` + marathon.like_count + `</span>
@@ -285,49 +285,50 @@
             $('#marathon-list').append(marathonHTML);
 
 
-            // 필터링 조건을 가져옵니다.
-            let searchKey = $("#searchKey").val();
-            let searchWord = $("#searchWord").val();
-            let addr = $("#addr").val();
+            // let searchKey = $("#searchKey").val() || "";
+            // let searchWord = $("#searchWord").val() || "";
+            // let addr = $("#addr").val() || ""; // 선택한 지역 필터
+            // let year = $("#year-filter").val() || ""; // 선택한 연도 필터
+            // let month = $("#month-filter").val() || ""; // 선택한 월 필터
+            // let sortOrder = $("#sort-order").val() || ""; // 정렬 기준이 있다면 추가
 
-            // 페이징 태그 생성
+// 페이징 태그 생성
             let paginationTag = "";
             const totalPages = Math.ceil(pVO.totalRecord / pVO.onePageRecord);
 
-            // 이전 버튼
+// 이전 버튼
             if (pVO.nowPage > 1) {
-                paginationTag += "<li class='page-item'>" +
-                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + (pVO.nowPage - 1) + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>&lt;</a>" +
+                paginationTag += "<li class='page-item prev-page'>" +
+                    "<a class='page-link' href='javascript:fetchFilteredData(\"" + pVO.year + "\", \"" + pVO.month + "\", \"" + pVO.addr + "\", \"" + pVO.search + "\", \"" + pVO.sort1 + "\", " + (pVO.nowPage - 1) + ");'>&lt;</a>" +
                     "</li>";
             }
 
-            // 페이지 번호 표시
-            let startPage = Math.max(1, pVO.nowPage - 2);
-            let endPage = Math.min(startPage + 4, totalPages);
-
-            // 시작 페이지 조정
-            if (endPage - startPage < 4) {
-                startPage = Math.max(1, endPage - 4);
-            }
+// 페이지 번호 표시
+            let startPage = Math.max(1, pVO.startPageNum);
+            let endPage = Math.min(startPage + pVO.onePageNum - 1, totalPages);
 
             for (let p = startPage; p <= endPage; p++) {
-                paginationTag += "<li class='page-item " + (pVO.nowPage === p ? "active" : "") + "'>" +
-                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + p + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>" + p + "</a>" +
+                paginationTag += "<li class='page-item page-num " + ((pVO.nowPage === p) ? "active" : "") + "'>" +
+                    "<a class='page-link' href='javascript:fetchFilteredData(\"" + pVO.year + "\", \"" + pVO.month + "\", \"" + pVO.addr + "\", \"" + pVO.search + "\", \"" + pVO.sort1 + "\", " + p + ");'>" + p + "</a>" +
                     "</li>";
             }
 
-            // 다음 버튼
+// 다음 버튼
             if (pVO.nowPage < totalPages) {
-                paginationTag += "<li class='page-item'>" +
-                    "<a class='page-link' href='javascript:void(0);' onclick='loadBoardPage(" + (pVO.nowPage + 1) + ", \"" + searchKey + "\", \"" + searchWord + "\", \"" + addr + "\");'>&gt;</a>" +
+                paginationTag += "<li class='page-item next-page'>" +
+                    "<a class='page-link' href='javascript:fetchFilteredData(\"" + pVO.year + "\", \"" + pVO.month + "\", \"" + pVO.addr + "\", \"" + pVO.search + "\", \"" + pVO.sort1 + "\", " + (pVO.nowPage + 1) + ");'>&gt;</a>" +
                     "</li>";
             }
 
-            // 페이징 태그 삽입
+// 페이징 태그 삽입
             $("#paging").html(paginationTag);
-        }
 
+
+
+        }
     }
+
+
 
 
 </script>

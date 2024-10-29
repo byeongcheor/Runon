@@ -1411,6 +1411,7 @@ function voteNow(vote_num, flag, vote_user_code) {
             } else if (flag == 1 && vote_user_code == user_code) {
                 $('#vote_update2').show();
                 $('#vote_close2').removeClass().addClass('vote-btn');
+                 $('#vote_delete2').removeClass().addClass('vote-btn');
             } else {
                 $('#vote_live').html('');
                 $('#vote_live').html('<strong>투표 현황</strong>');

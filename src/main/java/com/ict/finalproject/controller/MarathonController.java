@@ -51,7 +51,7 @@ public class MarathonController {
     }
 
     @GetMapping("/marathonList")
-    public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
+        public String marathonList(Model model, MarathonListVO mvo, PagingVO pvo, HttpServletRequest request){
 
 
         // 전체 레코드 수를 세고, 페이징 정보를 설정

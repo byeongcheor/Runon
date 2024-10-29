@@ -39,7 +39,7 @@
                         <div class="marathonTypeSize">
                             <span class="marathonO1">가격</span>
                             <input type="text" name="entry_fee" value="${marathonDetail.entry_fee}">
-                            <div class="marathonO1 text">마라톤 거리에 따라 가격을 적어주세요.<br/>(예: 25000원/40000원/55000원)</div>
+                            <div class="marathonO1 text">마라톤 거리에 따라 가격을 적어주세요.<br/>(예: 25000/40000/55000)</div>
                         </div>
 
                     </div>
