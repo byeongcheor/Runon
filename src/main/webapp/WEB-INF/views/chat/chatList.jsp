@@ -11,7 +11,7 @@
 	<input type='hidden' id=nickname value=${uvo.nickname}>
 	<input type='hidden' id=gender value=${uvo.gender}>
 </c:forEach>
-<button id="chatButton" class="image-button"></button>
+<%--<button id="chatButton" class="image-button"></button>--%>
 <div id="chatbox" >
 	<div class="chatbox-header">
 		<button id="closeChatBtn" class="close-chat-btn">×</button>

@@ -169,8 +169,9 @@
         </div>
     </div>
 </div>
-
+<button id="chatButton" class="image-button"></button>
 </body>
+
 <script>
     var clog = console.log;
     var now_personnel, new_personnel, intervalId;
@@ -727,10 +728,20 @@ function grid_draw(length, result) {
            }
        });
     }
+    document.addEventListener('scroll', function() {
+        const footer = document.querySelector('footer');
+        const button = document.querySelector('.image-button');
+        const footerRect = footer.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // 푸터가 화면에 보이기 시작할 때 버튼 숨김
+        if (footerRect.top < viewportHeight) {
+            button.style.display = 'none';
+        } else {
+            // 푸터와 겹치지 않으면 버튼 표시
+            button.style.display = 'block';
+        }
+    });
 
 
-
-    function modal_close(){
-        $('#mateMatchModal').hide();
-    }
 </script>
