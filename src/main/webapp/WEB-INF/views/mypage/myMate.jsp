@@ -273,17 +273,18 @@
             processData: false
             ,success: function(r){
                 /*console.log(r);*/
-                /*alert("성공");*/
+                alert("신고하기 완료했습니다.");
                 closeReport();
             },error: function(e){
-                /*alert("실패");*/
+                alert("파일을 업로드 해주세요.");
             }
         });
         return false;
     }
     //신고내역이 있는지 확인
     function checkReport(offender, matchingroomcode){
-
+        console.log(offender);
+        console.log(matchingroomcode);
         $.ajax({
             url:"/mypage/checkReport",
             type: "post",

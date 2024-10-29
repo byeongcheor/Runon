@@ -7,10 +7,11 @@
 <script src="/js/login&join/FindPw.js" type="text/javascript"></script>
 
 <div class="findPwFrm">
-    <h1 class="FindPwTop"><a>비밀번호 재설정</a></h1>
+    <h1 class="findIdTop"><img src="/img/logo3.png"></h1>
+    <h3 class="findIdMid">비밀번호 찾기</h3>
     <input type="text" name="username" id="username" placeholder="아이디 입력해주세요" />
     <input type="text" name="name" id="name" placeholder="성함을 입력해주세요"/>
-    <input type="button" id="FindPw" onclick="FindPws2()" value="비밀번호 재설정"/>
+    <input type="button" id="FindPw" class="findBtn"onclick="FindPws2()" value="비밀번호 찾기"/>
 </div>
 <div id="alerts">
 

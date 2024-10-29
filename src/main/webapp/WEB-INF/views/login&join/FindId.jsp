@@ -5,21 +5,15 @@
 </script>
 <link rel="stylesheet" href="/css/login&join/FindId.css" type="text/css">
 <script src="/js/login&join/FindId.js" type="text/javascript"></script>
-
-
 <div class="findIdFrm">
-    <h1 class="FindIdTop"><a>아이디찾기</a></h1>
-        <input type="text" name="name" id="name" placeholder="이름 입력" />
-        <input type="text" name="tel" id="tel" placeholder="핸드폰번호:010-0000-0000형식으로 입력"/>
-        <input type="button" id="FindId" onclick="FindIds2()" value="아이디찾기" />
-    <div class='find'>
-
-        <div id="radiobuttons">
-
-        </div>
-
-    </div>
+    <h1 class="findIdTop"><img src="/img/logo3.png"></h1>
+    <h3 class="findIdMid">아이디 찾기</h3>
+    <input type="text" name="name" id="name" placeholder="이름 입력" />
+    <input type="text" name="tel" id="tel" placeholder="핸드폰번호:010-0000-0000형식으로 입력"/>
+    <input type="button" class="findBtn" id="FindId" onclick="FindIds2()" value="아이디 찾기" />
 </div>
+
+
 
 
 

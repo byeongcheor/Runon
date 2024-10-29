@@ -79,8 +79,8 @@ function useemail(){
 }
 window.onload = function() {
     emailjs.init("tC4QTbGfMO5fEZx63");
-    window.resizeTo(460, 300);
+    window.resizeTo(450, 450);
     window.addEventListener('resize', function() {
-        window.resizeTo(460, 300);  // 창 크기를 다시 강제로 고정
+        window.resizeTo(450, 450);  // 창 크기를 다시 강제로 고정
     });// 올바른 User ID로 초기화
 };
