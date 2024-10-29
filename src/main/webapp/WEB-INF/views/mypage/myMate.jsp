@@ -290,8 +290,9 @@
             type: "post",
             data: {
                 usercode: usercode1,
+                offender: offender,
                 matchingroom: matchingroomcode
-            },
+        },
             success: function(r){
                 if(r.exists){
                     var datas = r.data;

@@ -354,8 +354,9 @@ public class MypageController {
     public Map<String, Object> checkReport(
             @RequestParam("usercode") int usercode,
             @RequestParam("matchingroom") int matchingroom
+            ,@RequestParam("offender") int offender
     ){
-        ReportVO report = service.selectReportForm(usercode, matchingroom);
+        ReportVO report = service.selectReportForm(usercode, matchingroom, offender);
         System.out.println("여기안옴?");
         System.out.println(report);
         Map<String, Object> result = new HashMap<>();

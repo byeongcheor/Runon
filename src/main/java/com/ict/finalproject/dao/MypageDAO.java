@@ -65,7 +65,7 @@ public interface MypageDAO {
     //메이트 신고하기
     public int reportMate(ReportVO report);
     //신고내역 있는지 확인
-    public ReportVO selectReportForm(@Param("usercode") int usercode, @Param("matching_room_code") int matching_room_code);
+    public ReportVO selectReportForm(@Param("usercode") int usercode, @Param("matching_room_code") int matching_room_code, @Param("offender") int  offender);
     //메이트개수
     public int getTotalMate(int usercode);
 

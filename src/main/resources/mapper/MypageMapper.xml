@@ -286,7 +286,7 @@
         select q.*, a.report_result
         from report_tbl q
         left join report_reply_tbl a on q.report_code = a.report_code
-        where victim_code =#{usercode} and matching_room_code = #{matching_room_code}
+        where victim_code =#{usercode} and matching_room_code = #{matching_room_code} and offender_code = #{offender}
         AND q.proof_img IS NOT NULL
         limit 1
     </select>
