@@ -100,8 +100,14 @@
 
                 Cvo.forEach(function (cvo){
                     var orderStatusText = cvo.status === 1 ? "주문완료" : "주문취소";
+                   /* const createdDate = new Date(cvo.create_time);*/
                     orderListTag +=`<div class="orderP2">`;
-                    if (cvo.status == 1){
+        /*            const today = new Date();
+                    const isSameDate =
+                        createdDate.getFullYear() === today.getFullYear() &&
+                        createdDate.getMonth() === today.getMonth() &&
+                        createdDate.getDate() === today.getDate();*/
+                    if (cvo.status == 1 ){
                         orderListTag+=`
                     <input type="checkbox" value="`+cvo.payment_detail_id+`"class="detailid">`;
                     }

@@ -213,7 +213,7 @@ function userdetail(usercode){
                 usertag+=`<div><input type="button" value="탈퇴시키기" onclick="userdel(` + users.usercode + `)"></div>`;
             }
                 usertag+=`<div>`;
-            if ((users.is_disabled==0&&users.role=="ROLE_USER"&&deleted=="1")||Admincode=="0"){
+            if (users.is_disabled==0&&((users.role=="ROLE_USER"&&deleted=="1")||Admincode=="0")){
             usertag+= `
                     <form method="post"  onsubmit="return disableUser(`+users.usercode+`)">
                         <select id="stopDuration">

@@ -192,6 +192,7 @@ function loadAdminPage(page,adminSearchType,adminSearchValue,adminSearchType2,ad
                 document.getElementById("checkboxlist").style.display = "none";
                 document.getElementById("downloadbutton").style.display = "none";
                 alert("권한이 없습니다.");
+                window.location.href="/adminPages/adminHome";
             }
         }
     });

@@ -63,5 +63,5 @@ setTimeout(function(){
 
 },400);
 function gomain(){
-    window.location.href="/";
+    window.location.href="/marathon/marathonList";
 }
