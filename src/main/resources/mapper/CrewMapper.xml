@@ -382,12 +382,18 @@
     </insert>
 
     <select id="crew_wait_select" resultType="com.ict.finalproject.vo.CrewVO">
-        select a.logo, a.crew_name, b.status as a_n,a.create_crew_code, c.crew_write_code, b.crew_request_code as b_n
-        from   create_crew_tbl a, crew_request_tbl b, crew_write c
-        where  b.usercode = ${param1}
-        and    a.create_crew_code = b.create_crew_code
-        and    a.create_crew_code = c.create_crew_code
-        order by b.requested_date desc
+        SELECT a.logo,
+        a.crew_name,
+        b.status AS a_n,
+        a.create_crew_code,
+        c.crew_write_code,
+        b.crew_request_code AS b_n
+        FROM   create_crew_tbl a
+        JOIN crew_request_tbl b ON a.create_crew_code = b.create_crew_code
+        JOIN crew_write c ON a.create_crew_code = c.create_crew_code
+        WHERE  b.usercode = ${param1}
+        AND    c.is_delete = 0
+        ORDER BY b.requested_date DESC;
     </select>
 
     <select id="crew_wait_detail" resultType="com.ict.finalproject.vo.CrewVO">
