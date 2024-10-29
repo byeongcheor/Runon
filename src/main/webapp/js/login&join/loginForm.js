@@ -45,14 +45,15 @@ function formCheck(event){
                             localStorage.setItem("refresh",refreshToken);
                             localStorage.setItem("Authorization",token);
 
-                            if (window.opener) {
-                                const parentUrl = window.opener.location.href;
-                                const parentFileName = parentUrl.substring(parentUrl.lastIndexOf('/') + 1);
-                                console.log(parentFileName);
-                                if(parentFileName=='crewList')crew();
-                            }
+
                             opener.window.location.reload();
                             window.close();
+                                if (window.opener) {
+                        const parentUrl = window.opener.location.href;
+                        const parentFileName = parentUrl.substring(parentUrl.lastIndexOf('/') + 1);
+                        console.log(parentFileName);
+                        if(parentFileName=='crewList')crew();
+                    }
                         },
                         error:function (e){
                             alert("아이디혹은 비밀번호가 틀렸습니다");
@@ -62,7 +63,7 @@ function formCheck(event){
 
                 }else if(r.result==0) {
 
-                    alert("아이디가 정지되었습니다.\n시작일:"+r.disabled_start_date+"\n정지기한:"+r.disabled_date+"까지입니다.");
+                    alert("아이디가 정지되었습니다.\n시작일:"+r.disabled_start_date+"\n정지기한:"+r.disabled_date+"까지입니다.\n 문의사항이  있으시면  ictfinal@naver.com으로 문의주세요");
                 }
 
 

@@ -6,13 +6,13 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/css/slick.css" type="text/css">
-    <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">--%>
+    <%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="/css/slick.css" type="text/css">
+        <link rel="stylesheet" href="/css/slick-theme.css" type="text/css">--%>
     <link rel="stylesheet" href="/css/main.css" type="text/css">
     <link rel="stylesheet" href="/css/mate.css" type="text/css">
-<%--    <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>--%>
-     <%@ include file="/WEB-INF/views/chat/chatList.jsp"%>
+    <%--    <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>--%>
+    <%@ include file="/WEB-INF/views/chat/chatList.jsp"%>
 
 
 
@@ -171,7 +171,6 @@
 </div>
 <button id="chatButton" class="image-button"></button>
 </body>
-
 <script>
     var clog = console.log;
     var now_personnel, new_personnel, intervalId;
@@ -190,7 +189,7 @@
         document.getElementById('mateMatchModal').style.display = 'none';
         if(usercode>0) $('#login').hide();
         gender=$('#gender').val();
-       popup_yn();//팝업 여부
+        popup_yn();//팝업 여부
         mate_popup_date_select();
         marathon_code();//내가 결제한 대회리스트 불러오기
         setTimeout(function() {
@@ -206,7 +205,7 @@
         setTimeout(function() {
             // 드롭다운을 토글하는 함수
             function toggleDropdown(box) {
-              /*  clog(box);*/
+                /*  clog(box);*/
                 $('.select-box').not(box).removeClass('active'); // 다른 드롭다운을 비활성화
                 $(box).toggleClass('active'); // 클릭한 드롭다운을 활성화/비활성화
             }
@@ -259,7 +258,7 @@
 
 
     function match_view(match_yn, flag){//선택한 인원수대로 매칭 자리만들기
-         $.ajax({
+        $.ajax({
             url:'/mate/match_view',
             type:'post',
             async: false,
@@ -273,8 +272,8 @@
                 var update_cnt = 0;
                 for(var i in  result){
                     if(usercode==result[0].usercode && img_no != result[i].b_s){
-                         img_no = result[i].b_s;// 이미지 바꾼유저
-                         grid_draw(length,result);
+                        img_no = result[i].b_s;// 이미지 바꾼유저
+                        grid_draw(length,result);
                     }
                 }
                 if(accept_cnt != result[0].accept_cnt||update_cnt != result[0].update_cnt){
@@ -342,30 +341,30 @@
         var screenLeft = (window.screen.width - width) / 2;   // 가로 중앙
         var screenTop = (window.screen.height - height) / 2;  // 세로 중앙
         $.ajax({
-           url: '/mate/go_profileList',  // 서버에 전송할 URL
-           type: 'POST',  // POST 방식으로 전송
-           data: {
-               Authorization  : Authorization,
-               usercode       : usercode,
-               gender         : gender,
-               match_yn       : match_yn,
-               num            : num
-           },
-           success: function(response) {
-             var popupUrl = '/mate/profileList';
-             window.open(popupUrl, 'ProfileList',
-                'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');           },
-           error: function(error) {
-               console.log('에러 발생:', error);
-           }
-       });
+            url: '/mate/go_profileList',  // 서버에 전송할 URL
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization  : Authorization,
+                usercode       : usercode,
+                gender         : gender,
+                match_yn       : match_yn,
+                num            : num
+            },
+            success: function(response) {
+                var popupUrl = '/mate/profileList';
+                window.open(popupUrl, 'ProfileList',
+                    'width=' + width + ',height=' + height + ',top=' + screenTop + ',left=' + screenLeft + ',resizable=no,scrollbars=no,menubar=no,status=no,toolbar=no');           },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
     }
 
-function matching() {
-    $('.select-box').removeClass('active');
-    var marathonValue = $('#marathonSelect').data('selected-value');
-    var participationCountValue = $('#participationCountSelect').data('selected-value');
-    var mateCountValue = $('#mateCountSelect').data('selected-value');
+    function matching() {
+        $('.select-box').removeClass('active');
+        var marathonValue = $('#marathonSelect').data('selected-value');
+        var participationCountValue = $('#participationCountSelect').data('selected-value');
+        var mateCountValue = $('#mateCountSelect').data('selected-value');
 
         // 매칭 로직
         if (marathonValue === undefined || participationCountValue === undefined || mateCountValue === undefined) {
@@ -395,7 +394,7 @@ function matching() {
                 console.error("Error in matching AJAX request:", e);
             }
         });
-}
+    }
 
     function marathon_code(){
         var marathonValue = $('#marathonSelect').data('selected-value');
@@ -423,7 +422,7 @@ function matching() {
     }
 
 
-  function match_out(){
+    function match_out(){
 
         $.ajax({
             url:'/mate/match_out',
@@ -469,49 +468,49 @@ function matching() {
             error:function(e){
             }
         });
-  };
+    };
 
 
     function accept(){
 
-            $.ajax({
-                url: '/mate/accept',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization  : Authorization,
-                    matching_room_code: match_yn
-                },
-                success: function(result) {
-                    $('#accept').hide();
-                    $('#accept_n').show();
-                    match_view(match_yn);
+        $.ajax({
+            url: '/mate/accept',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization  : Authorization,
+                matching_room_code: match_yn
+            },
+            success: function(result) {
+                $('#accept').hide();
+                $('#accept_n').show();
+                match_view(match_yn);
 
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
 
     function accept_n(){
-            $.ajax({
-                url: '/mate/accept_n',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization  : Authorization,
-                    matching_room_code: match_yn
-                },
-                success: function(result) {
-                    $('#accept').show();
-                    $('#accept_n').hide();
-                    match_view(match_yn);
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+        $.ajax({
+            url: '/mate/accept_n',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization  : Authorization,
+                matching_room_code: match_yn
+            },
+            success: function(result) {
+                $('#accept').show();
+                $('#accept_n').hide();
+                match_view(match_yn);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
 
     function start_view() {//매칭된 룸이 없으면 기본 빈 8개의 자리 생성
@@ -534,92 +533,92 @@ function matching() {
         $('.profile-container').append(list);
     } ;
 
-function grid_draw(length, result) {
-    var list = '';
-    // 선택한 메이트 인원 + 3의 배수로 맞춘 방 개수 계산
-    var total_mates = length;
-    var remainder = total_mates % 3;
+    function grid_draw(length, result) {
+        var list = '';
+        // 선택한 메이트 인원 + 3의 배수로 맞춘 방 개수 계산
+        var total_mates = length;
+        var remainder = total_mates % 3;
 
-    // 선택한 메이트 인원 + 3의 배수로 맞추기
-    if (remainder !== 0) total_mates += 3 - remainder;
-    total_mates = Math.max(9, total_mates); // 최소 9개의 방은 무조건 보여주기
+        // 선택한 메이트 인원 + 3의 배수로 맞추기
+        if (remainder !== 0) total_mates += 3 - remainder;
+        total_mates = Math.max(9, total_mates); // 최소 9개의 방은 무조건 보여주기
 
-    for (var i = 0; i < result.length; i++) {
-        var on = result[i].usercode == usercode ? 'onclick="profile_update(' + i + ');"' : '';
-        var list_gender = result[i].gender == "여" ? 'woman' : 'man';
-        var no = result[i].b_s == "0" ? '0' : result[i].b_s; // profile 값 가져옴
-        var img = list_gender + no;
-        // 나이 가져오기
-        var today = new Date();
-        var birthDate = new Date(result[i].birthdate);
-        var age = (today.getFullYear() - birthDate.getFullYear()) + '';
-        age = age < 10 ? '잼민이' : age[0] + '0대';
+        for (var i = 0; i < result.length; i++) {
+            var on = result[i].usercode == usercode ? 'onclick="profile_update(' + i + ');"' : '';
+            var list_gender = result[i].gender == "여" ? 'woman' : 'man';
+            var no = result[i].b_s == "0" ? '0' : result[i].b_s; // profile 값 가져옴
+            var img = list_gender + no;
+            // 나이 가져오기
+            var today = new Date();
+            var birthDate = new Date(result[i].birthdate);
+            var age = (today.getFullYear() - birthDate.getFullYear()) + '';
+            age = age < 10 ? '잼민이' : age[0] + '0대';
 
-        var style = '';
+            var style = '';
 
-        if (result[i].a_s == 'Y' && usercode == result[i].usercode){
-            $('#accept').hide();
-            $('#accept_n').show();
+            if (result[i].a_s == 'Y' && usercode == result[i].usercode){
+                $('#accept').hide();
+                $('#accept_n').show();
+            }
+            else if(result[i].a_s != 'Y' && usercode == result[i].usercode){
+                $('#accept').show();
+                $('#accept_n').hide();
+            }
+            if (result[i].a_s == 'Y') {  // 스타일 및 버튼 제어
+                style = "transform: scale(1.05);border-color: #CCFF47;";
+            }
+            else if(result[i].a_s != 'Y') {
+                style = '';
+            }
+
+            list += '<div class="profile-box" ' + on + ' style="' + style + '">';
+            list += '<div id="profile_img">';
+            list += '<img id="img' + i + '" src="/img/' + img + '.png" alt="프로필 1 이미지">';
+            list += '</div>';
+            list += '<span class="rank_name">' + result[i].nickname + '</span>';
+            list += '<span class="age">' + age + '</span>';
+            list += '<span class="run_km">' + result[i].tbuf_n + 'Km</span>';
+            list += '<span class="crew_name">' + result[i].crew_name + '</span>';
+            list += '</div>';
         }
-        else if(result[i].a_s != 'Y' && usercode == result[i].usercode){
-            $('#accept').show();
-            $('#accept_n').hide();
-        }
-        if (result[i].a_s == 'Y') {  // 스타일 및 버튼 제어
-            style = "transform: scale(1.05);border-color: #CCFF47;";
-        }
-        else if(result[i].a_s != 'Y') {
-            style = '';
+
+        // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
+        for (var i = result.length; i < length; i++) {
+            list += '<div class="profile-box" style="">';
+            list += '<div id="profile_img">';
+            list += '<img src="/img/user.png" alt="프로필 1 이미지">';
+            list += '</div>';
+            list += '<span class="rank_name">&nbsp;</span>';
+            list += '<span class="run_km">&nbsp;</span>';
+            list += '<span class="crew_name">&nbsp;</span>';
+            list += '</div>';
         }
 
-        list += '<div class="profile-box" ' + on + ' style="' + style + '">';
-        list += '<div id="profile_img">';
-        list += '<img id="img' + i + '" src="/img/' + img + '.png" alt="프로필 1 이미지">';
-        list += '</div>';
-        list += '<span class="rank_name">' + result[i].nickname + '</span>';
-        list += '<span class="age">' + age + '</span>';
-        list += '<span class="run_km">' + result[i].tbuf_n + 'Km</span>';
-        list += '<span class="crew_name">' + result[i].crew_name + '</span>';
-        list += '</div>';
+        // 나머지 비활성화된 방은 이미지 없이 처리
+        for (var i = length; i < total_mates; i++) {
+            list += '<div class="profile-box" style="pointer-events: none;">';
+            list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
+            list += '</div>';
+            list += '<span class="rank_name">&nbsp;</span>';
+            list += '<span class="run_km">&nbsp;</span>';
+            list += '<span class="crew_name">&nbsp;</span>';
+            list += '</div>';
+        }
+
+        // 프로필 컨테이너에 결과 반영
+        $('.profile-container').empty();
+        $('.profile-container').append(list);
+
+        // 매칭 버튼을 누르면 select 박스 비활성화
+        $('.select-box').each(function() {
+            // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
+            $(this).css('pointer-events', 'none');
+        });
+
+        // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
+        $('#matching').hide();
+        $('#out').show();
     }
-
-    // 현재 result에 없는, 선택한 메이트 인원에 대해 user.png 표시
-    for (var i = result.length; i < length; i++) {
-        list += '<div class="profile-box" style="">';
-        list += '<div id="profile_img">';
-        list += '<img src="/img/user.png" alt="프로필 1 이미지">';
-        list += '</div>';
-        list += '<span class="rank_name">&nbsp;</span>';
-        list += '<span class="run_km">&nbsp;</span>';
-        list += '<span class="crew_name">&nbsp;</span>';
-        list += '</div>';
-    }
-
-    // 나머지 비활성화된 방은 이미지 없이 처리
-    for (var i = length; i < total_mates; i++) {
-        list += '<div class="profile-box" style="pointer-events: none;">';
-        list += '<div id="profile_img" style="background-color: #1e1e1e">'; // 비활성화된 방 처리
-        list += '</div>';
-        list += '<span class="rank_name">&nbsp;</span>';
-        list += '<span class="run_km">&nbsp;</span>';
-        list += '<span class="crew_name">&nbsp;</span>';
-        list += '</div>';
-    }
-
-    // 프로필 컨테이너에 결과 반영
-    $('.profile-container').empty();
-    $('.profile-container').append(list);
-
-    // 매칭 버튼을 누르면 select 박스 비활성화
-    $('.select-box').each(function() {
-        // 드롭다운 클릭 자체를 막아줍니다 (클릭 방지)
-        $(this).css('pointer-events', 'none');
-    });
-
-    // 매칭 버튼을 숨기고 수락, 나가기 버튼 표시
-    $('#matching').hide();
-    $('#out').show();
-}
 
     // 옵션 선택 안내 모달 열기
     function showOptionSelectModal() {
@@ -645,38 +644,38 @@ function grid_draw(length, result) {
     };
 
     function hide7days(){
-            var num = $('#mateHide7days').is(':checked')?7:-7;
-            $.ajax({
-                url: '/mate/hide7days',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization: Authorization,
-                    num: num
-                },
-                success: function(result) {
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+        var num = $('#mateHide7days').is(':checked')?7:-7;
+        $.ajax({
+            url: '/mate/hide7days',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: Authorization,
+                num: num
+            },
+            success: function(result) {
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
     function neverShow(){
-            var num = $('#mateNeverShow').is(':checked')?99999:0;
-                $.ajax({
-                    url: '/mate/neverShow',
-                    type: 'post',
-                    async: false,
-                    data: {
-                        Authorization: Authorization,
-                        num: num
-                    },
-                    success: function(result) {
-                    },
-                    error: function(e) {
-                        console.error('Error: ', e);
-                    }
-              });
+        var num = $('#mateNeverShow').is(':checked')?99999:0;
+        $.ajax({
+            url: '/mate/neverShow',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: Authorization,
+                num: num
+            },
+            success: function(result) {
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
     function popup_yn(){
         var today = new Date();
@@ -698,50 +697,40 @@ function grid_draw(length, result) {
     }
 
     function mate_popup_date_select(){
-            $.ajax({
-                url: '/mate/mate_popup_date_select',
-                type: 'post',
-                async: false,
-                data: {
-                    Authorization: Authorization,
-                },
-                success: function(result) {
-                    $('#mate_popup_date').val(result);
-                },
-                error: function(e) {
-                    console.error('Error: ', e);
-                }
-            });
+        $.ajax({
+            url: '/mate/mate_popup_date_select',
+            type: 'post',
+            async: false,
+            data: {
+                Authorization: Authorization,
+            },
+            success: function(result) {
+                $('#mate_popup_date').val(result);
+            },
+            error: function(e) {
+                console.error('Error: ', e);
+            }
+        });
     }
     function go_mypage(){
         $.ajax({
-           url: '/mate/go_mypage',
-           type: 'POST',
-           data: {
-               Authorization  : Authorization
-           },
-           success: function(response) {
-                    window.location.href = '/mypage/myHome';
-           },
-           error: function(error) {
-               console.log('에러 발생:', error);
-           }
-       });
+            url: '/mate/go_mypage',
+            type: 'POST',
+            data: {
+                Authorization  : Authorization
+            },
+            success: function(response) {
+                window.location.href = '/mypage/myHome';
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
     }
-    document.addEventListener('scroll', function() {
-        const footer = document.querySelector('footer');
-        const button = document.querySelector('.image-button');
-        const footerRect = footer.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-
-        // 푸터가 화면에 보이기 시작할 때 버튼 숨김
-        if (footerRect.top < viewportHeight) {
-            button.style.display = 'none';
-        } else {
-            // 푸터와 겹치지 않으면 버튼 표시
-            button.style.display = 'block';
-        }
-    });
 
 
+
+    function modal_close(){
+        $('#mateMatchModal').hide();
+    }
 </script>

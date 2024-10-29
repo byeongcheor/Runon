@@ -9,32 +9,32 @@
         <div class="joinMain">
             <div class="joinN">아이디<span>(이메일)</span></div>
             <div class="joinI">
-                <input type="text" style="width:240px;"name="username" id="username" minlength="8" maxlength="30" placeholder="이메일 주소를 입력해 주십시오." onkeyup="setKeyCheck()" />
+                <input type="text" style="width:240px;"name="username" id="username" minlength="8" maxlength="30" placeholder="이메일 주소를 입력해 주십시오." value="quxxntiger@naver.com" onkeyup="setKeyCheck()" />
                 <input type="button" id="idCheck" value="아이디중복검사" onclick="idDoubleCheck()"/>
                 <input type="hidden" id="chk" value="N"><!-- N: 중복검사안함, Y 중복검사함 -->
             </div>
             <div class="joinN">비밀번호</div>
             <div class="joinI">
-                <input type="password" name="password" id="password" minlength="8" maxlength="15" placeholder="비밀번호를 입력해주세요"/>
+                <input type="password" name="password" id="password" minlength="8" maxlength="15" value="12345678" placeholder="비밀번호를 입력해주세요"/>
             </div>
             <div class="joinN">비밀번호확인</div>
             <div class="joinI">
-                <input type="password" name="password2" id="password2" placeholder="비밀번호를 재입력해주세요"/>
+                <input type="password" name="password2" id="password2" value="12345678" placeholder="비밀번호를 재입력해주세요"/>
             </div>
             <div class="joinN">이름</div>
             <div class="joinI">
-                <input type="text" style="width:230px;" name="name" id="name" placeholder="이름을 입력해주세요"/>
+                <input type="text" style="width:230px;" name="name" id="name" value="김영현" placeholder="이름을 입력해주세요"/>
                 <input type="button" style="width:50px;"value=" 남 " id="genderm" onclick="gendercheck(this.value)"/>
                 <input type="button" style="width:50px;" value=" 여 " id="genderw" onclick="gendercheck(this.value)"/>
                 <input type="hidden" name="gender" id="gender" value=""/>
             </div>
             <div class="joinN">생년월일</div>
             <div class="joinI">
-                <input type="text" name="birthdate" id="birthdate" placeholder="yyyymmdd형식으로 입력해주세요."/>
+                <input type="text" name="birthdate" id="birthdate" value="19980518" placeholder="yyyymmdd형식으로 입력해주세요."/>
             </div>
             <div class="joinN">닉네임</div>
             <div class="joinI">
-                <input type="text" name="nickname" id="nickname" onblur="nicknamecheck()" placeholder="닉네임을 입력해주세요."/>
+                <input type="text" name="nickname" id="nickname" value="영현짱" onblur="nicknamecheck()" placeholder="닉네임을 입력해주세요."/>
                 <input type="hidden" name="nickChk" id="nickChk" value="N">
             </div>
             <div id="nickCheck" style="font-size: 0.8em;"></div>
@@ -46,8 +46,8 @@
                     <option>031</option>
                     <option>051</option>
                 </select> -
-                <input type="text" name="tel2" id="tel2" size="4"  minlength="3" maxlength="4"/> -
-                <input type="text" name="tel3" id="tel3" size="4" maxlength="4"/>
+                <input type="text" name="tel2" id="tel2" size="4"  value="1234" minlength="3" maxlength="4"/> -
+                <input type="text" name="tel3" id="tel3" size="4" value="1234" maxlength="4"/>
                 <input type="hidden" name="tel" id="tel">
             </div>
             <div class="joinN">우편번호</div>
@@ -61,7 +61,7 @@
             </div>
             <div class="joinN">상세주소</div>
             <div class="joinI">
-                <input type="text" name="addr_details" id="addr_details" placeholder="상세주소를 입력해주세요"/>
+                <input type="text" name="addr_details" id="addr_details" value="123" placeholder="상세주소를 입력해주세요"/>
             </div>
             <div class="joinN info">개인정보 공개여부
                 <div class="form-check">

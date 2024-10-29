@@ -7,7 +7,7 @@ var isLatestDescending = true;
 
 var page=0;
 var now;
-
+var id;
 setTimeout(function() {
     if (usercode1!=null &&usercode1!=0 &&usercode1!=""){
         $.ajax({
@@ -208,6 +208,7 @@ function reset(){
 }
 var cnt=0;
 function detail(orderId,payment_method){
+    id=orderId;
   /*  console.log(payment_method);*/
     $.ajax({
         url:"/payment/completed",
@@ -396,6 +397,8 @@ function cancelOk(paymentKey){
                             reason: '고객이 취소를 원함'
                         },
                         success:function(r){
+                            alert("환불이 완료되었습니다");
+                            detail(id);
 
                         }
                     });

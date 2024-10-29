@@ -63,7 +63,7 @@ function findpw(username){
                           }, function(error) {
                               console.log('FAILED...', error);
                           });
-                alert("이메일을 확인해주세요.");
+                alert("비밀번호 재설정 url이 발송되었습니다, 이메일을 확인해주세요.");
 
             }
         });
