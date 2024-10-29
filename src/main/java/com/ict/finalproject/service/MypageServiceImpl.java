@@ -192,8 +192,8 @@ public class MypageServiceImpl implements MypageService{
     }
 
     @Override
-    public ReportVO selectReportForm(int usercode, int matching_room_code) {
-        return dao.selectReportForm(usercode, matching_room_code);
+    public ReportVO selectReportForm(int usercode, int matching_room_code, int offender) {
+        return dao.selectReportForm(usercode, matching_room_code, offender);
     }
 
     @Override
