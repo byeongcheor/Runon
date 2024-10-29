@@ -9,9 +9,9 @@ body {
         font-family: "Noto Sans KR", sans-serif;
         background-color: #121212;
         color: white;
-
     }
 
+/*채팅버튼*/
 .image-button {
     position: fixed;
     width: 60px; /* 버튼 너비 */
