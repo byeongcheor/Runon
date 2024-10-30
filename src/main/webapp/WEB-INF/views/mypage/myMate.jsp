@@ -177,7 +177,7 @@
                         tag += `
                         <div class="row" id="profiles">
                             <div class="col-sm-2 p-2" id="profile_Box">
-                                <img src="/resources/uploadfile/${vo.profile_img ? vo.profile_img : 'basicimg.png'}" id="profile_Img"/>
+                                <img src="/resources/uploadfile/`+vo.profile_img+`" id="profile_Img"/>
                             </div>
                             <div class="col-sm-3 p-2" id="nicknameReport">`+vo.nickname+`</div>
                             <div class="col-sm-1 p-2">`+vo.gender+`</div>
