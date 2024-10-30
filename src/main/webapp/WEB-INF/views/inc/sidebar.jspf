@@ -10,7 +10,7 @@
 <div id="body">
     <div id="sidebar">
         <div id="testbar">
-            <div id="logo"><img src="/img/logo3.png"></div>
+            <div id="logo" onclick="gohome()"><img src="/img/logo3.png"></div>
             <div id="menu">
                 <div class="menubox"><a class="menus" href="/adminPages/adminHome">Dashboard</a></div>
                 <div class="menubox">

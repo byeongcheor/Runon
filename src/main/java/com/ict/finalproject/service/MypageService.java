@@ -1,6 +1,7 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public interface MypageService {
     public List<MemberVO> selectMemberAll(int usercode, int offset, int limit);
     public int getTotalMate(int usercode);
     public int reportMate(ReportVO report);
-    public ReportVO selectReportForm(int usercode, int matching_room_code);
+    public ReportVO selectReportForm(@Param("usercode") int usercode, @Param("matching_room_code") int matching_room_code, @Param("offender") int  offender);
     public int getTotalQnA(int usercode);
     public List<QnAVO> selectQnAAll(int usercode, int offset, int limit);
     public void updateQnA(QnAVO qna);

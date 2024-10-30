@@ -137,11 +137,16 @@ let totalAmounts = 0;
 function updateTotalAmount(cartCode, amount, isChecked) {
     const checkboxes = document.querySelectorAll('.itemCheckbox');
     const selectAllCheckbox = document.getElementById('selectAll');
+    let allChecked = true; // 모든 체크박스가 선택되었는지 여부
+
     for (let checkbox of checkboxes) {
         if (!checkbox.checked) {
-            selectAllCheckbox.checked=false;// 체크되지 않은 체크박스가 있으면 false 반환
+            allChecked = false; // 하나라도 체크가 안 된 것이 있으면 false
+            break; // 반복문을 종료하여 효율성을 높임
         }
     }
+
+    selectAllCheckbox.checked = allChecked; // 전체 체크 여부에 따라 selectAllCheckbox를 설정
 
     // 상품 가격을 확인하고, 체크박스가 체크된 상태인지에 따라 처리
  /*   console.log(isChecked);
@@ -189,9 +194,9 @@ function cartload(){
                         tag += '<div class="ticket"><img src="/img/marathonPoster/' + cart.poster_img + '" alt="마라톤 포스터" class="marathonP"><span class="marathonT">' + cart.marathon_name + '</span></div>';
                         tag += '<div class="marathonC">' +
                             '<div class="counter-container">' +
-                            '<button onclick="increase(0,' + cart.cart_code + ')">-</button>';
+                            '<button  onclick="increase(0,' + cart.cart_code + ')" disabled>-</button>';
                         tag += '<span id="number">' + cart.quantity + '</span>';
-                        tag += '<button onclick="increase(1, ' + cart.cart_code + ')">+</button>';
+                        tag += '<button onclick="increase(1, ' + cart.cart_code + ')" disabled>+</button>';
                         tag += '</div></div>' +
                             '<div class="price">' + tagprice + '</div>' +
                             '<div class="amount">' + tagamount + '</div>' +
