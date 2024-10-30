@@ -170,7 +170,7 @@ function detail(certificate_code){
                     <div><div>신청자</div><div class="detailContent">`+Cvo.nickname+`</div></div>`;
             if (Cvo.crew_member_code!=0) {
                 tag += `<div><div>참여유형</div><div class="detailContent">크루</div></div>
-                        <div><div>크루명</div><div class="detailContent">OOO크루</div></div>`;
+                        <div><div>크루명</div><div class="detailContent">`+Cvo.crew_name+`</div></div>`;
             }else{
                 tag += `<div><div>참여유형</div><div class="detailContent">개인</div></div>`;
             }

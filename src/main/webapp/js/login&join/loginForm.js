@@ -84,11 +84,18 @@ function joinPopup() {
         popup.resizeTo(600, 980);
     }
 }
-function findIdPopup(){
-    window.open('/login&join/FindId', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
+function findIdPopup() {
+    const popup = window.open('/login&join/FindId', 'FindIdPopup', 'width=700, height=550, left=1200, top=150, resizable=yes');
+
+    popup.onload = function() {
+
+        const minHeight = 550;
+        const contentHeight = popup.document.body.scrollHeight;
+        popup.resizeTo(465, Math.max(contentHeight, minHeight));
+    };
 }
 function findPwdPopup(){
-    window.open('/login&join/FindPw', 'FindIdPopup', 'width=465, height=525 ,left=1200, top=150');
+    window.open('/login&join/FindPw', 'FindIdPopup', 'width=700, height=525 ,left=1200, top=150');
 }
 
 function crew() {

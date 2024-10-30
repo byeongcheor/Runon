@@ -28,18 +28,19 @@ function FindIds2(){
             var usernames=r.usernames;
             /*console.log(usernames);*/
             if (usernames!=null&&usernames!=""){
-                var tag=" <ul>";
+                var tag=" <ul class=radiobuttons_box>";
                 usernames.forEach(function(usernames,index){
                     tag+=`
                     <div><input type="radio" id="`+index+`" name="point" value="`+usernames.username+`" />
-                    <label class="form_label" for="`+index+`">`+usernames.username+`</label></div>
+                    <label class="findID" for="`+index+`">`+usernames.username+`</label></div>
                     `;
                 });
-                tag+="  <input type=\"button\" onclick=\"findpw()\" value=\"비밀번호찾기\"> </ul>";
+                 tag+=" </ul>";
+                tag+="  <input type=\"button\" class=\"findBtn\" onclick=\"findpw()\" value=\"비밀번호찾기\"> ";
                 document.getElementById("radiobuttons").innerHTML=tag;
 
             }else{
-                var tag="<h1>가입된 아이디가 없습니다.</h1>";
+                var tag="<h3 class=\"findID\">가입된 아이디가 없습니다.</h3>";
                 document.getElementById("radiobuttons").innerHTML=tag;
             }
 

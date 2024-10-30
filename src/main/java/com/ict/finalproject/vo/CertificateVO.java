@@ -22,5 +22,6 @@ public class CertificateVO {
     private int create_crew_code;
     private String nickname;
     private int crew_member_code;
+    private String crew_name;
 
 }

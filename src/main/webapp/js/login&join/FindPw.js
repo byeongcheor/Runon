@@ -28,13 +28,14 @@ function FindPws2(){
             if (r.mvo!=null&&r.mvo!=""){
                 findpw(r.mvo.username)
             }else{
-                var tag="<h1>입력하신 정보와 일치하는 아이디가 없습니다.</h1>";
+                var tag="<h3 class=\"findID\">입력하신 정보와 일치하는 아이디가 없습니다.</h3>";
+
                 document.getElementById("alerts").innerHTML=tag;
             }
 
         },
         error:function(e){
-          /*  console.log("예외발생",e);*/
+            /*  console.log("예외발생",e);*/
         }
 
     });
@@ -54,20 +55,20 @@ function findpw(username){
                 var token=r.token;
                 /*console.log(token);*/
                 var url="http://192.168.1.154:7942/loginjoin/changepw/"+token;
-               /* console.log(url);*/
-                          emailjs.send('gmail',"template_2msjhhl", {
-                              to_name:username,
-                              message:url
-                          })   .then(function(response) {
-                              console.log('SUCCESS!', response.status, response.text);
-                          }, function(error) {
-                              console.log('FAILED...', error);
-                          });
+                /* console.log(url);*/
+                emailjs.send('gmail',"template_2msjhhl", {
+                    to_name:username,
+                    message:url
+                })   .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                    console.log('FAILED...', error);
+                });
                 alert("비밀번호 재설정 url이 발송되었습니다, 이메일을 확인해주세요.");
 
             }
         });
-       /* window.close();*/
+        /* window.close();*/
     }
 
 
