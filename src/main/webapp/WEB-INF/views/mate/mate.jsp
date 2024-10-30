@@ -171,7 +171,6 @@
 </div>
 <button id="chatButton" class="image-button"></button>
 </body>
-
 <script>
     var clog = console.log;
     var now_personnel, new_personnel, intervalId;

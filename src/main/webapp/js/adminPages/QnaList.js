@@ -181,7 +181,7 @@ function detail(qna_code){
                 </div>   
             </div>
             `;
-            if ((qvo.qna_status==0&&cerate=="1")||adminz==0){
+            if (qvo.qna_status==0&&(cerate=="1"||adminz==0)){
                 Dtag+="<div><button id='answerbutton' type='button' onclick='answer(\""+qvo.qna_code+"\")'>답변하기</button></div>"
             }else{
                 document.getElementById("addreply").innerHTML="";

@@ -143,6 +143,7 @@ li{
     top: 0;
     display: none;
     z-index:999;
+    overflow: auto;
 }
 
 #qnadetail{
@@ -194,6 +195,7 @@ li{
     font-size: 16px;
     box-sizing: border-box;
     margin-bottom: 10px;
+    overflow: auto;
 }
 #answerbutton{
     border: none;
@@ -229,6 +231,7 @@ li{
     font-size: 16px;
     box-sizing: border-box;
     margin-bottom: 10px;
+    overflow: auto;
 }
 #insertAnswer{
     border: none;

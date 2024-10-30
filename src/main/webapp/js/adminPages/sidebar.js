@@ -25,3 +25,6 @@ function report(){
 function alink(url){
     window.location.href=url;
 }
+function gohome(){
+    window.location.href="/";
+}

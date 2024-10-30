@@ -11,6 +11,7 @@
     <input type="text" name="name" id="name" placeholder="이름 입력" />
     <input type="text" name="tel" id="tel" placeholder="핸드폰번호:010-0000-0000형식으로 입력"/>
     <input type="button" class="findBtn" id="FindId" onclick="FindIds2()" value="아이디 찾기" />
+    <div id="radiobuttons"></div>
 </div>
 
 

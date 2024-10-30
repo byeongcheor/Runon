@@ -73,11 +73,12 @@
 .chat-message p {
     margin: 0;
     padding: 10px;
-    background-color: #333;
+    background-color: #CCFF47;
     border-radius: 10px;
     max-width: 80%;
     word-wrap: break-word;
-    color: white;
+    color: black;
+    font-weight: bold;
     text-align: right;  /* 텍스트 오른쪽 정렬 */
 }
 
@@ -368,6 +369,7 @@ button#reportBtn {
     padding: 10px;
     border-bottom: 1px solid #292929;
     cursor: pointer;
+
     transition: background-color 0.3s ease; /* 색이 부드럽게 변하게 함 */
     position: relative;
     z-index: 10; /* 다른 요소보다 위에 있도록 설정 */

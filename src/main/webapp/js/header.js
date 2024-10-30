@@ -10,7 +10,7 @@ $(window).on('scroll',function(){
     }
 });
 function openLoginPopup() {
-    window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
+    window.open('/login&join/loginForm', 'LoginPopup', 'width=700, height=525 ,left=1200, top=150');
 }
 window.onload=function(){
  ToKen=localStorage.getItem("Authorization");
@@ -89,7 +89,7 @@ window.onload=function(){
 };
 function mypagelogin(){
     alert("로그인하신후 접근가능합니다 ");
-    window.open('/login&join/loginForm', 'LoginPopup', 'width=465, height=525 ,left=1200, top=150');
+    window.open('/login&join/loginForm', 'LoginPopup', 'width=700, height=525 ,left=1200, top=150');
 
 }
 

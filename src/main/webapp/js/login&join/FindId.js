@@ -28,18 +28,19 @@ function FindIds2(){
             var usernames=r.usernames;
             /*console.log(usernames);*/
             if (usernames!=null&&usernames!=""){
-                var tag=" <ul>";
+                var tag=" <ul class=radiobuttons_box>";
                 usernames.forEach(function(usernames,index){
                     tag+=`
                     <div><input type="radio" id="`+index+`" name="point" value="`+usernames.username+`" />
-                    <label class="form_label" for="`+index+`">`+usernames.username+`</label></div>
+                    <label class="findID" for="`+index+`">`+usernames.username+`</label></div>
                     `;
                 });
-                tag+="  <input type=\"button\" onclick=\"findpw()\" value=\"비밀번호찾기\"> </ul>";
+                 tag+=" </ul>";
+                tag+="  <input type=\"button\" class=\"findBtn\" onclick=\"findpw()\" value=\"비밀번호찾기\"> ";
                 document.getElementById("radiobuttons").innerHTML=tag;
 
             }else{
-                var tag="<h1>가입된 아이디가 없습니다.</h1>";
+                var tag="<h3 class=\"findID\">가입된 아이디가 없습니다.</h3>";
                 document.getElementById("radiobuttons").innerHTML=tag;
             }
 
@@ -56,17 +57,16 @@ function findpw(){
     emailjs.init("tC4QTbGfMO5fEZx63");
     const selectedRadio = document.querySelector('input[name="point"]:checked');
     if (selectedRadio) {
-        alert("선택된 값은: " + selectedRadio.value);
         const selectedValue = selectedRadio.value;
         $.ajax({
             url:"/login&join/changePw",
             type:"post",
             data: {
-                selectedRadio:selectedValue
+                username:selectedValue
             },
             success:function(r){
                 var token=r.token;
-                console.log(token);
+
                 var username= selectedValue;
                 var url="http://192.168.1.154:7942/loginjoin/changepw/"+token;
                 console.log(url);
@@ -74,9 +74,9 @@ function findpw(){
                     to_name:username,
                     message:url
                 })   .then(function(response) {
-                   /* console.log('SUCCESS!', response.status, response.text);*/
+                    alert("비밀번호 재설정 url이 발송되었습니다, 이메일을 확인해주세요. ")
                 }, function(error) {
-                    /*console.log('FAILED...', error);*/
+
                 });
             }
         });

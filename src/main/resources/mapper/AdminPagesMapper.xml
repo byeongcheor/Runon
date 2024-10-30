@@ -639,8 +639,10 @@
     </select>
     <select id="getCertificateDetail" resultType="com.ict.finalproject.vo.CertificateVO">
         select c.*, u.nickname
+        ,cc.crew_name
         from certificate_tbl c
         left join user_tbl u on c.username = u.username
+        left join create_crew_tbl cc on c.create_crew_code=cc.create_crew_code
         where c.certificate_code = #{param1}
     </select>
     <insert id="updateRecord">
