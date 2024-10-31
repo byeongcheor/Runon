@@ -1,8 +1,30 @@
-
+var usercode;
 
 setTimeout(function(){
-    usercode=usercode1;// 실제 사용자 코드 가져오기
-    /*  username=username1;*/
+    var ToKen=localStorage.getItem("Authorization");
+    if (ToKen!=null &&ToKen!="" ) {
+        ToKen = ToKen.substring(7);
+        console.log(ToKen);
+        $.ajax({
+            url: "/setToKengetUsers",
+            type: "POST",
+            data: {
+                ToKen: ToKen
+            },
+            success: function (r) {
+                // alert("Test");
+                // 유저정보 담기
+                usercode = r.mvo.usercode;
+                username = r.mvo.username;
+
+                console.log(usercode)
+            },error:function(e){
+                console.log(e);
+                alert("실패확인");
+            }
+        });
+    }
+    alert("확인");
     console.log('User Code:', usercode); // 디버깅용 로그 추가
 
     // 페이지 로드 시 조회수 증가 요청
@@ -36,7 +58,7 @@ setTimeout(function(){
 
     /// 초기 상태 설정 함수
     function setInitialLikeState() {
-        fetch(`/marathon/checkLike?usercode=`+usercode1+`&marathon_code=`+marathonId)
+        fetch(`/marathon/checkLike?usercode=`+usercode+`&marathon_code=`+marathonId)
             .then(response => response.json())
             .then(data => {
                 if (data.liked) {
@@ -151,7 +173,7 @@ setTimeout(function(){
             const cartData = {
                 price: itemPrice,
                 marathon_code: marathonId,
-                usercode: usercode1,
+                usercode: usercode,
                 quantity: 1
             };
 
@@ -215,7 +237,7 @@ setTimeout(function(){
             const cartData = {
                 price: itemPrice,
                 marathon_code: marathonId,
-                usercode: usercode1,
+                usercode: usercode,
                 quantity: 1
             };
 
@@ -257,7 +279,7 @@ setTimeout(function(){
         window.location.href = '/marathon/marathonList'; // 또는 사용자가 원래 있던 페이지로 이동
     });
     initializeMap();
-},300);
+},500);
 
 var map;
 function initializeMap() {
