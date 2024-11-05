@@ -108,9 +108,9 @@ function crew() {
                     <li><a class="menus" href="/cart/cart">CART</a></li>
                     <li id="mypage"><a onclick="mypagelogin()">MY</a></li>
                     <%--<li> <a href="/oauth2/authorization/google">google</a></li>--%>
-                    <li id="login"><a onclick="openLoginPopup()" style="color: #d1ff33">LOGIN</a></li>
+                    <li id="login"></li>
 
-                    <li id="logout"><a onclick="logout2()" style="color: #d1ff33">LOGOUT</a></li>
+                    <li id="logout"></li>
                     <li id="as"></li>
 
                 </ul>

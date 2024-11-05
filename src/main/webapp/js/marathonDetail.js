@@ -20,7 +20,7 @@ setTimeout(function(){
                 console.log(usercode)
             },error:function(e){
                 console.log(e);
-                alert("실패확인");
+
             }
         });
     }

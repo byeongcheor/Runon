@@ -67,8 +67,16 @@ dependencies {
     //웹소켓
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.2'
-
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0' // 적절한 버전으로 변경
+
+
+
+
+    // 엑셀관련
+    // https://mvnrepository.com/artifact/org.apache.poi/poi
+    implementation 'org.apache.poi:poi:5.3.0'
+    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    implementation 'org.apache.poi:poi-ooxml:5.3.0'
 
 
 

@@ -21,19 +21,17 @@
                 <div class="menubox"><a class="menus" href="/adminPages/QnaList">Q&A관리</a></div>
              <%--   <div onclick="report()" id="report" class="mouse menubox">
                     <a class="menus" id="reportfont" >신고 관리</a>
-
                 </div>
                 <div class="submenu hidden" onclick="alink('/adminPages/ReportList')">
                     <div>&nbsp; &nbsp; ReportList </div>
-
                 </div>
                 <div class="submenu hideen">
-
                     <div>&nbsp; &nbsp; 신고 처리</div>
                 </div>--%>
                 <div class="menubox"><a class="menus" href="/adminPages/boardList">게시판관리</a></div>
                 <div class="menubox"><a class="menus" href="/adminPages/CertificateList">기록인증</a></div>
                 <div class="menubox"><a class="menus" href="/adminPages/PaymentList">결제정보</a></div>
+                <div class="menubox"><a class="menus" href="/test/test">테스트</a></div>
             </div>
             <div id="lastmenu">
                 <a href="/">홈으로 이동</a>

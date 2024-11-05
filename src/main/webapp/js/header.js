@@ -38,13 +38,18 @@ window.onload=function(){
                 mypagTag='<a class="menus" href="/mypage/myHome">MY</a>';
                 document.getElementById("mypage").innerHTML=mypagTag;
             }
-
+            var tags=`<a onclick="logout2()" style="color: #d1ff33">LOGOUT</a>`;
+            document.getElementById("logout").innerHTML=tags;
         }
 
     });
 
     } else {
-        document.getElementById("logout").style.display="none";
+        var loginTag=`<a onclick="openLoginPopup()" style="color: #d1ff33">LOGIN</a>`;
+        document.getElementById("login").innerHTML=loginTag;
+
+
+
     }
 
     //a 태그 클릭 이벤트 핸들러

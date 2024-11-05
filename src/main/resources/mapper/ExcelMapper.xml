@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.ExcelDAO">
+    <insert id="insertExcel">
+        insert into marathon_list_tbl (marathon_name,marathon_type,total_distance,entry_fee,addr,marathon_content,event_date,
+        registration_start_date,registration_end_date,lat,lon,poster_img)values(
+        #{marathon_name},#{marathon_type},#{total_distance},#{entry_fee},#{addr},#{marathon_content},#{event_date},#{registration_start_date},
+        #{registration_end_date},#{lat},#{lon},#{poster_img})
+    </insert>
+
+
+</mapper>
