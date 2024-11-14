@@ -7,49 +7,6 @@
 <script src="/js/login&join/JoinForm.js" type="text/javascript"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-
-<style>
-
-    .modal {
-        display: none;  /* 처음에는 숨겨둠 */
-        position: fixed;
-        z-index: 1;  /* 모달이 다른 요소들 위에 표시되도록 설정 */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);  /* 반투명한 배경 */
-        background-color: rgba(0,0,0,0.4);  /* 반투명한 배경 */
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 30%;  /* 모달의 너비 설정 */
-        border-radius: 15px;
-    }
-
-    .close-button {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close-button:hover,
-    .close-button:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    .modal {
-        z-index: 1000;  /* 다른 요소들 위에 모달을 표시 */
-    }
-
-</style>
 <script>
     //QnA 이동
     function openQnA(){
@@ -63,8 +20,8 @@
             success: function(r){
                 location.href="/mypage/myQnA";
             },error: function(e){
-                alert("이동실패..");
-                console.log(e);
+              /*  alert("이동실패..");
+                console.log(e);*/
             }
         })
     }
@@ -74,13 +31,15 @@
         $.ajax({
             url: "/mypage/openMymate",
             type: "Post",
-            data: {username:username},
+            data: {
+                username:username1,
+                usercode:usercode1},
             success: function(r) {
                 location.href = "/mypage/myMate";
             },
             error: function(e) {
-                console.log(e);
-                alert("으으");
+            /*    console.log(e);*/
+               /* alert("으으");*/
             }
         });
     }
@@ -92,12 +51,12 @@
                 type: "Post",
                 data: {username:username},
                 success: function(r) {
-                    alert("성공");
+                   /* alert("성공");*/
                     location.href = "/mypage/certificateList";
                 },
                 error: function(e) {
-                    console.log(e);
-                    alert("으으");
+                   /* console.log(e);
+                    alert/!*("으으");*!/*/
                 }
             });
 
@@ -110,7 +69,7 @@
             modal.style.display="block";
 
         }else{
-            console.error("실패");
+           /* console.error("실패");*/
         }
     }
     //마라톤신청서수정모달닫기
@@ -119,7 +78,7 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
     //마라톤신청서모달열기
@@ -129,7 +88,7 @@
             modal.style.display="block";
 
         }else{
-            console.error("실패");
+            /*console.error("실패");*/
         }
     }
     //마라톤신청서모달닫기
@@ -138,13 +97,12 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
 
     //마라톤신청서 존재여부
     function checkMarathonForm(){
-
         $.ajax({
             url: "/mypage/marathonFormCheck",
             data: {usercode:usercode1},
@@ -152,7 +110,7 @@
                 if(r.exists){
                     var datas=r.data;
                     alert("기존에 작성한 신청서가 있습니다.")
-                    console.log(r.data);
+                    /*console.log(r.data);*/
                     var modal = document.getElementById("editMarathonFormModal");
                     if(modal){
                         document.getElementById("rname").value = datas.name;
@@ -173,7 +131,7 @@
                     openMarathonFormModal();
                 }
             },error: function (e){
-                console.log(e);
+               /* console.log(e);*/
             }
         })
     }
@@ -181,7 +139,6 @@
     //마라톤 신청서 작성폼 전송
     function submitMarathonForm(){
         const formData = {
-
             name: document.getElementById("name").value,
             tel: document.getElementById("tel").value,
             addr: document.getElementById("addr").value,
@@ -193,14 +150,14 @@
             privacy_consent: document.getElementById("privacy_consent").checked ? 1 : 0,  // boolean을 int로 변환
             media_consent: document.getElementById("media_consent").checked ? 1 : 0  // boolean을 int로 변환
         };
-        console.log(formData);
+        /*console.log(formData);*/
         var token = localStorage.getItem("Authorization");
         if(token != "" && token != null) {
             $.ajax({
                 url: "/mypage/createMarathonForm",
                 type: "post",
-
-                data: {usercode:usercode1,
+                data: {
+                    usercode:usercode1,
                     name: document.getElementById("name").value,
                     tel: document.getElementById("tel").value,
                     addr: document.getElementById("addr").value,
@@ -217,7 +174,7 @@
                     closeMarathonFormModal();
                     //location.reload();
                 }, error: function (e) {
-                    console.log(e);
+                   /* console.log(e);*/
                     alert("마라톤신청서 작성이 실패했습니다.");
                     return false;
 
@@ -253,7 +210,7 @@
                 location.reload();
             },error: function(e){
                 alert("신청서 수정에 실패했습니다.");
-                console.log(e);
+                /*console.log(e);*/
             }
         });
         return false;
@@ -286,7 +243,7 @@
                 location.reload();
             },error: function (e){
                 alert("신청서 삭제에 실패했습니다.");
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }
@@ -296,40 +253,44 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+            /*console.error("Modal element not found: " + modalId);*/
         }
     }
     //회원탈퇴 모달띄우기
     function openDeleteProfileModal(){
         var modal = document.getElementById("profileDeleteModal");
         if(modal){
+
             modal.style.display="block";
         }else{
-            console.error("실패");
+            /*console.error("실패");*/
         }
     }
     //회원탈퇴 폼 전송
     function submitDeleteProfile(){
-        var token = localStorage.getItem("Authorization");
         var deletePassword = document.getElementById("deletePassword").value;
-
-        if(token && deletePassword){
-            $.ajax({
-                url: "/mypage/deleteProfile",
-                type: "post",
-                data: {currentPassword: deletePassword},
-                headers: {Authorization: token},
-                success: function(r){
-                    alert("회원탈퇴가 완료되었습니다.");
-                    localStorage.removeItem("Authorization");
+        /*console.log(deletePassword);*/
+        $.ajax({
+            url: "/mypage/deleteProfile",
+            type: "post",
+            data: {
+                usercode: usercode1,
+                currentPassword: deletePassword
+            },
+            success: function(r){
+                if(r==1){
+                    alert("안전하게 회원탈퇴 되었습니다.");
                     closeDeleteProfileModal();
-                    location.href = "/";
-                },error: function(e){
-                    alert("회원탈퇴에 실패했습니다. 비밀번호를 확인해주세요.");
-                    console.log(e);
+                    localStorage.clear();
+                    location.href="/";
+                }else{
+                    alert("비밀번호가 일치하지 않습니다.");
                 }
-            })
-        }
+            },error: function(e){
+                alert("회원탈퇴에 실패했습니다. 가입되어있는 크루가 있는지 확인해주세요.");
+                /*console.log(e);*/
+            }
+        });
         return false;
     }
     // 회원정보수정 모달 열기
@@ -338,7 +299,7 @@
         if (modal) {
             modal.style.display = "block";  // 모달을 화면에 보이도록 설정
         } else {
-            console.error("Modal element not found: " + modalId);
+          /*  console.error("Modal element not found: " + modalId);*/
         }
     }
     // 회원정보수정 모달 닫기
@@ -347,94 +308,128 @@
         if (modal) {
             modal.style.display = "none";  // 모달을 숨김
         } else {
-            console.error("Modal element not found: " + modalId);
+           /* console.error("Modal element not found: " + modalId);*/
         }
     }
     //회원정보 모달 띄우기
     function openEditProfileModal(){
-        var token = localStorage.getItem("Authorization");
-        if(token != "" && token != null) {
-            $.ajax({
-                url: "/mypage/myHome",  // 사용자 정보를 불러오는 API 경로
-                type: "post",
-                data: {Authorization: token},
-                success: function (r) {
-                    var nameInput = document.getElementById("username");
-                    var name = document.getElementById("name");
-                    var birthdate = document.getElementById("birthdate");
-                    var gender = document.getElementById("gender");
-                    var nickname = document.getElementById("nickname");
-                    var tel1 = document.getElementById("tel1");
-                    var tel2 = document.getElementById("tel2");
-                    var tel3 = document.getElementById("tel3");
-                    if (nameInput) {  // 요소가 존재하는지 확인
-                        nameInput.value = r.username;
-                        name.value = r.name;
-                        birthdate.value = r.birthdate;
-                        gender.value = r.gender;
-                        nickname.value = r.nickname;
-                        tel1.value = r.tel1;
-                        tel2.value = r.tel2;
-                        tel3.value = r.tel3;
-                        openModal("profileEditModal");  // 모달을 띄움
-                    }
-                },
-                error: function (e) {
-                    alert("회원정보를 불러오는데 실패했습니다.");
-                    console.log(e);
+        $.ajax({
+            url: "/mypage/openEdit",  // 사용자 정보를 불러오는 API 경로
+            type: "post",
+            data: {
+                username: username1,
+                usercode: usercode1
+            },
+            success: function (r) {
+                /*console.log(r);*/
+                // 서버에서 받은 데이터를 폼에 채워 넣기
+                document.getElementById("username_editProfile").value = r.username;
+                document.getElementById("name_editProfile").value = r.name;
+                document.getElementById("currentPassword").value = '';  // 기존 비밀번호는 빈 값으로 초기화
+                document.getElementById("newPassword").value = '';
+                document.getElementById("newPasswordConfirm").value = '';
+                document.getElementById("nickname").value = r.nickname;
+                document.getElementById("birthdate").value = r.birthdate;
+                document.getElementById("tel1_editProfile").value = r.tel1;
+                document.getElementById("tel2_editProfile").value = r.tel2;
+                document.getElementById("tel3_editProfile").value = r.tel3;
+                document.getElementById("zip_code").value = r.zip_code;
+                document.getElementById("addr_editProfile").value = r.addr;
+                document.getElementById("addr_details_editProfile").value = r.addr_details;
+                // 개인정보 공개 여부
+                if (r.is_info_disclosure === 'Y') {
+                    document.getElementById("radio1").checked = true;
+                } else {
+                    document.getElementById("radio2").checked = true;
                 }
-            });
+                var modal = document.getElementById("profileEditModal");
+                if (modal) {
+                    modal.style.display = "block";
+                }
+                // 모달을 띄움
+            },
+            error: function (e) {
+                alert("회원정보를 불러오는데 실패했습니다.");
+               /* console.log(e);*/
+            }
+        });
+    }
+    function setInfoDisclosure(is_info_disclosure) {
+        if (is_info_disclosure == 'Y') {
+            document.getElementById("radio1").checked = true;
+        } else {
+            document.getElementById("radio2").checked = true;
         }
     }
     //회원정보 수정폼전송
     function submitEditProfile(){
-        var token = localStorage.getItem("Authorization");
-        var formData = {
-            name: document.getElementById("name").value,
-            currentPassword: document.getElementById("currentPassword").value,
-            newPassword: document.getElementById("newPassword").value,
-            newPasswordConfirm: document.getElementById("newPasswordConfirm").value,
-            nickname: document.getElementById("nickname").value,
-            tel1: document.getElementById("tel1").value,
-            tel2: document.getElementById("tel2").value,
-            tel3: document.getElementById("tel3").value,
-            Authorization:token
 
-        };
-        console.log(formData);
+        var newPassword = document.getElementById("newPassword").value;
+        var newPasswordConfirm = document.getElementById("newPasswordConfirm").value;
         // 새 비밀번호 확인
-        if (formData.newPassword !== formData.newPasswordConfirm) {
+        if (newPassword !== newPasswordConfirm) {
             alert("새 비밀번호가 일치하지 않습니다.");
             return false;
         }
+        var currentPassword = document.getElementById("currentPassword").value;
+        var nickname = document.getElementById("nickname").value;
+        var tel1 = document.getElementById("tel1_editProfile").value;
+        var tel2 = document.getElementById("tel2_editProfile").value;
+        var tel3 = document.getElementById("tel3_editProfile").value;
+        var zip_code = document.getElementById("zip_code").value;
+        var addr = document.getElementById("addr_editProfile").value;
+        var addr_details = document.getElementById("addr_details_editProfile").value;
+        var is_info_disclosure = document.querySelector('input[name="is_info_disclosure"]:checked').value;
+        $.ajax({
+           url:"/mypage/editt",
+           type:"post",
+           data:{
+               usercode:usercode1,
+               username: username1,
+               currentPassword: currentPassword,
+               newPassword: newPassword,
+               newPasswordConfirm: newPasswordConfirm,
+               nickname: nickname,
+               tel1: tel1,
+               tel2: tel2,
+               tel3: tel3,
+               zip_code: zip_code,
+               addr: addr,
+               addr_details: addr_details,
+               is_info_disclosure: is_info_disclosure
+           } ,
+            success:function (r){
+               if(r=="fail"){
+                   alert("현재 비밀번호가 틀립니다.")
+               }else if(r=="false"){
+                   alert("새 비밀번호가 일치하지 않습니다.")
+               }else{
+                   alert("수정되었습니다.");
+                   closeModal(profileEditModal);
+               }
 
-        if(token != "" && token != null){
-            $.ajax({
-                url: "/mypage/editProfile",
-                type: "post",
-                data: formData,
-                success: function(r){
-                    alert("회원정보가 수정되었습니다.");
-                    closeModal("profileEditModal");
-                    location.reload();
-                },error(e){
-                    alert("회원정보 수정에 실패하였습니다.");
-                    console.log(e);
-                }
-            })
-        }
-        return false;
+            },error: function(e){
+               /*alert(e);
+               alert(여기안옴);*/
+            }
+        });
+
     }
     //구매내역이동
     function getPurchaseList(){
         $.ajax({
             url:"/mypage/purchaseList",
+            type: "post",
+            data:{
+                username: username1,
+                usercode: usercode1
+            },
             success:function(r){
                 //console.log(r);
                 //location.href=r;
                 location.href="/mypage/purchaseList";
             },error:function (e){
-                console.log(e);
+                /*console.log(e);*/
             }
         })
     }
@@ -462,7 +457,7 @@
                     location.reload();
                 },error(e){
                     alert("프로필 변경이 실패했습니다.");
-                    console.log(e);
+                    /*console.log(e);*/
                 }
             })
         }
@@ -487,6 +482,7 @@
                                         <div class="profile_container">
                                             <div class="names">
                                                 <h1>`+r.name+`님</h1>
+                                                <p>`+r.nickname+`</p>
                                                 <p>`+r.username+`</p>
                                             </div>
                                             <div class="profileimage">
@@ -505,7 +501,7 @@
                                             <li class="status_items">
                                                 <div class="status_label">
                                                     <p>나의 랭킹🏃‍♀️</p>
-                                                    <p>123위</p>
+                                                    <p>`+r.ranking+`위</p>
                                                 </div>
                                             </li>
                                             <li class="status_items">
@@ -571,15 +567,15 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="">
+                                                <a class="menus" href="/cart/cart">
                                                     <div class="list_container">
-                                                        <p class="icons">💳</p>
-                                                        <p class="list_title">결제수단추가</p>
+                                                        <p class="icons">🛒</p>
+                                                        <p class="list_title">장바구니</p>
                                                     </div>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript: void(0)" onclick="openEditProfileModal()">
+                                                <a onclick="openEditProfileModal()">
                                                     <div class="list_container">
                                                         <p class="icons">⚙️</p>
                                                         <p class="list_title">회원정보 수정</p>
@@ -608,8 +604,8 @@
         }
     });
     function passwordChk(){
-        var currentPassword = document.getElementById("currentPassword");
-        var username = document.getElementById("username");
+        var currentPassword = document.getElementById("currentPassword").value;
+        var username = document.getElementById("username").value;
         $.ajax({
             url:"/mypage/passwordChk",
             type:"post",
@@ -617,15 +613,13 @@
                 currentPassword: currentPassword,
                 username: username
             },success: function(r){
-                r="1or0?";
                 if (r==1){
-                    document.getElementById("id").value="Y"
+                    document.getElementById("id").value="Y";
+                    alert("비밀번호가 일치합니다.")
                 }
                 if (r==0){
-
+                    alert("비밀번호가 일치하지않습니다.")
                 }
-
-                alert("성공");
             }
         })
     }
@@ -642,38 +636,38 @@
     <div id="openMarathonFormModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeMarathonFormModal()">&times;</span>
-            <h2 style="text-align: center">마라톤신청서 작성</h2>
-            <form method="POST" action="" onsubmit="return submitMarathonForm()" >
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">마라톤신청서 작성</h2>
+            <form class="modal-contents" method="POST" action="" onsubmit="return submitMarathonForm()" >
                 <div>
                     <label for="name">이름:</label>
-                    <input type="text" id="name" name="name" maxlength="30" required />
+                    <input class="inputs" style="width: 100%;" type="text" id="name" name="name" maxlength="30" required />
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input type="tel" id="tel" name="tel" maxlength="15" required />
+                    <input class="inputs" type="tel" id="tel" name="tel" maxlength="11" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
-                    <input type="text" id="addr" name="addr" maxlength="100" required />
+                    <input class="inputs" type="text" id="addr" name="addr" maxlength="100" required />
                 </div>
                 <div>
                     <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="addr_details" name="addr_details" maxlength="300" required />
+                    <input class="inputs" type="text" id="addr_details" name="addr_details" maxlength="300" required />
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="gender" name="gender" required>
+                    <select class="inputs" id="gender" name="gender" style="margin-bottom: 25px;" required>
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
                 </div>
                 <div>
                     <label for="birth_date">생년월일:</label>
-                    <input type="date" id="birth_date" name="birth_date" required />
+                    <input class="inputs" type="date" id="birth_date" name="birth_date" required />
                 </div>
                 <div>
                     <label for="size">사이즈:</label>
-                    <input type="text" id="size" name="size" maxlength="30" required />
+                    <input class="inputs" type="text" id="size" name="size" maxlength="30" required />
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
@@ -685,7 +679,7 @@
                 </div>
                 <div>
                     <label for="media_consent">미디어 사용 동의:</label>
-                    <input type="checkbox" id="media_consent" name="media_consent" />
+                    <input type="checkbox" id="media_consent" name="media_consent" style="margin-bottom: 25px;"/>
                 </div>
                 <div>
                     <button type="submit">신청하기</button>
@@ -697,38 +691,38 @@
     <div id="editMarathonFormModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeEditMarathonFormModal()">&times;</span>
-            <h2 style="text-align: center">마라톤신청서 수정</h2>
-            <form action="/" onsubmit="return submiteditMarathonForm()" method="POST">
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">마라톤신청서 수정</h2>
+            <form class="modal-contents" action="/" onsubmit="return submiteditMarathonForm()" method="POST">
                 <div>
                     <label for="name">이름:</label>
-                    <input type="text" id="rname" name="name" maxlength="30" required />
+                    <input class="inputs" type="text" id="rname" name="name" maxlength="30" required />
                 </div>
                 <div>
                     <label for="tel">전화번호:</label>
-                    <input type="tel" id="rtel" name="tel" maxlength="15" required />
+                    <input class="inputs" type="tel" id="rtel" name="tel" maxlength="15" required />
                 </div>
                 <div>
                     <label for="addr">주소:</label>
-                    <input type="text" id="raddr" name="addr" maxlength="100" required />
+                    <input class="inputs" type="text" id="raddr" name="addr" maxlength="100" required />
                 </div>
                 <div>
                     <label for="addr_details">상세 주소:</label>
-                    <input type="text" id="raddr_details" name="addr_details" maxlength="300" required />
+                    <input class="inputs" type="text" id="raddr_details" name="addr_details" maxlength="300" required />
                 </div>
                 <div>
                     <label for="gender">성별:</label>
-                    <select id="rgender" name="gender" required>
+                    <select class="inputs" id="rgender" name="gender" style="margin-bottom: 25px;" required >
                         <option value="M">남성</option>
                         <option value="F">여성</option>
                     </select>
                 </div>
                 <div>
                     <label for="birth_date">생년월일:</label>
-                    <input type="date" id="rbirth_date" name="birth_date" required />
+                    <input class="inputs" type="date" id="rbirth_date" name="birth_date" required />
                 </div>
                 <div>
                     <label for="size">사이즈:</label>
-                    <input type="text" id="rsize" name="size" maxlength="30" required />
+                    <input class="inputs" type="text" id="rsize" name="size" maxlength="30" required />
                 </div>
                 <div>
                     <label for="terms_agreement">이용약관 동의:</label>
@@ -740,7 +734,7 @@
                 </div>
                 <div>
                     <label for="media_consent">미디어 사용 동의:</label>
-                    <input type="checkbox" id="rmedia_consent" name="media_consent" />
+                    <input type="checkbox" id="rmedia_consent" name="media_consent" style="margin-bottom: 25px;" />
                 </div>
                 <div>
                     <button type="submit">수정하기</button>
@@ -749,72 +743,69 @@
             </form>
         </div>
     </div>
-
     <!--회원정보수정모달-->
-    <div id="profileEditModal" class="modal" style="display:none;">
-        <div class="modal-content" style="width: 20%;">
+    <div id="profileEditModal" class="modal" style="display: none;">
+        <div class="modal-content" style="width: 25%;">
             <span class="close-button" onclick="closeModal('profileEditModal')">&times;</span>
-            <h2 style="text-align: center">회원정보 수정</h2>
-            <form method="post" id="editProfileForm" onsubmit="return formCheck()" >
-                <div class="joinMain">
-                    <div class="joinN">아이디<span>(이메일)</span></div>
-                    <div class="joinI">
-                        <input type="text" name="username" id="username" value="userid" readonly/>
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">회원정보 수정</h2>
+            <div class="modal-contents">
+                <div>
+                    <div>아이디<span>(이메일)</span></div>
+                    <div>
+                        <input class="inputs" type="text" name="username" id="username_editProfile" readonly/>
                     </div>
-                    <div class="joinN">기존 비밀번호</div>
-                    <div class="joinI">
-                        <input type="password" name="currentPassword" id="currentPassword" onfocusout="passwordChk()" placeholder="기존 비밀번호를 입력해주세요." required/>
+                    <div>기존 비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="currentPassword" id="currentPassword"  placeholder="기존 비밀번호를 입력해주세요." required/>
                         <input type ="hidden" value="N">
                     </div>
-                    <div class="joinN">새 비밀번호</div>
-                    <div class="joinI">
-                        <input type="password" name="newPassword" id="newPassword" placeholder="변경할 비밀번호를 입력해주세요."/>
+                    <div>새 비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="newPassword" id="newPassword" placeholder="변경할 비밀번호를 입력해주세요."/>
                     </div>
-                    <div class="joinN">새 비밀번호확인</div>
-                    <div class="joinI">
-                        <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="변경할 비밀번호를 재입력해주세요"/>
+                    <div>새 비밀번호확인</div>
+                    <div>
+                        <input class="inputs" type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="변경할 비밀번호를 재입력해주세요"/>
                     </div>
-                    <div class="joinN">이름</div>
-                    <div class="joinI">
-                        <input type="text" name="name" id="name" value="name" disabled/>
-                        <input type="button" value=" 남 " id="genderm" onclick="gendercheck(this.value)" disabled/>
-                        <input type="button" value=" 여 " id="genderw" onclick="gendercheck(this.value)" disabled/>
-                        <input type="hidden" name="gender" id="gender" value="gender" disabled/>
+                    <div>이름</div>
+                    <div>
+                        <input class="inputs" type="text" name="name" id="name_editProfile" value="name" readonly/>
+                        <input type="hidden" name="gender" id="gender_editProfile" value="gender" disabled/>
                     </div>
-                    <div class="joinN">생년월일</div>
-                    <div class="joinI">
-                        <input type="text" name="birthdate" id="birthdate" value="birthdate" disabled/>
+                    <div>생년월일</div>
+                    <div>
+                        <input class="inputs" type="text" name="birthdate" id="birthdate" value="birthdate" disabled/>
                     </div>
-                    <div class="joinN">닉네임</div>
-                    <div class="joinI">
-                        <input type="text" name="nickname" id="nickname" onblur="nicknamecheck()" value="nickname"/>
+                    <div>닉네임</div>
+                    <div>
+                        <input  class="inputs" type="text" name="nickname" id="nickname" onblur="nicknamecheck()" value="nickname"/>
                         <input type="hidden" name="nickChk" id="nickChk" value="N">
                     </div>
                     <div id="nickCheck" style="font-size: 0.8em;"></div>
-                    <div class="joinN">연락처</div>
-                    <div class="joinT">
-                        <select name="tel1" id="tel1" value="tel1">
+                    <div style="margin-top: 20px;">연락처</div>
+                    <div>
+                        <select  class="inputs" style="width:33%;" name="tel1" id="tel1_editProfile" value="tel1">
                             <option>010</option>
                             <option>02</option>
                             <option>031</option>
                             <option>051</option>
                         </select> -
-                        <input type="text" name="tel2" id="tel2" size="4"  minlength="3" maxlength="4" value="tel2"/> -
-                        <input type="text" name="tel3" id="tel3" size="4" maxlength="4" value="tel3"/>
-                        <input type="hidden" name="tel" id="tel">
+                        <input  class="inputs" style="width:30%" type="text" name="tel2" id="tel2_editProfile" size="4"  minlength="3" maxlength="4" value="tel2"/> -
+                        <input  class="inputs" style="width:30%" type="text" name="tel3" id="tel3_editProfile" size="4" maxlength="4" value="tel3"/>
+                        <input type="hidden" name="tel" id="tel_editProfile">
                     </div>
-                    <div class="joinN">우편번호</div>
-                    <div class="joinZ">
-                        <input type="text" name="zip_code" id="zip_code" size="5" placeholder="선택사항"/>
-                        <input type="button" id="zipSearch" value="우편변호찾기" onclick="daumPostcode()"/>
+                    <div>우편번호</div>
+                    <div>
+                        <input class="inputs" style="width:50%" type="text" name="zip_code" id="zip_code" size="5" placeholder="선택사항"/>
+                        <input class="modalbtn" style="width:30%" type="button" id="zipSearch" value="우편번호찾기" onclick="daumPostcode()"/>
                     </div>
-                    <div class="joinN">주소</div>
-                    <div class="joinI">
-                        <input type="text" name="addr" id="addr" style="width:70%" placeholder="선택사항입니다"/>
+                    <div>주소</div>
+                    <div>
+                        <input class="inputs" style="width:100%" type="text" name="addr" id="addr_editProfile" style="width:70%" placeholder="선택사항입니다"/>
                     </div>
-                    <div class="joinN">상세주소</div>
-                    <div class="joinI">
-                        <input type="text" name="addr_details" id="addr_details" placeholder="선택사항입니다"/>
+                    <div>상세주소</div>
+                    <div>
+                        <input class="inputs" type="text" name="addr_details" id="addr_details_editProfile" placeholder="선택사항입니다"/>
                     </div>
                     <div class="joinN info">개인정보 공개여부
                         <div class="form-check" style="color: #899cb5;">
@@ -828,25 +819,25 @@
                     </div>
                     <input type="hidden" name="role" id="role" value="ROLE_USER">
                     <div class="btnBox">
-                        <button type="button"  onclick="submitEditProfile()" style="margin-top: 20px;" id="savebtn">저장</button>
+                        <button type="button" onclick="submitEditProfile()" style="margin-top: 20px; width: 100%; background-color:#1570ff; " id="savebtn">저장</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
     <!-- 회원탈퇴 모달 -->
     <div id="profileDeleteModal" class="modal" style="display:none;">
         <div class="modal-content" style="width: 20%;">
             <span class="close-button" onclick="closeDeleteProfileModal()">&times;</span>
-            <h2 style="text-align: center">회원탈퇴</h2>
-            <form method="post" id="deleteProfileForm" onsubmit="return submitDeleteProfile()">
-                <div class="joinMain">
-                    <div class="joinN">비밀번호</div>
-                    <div class="joinI" style="text-align: center;">
-                        <input type="password" name="deletePassword" id="deletePassword" placeholder="비밀번호를 입력해주세요" required/>
+            <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">회원탈퇴</h2>
+            <form method="post" class="modal-contents" id="deleteProfileForm" onsubmit="return submitDeleteProfile()">
+                <div>
+                    <div>비밀번호</div>
+                    <div>
+                        <input class="inputs" type="password" name="deletePassword" id="deletePassword" placeholder="비밀번호를 입력해주세요" required/>
                     </div>
                     <div class="btnBox">
-                        <button type="submit" style="margin-top: 20px;" id="deleteBtn">탈퇴하기</button>
+                        <button type="submit" style="margin-top: 20px; width: 100%; background-color:#1570ff; " id="deleteBtn">탈퇴하기</button>
                     </div>
                 </div>
             </form>

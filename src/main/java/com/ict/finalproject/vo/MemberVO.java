@@ -39,7 +39,26 @@ public class MemberVO {
     private String activation_date;
     private int point_code;
     private String nickname;
+    private String disabled_start_date;
     private String mate_popup_date;
+
+    private int ranking;
+    private int mypoint;
+
+    private String currentPassword;
+    private String newPassword;
+    private String newPasswordConfirm;
+
+    private int matching_room_code;
+    private String writedate;
+
+    public String getWritedate() {
+        return writedate;
+    }
+
+    public void setWritedate(String writedate) {
+        this.writedate = writedate;
+    }
 
     @Override
     public String toString() {
@@ -72,8 +91,55 @@ public class MemberVO {
                 ", activation_date='" + activation_date + '\'' +
                 ", point_code=" + point_code +
                 ", nickname='" + nickname + '\'' +
+                ", disabled_start_date='" + disabled_start_date + '\'' +
                 ", mate_popup_date='" + mate_popup_date + '\'' +
+                ", ranking=" + ranking +
+                ", mypoint=" + mypoint +
+                ", currentPassword='" + currentPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", newPasswordConfirm='" + newPasswordConfirm + '\'' +
+                ", matching_room_code=" + matching_room_code +
                 '}';
+    }
+
+    public int getMatching_room_code() {
+        return matching_room_code;
+    }
+
+    public void setMatching_room_code(int matching_room_code) {
+        this.matching_room_code = matching_room_code;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
+
+    public int getMypoint() {
+        return mypoint;
+    }
+
+    public void setMypoint(int mypoint) {
+        this.mypoint = mypoint;
     }
 
     public String getMate_popup_date() {
@@ -318,5 +384,13 @@ public class MemberVO {
 
     public void setPoint_code(int point_code) {
         this.point_code = point_code;
+    }
+
+    public String getDisabled_start_date() {
+        return disabled_start_date;
+    }
+
+    public void setDisabled_start_date(String disabled_start_date) {
+        this.disabled_start_date = disabled_start_date;
     }
 }

@@ -1,5 +1,6 @@
 package com.ict.finalproject.service;
 
+import com.ict.finalproject.dao.LoginDAO;
 import com.ict.finalproject.dao.MemberDAO;
 import com.ict.finalproject.vo.MemberVO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,10 +11,12 @@ public class JoinServiceImpl implements JoinService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberDAO memberDAO;  // 변수명 통일
+    private final LoginDAO loginDAO;
 
-    public JoinServiceImpl(MemberDAO memberDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public JoinServiceImpl(MemberDAO memberDAO, BCryptPasswordEncoder bCryptPasswordEncoder, LoginDAO loginDAO) {
         this.memberDAO = memberDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.loginDAO = loginDAO;
     }
 
     @Override
@@ -24,7 +27,8 @@ public class JoinServiceImpl implements JoinService {
             System.out.println("User already exists!");
             return  0;  // 이미 사용자가 있으면 저장하지 않음
         }
-
+        String birthdate=vo.getBirthdate();
+        
 
 
         // 비밀번호 암호화
@@ -80,7 +84,15 @@ public class JoinServiceImpl implements JoinService {
     }
 
     @Override
+    public void addpoint_change_code(int usercode) {
+        memberDAO.addpoint_change_code(usercode);
+    }
+
+    @Override
     public MemberVO getUsers(String username) {
         return memberDAO.getUsers(username);
     }
+
+
+
 }

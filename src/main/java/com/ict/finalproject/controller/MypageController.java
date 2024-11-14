@@ -6,6 +6,7 @@ import com.ict.finalproject.jwt.JWTUtil;
 import com.ict.finalproject.service.MemberService;
 import com.ict.finalproject.service.MypageService;
 
+import com.ict.finalproject.service.PaymentService;
 import com.ict.finalproject.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +36,7 @@ public class MypageController {
     @Autowired
     MypageService service;
     @Autowired
-    MemberService memberservice;
+    PaymentService paymentService;
     @Autowired
     JWTUtil jwtUtil;
     @Autowired
@@ -41,22 +44,24 @@ public class MypageController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+
     //유저정보보여주기(마이페이지홈, 회원정보수정)
     @PostMapping("mypage/myHome")
     @ResponseBody
     public MemberVO myHomegetToken(@RequestParam("Authorization")String token, Model model) {
-        token=token.substring("Bearer ".length());
-        String username=jwtUtil.setTokengetUsername(token);
-        MemberVO member = service.selectMember(username);
+        token = token.substring("Bearer ".length());
+        String username = jwtUtil.setTokengetUsername(token);
+        MemberVO member;
+        log.info("member:" + username);
+        member = service.selectMember(username);
         String imgname = service.getProfileImg(username);
-        String defaultImg = "/basicsimg.png";
-        if(username != null){
+        String defaultImg = "/basicimg.png";
+        if (username != null) {
             model.addAttribute("userimg", imgname != null ? imgname : defaultImg);
         }
-        log.info("member:"+member);
+
         return member;
     }
-
     //프로필업데이트
     @PostMapping("/mypage/updateProfile")
     @ResponseBody
@@ -78,8 +83,26 @@ public class MypageController {
         }
         try{
             String fileName = file.getOriginalFilename();
-            File targetFile = new File(UPLOAD_DIR+fileName);
+            String newFilename = System.currentTimeMillis()+fileName;
+            //이전 파일삭제
+            String preFileName = (String)session.getAttribute("imgname");
+            log.info("이전파일이름: " + preFileName);
+            if(preFileName != null){
+                String preFilePath = UPLOAD_DIR + preFileName.substring(preFileName.lastIndexOf("/")+1);
+                log.info("이전 파일 경로: " + preFilePath);
+                File preFile = new File(preFilePath);
+                if(preFile.exists()){
+                    if(preFile.delete()){
+                        log.info("이전파일삭제성공:{}",preFilePath);
+                    }else{
+                        log.info("이전파일삭제실패:{}",preFilePath);
+                    }
+                }
+            }
+            //새로운파일저장경로
+            File targetFile = new File(UPLOAD_DIR+newFilename);
             log.info("파일저장경로: {}", targetFile.getAbsolutePath());
+            //새로운파일저장
             file.transferTo(targetFile);
             log.info("파일저장성공: {}", fileName);
 
@@ -89,10 +112,10 @@ public class MypageController {
 
             if(username != null){
                 log.info("업뎃시작");
-                service.updateProfile(username, fileName);
+                service.updateProfile(username, newFilename);
                 log.info("업뎃완료");
 
-                String fileUrl = webPath+fileName;
+                String fileUrl = webPath+newFilename;
                 session.setAttribute("imgname", fileUrl);
                 log.info("세션이미지업뎃완:{}", fileUrl);
 
@@ -123,11 +146,97 @@ public class MypageController {
        // return "mypage/myHome";
     }
     //구매내역으로 이동
+    @PostMapping("mypage/purchaseList")
+    @ResponseBody
+    public String getPurchase(@RequestParam("username")String username,
+                              @RequestParam("usercode")int usercode){
+        return null;
+    }
     @GetMapping("mypage/purchaseList")
     public String purchaseList(){
 
         return "mypage/purchaseList";
     }
+    //구매내역리스트
+    @PostMapping("/mypage/viewOrder")
+    @ResponseBody
+    public Map<String, Object> orderList(@RequestParam("username")String username,
+                                         @RequestParam("usercode")int usercode,
+                                         @RequestParam(value="page", defaultValue = "1") int page){
+        Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalOrder(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<PaymentVO> list = service.selectOrderAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+        System.out.println(list);
+        result.put("list", list);
+        result.put("pvo", pvo);
+        return result;
+    }
+    //구매내역->구매목록상세보기
+    @PostMapping("/mypage/viewOrderDetails")
+    @ResponseBody
+    public String viewOrderDetails(@RequestParam("usercode")int usercode,
+                                   @RequestParam("username")String username,
+                                   @RequestParam("orderId")String orderId){
+        System.out.println("usercode"+usercode);
+        System.out.println("orderId"+orderId);
+        return "success";
+    }
+//    @GetMapping("mypage/viewOrderDetail")
+//    public String viewOrderDetail(){
+//        return "mypage/viewOrderDetail";
+//    }
+//    @PostMapping("mypage/viewOrderDetails")
+//    @ResponseBody
+//    public String viewOrderDetail(@RequestParam("orderId") String orderId, Model model) {
+//        // orderId를 기반으로 주문 상세 정보를 조회하고 모델에 추가
+//        System.out.println("orderId"+orderId);
+//        PaymentdetailVO list = service.getOrderId(orderId);
+//        model.addAttribute("list", list);
+//
+//        return "viewOrderDetail";
+//    }
+    @PostMapping("/mypage/complete")
+    public ModelAndView complete(
+            @RequestParam("orderId")String orderId,
+            @RequestParam("payment_method")String payment_method
+    ){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("orderId", orderId);
+        mav.addObject("payment_method", payment_method);
+        mav.setViewName("mypage/viewOrderDetail");
+        return mav;
+    }
+    //구매내역 뿌려주기
+    @PostMapping("/mypage/completed")
+    @ResponseBody
+    public Map<String,Object>completed(@RequestParam("orderId")String orderId){
+        Map<String,Object> map=new HashMap<>();
+        System.out.println("orderId:"+orderId);
+        List<CompleteVO>Cvo=new ArrayList<>();
+        Cvo=paymentService.selectCvoList(orderId);
+        map.put("Cvo",Cvo);
+        return map;
+    }
+//    @PostMapping("/mypage/completed")
+//    public List<CompleteVO> completed(@RequestParam("orderId") String orderId,
+//                                      @RequestParam("usercode") int usercode,
+//                                      Model model){
+//        List<CompleteVO> Cvo = paymentService.selectCvoList(orderId);
+//        model.addAttribute("Cvo", Cvo);
+//        model.addAttribute("orderId", orderId);
+//        return Cvo;
+//    }
 
     //마라톤신청서조회
     @GetMapping("mypage/marathonFormCheck")
@@ -151,8 +260,8 @@ public class MypageController {
     @PostMapping("/mypage/createMarathonForm")
     @ResponseBody
     public String createMarathonForm(
+            @RequestParam("usercode") int usercode,
             MarathonFormVO marathonVO){
-        System.out.println("sadf"+marathonVO);
         service.createMarathonForm(marathonVO);
         return "200";
     }
@@ -167,6 +276,7 @@ public class MypageController {
                                      @RequestParam("gender") String gender,
                                      @RequestParam("birth_date") String birthDate,
                                      @RequestParam("size") String size
+
                                      ){
         MarathonFormVO mvo = service.selectMarathonForm(usercode);
         if(mvo != null){
@@ -189,7 +299,6 @@ public class MypageController {
             @RequestParam("size") String size
     ){
         MarathonFormVO mvo = service.selectMarathonForm(usercode);
-        System.out.println("여긴오니?");
         if(mvo != null){
             mvo.setName(name);
             mvo.setTel(tel);
@@ -206,7 +315,8 @@ public class MypageController {
     //나의메이트이동
     @PostMapping("/mypage/openMymate")
     @ResponseBody
-    public String openMymate(@RequestParam("username")String username){
+    public String openMymate(@RequestParam("username")String username,
+                             @RequestParam("usercode")int usercode){
         return null;
     }
     @GetMapping("/mypage/myMate")
@@ -217,15 +327,104 @@ public class MypageController {
     @PostMapping("/mypage/mymateList")
     @ResponseBody
     public Map<String, Object> mymateList(
-            @RequestParam("usercode") int usercode
+            @RequestParam("usercode") int usercode,
+            @RequestParam(value="page", defaultValue = "1") int page
     ){
-        System.out.println("메이트유저온다"+usercode);
-        List<MemberVO> membervo = service.selectMemberAll(usercode);
-        System.out.println(membervo);
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalMate(usercode);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<MemberVO> membervo = service.selectMemberAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("member", membervo);
+        result.put("pvo", pvo);
 
         return result;
+    }
+    //메이트 신고내역 있는지 확인
+    @PostMapping("/mypage/checkReport")
+    @ResponseBody
+    public Map<String, Object> checkReport(
+            @RequestParam("usercode") int usercode,
+            @RequestParam("matchingroom") int matchingroom
+            ,@RequestParam("offender") int offender
+    ){
+        ReportVO report = service.selectReportForm(usercode, matchingroom, offender);
+        System.out.println("여기안옴?");
+        System.out.println(report);
+        Map<String, Object> result = new HashMap<>();
+        if(report != null){
+            result.put("exists", true);
+            result.put("data", report);
+        }else{
+            result.put("exists", false);
+        }
+        return result;
+    }
+    //메이트 신고하기 (DB)
+    @PostMapping("/mypage/createReport")
+    @ResponseBody
+    public ReportVO createReport(
+            @RequestParam("offender") int offender,
+            @RequestParam("usercode") int usercode,
+            @RequestParam("subjectReport") String subjectReport,
+            @RequestParam("contentReport") String contentReport,
+            @RequestParam("proofReport") MultipartFile file,
+            @RequestParam("matchingroom") int matchingroom,
+            HttpServletRequest request
+    ){
+        ReportVO rvo = new ReportVO();
+        try{
+            String saveDir = request.getServletContext().getRealPath("/resources/uploadReport/");
+            File dir = new File(saveDir);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+            if(!file.isEmpty()){
+                String original = file.getOriginalFilename();
+                String miliFile = System.currentTimeMillis()+original;
+                String savePath = saveDir+miliFile;
+                file.transferTo(new File(savePath));
+                System.out.println("확인1");
+                rvo.setVictim_code(usercode);
+                System.out.println("usercode:"+usercode);
+                rvo.setOffender_code(offender);
+                System.out.println("offender:"+offender);
+                rvo.setReport_reason(subjectReport);
+                System.out.println("subjectReport:"+subjectReport);
+                rvo.setReport_content(contentReport);
+                System.out.println("contentReports:"+contentReport);
+                rvo.setProof_img(miliFile);
+                System.out.println("miliFile:"+miliFile);
+                rvo.setMatching_room_code(matchingroom);
+                System.out.println("matchingroom:"+matchingroom);
+
+                System.out.println("DB에 저장시도");
+                service.reportMate(rvo);
+                System.out.println(rvo);
+                System.out.println("DB에 저장완");
+
+                System.out.println("offender_code: " + rvo.getOffender_code());
+                System.out.println("report_reason: " + rvo.getReport_reason());
+                System.out.println("victim_code: " + rvo.getVictim_code());
+                System.out.println("matching_room_code: " + rvo.getMatching_room_code());
+                System.out.println("report_content: " + rvo.getReport_content());
+                System.out.println("proof_img: " + rvo.getProof_img());
+            }
+            System.out.println("저장됐지?");
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("여긴오면안돼");
+        }
+        System.out.println("라스트확인");
+        return rvo;
     }
     //내기록인증하기 이동
     @PostMapping("/mypage/certificate")
@@ -244,10 +443,30 @@ public class MypageController {
     //기록인증하기리스트페이지
     @PostMapping("/mypage/certificateList")
     @ResponseBody
-    public Map<String, Object> certificateList(@RequestParam("username")String username,@RequestParam("usercode")int usercode) {
-        List<CertificateVO> list = service.selectCertificateAll(username);
+    public Map<String, Object> certificateList(@RequestParam("username")String username,
+                                               @RequestParam("usercode")int usercode,
+                                               @RequestParam(value="page", defaultValue = "1") int page) {
         Map<String, Object> result = new HashMap<>();
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+        int totalRecord = service.getTotalCertificate(username);
+        pvo.setTotalRecord(totalRecord);
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<CertificateVO> list = service.selectCertificateAll(username, pvo.getOffset(), pvo.getOnePageRecord());
+        List<OrderVO> orderList = service.getOrderInfo(usercode);
+        List<CrewMemberVO> crewMemberList = service.getCrewMember(usercode);
+        System.out.println(usercode);
+        System.out.println(crewMemberList);
+        System.out.println(list);
         result.put("list", list);
+        result.put("orderList", orderList);
+        result.put("crewMemberList", crewMemberList);
+        result.put("pvo", pvo);
         return result;
     }
     //기록인증하기
@@ -257,10 +476,17 @@ public class MypageController {
             @RequestParam("content") String content,
             @RequestParam("proof_photo") MultipartFile file,
             @RequestParam("username") String username,
+            @RequestParam("marathon_code") int marathon_code,
+            @RequestParam("usercode") int usercode,
+            @RequestParam(value = "run_option", defaultValue = "0") int run_option,
+            @RequestParam(value = "crew_option", defaultValue = "0", required = false) Integer crew_option,
+            @RequestParam(value = "crew_member_code", defaultValue = "0", required = false) Integer crew_member_code,
             HttpServletRequest request
     ){
         CertificateVO cvo = new CertificateVO();
         try{
+            int order_code = service.getOrderCode(marathon_code, usercode);
+
             String saveDir = request.getServletContext().getRealPath("/resources/uploadCertificate/");
              File dir = new File(saveDir);
              if(!dir.exists()){
@@ -275,6 +501,10 @@ public class MypageController {
                  cvo.setContent(content);
                  cvo.setProof_photo(miliFilename);
                  cvo.setUsername(username);
+                 cvo.setOrder_code(order_code);
+                 cvo.setRun_option(run_option);
+                 cvo.setCreate_crew_code(crew_option);
+                 cvo.setCrew_member_code(crew_member_code);
                  cvo.setUpdated_date(String.valueOf(new Date()));
                  System.out.println("확인2");
                  service.updateCertificate(cvo);
@@ -327,10 +557,26 @@ public class MypageController {
     @PostMapping("/mypage/myQnAList")
     @ResponseBody
     public Map<String, Object> myQnAList(@RequestParam("username")String username,
-                                      @RequestParam("usercode")int usercode){
-        List<QnAVO> list = service.selectQnAAll(usercode);
+                                      @RequestParam("usercode")int usercode,
+                                      @RequestParam(value="page", defaultValue = "1") int page){
         Map<String, Object> result = new HashMap<>();
+
+        PagingVO pvo = new PagingVO();
+        int record = 8;
+        pvo.setOnePageRecord(record);
+
+        int totalRecord = service.getTotalQnA(usercode);
+        pvo.setTotalRecord(totalRecord);
+
+        int totalPage = (int) Math.ceil((double) totalRecord / record);
+        pvo.setTotalPage(totalPage);
+        pvo.setNowPage(page);
+        pvo.setOffset((pvo.getNowPage() - 1) * pvo.getOnePageRecord());
+
+        List<QnAVO> list = service.selectQnAAll(usercode, pvo.getOffset(), pvo.getOnePageRecord());
+
         result.put("list", list);
+        result.put("pvo", pvo);
         return result;
     }
     //QnA작성
@@ -375,83 +621,82 @@ public class MypageController {
         }
         return qvo;
     }
-    //회원정보수정(DB)
-    @PostMapping("/mypage/editProfile")
+    //회원정보수정폼
+    @PostMapping("/mypage/openEdit")
     @ResponseBody
-    public ResponseEntity<Map<String,String>> editProfile(
-            @RequestParam("Authorization")String token,
+    public MemberVO openEdit(@RequestParam("username")String username,
+                                        @RequestParam("usercode")int usercode) {
+        MemberVO member = service.selectOne(username);
+        return member;
+    }
+    //회원정보수정(DB)
+    @PostMapping("/mypage/test")
+    @ResponseBody
+    public String asdf(@RequestParam("usercode")int usercode){
+        System.out.println("테스트");
+        System.out.println(usercode);
+        String a="test";
+        return a;
+    }
+
+    @PostMapping("/mypage/editt")
+    @ResponseBody
+    public String editProfile(
+            @RequestParam("username") String username,
             @RequestParam("currentPassword") String currentPassword,
             @RequestParam("newPassword") String newPassword,
+            @RequestParam("newPasswordConfirm") String newPasswordConfirm,
             @RequestParam("nickname") String nickname,
             @RequestParam("tel1") String tel1,
             @RequestParam("tel2") String tel2,
-            @RequestParam("tel3") String tel3){
+            @RequestParam("tel3") String tel3,
+            @RequestParam("zip_code") int zip_code,
+            @RequestParam("addr") String addr,
+            @RequestParam("addr_details")String addr_details,
+            @RequestParam("is_info_disclosure")String is_info_disclosure){
 
-        log.info("currentPassword:"+currentPassword);
-
-        token=token.substring("Bearer ".length());
-        String username=jwtUtil.setTokengetUsername(token);
-        MemberVO member = service.selectMember(username);
-        log.info("passchk : " + passwordEncoder.matches(currentPassword, member.getPassword()));
-        // 기존 비밀번호 확인
-        if (member == null || !passwordEncoder.matches(currentPassword, member.getPassword())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "현재 비밀번호가 일치하지 않습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        MemberVO member = service.selectOne(username);
+        System.out.println("여긴오니"+member);
+        boolean passwordChk = BCrypt.checkpw(currentPassword, member.getPassword());
+        System.out.println("비번체크:"+passwordChk);
+        if(passwordChk){
+            member.setNickname(nickname);
+            member.setTel1(tel1);
+            member.setTel2(tel2);
+            member.setTel3(tel3);
+            member.setAddr(addr);
+            member.setAddr_details(addr_details);
+            member.setIs_info_disclosure(is_info_disclosure);
+            if(newPassword!=null){
+                if(newPassword.equals(newPasswordConfirm)){
+                    String hashPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                    member.setPassword(hashPassword);
+                }else{
+                    return "false";
+                }
+            }
+            service.editProfile(member);
+            return "success";
+        }else{
+            return "fail";
         }
-
-        // 새 비밀번호가 비어 있지 않을 경우 비밀번호 업데이트
-        if (newPassword != null && !newPassword.isEmpty()) {
-            member.setPassword(passwordEncoder.encode(newPassword));
-        }
-
-        member.setNickname(nickname);
-        member.setTel(tel1);
-        member.setTel2(tel2);
-        member.setTel3(tel3);
-
-        service.editProfile(member);
-
-        Map<String, String> response = new HashMap<>();
-        return ResponseEntity.ok().body(response);
     }
-    //회원탈퇴 (DB)]
+
+    //회원탈퇴(DB)
     @PostMapping("/mypage/deleteProfile")
     @ResponseBody
-    public ResponseEntity<Map<String,String>> deleteProfile(
-            @RequestHeader("Authorization") String token,
-            @RequestParam("currentPassword") String currentPassword
-    ){
-        log.info("currentPassword:"+currentPassword);
-       // 토큰에서 사용자명 추출
-       token = token.substring("Bearer ".length());
-       String username = jwtUtil.setTokengetUsername(token);
-       MemberVO member = service.selectMember(username);
-       System.out.println(member.getPassword());
-
-       // 비밀번호 확인
-       if (member == null || !passwordEncoder.matches(currentPassword, member.getPassword())) {
-           System.out.println("비밀번호일치하는지 확인");
-           Map<String, String> response = new HashMap<>();
-           response.put("error", "비밀번호가 일치하지 않습니다.");
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-       }
-       System.out.println("비밀번호일치하는지 확인22");
-       service.deactiveProfile(username, 1);
-       Map<String, String> response = new HashMap<>();
-       response.put("message", "회원탈퇴가 완료되었습니다.");
-
-       return ResponseEntity.ok().body(response);
+    public int deleteProfile(
+            @RequestParam("usercode")int usercode,
+            @RequestParam("currentPassword")String currentPassword){
+        System.out.println(usercode);
+        System.out.println(currentPassword);
+        boolean isDeleted = service.checkPassword(usercode, currentPassword);
+        System.out.println(isDeleted);
+        if(isDeleted){
+            return 1;
+        }else{
+            return 0;
+        }
     }
-
-    /*@PostMapping("/mypage/passwordChk")
-    @ResponseBody
-    public int passwordChk(@RequestParam("currentPassword") String currentPassword,
-                           @RequestParam("username") String username) {
-
-
-    }*/
-
-
 
 }

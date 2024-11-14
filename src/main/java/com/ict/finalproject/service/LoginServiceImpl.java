@@ -1,13 +1,23 @@
 package com.ict.finalproject.service;
 
 import com.ict.finalproject.dao.LoginDAO;
+
+
+import com.ict.finalproject.dao.MemberDAO;
+import com.ict.finalproject.vo.MemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LoginServiceImpl implements LoginService {
-    @Autowired
-    LoginDAO dao;
+
+     @Autowired
+     private LoginDAO dao;
+
+
 
     @Override
     public void addToken(String refreshToken,String username) {
@@ -23,4 +33,26 @@ public class LoginServiceImpl implements LoginService {
     public void updateToken(String refreshToken, String username) {
         dao.updateToken(refreshToken,username);
     }
+
+    @Override
+    public void loginHistory(String username, String ip) {
+        dao.loginHistory(username,ip);
+    }
+
+    @Override
+    public List<MemberVO> FindIds(String name, String tel) {
+        return dao.FindIds(name,tel);
+    }
+
+    @Override
+    public int updatePassword(String username, String newPassword) {
+        return dao.updatePassword(username,newPassword);
+    }
+
+    @Override
+    public MemberVO ChangePwd(String username, String name) {
+        return dao.ChangePwd(username,name);
+    }
+
+
 }

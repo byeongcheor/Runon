@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.finalproject.dao.MarathonDAO">
+    <select id="userselect" resultType="com.ict.finalproject.vo.MarathonListVO">
+        select *
+        from   user_tbl
+        where  usercode =${param1}
+    </select>
+    <select id="usercodeSelect"  resultType="int">
+        select usercode
+        from   user_tbl
+        where  username ='${param1}'
+    </select>
+    <select id="marathonSelectPaging" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND addr LIKE CONCAT('%', #{addr}, '%')
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sort1 == 1">
+                like_count DESC
+            </when>
+            <when test="sort1 == 2">
+                hit DESC
+            </when>
+            <otherwise>
+                hit DESC
+            </otherwise>
+        </choose>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <select id="totalRecord" parameterType="PagingVO" resultType="int">
+        SELECT COUNT(*)
+        FROM marathon_list_tbl
+        WHERE 1=1  <!-- 모든 대회를 포함 -->
+        <if test="searchKey != null and searchKey != ''">
+            <if test="searchKey == 'marathon_name'">
+                AND marathon_name LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+            <if test="searchKey == 'is_active'">
+                AND is_active = #{searchWord}
+            </if>
+            <if test="searchKey == 'is_deleted'">
+                AND is_deleted = #{searchWord}
+            </if>
+        </if>
+    </select>
+
+    <!-- 마라톤 코드로 마라톤 정보 조회 -->
+    <select id="getMarathonByCode" resultType="MarathonListVO" parameterType="int">
+        SELECT
+        marathon_code,
+        marathon_name,
+        marathon_type,
+        total_distance,
+        entry_fee,
+        addr,
+        marathon_content,
+        event_date,
+        registration_start_date,
+        registration_end_date,
+        tags,
+        created_date,
+        lat,
+        lon,
+        is_updated,
+        updated_date,
+        is_active,
+        activation_date,
+        is_deleted,
+        deleted_date,
+        admin_code,
+        poster_img,
+        hit,
+        like_count
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonCode}
+    </select>
+    <select id="getMarathonById" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT marathon_code, marathon_name, lat, lon
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonId}
+    </select>
+    <!-- 장바구니 항목 추가 -->
+    <insert id="addToCart" >
+        INSERT INTO cart_tbl (quantity, price, marathon_code, usercode, cart_expiration_date)
+        VALUES (#{quantity}, #{price}, #{marathon_code}, #{usercode}, NOW())
+    </insert>
+    <!-- 사용자별 장바구니 항목 조회 -->
+    <select id="getCartByUserCode" resultType="com.ict.finalproject.vo.CartVO" parameterType="int">
+        SELECT * FROM cart_tbl
+        WHERE usercode = #{usercode}
+        AND is_deleted = 0
+    </select>
+    <update id="increaseHit" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET hit = hit + 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+
+    <select id="getFilteredTotalRecord" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM marathon_list_tbl
+        WHERE is_deleted = 0
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND addr LIKE CONCAT('%', #{addr}, '%')
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+
+    <select id="selectFilteredMarathons" parameterType="com.ict.finalproject.vo.PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE is_deleted = 0
+        <if test="year != null and year != ''">
+            AND YEAR(event_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(event_date) = #{month}
+        </if>
+        <if test="addr != null and addr != ''">
+            AND addr LIKE CONCAT('%', #{addr}, '%')
+        </if>
+        <if test="search != null and search != ''">
+            AND marathon_name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sort1 == 1">
+                like_count DESC <!-- 좋아요 순 -->
+            </when>
+            <when test="sort1 == 2">
+                hit DESC <!-- 조회 순 -->
+            </when>
+            <otherwise>
+                event_date ASC <!-- 기본 정렬 -->
+            </otherwise>
+        </choose>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <insert id="addLike" parameterType="com.ict.finalproject.vo.LikeVO">
+        INSERT INTO marathon_likes (usercode, marathon_code, created_at) VALUES (#{usercode}, #{marathon_code}, NOW())
+    </insert>
+    <select id="checkLike" parameterType="map" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </select>
+    <update id="incrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count + 1
+        WHERE marathon_code = #{marathon_code};
+    </update>
+    <delete id="removeLike" parameterType="map">
+        DELETE FROM marathon_likes
+        WHERE usercode = #{usercode} AND marathon_code = #{marathonCode}
+    </delete>
+
+    <update id="decrementLikeCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET like_count = like_count - 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET hit = hit + 1
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <select id="getMarathonDetail" parameterType="int" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        WHERE marathon_code = #{marathonCode}
+    </select>
+    <update id="updateMarathon">
+        UPDATE marathon_list_tbl
+        <set>
+            marathon_name = #{marathon_name},
+            event_date = #{event_date},
+            addr = #{addr},
+            total_distance = #{total_distance},
+            entry_fee = #{entry_fee},
+            registration_start_date = #{registration_start_date},
+            registration_end_date = #{registration_end_date},
+            marathon_content = #{marathon_content},
+            lat = #{lat},
+            lon = #{lon}
+            <if test="poster_img != null">
+                , poster_img = #{poster_img}
+            </if>
+        </set>
+        WHERE marathon_code = #{marathon_code}
+    </update>
+    <update id="deleteMarathon" parameterType="int">
+        UPDATE marathon_list_tbl
+        SET is_deleted = 1, deleted_date = NOW()
+        WHERE marathon_code = #{marathonCode}
+    </update>
+    <insert id="saveMarathon" parameterType="com.ict.finalproject.vo.MarathonListVO">
+        INSERT INTO marathon_list_tbl
+        (marathon_name,  marathon_type, total_distance, entry_fee, poster_img, event_date, addr, registration_start_date, registration_end_date, marathon_content, admin_code, lat, lon)
+        VALUES
+        (#{marathon_name}, 1, #{total_distance}, #{entry_fee}, #{poster_img}, #{event_date}, #{addr}, #{registration_start_date}, #{registration_end_date}, #{marathon_content}, 0, #{lat}, #{lon});
+    </insert>
+    <select id="getHospitalList" resultType="com.ict.finalproject.vo.HospitalVO">
+        SELECT name, latitude, longitude,
+        ST_Distance_Sphere(
+        point(longitude, latitude),
+        point(#{longitude}, #{latitude})
+        ) AS distance
+        FROM hospital_tbl
+        ORDER BY distance
+        LIMIT 30;
+    </select>
+</mapper>

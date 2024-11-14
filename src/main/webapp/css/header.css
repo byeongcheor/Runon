@@ -43,7 +43,7 @@
 body{
     margin:0;
     padding:0;
-    animation: fadein 4s;
+
 }
 @keyframes fadein {
     0% {
@@ -52,4 +52,8 @@ body{
     100% {
         opacity:1;
     }
+}
+
+.form_label{
+    color: white;
 }

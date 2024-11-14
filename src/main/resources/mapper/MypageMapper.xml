@@ -3,11 +3,60 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.finalproject.dao.MypageDAO">
+    <select id="selectOne" resultType="com.ict.finalproject.vo.MemberVO">
+        select *
+        from user_tbl
+        where username = #{param1}
+    </select>
+<!--    <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">-->
+<!--        SELECT u.*, p.mypoint-->
+<!--        FROM user_tbl u-->
+<!--        LEFT JOIN point_tbl p ON u.usercode = p.usercode-->
+<!--        WHERE username=#{username}-->
+<!--    </select>-->
     <select id="selectMember" resultType="com.ict.finalproject.vo.MemberVO">
-        SELECT u.*, p.mypoint
-        FROM user_tbl u
-        LEFT JOIN point_tbl p ON u.usercode = p.usercode
-        WHERE username=#{username}
+        <!--SELECT AllUsers.*, u.mypoint
+        FROM (
+        SELECT RANK() OVER (ORDER BY SUM(b.score_change) DESC) AS ranking,
+        a.usercode,
+        a.nickname,
+        a.profile_img,
+        a.name,
+        a.username,
+        SUM(b.score_change) AS Total_Km,
+        COALESCE(d.crew_name, 'No Crew') AS crew_name
+        FROM user_tbl a
+        JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        WHERE a.is_info_disclosure = 'Y'
+        GROUP BY a.usercode, a.nickname, a.profile_img, d.crew_name, a.name, a.username
+        ) AS AllUsers
+        LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
+        WHERE AllUsers.usercode = (select usercode from user_tbl where username = #{param1});-->
+        SELECT AllUsers.*, u.mypoint
+        FROM (
+        SELECT
+        CASE
+        WHEN SUM(b.score_change) IS NOT NULL THEN RANK() OVER (ORDER BY SUM(b.score_change) DESC)
+        ELSE NULL
+        END AS ranking,
+        a.usercode,
+        a.nickname,
+        a.profile_img,
+        a.name,
+        a.username,
+        COALESCE(SUM(b.score_change), 0) AS Total_Km,
+        COALESCE(GROUP_CONCAT(DISTINCT d.crew_name SEPARATOR ', '), 'No Crew') AS crew_name
+        FROM user_tbl a
+        LEFT JOIN record_tbl b ON a.usercode = b.usercode
+        LEFT JOIN crew_member_tbl c ON a.usercode = c.usercode
+        LEFT JOIN create_crew_tbl d ON c.create_crew_code = d.create_crew_code
+        GROUP BY a.usercode, a.nickname, a.profile_img, a.name, a.username
+        ) AS AllUsers
+        LEFT JOIN point_tbl u ON AllUsers.usercode = u.usercode
+        WHERE AllUsers.usercode = (SELECT usercode FROM user_tbl WHERE username = #{userName});
+
     </select>
     <update id="updateProfile">
         update user_tbl set profile_img = #{param2} where username = #{param1}
@@ -28,10 +77,104 @@
         set is_deleted = 1, deleted_date = now()
         where username = #{param1}
     </update>
+    <select id="getMember" resultType="com.ict.finalproject.vo.MemberVO">
+        select * from user_tbl
+        where usercode=#{usercode}
+    </select>
+    <insert id="insertDelUser">
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code)
+        select u.usercode,
+        u.username,
+        u.password,
+        u.nickname,
+        u.addr,
+        u.addr_details,
+        u.zip_code,
+        u.birthdate,
+        u.gender,
+        u.tel,
+        u.profile_img,
+        u.is_info_disclosure,
+        u.role,
+        u.is_google,
+        u.creation_date,
+        p.mypoint,
+        p.point_code
+        from user_tbl u
+        left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
+    </insert>
+    <delete id="delFromUser">
+        delete from user_tbl where usercode=#{param1}
+    </delete>
+    <delete id="delFromPoint">
+        delete from point_tbl where usercode=#{param1}
+    </delete>
+    <select id="passwordChk" resultType="com.ict.finalproject.vo.MemberVO">
+        select username, passsword
+        from user_tbl
+        where username=#{param1}
+    </select>
+    <select id="selectOrderAll" resultType="com.ict.finalproject.vo.PaymentVO">
+<!--        select o.*, m.marathon_name marathon_name-->
+<!--        from order_tbl o-->
+<!--        join marathon_list_tbl m on o.marathon_code = m.marathon_code-->
+<!--        where o.usercode = #{usercode}-->
+<!--        order by o.order_code desc-->
+<!--        limit #{offset}, #{limit}-->
+<!--        select pm.*, pd.orderId-->
+<!--        from payment_tbl pm-->
+<!--        join payment_detail_tbl pd on pm.payment_code = pd.payment_code-->
+<!--        where pm.usercode = #{usercode}-->
+<!--        order by pm.payment_code desc-->
+<!--        limit #{offset}, #{limit}-->
+<!--        SELECT *-->
+<!--        FROM (-->
+<!--        SELECT pm.*, pd.orderId,-->
+<!--        ROW_NUMBER() OVER (PARTITION BY pd.orderId ORDER BY pm.payment_code DESC) AS rn-->
+<!--        FROM payment_tbl pm-->
+<!--        JOIN payment_detail_tbl pd ON pm.payment_code = pd.payment_code-->
+<!--        WHERE pm.usercode = #{usercode} and pm.is_completed =1-->
+<!--        ) AS subquery-->
+<!--        WHERE rn = 1-->
+<!--        ORDER BY payment_code DESC-->
+<!--        limit #{offset}, #{limit}-->
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        MAX(m.marathon_count) AS marathon_count
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status != 0 AND pd.is_deleted = 0
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0
+        AND u.usercode = #{usercode}
+        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+        limit #{offset}, #{limit}
+    </select>
+    <select id="getTotalOrder">
+        select count(payment_code)
+        from payment_tbl
+        where usercode = #{param1}
+    </select>
     <select id="selectMarathonForm" resultType="com.ict.finalproject.vo.MarathonFormVO">
         SELECT *
         FROM marathon_form_tbl
-        WHERE usercode = #{param1} AND is_deleted = 0
+        WHERE usercode = #{param1}
         limit 1;
     </select>
     <select id="selectUsercode" parameterType="com.ict.finalproject.vo.MemberVO">
@@ -50,26 +193,51 @@
     <update id="updateMarathonForm">
         update marathon_form_tbl
         set name=#{name}, tel=#{tel}, addr=#{addr}, addr_details=#{addr_details},
-        gender=#{gender}, birth_date=#{birth_date}, size=#{size}, usercode=#{usercode}
+        gender=#{gender}, birth_date=#{birth_date}, size=#{size}
+        where usercode=#{usercode}
     </update>
+    <select id="getOrderId" resultType="com.ict.finalproject.vo.PaymentdetailVO">
+        select *
+        from payment_detail_tbl
+        where orderId=#{param1}
+    </select>
+    <select id="getOrderInfo" resultType="com.ict.finalproject.vo.OrderVO">
+        select o.*, m.marathon_name
+        from order_tbl o
+        join marathon_list_tbl m on o.marathon_code = m.marathon_code
+        where usercode = #{param1}
+    </select>
+    <select id="getOrderCode">
+        select order_code
+        from order_tbl
+        where marathon_code = #{param1} and usercode = #{param2}
+        limit 1
+    </select>
+    <select id="getTotalCertificate">
+        select count(certificate_code)
+        from certificate_tbl
+        where username = #{username}
+    </select>
     <select id="selectCertificateAll" parameterType="com.ict.finalproject.vo.CertificateVO">
-        select
-            c.certificate_code as certificate_code,
-            c.content as content,
-            c.proof_photo as proof_photo,
-            c.updated_date as updated_date,
-            c.result_status as result_status,
-            c.result_date as result_date
-        from certificate_tbl c
-        join order_tbl o on c.order_code = o.order_code
-        join cart_tbl ct on o.cart_code = ct.cart_code
-        join marathon_list_tbl m on ct.marathon_code = m.marathon_code
-        join user_tbl u on c.username = u.username
-        where c.username = #{param1}
+        SELECT
+        c.certificate_code AS certificate_code,
+        c.content AS content,
+        c.proof_photo AS proof_photo,
+        c.updated_date AS updated_date,
+        c.result_status AS result_status,
+        c.result_date AS result_date,
+        o.marathon_code AS marathon_code,
+        m.marathon_name AS marathon_name
+        FROM certificate_tbl c
+        JOIN order_tbl o ON c.order_code = o.order_code
+        JOIN user_tbl u ON c.username = u.username
+        JOIN marathon_list_tbl m ON o.marathon_code = m.marathon_code
+        WHERE c.username = #{username}
+        limit #{offset}, #{limit}
     </select>
     <insert id="updateCertificate" parameterType="com.ict.finalproject.vo.CertificateVO">
-        insert into certificate_tbl (content, proof_photo, result_status, order_code, username)
-        values (#{content}, #{proof_photo}, '처리중', 1, #{username})
+        insert into certificate_tbl (content, proof_photo, result_status, order_code, username, run_option, create_crew_code, crew_member_code)
+        values (#{content}, #{proof_photo}, '처리중', #{order_code}, #{username}, #{run_option}, #{create_crew_code}, #{crew_member_code})
     </insert>
     <delete id="deleteCertificate" parameterType="int">
         delete from certificate_tbl
@@ -80,23 +248,59 @@
         from certificate_tbl
         where certificate_code=#{param1}
     </select>
-    <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
-        select u.*
+    <select id="getCrewMember" resultType="com.ict.finalproject.vo.CrewMemberVO">
+        select cm.crew_member_code, cm.usercode, cm.create_crew_code, cc.crew_name
+        from crew_member_tbl cm
+        join create_crew_tbl cc on cc.create_crew_code = cm.create_crew_code
+        where cm.usercode = #{param1}
+    </select>
+    <select id="getTotalMate">
+        select count(u.usercode)
         from user_tbl u
-        where u.usercode in (
-            select a.usercode
-            from applicant_tbl a
-            where a.matching_room_code in (
-                select matching_room_code
-                from applicant_tbl
-                where usercode = #{param1}
-            )
+        join applicant_tbl a on u.usercode = a.usercode
+        where a.matching_room_code in (
+        select matching_room_code
+        from applicant_tbl
+        where usercode = #{usercode}
         )
+        and u.usercode != #{usercode}
+    </select>
+    <select id="selectMemberAll" resultType="com.ict.finalproject.vo.MemberVO">
+        select u.*, a.matching_room_code, a.writedate
+        from user_tbl u
+        join applicant_tbl a on u.usercode = a.usercode
+        where a.matching_room_code in (
+            select matching_room_code
+            from applicant_tbl
+            where usercode = #{param1}
+        )
+        and u.usercode != #{param1}
+        limit #{offset}, #{limit}
+    </select>
+    <insert id="reportMate">
+        insert into report_tbl
+        (offender_code, report_reason, victim_code, matching_room_code, report_content, proof_img)
+        values(#{offender_code}, #{report_reason}, #{victim_code}, #{matching_room_code}, #{report_content}, #{proof_img})
+    </insert>
+    <select id="selectReportForm" resultType="com.ict.finalproject.vo.ReportVO">
+        select q.*, a.report_result
+        from report_tbl q
+        left join report_reply_tbl a on q.report_code = a.report_code
+        where victim_code =#{usercode} and matching_room_code = #{matching_room_code} and offender_code = #{offender}
+        AND q.proof_img IS NOT NULL
+        limit 1
+    </select>
+    <select id="getTotalQnA">
+        select count(qna_code)
+        from qna_tbl
+        where usercode=#{param1} and is_deleted =0
     </select>
     <select id="selectQnAAll" resultType="com.ict.finalproject.vo.QnAVO">
         select *
         from qna_tbl
         where usercode=#{param1} and is_deleted = 0
+        order by qna_code desc
+        limit #{offset}, #{limit}
     </select>
     <insert id="updateQnA" parameterType="com.ict.finalproject.vo.QnAVO">
         insert into qna_tbl (qna_code, qna_subject, qna_content, usercode)
@@ -119,4 +323,9 @@
         set qna_status = #{param1}
         where qna_code = #{param2}
     </update>
+    <select id="isinCrew">
+        select count(*)
+        from create_crew_tbl
+        where usercode=#{param}
+    </select>
 </mapper>

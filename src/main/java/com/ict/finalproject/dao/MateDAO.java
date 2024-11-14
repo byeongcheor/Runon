@@ -24,6 +24,7 @@ public interface MateDAO {
     int match_out(int matching_room_code, int user_code);
     int matching_room_personnel_update_plus(int matching_room_code);
     int matching_room_personnel_update_minus(int matching_room_code);
+    int matching_complite(int matching_room_code);
     int matching_room_personnel_zero_delete();
     int usercodeSelect(String user_name);
     int hide7daysAdd(int user_code,int num);

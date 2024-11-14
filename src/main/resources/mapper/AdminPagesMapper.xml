@@ -7,11 +7,11 @@
         select count("usercode") from user_tbl
     </select>
     <select id="selectAllUser" resultType="com.ict.finalproject.vo.MemberVO">
-        select *from user_tbl where role = "ROLE_USER"
+        select *from user_tbl
         order by `usercode`  LIMIT  #{onePageRecord} offset #{offset}
     </select>
     <select id="selectMembers"  resultType="com.ict.finalproject.vo.MemberVO">
-        select *from user_tbl where role = "ROLE_USER"
+        select *from user_tbl where role = #{param1}
         order by `usercode`
     </select>
 
@@ -24,4 +24,988 @@
     <select id="getRecord" resultType="com.ict.finalproject.vo.RecordVO">
         select * from record_tbl where usercode = #{param1}
     </select>
+    <select id="selectInPay" resultType="com.ict.finalproject.vo.AdminPaymentVO">
+        select o.order_code,p.completed_date,m.marathon_name,o.price,o.quantity,o.total_amount
+        from payment_tbl p
+        join order_tbl o on p.usercode = o.usercode
+        join marathon_list_tbl m on o.marathon_code = m.marathon_code
+        where o.usercode=#{param1}
+        and p.is_completed=1
+        order by o.order_code desc
+    </select>
+
+    <insert id="insert">
+        insert into deleted_user_tbl (usercode, username, password, nickname, addr, addr_details, zip_code, birthdate, gender, tel, profile_img, is_info_disclosure, role, is_google, creation_date, mypoint, point_code)
+        select u.usercode,
+        u.username,
+        u.password,
+        u.nickname,
+        u.addr,
+        u.addr_details,
+        u.zip_code,
+        u.birthdate,
+        u.gender,
+        u.tel,
+        u.profile_img,
+        u.is_info_disclosure,
+        u.role,
+        u.is_google,
+        u.creation_date,
+        p.mypoint,
+        p.point_code
+        from user_tbl u
+        left join point_tbl p ON u.usercode = p.usercode where u.usercode=#{param1} ;
+    </insert>
+    <delete id="deluser">
+        delete from user_tbl where usercode=#{param1}
+    </delete>
+    <delete id="delpoint">
+        delete from point_tbl where usercode=#{param1}
+    </delete>
+    <update id="setDisableUserTime">
+        UPDATE user_tbl
+        SET is_disabled = 1,
+        disabled_start_date =     CASE
+        WHEN disabled_date IS NULL THEN NOW()
+        ELSE disabled_start_date
+        END,
+        disabled_date =
+        <choose>
+            <when test="disableday == 999">
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL 300 YEAR
+                ELSE NOW() + INTERVAL 300 YEAR
+                END
+            </when>
+            <otherwise>
+                CASE
+                WHEN disabled_date IS NOT NULL THEN disabled_date + INTERVAL #{disableday} DAY
+                ELSE NOW() + INTERVAL #{disableday} DAY
+                END
+            </otherwise>
+        </choose>
+        WHERE usercode = #{usercode}
+    </update>
+
+    <update id="setEnableUser">
+        update user_tbl set is_disabled=0,
+        disabled_date=null where usercode=#{param1}
+    </update>
+    <select id="getTotalRecordWithSearch" resultType="int">
+        select count(usercode)
+        from user_tbl
+
+        <where>
+            <!-- 첫 번째 검색 조건 -->
+            <if test="searchKey != null and searchWord != null  ">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+            <if test="searchKey != null and searchWord != null and searchKey2 != null and searchWord2 != null">
+                and
+            </if>
+            <!-- 두 번째 검색 조건 -->
+            <if test="searchKey2 != null and searchWord2 != null ">
+                ${searchKey2} = #{searchWord2}
+            </if>
+        </where>
+    </select>
+    <select id="selectUserWithSearch" resultType="com.ict.finalproject.vo.MemberVO">
+        select *
+        from user_tbl
+        <where>
+            <!-- 첫 번째 검색 조건 -->
+            <if test="searchKey != null and searchWord != null">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+            <if test="searchKey != null and searchWord != null and searchKey2 != null and searchWord2 != null">
+                and
+            </if>
+            <!-- 두 번째 검색 조건 -->
+            <if test="searchKey2 != null and searchWord2 != null ">
+                 ${searchKey2} = #{searchWord2}
+            </if>
+        </where>
+        order by `usercode`
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+
+    <select id="selectedMembers" resultType="com.ict.finalproject.vo.MemberVO">
+        select *from user_tbl
+        where usercode in <foreach item="usercodes" collection="list" open="(" separator="," close=")">
+        #{usercodes}
+    </foreach>
+    </select>
+    <select id="getSearchAdminTotalRecord"  resultType="int">
+        select count(usercode)
+        from  admin_tbl
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey == 'username'">
+                     usercode in (select usercode from user_tbl where username like concat('%', #{searchWord}, '%'))
+                </if>
+                <if test="searchKey == 'role'">
+                    and role = #{searchWord}
+                </if>
+                <if test='searchKey == "permission_add"'>
+                    AND permission_add =#{searchWord}
+                </if>
+
+                <if test="searchKey == 'permission_edit'">
+                    and permission_edit = #{searchWord}
+                </if>
+                <if test="searchKey == 'permission_delete'">
+                    and permission_delete = #{searchWord}
+                </if>
+                <if test="searchKey == 'is_deleted'">
+                    and is_deleted = #{searchWord}
+                </if>
+            </if>
+            <if test="searchKey != null and searchWord != null and searchKey2 != null and searchWord2 != null">
+                and
+            </if>
+            <if test="searchKey2 != null and searchWord2 != null ">
+                ${searchKey2} = #{searchWord2}
+            </if>
+        </where>
+    </select>
+    <select id="getAdminTotalRecord" resultType="int">
+        select count(admin_code) from admin_tbl
+    </select>
+    <select id="selectAdminWithSearch"  resultType="com.ict.finalproject.vo.AdminsVO">
+        SELECT
+        admin_code,
+        role,
+        permission_add,
+        permission_edit,
+        permission_delete,
+        is_deleted,
+        deleted_date,
+        usercode,
+        (SELECT username FROM user_tbl WHERE usercode = a.usercode) AS username,
+        (SELECT name FROM user_tbl WHERE usercode = a.usercode) AS name,
+        created_date
+        FROM admin_tbl a
+        <where>
+            <if test="searchKey != null and searchWord != null ">
+                <if test="searchKey == 'username'">
+                    AND usercode IN (SELECT usercode FROM user_tbl WHERE username LIKE CONCAT('%', #{searchWord}, '%'))
+
+                </if>
+                <if test="searchKey == 'role'">
+                    AND role = #{searchWord}
+                </if>
+                <if test='searchKey == "permission_add" '>
+                    AND permission_add =#{searchWord}
+                </if>
+
+                <if test="searchKey == 'permission_edit'">
+                    AND permission_edit = #{searchWord}
+                </if>
+                <if test="searchKey == 'permission_delete'">
+                    AND permission_delete = #{searchWord}
+                </if>
+                <if test="searchKey == 'is_deleted'">
+                    AND is_deleted = #{searchWord}
+                </if>
+            </if>
+            <if test="searchKey != null and searchWord != null and searchKey2 != null and searchWord2 != null">
+                and
+            </if>
+            <if test="searchKey2 != null and searchWord2 != null ">
+                ${searchKey2} = #{searchWord2}
+            </if>
+        </where>
+        order by role
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="selectAllAdmin" resultType="com.ict.finalproject.vo.AdminsVO">
+        SELECT
+        admin_code,
+        role,
+        permission_add,
+        permission_edit,
+        permission_delete,
+        is_deleted,
+        deleted_date,
+        usercode,
+        (SELECT username FROM user_tbl WHERE usercode = a.usercode) AS username,
+        (SELECT name FROM user_tbl WHERE usercode = a.usercode) AS name,
+        created_date
+        FROM admin_tbl a
+        order by role
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="selectAdminRole" resultType="com.ict.finalproject.vo.AdminsVO">
+        select *from admin_tbl where usercode=#{usercode} and is_deleted=0
+    </select>
+    <select id="selectAdmin" resultType="com.ict.finalproject.vo.AdminsVO">
+        select *from admin_tbl where usercode=#{usercode}
+    </select>
+    <update id="updateRole">
+        update admin_tbl
+        set role=#{role}
+
+        <if test='is_deleted == "Y"'>
+            , deleted_date = NOW()
+            ,is_deleted=1,
+            permission_add=0,
+            permission_edit=0,
+            permission_delete=0
+        </if>
+        <if test='is_deleted == "N"'>
+            ,deleted_date=null
+            ,is_deleted=0
+            , permission_add=#{permission_add},
+            permission_edit=#{permission_edit},
+            permission_delete=#{permission_delete}
+        </if>
+        where admin_code = #{admin_code}
+    </update>
+    <update id="updateUserRole">
+        update user_tbl
+        set
+        <if test='is_deleted eq "Y"'>
+            role = "ROLE_USER"
+        </if>
+        <if test='is_deleted eq "N"'>
+            role = "ROLE_ADMIN"
+        </if>
+        where usercode = #{usercode}
+    </update>
+
+    <update id="UpdateUsertbl">
+        update user_tbl set role="ROLE_ADMIN" where usercode=#{usercode}
+    </update>
+    <insert id="insertAdmintbl">
+        insert into admin_tbl(role,usercode) values(3,#{usercode})
+    </insert>
+    <update id="updateAdmintbl">
+        update admin_tbl set role=3,is_deleted=0,deleted_date=null where usercode=#{usercode}
+    </update>
+    <update id="userroleDown">
+        update user_tbl set role="ROLE_USER" where usercode=#{usercode}
+    </update>
+    <update id="adminroleDown">
+        update admin_tbl set is_deleted=1,deleted_date=now(),permission_add=0,permission_edit=0,permission_delete=0 where
+        usercode=#{usercode}
+    </update>
+    <select id="getSearchReportRecord" resultType="int">
+        select count(report_code)
+        from report_tbl
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey == 'all_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        offender_code in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                        or
+                        victim_code in(select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+
+                <if test="searchKey == 'offender_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        offender_code in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+                <if test="searchKey == 'victim_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        victim_code in(select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+
+            </if>
+        </where>
+    </select>
+    <select id="selectReportWithSearch" resultType="com.ict.finalproject.vo.ReportVO">
+        select report_code ,offender_code,report_reason,report_content,report_date,victim_code,report_status
+        ,o.nickname AS offender_nickname,
+        v.nickname AS victim_nickname
+        from  report_tbl r
+        LEFT JOIN
+        user_tbl o ON r.offender_code = o.usercode
+        LEFT JOIN
+        user_tbl v ON r.victim_code = v.usercode
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey == 'all_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        offender_code in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                        or
+                        victim_code in(select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+
+                <if test="searchKey == 'offender_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        offender_code in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+                <if test="searchKey == 'victim_code'">
+                    <if test="searchKey2 == 'nickname'">
+                        victim_code in(select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                    </if>
+                    <if test="searchKey2 =='report_status'">
+                        report_status=#{searchWord}
+                    </if>
+                </if>
+
+            </if>
+        </where>
+        order by report_code desc
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="getReportTotalRecord">
+        select count(report_code) from report_tbl
+    </select>
+    <select id="selectAllReport" resultType="com.ict.finalproject.vo.ReportVO">
+        SELECT
+        r.report_code,
+        r.offender_code,
+        r.report_reason,
+        r.report_content,
+        r.report_date,
+        r.victim_code,
+        r.report_status,
+        o.nickname AS offender_nickname,
+        v.nickname AS victim_nickname
+        FROM
+        report_tbl r
+        LEFT JOIN
+        user_tbl o ON r.offender_code = o.usercode
+        LEFT JOIN
+        user_tbl v ON r.victim_code = v.usercode
+        order by report_code desc
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="getVisitorsByPeriod" resultType="com.ict.finalproject.vo.AllCountVO">
+        SELECT DATE(login_date) AS visit_date, COUNT(*) AS visitor_count
+        FROM login_history_tbl
+        WHERE login_date >= CURDATE() - INTERVAL #{param1} day
+        GROUP BY DATE(login_date)
+        ORDER BY visit_date;
+    </select>
+    <select id="getYearlyVisitorCounts" resultType="com.ict.finalproject.vo.AllCountVO">
+        SELECT YEAR(login_date) AS visit_date, COUNT(*) AS visitor_count
+        FROM login_history_tbl
+        GROUP BY YEAR(login_date)
+        ORDER BY visit_date;
+    </select>
+    <select id="getCountregistration" resultType="com.ict.finalproject.vo.MarathonCountVO">
+        SELECT
+        COUNT(created_date) AS marathon_Count,
+        SUM(CASE WHEN event_date >= NOW() AND NOW() >= registration_start_date THEN 1 ELSE 0 END) AS event_count,
+        SUM(CASE WHEN event_date >= NOW() AND registration_start_date > NOW() THEN 1 ELSE 0 END) AS unstart_count,
+        SUM(CASE WHEN NOW()>event_date THEN 1 ELSE 0 END) AS end_count
+        FROM
+        marathon_list_tbl;
+    </select>
+    <select id="getCountAPlist" resultType="com.ict.finalproject.vo.AdminPaymentVO">
+     <!--   select
+        year(created_date) as completed_date,
+        sum(real_amount) as real_amount
+        from order_tbl
+        where
+        payment_status = 1
+        and created_date >= date_format(date_sub(now(),INTERVAL 2 year),"%Y-01-01")
+        group by
+        year(created_date)
+        order by
+        year(created_date) desc;-->
+        select
+        year(completed_date) as completed_date,
+        sum(total_amount) as real_amount
+        from payment_tbl
+        where
+        is_completed = 1
+        and completed_date >= date_format(date_sub(now(),INTERVAL 2 year),"%Y-01-01")
+        group by
+        year(completed_date)
+        order by
+        year(completed_date) desc;
+    </select>
+    <select id="getCountMemlist" resultType="com.ict.finalproject.vo.MemCountVO">
+        select
+            sum(case when gender="남" then 1 else 0 end) as MCount,
+            sum(case when gender="여" then 1 else 0 end) as WCount,
+            count(usercode) as allCount
+        from user_tbl;
+    </select>
+    <select id="GenderAgeCount" resultType="com.ict.finalproject.vo.AgeCountVO">
+        SELECT
+        CASE
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) BETWEEN 0 AND 19 THEN '10대'
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) BETWEEN 20 AND 29 THEN '20대'
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) BETWEEN 30 AND 39 THEN '30대'
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) BETWEEN 40 AND 49 THEN '40대'
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) BETWEEN 50 AND 59 THEN '50대'
+        WHEN FLOOR(DATEDIFF(CURDATE(), birthdate) / 365.25) >= 60 THEN '60대 이상'
+        ELSE '미기입자'
+        END AS ageGroup,
+        COUNT(usercode) AS groupCount
+        FROM user_tbl where gender=#{param}
+        GROUP BY ageGroup;
+    </select>
+    <select id="JClist" resultType="com.ict.finalproject.vo.JoinsCountVO">
+        SELECT
+            COUNT(CASE WHEN DATE(creation_date) = CURDATE() THEN 1 END) AS dailyCount,
+            COUNT(CASE WHEN YEAR(creation_date) = YEAR(CURDATE()) AND MONTH(creation_date) = MONTH(CURDATE()) THEN 1 END) AS monthlyCount
+        FROM user_tbl;
+    </select>
+    <select id="getNewPayment" resultType="com.ict.finalproject.vo.AdminPaymentVO">
+        SELECT
+        pd.orderId,
+        p.total_amount,
+        u.nickname,
+        p.completed_date
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status != 0 AND pd.is_deleted = 0
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0
+        GROUP BY pd.orderId, u.nickname, p.total_amount,p.completed_date
+        ORDER BY p.completed_date desc
+        LIMIT 5
+    </select>
+    <select id="getQnaList" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.qna_code,u.nickname,q.qna_subject,q.writedate from
+        qna_tbl q
+        join user_tbl u on q.usercode=u.usercode
+        where qna_status=0  order by q.writedate desc limit 5;
+    </select>
+    <select id="getYearsTop5list" resultType="com.ict.finalproject.vo.YearsTop5MarathonVO">
+        SELECT
+        m.marathon_name AS marathon_name,
+        SUM(o.total_amount) AS total_real_amount
+        FROM
+        order_tbl o
+        JOIN
+        marathon_list_tbl m ON o.marathon_code = m.marathon_code
+        WHERE
+        YEAR(o.created_date) = #{param1} and o.order_status=1
+        GROUP BY
+        m.marathon_name
+        ORDER BY
+        total_real_amount DESC
+        LIMIT 3;
+    </select>
+    <select id="getReportDetail" resultType="com.ict.finalproject.vo.ReportVO">
+        SELECT
+        r.report_code,
+        r.offender_code,
+        r.report_reason,
+        r.report_content,
+        r.report_date,
+        r.victim_code,
+        r.report_status,
+        o.nickname AS offender_nickname,
+        v.nickname AS victim_nickname,
+        (SELECT COUNT(*) FROM report_tbl WHERE offender_code = r.offender_code) AS report_count
+        FROM
+        report_tbl r
+        LEFT JOIN
+        user_tbl o ON r.offender_code = o.usercode
+        LEFT JOIN
+        user_tbl v ON r.victim_code = v.usercode
+        WHERE
+        r.report_code = #{param1}
+    </select>
+    <insert id="setReportReply">
+        insert into report_reply_tbl(content,report_result,process_date,report_code,admin_code) values(#{content},#{report_result},now(),
+        #{report_code},#{admin_code})
+    </insert>
+    <update id="updateReport">
+        update report_tbl set report_status=1 where report_code = #{report_code}
+    </update>
+    <select id="getReportReply">
+        SELECT
+        r.*,
+        u.nickname AS admin_nickname
+        FROM
+        report_reply_tbl r
+        JOIN
+        admin_tbl a ON r.admin_code = a.admin_code
+        JOIN
+        user_tbl u ON a.usercode = u.usercode
+        WHERE
+        r.report_code =#{report_code}
+    </select>
+    <select id="getCertificaterecode">
+        select count(certificate_code)
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <!-- 처리중일 때 -->
+                <if test="searchKey2 == '처리중'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+
+                <!-- 처리완료일 때 -->
+                <if test="searchKey2 == '처리완료'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+            </if>
+            <!-- result_status 조건 추가 -->
+            and c.result_status = #{searchKey2}
+        </where>
+    </select>
+
+
+    <select id="getCertificateTotalRecord">
+        select count(certificate_code)
+        from certificate_tbl
+    </select>
+    <select id="selectWithSearchCertificateList" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        <where>
+            <!-- searchWord가 있을 경우에만 검색 조건 추가 -->
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <!-- 처리 상태에 따른 검색 -->
+                <if test="searchKey2 == '처리중'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+
+                <if test="searchKey2 == '처리완료'">
+                    <choose>
+                        <when test="searchKey == 'username'">
+                            c.username LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                        <when test="searchKey == 'nickname'">
+                            u.nickname LIKE CONCAT('%', #{searchWord}, '%')
+                        </when>
+                    </choose>
+                </if>
+            </if>
+                and c.result_status = #{searchKey2}
+        </where>
+        order by c.certificate_code desc
+        LIMIT #{onePageRecord} offset #{offset}
+    </select>
+
+    <select id="selectAllCertificateList" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        order by certificate_code desc
+        LIMIT  #{onePageRecord} offset #{offset}
+    </select>
+    <select id="getCertificateDetail" resultType="com.ict.finalproject.vo.CertificateVO">
+        select c.*, u.nickname
+        ,cc.crew_name
+        from certificate_tbl c
+        left join user_tbl u on c.username = u.username
+        left join create_crew_tbl cc on c.create_crew_code=cc.create_crew_code
+        where c.certificate_code = #{param1}
+    </select>
+    <insert id="updateRecord">
+        INSERT INTO record_tbl (score_change, usercode, now_score, changedate,category,grade)
+        SELECT
+        #{record},
+        u.usercode,
+        IFNULL(r.now_score, 0) + #{record},
+        NOW(),
+        1,
+        2
+        FROM certificate_tbl c
+        JOIN user_tbl u ON c.username = u.username
+        LEFT JOIN record_tbl r ON r.usercode = u.usercode
+        AND r.create_crew_code IS NULL
+        WHERE c.certificate_code = #{certificate_code}
+        ORDER BY r.changedate DESC
+        LIMIT 1;
+    </insert>
+    <update id="updatePoint">
+        UPDATE point_tbl p
+        JOIN user_tbl u ON u.usercode = p.usercode
+        JOIN certificate_tbl c ON c.username = u.username
+        SET mypoint =mypoint+${record}
+        WHERE  c.certificate_code = #{certificate_code}
+    </update>
+    <select id="getPointCode" >
+        SELECT p.point_code
+        FROM point_tbl p
+        JOIN user_tbl u ON u.usercode = p.usercode
+        JOIN certificate_tbl c ON c.username = u.username
+        WHERE c.certificate_code = #{certificate_code};
+    </select>
+    <insert id="insertPointChangetbl">
+        insert into point_change_tbl(point_change,point_code) values(#{record},#{point_code})
+    </insert>
+    <update id="updatecertificate">
+        update certificate_tbl set result_status="처리완료" ,result_date=now() where certificate_code = #{certificate_code}
+    </update>
+    <insert id="updateCrewRecord">
+        INSERT INTO record_tbl (score_change, usercode, now_score, changedate, category, grade, create_crew_code)
+        SELECT
+        #{record},
+        u.usercode,
+        IFNULL(
+        (SELECT now_score
+        FROM record_tbl r
+        WHERE r.create_crew_code = cm.create_crew_code
+        AND r.usercode = u.usercode
+        ORDER BY r.changedate DESC
+        LIMIT 1), 0) + #{record},
+        NOW(),
+        1,
+        1,
+        cm.create_crew_code
+        FROM certificate_tbl c
+        JOIN user_tbl u ON c.username = u.username
+        JOIN crew_member_tbl cm ON cm.crew_member_code = #{crew_member_code}
+        WHERE c.certificate_code = #{certificate_code};
+    </insert>
+    <select id="getPaymentRecord">
+        select count(payment_code)
+        from payment_tbl where is_completed = 1 and is_deleted=0
+    </select>
+    <select id="getSearchPaymentRecord">
+        SELECT COUNT(p.payment_code)
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        <if test="searchKey == 'orderId'">
+            JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code  <!-- orderId 검색을 위해 payment_detail_tbl 조인 -->
+        </if>
+        <where>
+            p.is_completed = 1
+            AND p.is_deleted = 0
+            <if test="searchKey == 'orderId'">
+                AND pd.is_deleted = 0
+            </if>
+            <if test="searchKey != null and !searchKey.isEmpty()">
+                <if test="searchKey == 'orderId'">
+                    AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'nickname'">
+                    AND u.usercode IN (
+                    SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
+                    )
+                </if>
+            </if>
+        </where>
+
+
+    </select>
+    <select id="getPaymentSearchList" resultType="com.ict.finalproject.vo.PaymentVO">
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count  -- MAX로 감싸서 집계함
+        FROM
+        payment_tbl p
+        JOIN
+        user_tbl u ON p.usercode = u.usercode
+        JOIN
+        payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM
+        payment_detail_tbl pd
+        JOIN
+        order_tbl o ON pd.order_code = o.order_code
+        JOIN
+        marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE
+        status != 0 AND pd.is_deleted = 0
+        GROUP BY
+        pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code
+        AND pd.orderId = m.orderId
+        WHERE
+        p.is_deleted = 0
+        <if test="searchKey != null and !searchKey.isEmpty()">
+            <if test="searchKey == 'orderId'">
+                AND pd.orderId LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+            <if test="searchKey == 'nickname'">
+                AND u.usercode IN (
+                SELECT usercode FROM user_tbl WHERE nickname LIKE CONCAT('%', #{searchWord}, '%')
+                )
+            </if>
+        </if>
+        GROUP BY
+        pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+        <if test="schedule != null and !schedule.isEmpty()">
+            ORDER BY ${schedule} ${sort}
+        </if>
+        LIMIT #{onePageRecord} OFFSET #{offset};
+
+
+    </select>
+    <select id="getPaymentList" resultType="com.ict.finalproject.vo.PaymentVO">
+        SELECT
+        pd.orderId,
+        u.nickname,
+        p.total_amount,
+        p.payment_method,
+        p.completed_date,
+        m.latest_marathon_name,
+        CONCAT(IFNULL(MAX(m.marathon_count) - 1, 0)) AS marathon_count
+        FROM payment_tbl p
+        JOIN user_tbl u ON p.usercode = u.usercode
+        JOIN payment_detail_tbl pd ON p.payment_code = pd.payment_code
+        JOIN (
+        SELECT
+        pd.payment_code,
+        pd.orderId,
+        MAX(mt.marathon_name) AS latest_marathon_name,
+        COUNT(mt.marathon_name) AS marathon_count
+        FROM payment_detail_tbl pd
+        JOIN order_tbl o ON pd.order_code = o.order_code
+        JOIN marathon_list_tbl mt ON o.marathon_code = mt.marathon_code
+        WHERE status != 0 AND pd.is_deleted = 0  -- 서브쿼리에서 pd의 is_deleted 조건만 사용
+        GROUP BY pd.payment_code, pd.orderId
+        ) m ON pd.payment_code = m.payment_code AND pd.orderId = m.orderId
+        WHERE p.is_deleted = 0  -- 메인 쿼리에서 p.is_deleted 조건 추가
+        GROUP BY pd.orderId, u.nickname, p.total_amount, p.payment_method, p.completed_date, m.latest_marathon_name
+
+        <if test="schedule != null and !schedule.isEmpty()">
+            ORDER BY ${schedule} ${sort}
+        </if>
+
+        LIMIT #{onePageRecord} OFFSET #{offset}
+
+    </select>
+    <select id="getSearchQnaRecord">
+        select count(qna_code)
+        from qna_tbl
+        <where>
+          is_deleted=0
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                and
+                <if test="searchKey == 'username'">
+                      usercode in (select usercode from user_tbl where username like concat('%', #{searchWord}, '%'))
+                </if>
+                <if test="searchKey == 'nickname'">
+                    usercode in (select usercode from user_tbl where nickname like concat('%', #{searchWord}, '%'))
+                </if>
+
+
+            </if>
+            <if test="searchKey2 != null">
+                and qna_status = #{searchKey2}
+            </if>
+        </where>
+    </select>
+
+    <select id="getQnaRecord">
+        select count(qna_code)
+        from qna_tbl where is_deleted=0
+    </select>
+    <select id="getSearchQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*, u.nickname, u.username, a.writedate as answer_date
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        left join answer_tbl a on q.qna_code = a.qna_code
+        <where>
+            q.is_deleted = 0
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                and
+                <if test="searchKey == 'username'">
+                    u.username like concat('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'nickname'">
+                    u.nickname like concat('%', #{searchWord}, '%')
+                </if>
+            </if>
+            <if test="searchKey2 != null">
+                and q.qna_status = #{searchKey2}
+            </if>
+        </where>
+        order by writedate desc
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <select id="getQnaLists" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*, u.nickname, u.username, a.writedate as answer_date
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        left join answer_tbl a on q.qna_code = a.qna_code
+        where q.is_deleted=0
+        order by writedate desc
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+    <select id="getQnaDetail" resultType="com.ict.finalproject.vo.QnAVO">
+        select q.*,u.nickname,u.username
+        from qna_tbl q
+        join user_tbl u on q.usercode = u.usercode
+        where q.qna_code=#{qna_code}
+    </select>
+    <select id="getAnswer" resultType="com.ict.finalproject.vo.AnswerVO">
+        select * from answer_tbl
+        where qna_code=#{qna_code}
+    </select>
+    <insert id="insertAnswer">
+        insert into answer_tbl(answer_content,qna_code,admin_code) values(#{content},#{qna_code},
+        (select admin_code from admin_tbl where usercode=#{usercode}));
+    </insert>
+    <update id="updateqna">
+        update qna_tbl set qna_status=1 where qna_code=#{qna_code}
+    </update>
+    <update id="updateAnswer">
+        update answer_tbl
+        set answer_content = #{content},
+        writedate=now(),
+        admin_code = (select admin_code from admin_tbl where usercode = #{usercode})
+        where qna_code = #{qna_code}
+    </update>
+
+    <!-- 마라톤 게시글 총 레코드 수 조회 (검색 조건 포함) -->
+    <select id="getSearchBoardRecord" resultType="int">
+        SELECT COUNT(marathon_code)
+        FROM marathon_list_tbl
+        <where>
+            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">
+                <if test="searchKey == 'marathon_name'">
+                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'is_active'">
+                    AND is_active = #{searchWord} <!-- is_active에 대한 조건 -->
+                </if>
+                <if test="searchKey == 'is_deleted'">
+                    AND is_deleted = #{searchWord} <!-- is_deleted에 대한 조건 -->
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <!-- 검색 조건을 포함한 마라톤 게시글 목록 조회 -->
+    <select id="selectBoardWithSearch" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT *
+        FROM marathon_list_tbl
+        <where>
+            <if test="searchKey != null and searchWord != null">
+                <if test="searchKey == 'marathon_name'">
+                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')
+                </if>
+                <if test="searchKey == 'is_active'">
+                    AND is_active = #{searchWord} <!-- is_active에 대한 조건 -->
+                </if>
+                <if test="searchKey == 'is_deleted'">
+                    AND is_deleted = #{searchWord} <!-- is_deleted에 대한 조건 -->
+                </if>
+            </if>
+        </where>
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+
+
+    <!-- 전체 마라톤 게시글 총 레코드 수 조회 -->
+    <select id="getBoardTotalRecord" resultType="int">
+        select count(marathon_code) from marathon_list_tbl
+    </select>
+
+    <!-- 검색 조건 없이 전체 마라톤 게시글 목록 조회 -->
+    <select id="selectAllBoard" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT marathon_code, marathon_name, created_date, is_active, is_deleted, activation_date, deleted_date
+        FROM marathon_list_tbl
+        ORDER BY marathon_code DESC
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+    <!-- 마라톤리스트 엑셀 -->
+    <select id="selectMarathons" resultType="com.ict.finalproject.vo.MarathonListVO">
+        SELECT * FROM marathon_list_tbl;
+    </select>
+
+    <!-- 게시글 총 레코드 수 조회 (검색 조건 포함)-->
+<!--    <select id="getSearchBoardRecord" resultType="int">-->
+<!--        SELECT COUNT(marathon_code)-->
+<!--        FROM marathon_list_tbl-->
+<!--        <where>-->
+<!--            <if test="searchKey != null and searchWord != null and !searchWord.isEmpty()">-->
+<!--                <if test="searchKey == 'marathon_name'">-->
+<!--                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_active'">-->
+<!--                    AND is_active = #{searchWord}-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_deleted'">-->
+<!--                    AND is_deleted = #{searchWord}-->
+<!--                </if>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 검색 조건을 포함한 마라톤 게시글 목록 조회 &ndash;&gt;-->
+<!--    <select id="selectBoardWithSearch" parameterType="PagingVO" resultType="com.ict.finalproject.vo.MarathonListVO">-->
+<!--        SELECT *-->
+<!--        FROM marathon_list_tbl-->
+<!--        <where>-->
+<!--            <if test="searchKey != null and searchWord != null">-->
+<!--                <if test="searchKey == 'marathon_name'">-->
+<!--                    marathon_name LIKE CONCAT('%', #{searchWord}, '%')-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_active'">-->
+<!--                    AND is_active = #{searchWord}-->
+<!--                </if>-->
+<!--                <if test="searchKey == 'is_deleted'">-->
+<!--                    AND is_deleted = #{searchWord}-->
+<!--                </if>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        LIMIT #{onePageRecord} OFFSET #{offset}-->
+<!--    </select>-->
+
+<select id="selectRole">
+    select role from user_tbl where usercode=#{usercode}
+</select>
+
+
 </mapper>

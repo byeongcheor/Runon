@@ -1,3 +1,8 @@
+* {
+    animation: none !important;
+}
+
+
 body {
         margin: 0;
         padding: 0;
@@ -5,6 +10,36 @@ body {
         background-color: #121212;
         color: white;
     }
+
+/*채팅버튼*/
+.image-button {
+    position: fixed;
+    width: 60px; /* 버튼 너비 */
+    height: 60px; /* 버튼 높이 */
+    background-image: url('/img/chatICON.png'); /* 이미지 경로 */
+    background-size: cover; /* 이미지가 버튼 크기에 맞게 조정 */
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none; /* 버튼 테두리 제거 */
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    bottom: 50px; /* 화면 하단에서 20px 위 */
+    right: 50px; /* 화면 오른쪽에서 20px 왼쪽 */
+    background-color: transparent; /* 배경색을 투명하게 설정 */
+    transition: transform 0.2s, box-shadow 0.2s; /* 애니메이션 효과 */
+}
+
+.image-button:hover {
+    transform: translateY(-5px); /* 위로 이동 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
+.image-button:active {
+    transform: translateY(2px); /* 클릭 시 살짝 아래로 이동 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 줄이기 */
+}
+
+
+
 
     #bannerBox{
         width:100%;
@@ -18,7 +53,7 @@ body {
     }
     /* 전체 레이아웃 */
     .layout {
-        max-width: 1500px;
+        max-width: 1400px;
         justify-content: space-between;
         padding-top: 50px; /* 헤더 아래에 충분한 공간 */
         padding-left: 30px; /* 사이드바와의 간격 */
@@ -29,9 +64,12 @@ body {
 
     }
 
+
+
+
     /* 중앙 메인 콘텐츠 */
     .main-content {
-        width: 100%;
+        width: 90%;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -40,10 +78,10 @@ body {
     /* 프로필 박스 컨테이너 */
     .profile-container {
         margin: 30px 0;
-        width: 100%;
+        width: 80%;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 35px;
     }
 
     /* 개별 프로필 박스 */
@@ -195,7 +233,7 @@ body {
         border: 2px solid #fff;
         border-radius: 10px;
         background-color: #CCFF47;
-        width: 130px;
+        width: 140px;
         color: black;
         font-size: 16px;  /* 헤더 메뉴와 동일한 텍스트 크기 */
         font-weight: bold;  /* 헤더 메뉴와 동일한 굵기 */
@@ -215,23 +253,19 @@ body {
         position: sticky;
         top: 100px; /* 헤더 아래로 100px 고정 */
         z-index: 20; /* chatbox보다 높은 z-index로 설정 */
-        margin-left:100px;
-
-
-
     }
     .ranking {
         top: 100px;
         width: 300px;
         background-color: #1e1e1e;
         color: #fff;
-        margin: 15px 0;
+        margin-top: 39px;
         padding: 10px 20px;
         border-radius: 10px;
-        max-height: 210px;
-        overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
+        max-height: 900px;
+        overflow-y: auto;
+        margin-left:30px;
     }
-
     .ranking::-webkit-scrollbar {
         width: 8px;
         margin-top: 10px;
@@ -245,13 +279,14 @@ body {
     .ranking::-webkit-scrollbar-thumb:hover {
         background-color: #555;
     }
+
     .ranking .menu-title {
         position: sticky; /* 스크롤에 따라 고정되게 설정 */
         top: 0; /* 상단에 고정 */
         background-color: #1e1e1e; /* 배경색 고정 */
         z-index: 100; /* 다른 요소보다 위에 있도록 설정 */
         padding: 10px 10px; /* select-box와 동일한 패딩 */
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         margin-top: 15px;
         font-size: 16px; /* select-box와 동일한 텍스트 크기 */
         font-weight: 500; /* select-box와 동일한 텍스트 굵기 */
@@ -267,11 +302,11 @@ body {
     }
 
     .ranking ul li {
-        padding: 5px 5px;
+        padding: 1px 5px;
         cursor: pointer;
         color: white;
         transition: 0.3s;
-        margin-left: 15px;
+        margin-left: 10px;
     }
 
     .ranking ul li:hover {
@@ -286,18 +321,19 @@ body {
     }
 
     .rank-list li {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
+       display: flex;
+       align-items: center;
+       justify-content: flex-start; /* 왼쪽 정렬 */
+       padding: 10px 0;
     }
-    .profile-img {
+    .profile_img {
         width: 40px;
         height: 40px;
         border-radius: 50%; /* 이미지를 둥글게 */
 
 
     }
-    .rank-list li:hover .profile-img {
+    .rank-list li:hover .profile_img {
         border-color: #CCFF47; /* 마우스 오버 시 연두색 테두리 */
         box-shadow: 0 0 8px #CCFF47; /* 마우스 오버 시 부각되는 효과 */
     }
@@ -320,11 +356,49 @@ body {
         font-size: 12px;
         color: #ff4d4d;
     }
+    .grade {
+        display: inline-block;
+        width: 30px; /* 고정 너비 */
+        text-align: center;
+        white-space: nowrap; /* 한 줄 유지 */
+        margin-right: 10px; /* 프로필 이미지와의 간격 */
+    }
 
     .crew-name {
         font-size: 12px;
         color: #CCFF47;
-        margin-left: 10px; /* .runkm 옆에 배치 */
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 130px;
+    }
+    .rank_name {
+
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    .age{
+       font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .run_km { /* 매칭프로필 */
+        font-size: 13px;
+        color: #ff4d4d;
+        margin-bottom: 3px;
+    }
+
+    .crew_name { /* 매칭프로필 */
+        font-size: 13px;
+        color: #CCFF47;
+        margin-left: 10px;
+        margin-bottom: 3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width:156px
+
     }
     .more {
         margin-top: 12px;
@@ -336,30 +410,61 @@ body {
 
 
 /* 오른쪽 채팅창 */
+#taMsg {
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+    overflow-y: auto;
+}
 #chatbox {
+    display: none;
     height: 600px;
-    width: 450px;
+    width: 400px;
     background-color: #1e1e1e;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
     border-radius: 10px;
     margin-right: 20px;
+    bottom: 50px; /* 화면 하단에서 20px 띄움 */
+    right: 90px; /* 화면 오른쪽에서 20px 띄움 */
     max-height: 600px; /* 원하는 고정된 높이로 변경 */
-    overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
-    position: sticky;
-    top: 100px; /* 해더 아래로 100px 고정 */
+
+    position: fixed;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+
+}
+/* 채팅창 상단 헤더 부분 */
+.chatbox-header {
+    padding: 0px;
+    color: white;
+    display: flex;
+    position: sticky; /* 스크롤 시에도 고정 */
+    top: 0;
     z-index: 10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
-#chatbox::-webkit-scrollbar {
+/* 닫기 버튼 스타일 */
+.close-chat-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+.close-chat-btn:hover {
+    color: #CCFF47;
+}
+#taMsg::-webkit-scrollbar {
     width: 6px;
-    margin-bottom: 10px; /* 하단에 10px 간격 추가 */
+
 }
-#chatbox::-webkit-scrollbar-thumb {
+#taMsg::-webkit-scrollbar-thumb {
     background-color: #fcf6f6; /* 스크롤바 색상 */
     border-radius: 10px;
 }
-#chatbox::-webkit-scrollbar-thumb:hover {
+#taMsg::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
 .chat-message {
@@ -390,6 +495,9 @@ body {
     display: flex;
     justify-content: space-between;
     background-color: #2e2e2e;
+    position: sticky; /* 고정된 위치에 있게 설정 */
+    bottom: 0; /* 하단에 고정 */
+    z-index: 10;
 }
 
 
@@ -400,11 +508,11 @@ body {
     border-radius: 5px;
     margin-right: 10px;
 }
-.profile-img {
+.profile_img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-left:5px;
+   margin:5px 15px 10px 10px
 }
 
 .message-info {
@@ -418,9 +526,19 @@ body {
     margin-bottom: 2px;
     color:white;
 }
+#reportBtn {
+    padding: 10px 20px;
+    background-color: red;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-
-#chatbox .chat-input button {
+#sendBtn {
     padding: 10px 20px;
     background-color: #CCFF47;
     border: 2px solid #fff;
@@ -478,7 +596,6 @@ body {
     margin-top: 5px;
     text-align: left;
 }
-
 /* 모달 공통 스타일 */
 .modal {
   display: none;
@@ -655,6 +772,84 @@ body {
 .mate-modal-footer button:hover {
     background-color: #6ba82d;
 }
+/* 채팅 리스트 전체 스타일 */
+#chatList {
 
+    height: 600px;
+    width: 400px;
+    background-color: #1e1e1e;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 20px;
+    bottom: 50px; /* 화면 하단에서 20px 띄움 */
+    right: 90px; /* 화면 오른쪽에서 20px 띄움 */
+    max-height: 600px; /* 원하는 고정된 높이로 변경 */
+    overflow-y: auto; /* 넘칠 경우 스크롤 표시 */
+    position: fixed;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    flex-grow: 1; /* 채팅 메시지가 입력창을 밀어내도록 */
+}
 
+/* 리스트 숨김 처리 */
+.hidden {
+    display: none;
+}
+
+/* 텍스트와 날짜를 담는 컨테이너 */
+.chat-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* 개별 채팅 항목 */
+.chat-item {
+    display: flex;
+    justify-content: space-between; /* 날짜를 오른쪽에 배치하기 위해 사용 */
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #292929;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 색이 부드럽게 변하게 함 */
+}
+.chat-item:hover {
+    background-color: #424242; /* 마우스를 올렸을 때 색상 변경 */
+}
+
+.chat-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #333;;
+}
+/* 날짜 스타일 */
+.chat-date {
+    font-size: 12px;
+    color: gray; /* 날짜를 살짝 흐리게 표시 */
+}
+
+.chat-text {
+    font-size: 16px;
+}
+
+/*신고버튼*/
+.header-icons {
+    display: flex;
+    align-items: center;
+}
+
+.bell-icon {
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+button#reportBtn {
+    background-color: #f44336; /* 신고 버튼 색상 */
+}
 

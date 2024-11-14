@@ -18,4 +18,10 @@ public class CertificateVO {
     private String result_date;
     private String username;
     private int order_code;
+    private int run_option;
+    private int create_crew_code;
+    private String nickname;
+    private int crew_member_code;
+    private String crew_name;
+
 }

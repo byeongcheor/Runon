@@ -1,10 +1,11 @@
 
-let clickCount = 0;
+if (typeof clickCount==='undefined'){
+    let clickCount=0;
+}
+clickCount=0;
 function report(){
     const submenus = document.querySelectorAll('.submenu');
     clickCount++;
-
-
     submenus.forEach(submenu => {
         if (clickCount % 2 === 1) {
             submenu.classList.remove("hidden");
@@ -21,22 +22,9 @@ function report(){
         }
     });
 }
-// window.onload=function(){
-//     console.log(testtoken);
-//     $.ajax({
-//         url:"/adminPages/adminCheck",
-//         type:"post",
-//         data:{
-//             token:testtoken
-//         },
-//         success:function(r){
-//             var role=r.role;
-//
-//             if(role !="ADMIN"){
-//                 window.location.href="/";
-//             }
-//         }
-//     });
-//
-//
-// }
+function alink(url){
+    window.location.href=url;
+}
+function gohome(){
+    window.location.href="/";
+}

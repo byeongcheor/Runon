@@ -20,7 +20,6 @@
     .body_container{
         background-color: white;
         width: 1000px;
-        height: 900px;
         margin: 0 auto;
         border-radius: 10px 10px 0 0;
         padding: 30px;
@@ -40,7 +39,7 @@
         border-bottom: 1px solid #ddd;
         width: 90%;
         margin: 0 auto;
-        line-height: 30px;
+        line-height: 40px;
     }
     .modal {
         display: none;  /* 처음에는 숨겨둠 */
@@ -80,28 +79,99 @@
     .modal {
         z-index: 1000;  /* 다른 요소들 위에 모달을 표시 */
     }
+    .inputs{
+        border: 1px solid #d9e0e6;
+        background-color: #f8fafb;
+        width: 100%;
+        height: 54px;
+        border-radius: 16px;
+        padding: 14px 15px;
+        font-size: 16px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+    .modal-contents button{
+        background-color: #1570ff;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        margin-bottom: 20px;
+        line-height: 40px;
+        border-radius: 5px;
+        color: white;
+    }
+    .modal-content textarea{
+        border: 1px solid #d9e0e6;
+        background-color: #f8fafb;
+        width: 100%;
+        border-radius: 16px;
+        padding: 14px 15px;
+        font-size: 16px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+    .pagination .page-link{
+        color: black;
+    }
+    .pagination .page-link:hover {
+        color: #fff; /* 호버 시 텍스트 색상 */
+        background-color: black; /* 호버 시 배경색 */
+    }
+    /* 활성화된 페이지 아이템 색상 변경 */
+    .pagination .page-item.active .page-link {
+        background-color: black; /* 배경색 */
+        border-color: black;     /* 테두리 색상 */
+        color: white;              /* 텍스트 색상 */
+    }
+
+    /* 활성화된 페이지 아이템 호버 시 색상 변경 */
+    .pagination .page-item.active .page-link:hover {
+        background-color: grey; /* 호버 시 배경색 */
+        border-color: grey;     /* 호버 시 테두리 색상 */
+    }
+    #paging{
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+
 </style>
 <script>
     setTimeout(function(){
+        var page;
+        reloadPage(page);
+    },100);
+    function reloadPage(page){
+        if(page==null){
+            page=1;
+        }
         $.ajax({
             url:"/mypage/myQnAList",
             type:"post",
             data:{
                 username:username1,
                 usercode:usercode1,
-                Token:ToKen
+                Token:ToKen,
+                page:page
             } ,
             success:function(r){
-
                 var tag="";
-
-                $.each(r.list, function(i, vo){
-                    if (vo.qna_status==0){
-                        vo.qna_status="처리중";
-                    }else{
-                        vo.qna_status="처리완료";
-                    }
+                var pvo= r.pvo;
+                if(r.list.length==0){
                     tag += `
+                        <div class="row" style="text-align: center; margin-top: 40px;">
+                            <p>1:1문의한 내역이 없습니다.</p>
+                        </div>
+                    `;
+                }else{
+                    $.each(r.list, function(i, vo){
+                        if (vo.qna_status==0){
+                            vo.qna_status="처리중";
+                        }else{
+                            vo.qna_status="처리완료";
+                        }
+                        tag += `
                             <div class="row">
                                 <div class="col-sm-1 p-2">`+vo.qna_code+`</div>
                                 <div class="col-sm-4 p-2"><a onclick="submitviewQnA(`+vo.qna_code+`)">`+vo.qna_subject+`</a></div>
@@ -112,13 +182,32 @@
                                 </div>
                             </div>
                         `;
-                });
+                    });
+                }
                 document.getElementById("list").innerHTML = tag;
+
+                var paginationTag="";
+
+                if (pvo.nowPage > 1) {
+                    paginationTag += "<li class= 'page-item'><a class='page-link' href='javascript:reloadPage("+(pvo.nowPage - 1)+";'><</a></li>";
+                }
+                for (var p = pvo.startPageNum; p <= pvo.startPageNum + pvo.onePageNum - 1; p++) {
+                    if (p <= pvo.totalPage) {
+                        paginationTag += "<li class='page-item " + (pvo.nowPage === p ? "active" : "") + "'><a class='page-link' href='javascript:reloadPage(" + p + ");'>" + p + "</a></li>";
+                    }
+                }
+                if (pvo.nowPage < pvo.totalPage) {
+                    paginationTag += "<li class='page-item'><a class='page-link' href='javascript:reloadPage(" + (pvo.nowPage + 1) + ");'>></a></li>";
+                }
+                $(".pagination").html(paginationTag);
+
             },error:function (e){
-                alert(e);
+                /*alert(e);*/
             }
         });
-    },1000);
+    }
+
+
     //모달열기
     function openModal(){
         var modal = document.getElementById("uploadQnA");
@@ -165,8 +254,8 @@
                 closeModal();
                 location.reload();
             },error: function(e){
-                alert("실패");
-                console.log(e);
+                /*alert("실패");
+                console.log(e);*/
             }
         });
         return false;
@@ -200,7 +289,7 @@
                 usercode: usercode1,
                 qna_code: qna_code
             },success: function(r){
-                console.log(r);
+                /*console.log(r);*/
                 document.getElementById("subject1").value = r.qna_subject;
                 document.getElementById("content1").value = r.qna_content;
                 if(r.answer_content){
@@ -209,7 +298,7 @@
                 openViewQnA();
             },error: function(e){
                 alert("조회실패..");
-                console.log(e);
+               /* console.log(e);*/
             }
         })
         return false;
@@ -237,11 +326,11 @@
         <div id="uploadQnA" class="modal" style="display:none;">
             <div class="modal-content" style="width: 20%;">
                 <span class="close-button" onclick="closeModal()">&times;</span>
-                <h2 style="text-align: center">QnA작성하기</h2>
-                <form method="post"  action="/" onsubmit="return submitQnA()">
+                <h2 style="font-weight: 700; font-size: 20pt; line-height: 40px;">QnA작성하기</h2>
+                <form class="modal-contents" method="post"  action="/" onsubmit="return submitQnA()">
                     <div>
                         <div>
-                            <input type="text" name="subject" id="subject" placeholder="제목을 입력하세요." required/>
+                            <input class="inputs" type="text" name="subject" id="subject" placeholder="제목을 입력하세요." required/>
                         </div>
                         <div>
                             <textarea name="content" id="content" placeholder="내용을 입력하세요." required></textarea>
@@ -256,22 +345,33 @@
 
         <div id="viewQnA" class="modal" style="display:none;">
             <div class="modal-content" style="width: 20%;">
-                <span class="close-button" onclick="closeViewQnA()">&times;</span>
+                <span style="text-align: right;" class="close-button" onclick="closeViewQnA()">&times;</span>
                 <h2 style="text-align: center">QnA</h2>
-                <form method="post"  action="/" onsubmit="return submitviewQnA()">
+                <form method="post"  class="modal-contents" action="/" onsubmit="return submitviewQnA()">
                     <div>
                         <div>
-                            <input type="text" name="subject" id="subject1" readonly/>
+                            <div>문의제목</div>
+                            <div>
+                                <input class="inputs" type="text" name="subject" id="subject1" readonly/>
+                            </div>
                         </div>
                         <div>
-                            <textarea name="content" id="content1" readonly></textarea>
+                            <div>문의내용</div>
+                            <div>
+                                <textarea style="height: auto;" name="content" id="content1" readonly></textarea>
+                            </div>
                         </div>
                         <div>
-                            <textarea name="answer" id="answer1"  readonly></textarea>
+                            <div>관리자답변</div>
+                            <div>
+                                <textarea style="height: 250px;" name="answer" id="answer1"  readonly></textarea>
+                            </div>
                         </div>
+
                     </div>
                 </form>
             </div>
         </div>
+        <div class="pagination" id="paging"></div>
     </div>
 </div>

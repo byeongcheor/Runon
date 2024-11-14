@@ -1,32 +1,39 @@
-body{
-    animation: none;background-color: black;
+body {
+    animation: none;
+    background-image: url('/img/loginback.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    filter: opacity(0.85);
 }
 
 .loginFrm{
-    width: 350px;  margin: 0 auto;
-    /*overflow-y:auto;*/
+    width: 300px;  margin: 0 auto;
 }
 .loginFrm h1{
     text-align: center; margin: 50px 0 30px;
 }
 .loginFrm input[type="text"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
+    width: 300px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 3px solid #ddd;  font-size:16px;
 }
 .loginFrm input[type="password"]{
-    width: 350px; padding: 10px; margin: 10px 0; border-radius: 10px;
-    border: 2px solid #ddd;  font-size: 1.1em;
+    width: 300px; padding: 10px; margin: 10px 0; border-radius: 10px;
+    border: 3px solid #ddd;  font-size: 16px;
 }
 .loginFrm input[type="password"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
+    border: 3px solid #ccff33;
+    outline: none;
 }
 .loginFrm input[type="text"]:focus {
-    border: 2px solid #87CEEB; /* 포커스 시 테두리 색상 변경 */
-    outline: none; /* 기본 포커스 윤곽선 제거 */
+    border: 3px solid #ccff33;
+    outline: none;
 }
 .loginbtn{
-    width: 350px; color: #fff; background: #87CEEB; font-size: 1.2em;
+    width: 300px; color:black; background: #ccff33; font-size:16px;
     border-style: none;
     padding: 10px; margin: 10px 0; border-radius: 10px;
 }
@@ -34,18 +41,51 @@ body{
 .find{
     text-align: center;
     padding: 10px; margin: 10px 0;
-    color:#696969;
+    color: #ddd;
+    font-size:16px;
 
 }
 .find a:link, .find a:visited{
     color:#696969;
 }
 .find a:hover{
-    color: #87CEEB;
+    color:  #ccff33;
     font-weight: bold;
 }
 
 header,footer{display:none;}
 .loginTop img{
-    width: 300px;
+    width: 240px;
 }
+
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  transition: background-color 0.2s ease;
+  font-size: 16px;
+  width: 285px;
+  border-radius: 10px;
+  border: 3px solid #ddd;
+  padding: 4px;
+
+}
+
+.google-login-btn a {
+  text-decoration: none;
+  color: #606366;
+  display: flex;
+  align-items: center;
+}
+
+.google-login-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.google-logo {
+  width: 25px;
+  height: 25px;
+  margin-right:10px;
+}
+

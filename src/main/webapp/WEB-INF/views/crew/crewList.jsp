@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="${pageContext.request.contextPath}/js/crew.js" type="text/javascript"></script>
 
+
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -23,11 +24,17 @@
     </div>
 
     <div id="crew_body">
-        <div id="crew_nav">
+        <div id="crew_nav" >
             <ul>
-                <li><a href="/crew/crewList">크루모집</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
-                <li><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal">나의 크루</a></li>
+                <li id="crewFind"><a href="/crew/crewList">크루모집</a></li>
+                    <c:if test="${user_code != 0}">
+                        <li ><a href="#" data-bs-toggle="modal" data-bs-target="#crewCreateModal" onclick="resetForm()">크루생성</a></li>
+                        <li id="myCrew"><a href="#" data-bs-toggle="modal" data-bs-target="#myCrewModal" onClick="crew_page(2)">나의 크루</a></li>
+                    </c:if>
+                    <c:if test="${user_code == 0}">
+                        <li onclick="login()">크루생성</li>
+                        <li onclick="login()">나의 크루</li>
+                    </c:if>
             </ul>
         </div>
     </div>
@@ -56,7 +63,6 @@
                 </select>
                 <select class="form-select" name="search" id="addr" onchange="select_box_change2();">
                     <option value="">지역</option>
-                    <option value="">전체</option>
                     <option value="서울">서울</option>
                     <option value="경기">경기</option>
                     <option value="부산">부산</option>
@@ -79,7 +85,14 @@
                 <input type="text" name="searchWord" id="searchWord" />
                 <button type="submit" class="btn btn-outline-secondary" onClick="crew_list_select()">Search</button>
             </div>
-            <button class="add-btn" onClick="crew_page()"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            <c:if test="${user_code != 0}">
+                <button class="add-btn" onClick="crew_page(1)"data-bs-toggle="modal" data-bs-target="#createNewTeamModal">➕</button>
+            </c:if>
+            <c:if test="${user_code == 0}">
+                <button class="add-btn" onClick="login()">➕</button>
+            </c:if>
+
+
         </div>
     </div>
 
@@ -87,17 +100,17 @@
         <div class="list_wrapper">
             <ul id="crew_list">
                 <c:forEach var="cvo" items="${list}">
-                    <li class="list_item" onClick="crew_page_detail(${cvo.create_crew_code})">
+                    <li class="list_item">
                         <div class="crew_profileimage">
                             <div class="profileBox">
                                 <img src="/crew_upload/${cvo.logo}" class="profileImg">
                             </div>
                         </div>
-                        <div class="crew_content">
+                        <div class="crew_content" onClick="crew_page_detail(${cvo.create_crew_code},${cvo.crew_write_code})">
                             <div class="crew_title">
                                 <span class="crewname"style=" font-weight: bold; font-size:16px;"><b>${cvo.crew_name}</b></span>
                                 <span class="count">🏃‍♀️${cvo.num}<span>
-                                <span class="count">멤버모집<span>
+                                <span class="count2">멤버모집<span>
                             </div>
                             <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">
                                 <span class="crewaddr">${cvo.addr}</span>&nbsp;&nbsp;&nbsp;
@@ -117,37 +130,35 @@
             </ul>
         </div>
     </div>
-    <!-- 페이징 -->
-    <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
-        <!-- 이전페이지 -->
-        <!-- 첫번째 페이지 -->
-        <c:if test="${pvo.nowPage==1}">
-            <li class="page-item"><a class="page-link" href="javascript:void(0);"><</a></li>
-        </c:if>
+ <!-- 페이징 -->
+  <ul class="pagination justify-content-center" style="margin:100px;" id="paging">
+      <!-- 이전페이지 -->
+      <c:if test="${pvo.nowPage == 1}">
+          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);"><</a></li>
+      </c:if>
 
-        <!-- 첫번째 페이지가 아니면 -->
-        <c:if test="${pvo.nowPage>1}">
-            <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage-1});">Previous</a></li>
-        </c:if>
+      <c:if test="${pvo.nowPage > 1}">
+          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage - 1});"><</a></li>
+      </c:if>
 
-        <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum+pvo.onePageNum-1}">
-            <c:if test="${p<=pvo.totalPage}">
-                <li class='page-item <c:if test="${p==pvo.nowPage}">active</c:if>'>
-                    <a class="page-link" href="javascript:crew_list_select(${p});">${p}</a>
-                </li>
-            </c:if>
-        </c:forEach>
+      <c:forEach var="p" begin="${pvo.startPageNum}" end="${pvo.startPageNum + pvo.onePageNum - 1}">
+          <c:if test="${p <= pvo.totalPage}">
+              <li class='page-item ${p == pvo.nowPage ? "active" : ""}'>
+                  <a class="page-link" href="javascript:crew_list_select(${p});">${p}</a>
+              </li>
+          </c:if>
+      </c:forEach>
 
-        <!-- 다음페이지 -->
-        <c:if test="${pvo.nowPage==pvo.totalPage}">
-            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-        </c:if>
-        <c:if test="${pvo.nowPage<pvo.totalPage}">
-            <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage+1});">></a></li>
-        </c:if>
-    </ul>
+      <!-- 다음페이지 -->
+      <c:if test="${pvo.nowPage == pvo.totalPage}">
+          <li class="page-item disabled"><a class="page-link" href="javascript:void(0);">></a></li>
+      </c:if>
+      <c:if test="${pvo.nowPage < pvo.totalPage}">
+          <li class="page-item"><a class="page-link" href="javascript:crew_list_select(${pvo.nowPage + 1});">></a></li>
+      </c:if>
+  </ul>
 
-    <!-- 첫 번째 모달 -->
+<!-- 첫 번째 모달 -->
     <form id="crewCreateForm" enctype="multipart/form-data">
         <div class="modal fade" id="crewCreateModal" tabindex="-1" aria-labelledby="crewCreateModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
@@ -199,7 +210,6 @@
                                 <label for="city" class="form-label">도시</label>
                                 <select class="form-control text-center" name="city" id="city" onchange="select_box_change3('1');">
                                     <option value="" selected>지역</option> <!-- 기본으로 선택 -->
-                                    <option value="" selected>전체</option>
                                     <option value="서울">서울</option>
                                     <option value="경기">경기</option>
                                     <option value="부산">부산</option>
@@ -268,21 +278,19 @@
             </div>
         </div>
     </form>
-
     <!-- 플러스 버튼을 클릭하면 나오는 첫번째 모달 -->
     <div class="modal fade" id="createNewTeamModal" tabindex="-1" aria-labelledby="createNewTeamModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createNewTeamModalLabel">어떤 걸 하시겠어요?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id=plus_modal></button>
                 </div>
                 <div class="modal-body" id="crew_page">
                 </div>
             </div>
         </div>
     </div>
-
     <!-- 플러스 버튼을 클릭하면 나오는 두번째 모달 -->
     <div class="modal fade" id="crewInfoModal" tabindex="-1" aria-labelledby="crewInfoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -298,7 +306,6 @@
                             <label for="city" class="form-label">도시</label>
                             <select class="form-control text-center" id="city2" name="city" onchange="select_box_change3('2');">
                                 <option value="" selected>지역</option> <!-- 기본으로 선택 -->
-                                <option value="" selected>전체</option>
                                 <option value="서울">서울</option>
                                 <option value="경기">경기</option>
                                 <option value="부산">부산</option>
@@ -353,7 +360,6 @@
             </div>
         </div>
     </div>
-
     <!-- 3번째 모달 -->
     <form id="crew_write_add" enctype="multipart/form-data">
         <input type=hidden id='third_crew_code' name='third_crew_code'>
@@ -416,13 +422,13 @@
                         </div>
 
                         <div id="photoPreviewSection" style="display: none; position: relative;">
-                            <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 100%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
+                            <img id="teamPhotoPreview" src="" alt="팀 사진 미리보기" style="width: 80%; height: auto; border-radius: 5px; position: relative; z-index: 1;">
                             <button type="button" class="btn delete-btn" id="deletePhotoBtn" onclick="deletePhoto()" style="position: absolute; top: 10px; left: 10px; z-index: 2; background-color: rgba(255, 255, 255, 0.7); border: none;">지우기</button>
                         </div>
 
                         <div class="mt-3">
                             <label class="form-label">크루 소개</label>
-                            <textarea id="teamIntro3" name='teamIntro3' class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 200px;"></textarea>
+                            <textarea id="teamIntro3" name='teamIntro3' class="form-control" placeholder="여기를 눌러 크루를 소개하세요" style="height: 300px;"></textarea>
                         </div>
 
                         <div class="btn-group mt-3">
@@ -439,26 +445,11 @@
       <div class="modal-dialog modal-dialog-centered custom-modal-width">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="myCrewModalLabel">내 팀</h5>
+            <h5 class="modal-title" id="myCrewModalLabel">나의 크루</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- 팀 리스트 -->
-            <ul class="team-list">
-              <!-- 팀 아이템 예시 -->
-              <li class="team-item">
-                <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
-                  <div class="team-name">선풍기</div>
-                </a>
-              </li>
-              <li class="team-item">
-                <a class="team-link">
-                  <img src="/img/man1.png" class="team-emblem" alt="팀 이미지">
-                  <div class="team-name">영현영선</div>
-                </a>
-              </li>
-              <!-- 다른 팀 아이템도 같은 구조로 추가 -->
+            <ul class="team-list" id='team_list'>
             </ul>
           </div>
         </div>
@@ -466,16 +457,13 @@
     </div>
 
 <script>
-//setTimeout(function(){
-//                 alert(username1);
-// }, 1500);
-//setTimeout(function(){
-//            alert(usercode1);
-//}, 2000);
+
+var Authorization = localStorage.getItem("Authorization");
+var clog=console.log;
+var usercode=${user_code};
+/*clog('usercode : '+usercode);*/
 
 
-    var Authorization = localStorage.getItem("Authorization");
-    var clog=console.log;
     var seoulDistricts = [
         "강남구", "강동구", "강북구", "강서구", "관악구", "광진구",
         "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구",
@@ -554,8 +542,6 @@
     var jejuDistricts = [
         "서귀포시", "제주시"
     ];
-
-
 
     function select_box_change3(flag) {
 
@@ -644,7 +630,7 @@
         }
 
         $('#addr_gu').html('');
-        var list = '<option value="">전체</option>';
+        var list = '';
 
         if ($('#addr').val() == '서울') {
             seoulDistricts.forEach(function (district) {
@@ -731,12 +717,19 @@
 
     $(document).ready(function() {
         $('#addr_gu').hide();
-        crew_page();
+       if(usercode!=0){
+          crew_page(1);
+       }
+       else{
+          $('.list_item').removeAttr('onclick');
+       }
     });
     // 모달 닫기 확인
     function confirmClose(modalId) {
         if (confirm("닫으시면 선택한 정보가 사라집니다. 닫으시겠습니까?")) {
-            $('#' + modalId).modal('hide');
+            $('#' + modalId).modal('hide'); // 모달 숨기기
+            $('.modal-backdrop').remove(); // 모달 백드롭(블러 처리된 배경) 강제 제거
+            $('body').removeClass('modal-open'); // 모달 닫힌 후 'modal-open' 클래스가 남아있다면 제거
         }
     }
     // Enter 키 입력 방지
@@ -746,84 +739,100 @@
         }
     });
 
-    function crew_list_select(panging){
-        var list = '';
-        var page = panging===undefined?0:panging*10;
-
-        $.ajax({
-            url: '/crew/search_crewList',
-            type: 'post',
-            async: false,
-            data: {
-                Authorization : Authorization,
-                page          : page,
-                orderby       : $('#orderby').val(),
-                gender        : $('#gender').val(),
-                age           : $('#age').val(),
-                addr          : $('#addr').val(),
-                addr_gu       : $('#addr_gu').val(),
-                searchWord    : $('#searchWord').val()
-            },
-            success: function(result) {
-                for(var i in result){
-  list += '<div class="list_wrapper">';
-                    list += ' <ul id="crew_list">';
-                    list += '  <li class="list_item" onClick="crew_page_detail(' + result[i].create_crew_code + ')">';
-                    list += '   <div class="crew_profileimage">';
-                    list += '       <div class="profileBox">';
-                    list += '           <img src="/crew_upload/'+result[i].logo+'" class="profileImg">';
-                    list += '       </div>';
-                    list += '   </div>';
-                    list += '   <div class="crew_content">';
-                    list += '       <div class="crew_title">';
-                    list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>'+result[i].crew_name+'</b></span>';
-                    list += '           <span class="count">🏃‍♀️'+result[i].num+'<span>';
-                    list += '           <span class="count">멤버모집<span>';
-                    list += '       </div>';
-                    list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
-                    list += '          <span class="crewaddr">'+result[i].addr+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '          <span class="crewIntro">'+result[i].content+'</span>';
-                    list += '       </div>';
-                    list += '       <div style="margin-top:3px; >';
-                    list += '          <span class="crewhit">'+result[i].gender+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '          <span class="crewhit">'+result[i].age+'</span>';
-                    list += '       </div>';
-                    list += '       <div style="margin-top:12px;">';
-                    list += '           <span class="crewhit">조회수'+result[i].hits+'</span>&nbsp;&nbsp;&nbsp';
-                    list += '         <span class="crewhit">신청'+ result[i].a_n+'</span>';
-                    list += '       </div>';
-                    list += '     </div>';
-                    list += '   </li>';
-                    list += '  </ul>';
-                    list += '</div>';
-                }
-
-                $('#crew_list').html('');
-                $('#crew_list').append(list);
-                var num = (Math.ceil(result.length / 10));
-                var page_list='';
-
-                if(paging==0){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);"><</a></li>';
-                }
-
-                if(i>1) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging-1)+');">Previous</a></li>';
-
-                for(var i=0; i<num;i++){
-                    page_list+='<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+i+');">'+(i+1)+'</a></li>';
-                }
-
-                if(paging==num) page_list+='<li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>';
-
-                if(paging<num) page_list+= '<li class="page-item"><a class="page-link" href="javascript:crew_list_select('+(paging+1)+');">></a></li>';
-                $('#paging').html('');
-                $('#paging').append(page_list);
-            },
-            error: function(e) {
-                console.error('Error: ', e);
-            }
-        });
+  function crew_list_select(panging) {
+    if(usercode==0){
+        alert('로그인을 해주세요');
+        return false;
     }
+    var list = '';
+    // 페이지 번호 그대로 전달 (offset 계산은 서버에서 처리)
+    var page = (panging === undefined || panging <= 0) ? 1 : panging;
+
+    $.ajax({
+        url: '/crew/search_crewList',
+        type: 'post',
+        async: false,
+        data: {
+            Authorization: Authorization,
+            page: page,  // offset 대신 page 번호를 서버로 보냄
+            orderby: $('#orderby').val(),
+            gender: $('#gender').val(),
+            age: $('#age').val(),
+            addr: $('#addr').val(),
+            addr_gu: $('#addr_gu').val(),
+            searchWord: $('#searchWord').val()
+        },
+        success: function(result) {
+            var crewList = result.list;  // 검색 결과 리스트
+            var totalPage = result.totalPage;  // 총 페이지 수
+            var nowPage = result.nowPage;  // 현재 페이지
+
+            // 데이터 리스트 렌더링
+            for (var i in crewList) {
+                list += '<div class="list_wrapper">';
+                list += ' <ul id="crew_list">';
+                list += '  <li class="list_item" onClick="crew_page_detail(' + crewList[i].create_crew_code + ',' + crewList[i].crew_write_code + ')">';
+                list += '   <div class="crew_profileimage">';
+                list += '       <div class="profileBox">';
+                list += '           <img src="/crew_upload/' + crewList[i].logo + '" class="profileImg">';
+                list += '       </div>';
+                list += '   </div>';
+                list += '   <div class="crew_content">';
+                list += '       <div class="crew_title">';
+                list += '           <span class="crewname" style=" font-weight: bold; font-size:16px;"><b>' + crewList[i].crew_name + '</b></span>';
+                list += '           <span class="count">🏃‍♀️' + crewList[i].num + '<span>';
+                list += '           <span class="count2">멤버모집<span>';
+                list += '       </div>';
+                list += '       <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">';
+                list += '          <span class="crewaddr">' + crewList[i].addr + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '          <span class="crewIntro">' + crewList[i].content + '</span>';
+                list += '       </div>';
+                list += '       <div style="margin-top:3px;">';
+                list += '          <span class="crewhit">' + crewList[i].gender + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '          <span class="crewhit">' + crewList[i].age + '</span>';
+                list += '       </div>';
+                list += '       <div style="margin-top:12px;">';
+                list += '           <span class="crewhit">조회수' + crewList[i].hits + '</span>&nbsp;&nbsp;&nbsp;';
+                list += '           <span class="crewhit">신청' + crewList[i].a_n + '</span>';
+                list += '       </div>';
+                list += '     </div>';
+                list += '   </li>';
+                list += '  </ul>';
+                list += '</div>';
+            }
+
+            $('#crew_list').html('');
+            $('#crew_list').append(list);
+
+            // 페이징 처리
+            var page_list = '';
+
+            if (nowPage == 1) {
+                page_list += '<li class="page-item disabled"><a class="page-link" href="javascript:void(0);"><</a></li>';
+            } else {
+                page_list += '<li class="page-item"><a class="page-link" href="javascript:crew_list_select(' + (nowPage - 1) + ');"><</a></li>';
+            }
+
+            for (var i = 1; i <= totalPage; i++) {
+                page_list += '<li class="page-item ' + (i == nowPage ? 'active' : '') + '">';
+                page_list += '<a class="page-link" href="javascript:crew_list_select(' + i + ');">' + i + '</a></li>';
+            }
+
+            // 마지막 페이지에선 "Next" 버튼을 비활성화
+            if (nowPage < totalPage) {
+                page_list += '<li class="page-item"><a class="page-link" href="javascript:crew_list_select(' + (nowPage + 1) + ');">></a></li>';
+            } else {
+                page_list += '<li class="page-item disabled"><a class="page-link" href="javascript:void(0);">></a></li>';
+            }
+
+            $('#paging').html('');
+            $('#paging').append(page_list);
+        },
+        error: function(e) {
+            console.error('Error: ', e);
+        }
+    });
+  }
 
     function previewImage(event) {
         var reader = new FileReader();
@@ -866,7 +875,7 @@
             return;
         }
         const teamImageFile = document.getElementById('teamEmblem').files[0];
-        const teamImageURL = teamImageFile ? URL.createObjectURL(teamImageFile) : "/img/man1.png";
+        const teamImageURL = teamImageFile ? URL.createObjectURL(teamImageFile) : "/img/basicimg.png";
 
         document.getElementById('teamNameDisplay').textContent = teamName;
         document.getElementById('teamImage').src = teamImageURL;
@@ -875,65 +884,71 @@
         $('#locationModal').modal('show');
     }
 
-function submitCrewInfo() {
-    var form = $('#crewCreateForm')[0];
-    var formData = new FormData(form);
+    function submitCrewInfo() {
+        var form = $('#crewCreateForm')[0];
+        var formData = new FormData(form);
 
-    // 이미지 파일이 있는지 확인
-    var teamImageFile = $('#teamEmblem').val();
+        // 이미지 파일이 있는지 확인
+        var teamImageFile = $('#teamEmblem').val();
 
-    // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
-    if (!teamImageFile) {
-        // 기본 이미지 경로를 추가
-        formData.append('teamEmblem', 'man1.png');
-    } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
-        alert('이미지파일만 업로드가 가능합니다.');
-        return false;
-    }
-
-    // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-    var city = $('#city').val();
-    var ageChecked = $('input[name="age[]"]:checked').length > 0;
-    var genderChecked = $('input[name="gender"]:checked').length > 0;
-
-    if (!city) {
-        alert('활동하는 지역을 선택해주세요.');
-        return false;
-    }
-
-    if (!ageChecked) {
-        alert('주요 나이대를 선택해주세요.');
-        return false;
-    }
-
-    if (!genderChecked) {
-        alert('성별을 선택해주세요.');
-        return false;
-    }
-
-    // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
-    $.ajax({
-        url: '/crew/crew_add',
-        type: 'POST',
-        headers: {
-            Authorization: localStorage.getItem('Authorization')
-        },
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-         if(response==1) alert('이미 존재하는 크루명입니다.');
-         else {
-            alert('크루가 성공적으로 생성되었습니다!');
-            $('#locationModal').modal('hide');
-         }
-        },
-        error: function(error) {
-            console.log(error);
-            alert('크루 생성 중 오류가 발생했습니다.');
+        // 이미지 파일이 없는 경우 기본 이미지 경로를 설정
+        if (!teamImageFile) {
+            // 기본 이미지 경로를 추가
+            formData.append('teamEmblem', 'basicimg.png');
+        } else if (teamImageFile.indexOf('png') == -1 && teamImageFile.indexOf('jpg') == -1 && teamImageFile.indexOf('jpeg') == -1) {
+            alert('이미지파일만 업로드가 가능합니다.');
+            return false;
         }
-    });
-}
+
+        // 활동 지역, 주요 나이대, 성별 선택 여부 확인
+        var city = $('#city').val();
+        var region = $('#region').val();
+        var ageChecked = $('input[name="age[]"]:checked').length > 0;
+        var genderChecked = $('input[name="gender"]:checked').length > 0;
+
+        if (!city) {
+            alert('활동하는 도시를 선택해주세요.');
+            return false;
+        }
+
+        if (!region) {
+            alert('활동하는 지역을 선택해주세요.');
+            return false;
+        }
+
+        if (!ageChecked) {
+            alert('주요 나이대를 선택해주세요.');
+            return false;
+        }
+
+        if (!genderChecked) {
+            alert('성별을 선택해주세요.');
+            return false;
+        }
+
+        // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+        $.ajax({
+            url: '/crew/crew_add',
+            type: 'POST',
+            headers: {
+                Authorization: localStorage.getItem('Authorization')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+             if(response==1) alert('이미 존재하는 크루명입니다.');
+             else {
+                alert('크루가 성공적으로 생성되었습니다!');
+                $('#locationModal').modal('hide');
+             }
+            },
+            error: function(error) {
+                /*console.log(error);
+                alert('크루 생성 중 오류가 발생했습니다.');*/
+            }
+        });
+    }
 
     function resetForm() {
         document.getElementById('crewCreateForm').reset();
@@ -983,9 +998,15 @@ function submitCrewInfo() {
         });
 
     });
-    function crew_page() {
+    function crew_page(flag) {
+       if(usercode==0){
+           alert('로그인을 해주세요');
+           $('#plus_modal').click();
+           return false;
+       }
         var list = '';
         $('#crew_page').html('');
+        $('#team_list').html('');
         $.ajax({
             url: '/crew/crew_page',
             type: 'POST',
@@ -995,15 +1016,34 @@ function submitCrewInfo() {
             processData: false,
             contentType: false,
             success: function(response) {
-                for (var i in response) {
-                    if (response[i].a_n == 0) {
-                        list += '<button type="button" class="option-btn" onClick="crew_page_write(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 멤버 모집 시작하기</button>';
-                    } else if (response[i].a_n == 1) {
-                        list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
+                if(flag==1){
+                    for (var i in response) {
+                        if (response[i].a_n == 0) {
+                            list += '<button type="button" class="option-btn" onClick="crew_page_write(' + response[i].create_crew_code + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 멤버 모집 시작하기</button>';
+                        } else if (response[i].a_n > 0) {
+                            list += '<button type="button" class="option-btn" onClick="crew_page_detail(' + response[i].create_crew_code+','+response[i].a_n + ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + ' 모집글 확인하기</button>';
+                        }
                     }
+                    list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
+                    $('#crew_page').append(list);
                 }
-                list += '<button type="button" class="option-btn" onClick="crew_add_popup();"id="createNewTeamBtn">새로운 팀 만들기</button>';
-                $('#crew_page').append(list);
+                if(flag==2){
+                    for (var i in response) {
+                         list += '<li class="team-item">';
+                         list += '<a class="team-link">';
+                         list += '<img src="/crew_upload/'+response[i].logo+'" class="teamemblem">';
+                         list += '<div class="team-name" onClick="go_my_crew(' + response[i].create_crew_code +','+ response[i].usercode+','+ response[i].b_n+ ')" id="write' + response[i].create_crew_code + '">' + response[i].crew_name + '</div>';
+                         list +='</a>';
+                         list+='</li>';
+                    }
+                     list += '<li class="team-item">';
+                     list += '<a class="team-link">';
+                     list += '<img src="/img/group.png" class="teamemblem">';
+                     list += '<div class="team-name" onClick="join_wait()" id="write">가입 신청 내역</div>';
+                     list +='</a>';
+                     list+='</li>';
+                    $('#team_list').append(list);
+                }
             },
             error: function(error) {
                 console.log(error);
@@ -1047,52 +1087,99 @@ function submitCrewInfo() {
 
     }
 
-    function crew_page_detail(create_crew_code) {
+    function crew_page_detail(create_crew_code, crew_write_code) {
+        $.ajax({
+            url: '/crew/go_crewDetail',  // 서버에 전송할 URL
+            type: 'POST',  // POST 방식으로 전송
+            data: {
+                Authorization: Authorization,  // 토큰 또는 기타 데이터
+                create_crew_code: create_crew_code  // 전송할 데이터
+            },
+            success: function(response) {
+                window.location.href = '/crew/crewDetail'; // 페이지 이동 (URL에 파라미터 노출되지 않음)            } else {
+            },
+            error: function(error) {
+                console.log('에러 발생:', error);
+            }
+        });
         $('#createNewTeamModal').modal('hide');
-        window.location.href = '/crew/crewDetail?create_crew_code='+ create_crew_code;
     }
+
+    function go_my_crew(create_crew_code,user_code,position) {
+        $('#myCrewModal').modal('hide');
+            $.ajax({
+                url: '/crew/go_crewManage',
+                type: 'POST',  // POST 방식으로 전송
+                data: {
+                    Authorization    : Authorization,
+                    create_crew_code : create_crew_code,
+                    user_code        : user_code,
+                    position         : position
+                },
+                success: function(response) {
+                    window.location.href = '/crew/crewManage'; // 페이지 이동 (URL에 파라미터 노출되지 않음)
+                },
+                error: function(error) {
+                    console.log('에러 발생:', error);
+                }
+            });
+   }
+
+    function join_wait() {
+        $('#myCrewModal').modal('hide');
+        window.location.href = '/crew/crewWait';
+    }
+
     function crew_add_popup(){
         resetForm(); // 폼 리셋
         $('#createNewTeamModal').modal('hide');
         $('#crewCreateModal').modal('show');
     }
 
-function crew_write_add() {
-       var form = $('#crew_write_add')[0];
-       var formData = new FormData(form);
-        clog(form);
-       // 활동 지역, 주요 나이대, 성별 선택 여부 확인
-       var ageChecked = $('input[name="age[]3"]:checked').length > 0;
-       var genderChecked = $('input[name="gender3"]:checked').length > 0;
-       if (!ageChecked) {
-           alert('주요 나이대를 선택해주세요.');
-           return false;
-       }
-       if (!genderChecked) {
-           alert('성별을 선택해주세요.');
-           return false;
-       }
-       // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
-       $.ajax({
-           url: '/crew/crew_write_add',
-           type: 'POST',
-           headers: {
-               Authorization: localStorage.getItem('Authorization')
-           },
-           data: formData,
-           processData: false,
-           contentType: false,
-           success: function(response) {
-               alert('크루 모집이 성공적으로 생성되었습니다!');
-               $('#uploadTeamPhotoModal').modal('hide');
-               crew_list_select(0)
-           },
-           error: function(error) {
-               console.log(error);
-               alert('크루 모집 중 오류가 발생했습니다.');
-           }
-       });
-   }
+    function crew_write_add() {
 
+           var form = $('#crew_write_add')[0];
+           var formData = new FormData(form);
+        /*    clog(form);*/
+            var ageChecked = $('input[name="age[]3"]:checked').length > 0;
+            var genderChecked = $('input[name="gender3"]:checked').length > 0;
+            var teamIntro = $('#teamIntro3').val().trim();
+           if (!ageChecked) {
+               alert('주요 나이대를 선택해주세요.');
+               return false;
+           }
+           if (!genderChecked) {
+               alert('성별을 선택해주세요.');
+               return false;
+           }
+           if (teamIntro === "") {
+               alert('크루 소개글을 작성해주세요.');
+               return false;
+           }
+           // 모든 필수 필드가 선택된 경우 AJAX 요청 보내기
+           $.ajax({
+               url: '/crew/crew_write_add',
+               type: 'POST',
+               headers: {
+                   Authorization: localStorage.getItem('Authorization')
+               },
+               data: formData,
+               processData: false,
+               contentType: false,
+               success: function(response) {
+                   alert('크루 모집이 성공적으로 생성되었습니다!');
+                   $('#uploadTeamPhotoModal').modal('hide');
+
+                   crew_list_select(0);
+               },
+               error: function(error) {
+                   console.log(error);
+                   alert('크루 모집 중 오류가 발생했습니다.');
+               }
+           });
+       }
+        function login(){
+            alert('로그인해주세요.')
+        }
 </script>
 

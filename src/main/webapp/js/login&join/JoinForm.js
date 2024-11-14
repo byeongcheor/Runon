@@ -19,7 +19,7 @@ function nicknamecheck(){
 
                 }else {
                     tag="닉네임을 이미 사용중입니다";
-                    document.getElementById("nickCheck").style.color="red"
+                    document.getElementById("nickCheck").style.color="#FF4500"
                     document.getElementById("nickChk").value="N";
                     document.getElementById("nickCheck").innerText=tag;
                 }
@@ -31,7 +31,7 @@ function nicknamecheck(){
 
         });
     }
-    document.getElementById("nickCheck").style.color="red";
+    document.getElementById("nickCheck").style.color="#FF4500";
     document.getElementById("nickCheck").innerText="닉네임을 입력해주세요";
 
 }
@@ -90,7 +90,7 @@ function idDoubleCheck(){
     else{//아이디를 입력했을때
         var username = document.getElementById("username").value;
         //           "매핑주소?username=ddd"                          창이름       옵션
-        window.open("/idDoubleCheck?username="+username, "idCheck","width=460, height=300, left=700,top=100,resizable=no");
+        window.open("/idDoubleCheck?username="+username, "idCheck","width=500, height=500, left=700,top=100,resizable=no");
     }
 }
 
@@ -99,16 +99,23 @@ function setKeyCheck(){
         document.getElementById("chk").value = "N";
     }
 }
+
 //form 유효성검사하기
 function formCheck(){
     var tel1=document.getElementById("tel1").value;
     var tel2=document.getElementById("tel2").value;
     var tel3=document.getElementById("tel3").value
+    if (tel2.length!=4||tel3.length!=4){
+        alert("핸드폰번호를 제대로 입력해주세요");
+        return false;
+    }
     if (tel2 !=""&&tel2!=null&&tel3 !=""&&tel3!=null) {
         var tel = tel1+tel2+tel3;
         document.getElementById("tel").value = tel;
     }else{
         document.getElementById("tel").value=null;
+        alert("핸드폰번호를 입력해주세요");
+        return false;
     }
 
 
@@ -137,6 +144,18 @@ function formCheck(){
         alert("이미 사용인 닉네임이거나 닉네임을 입력해주세요");
         return false;
     }
+    if (document.getElementById("addr").value==""){
+        alert("주소를 입력해주세요");
+        return false;
+    }
+    if (document.getElementById("addr_details").value==""){
+        alert("상세주소를 입력해주세요");
+        return false;
+    }
+    if (document.getElementById("zip_code").value==""){
+        alert("우편번호를 입력해주세요");
+        return false;
+    }
     const selectedValue = document.querySelector('input[name="is_info_disclosure"]:checked');
     if (!selectedValue){
         alert("개인정보 공개여부를 선택해주세요.");
@@ -154,26 +173,26 @@ function formCheck(){
     }
     var birthdate = document.getElementById("birthdate").value;
 
-    var brrthregEx=/^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+    var brrthregEx = /^(\d{4})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+
     if (!brrthregEx.test(birthdate)){
         alert("생년월일이 잘못되었습니다.");
         return false;
     }
-
-
-
     return true;
 }
-function gendercheck(gender){
-
-    if (gender==" 남 "){
-        document.getElementById("genderm").style.background="#FFA500";
-        document.getElementById("genderw").style.background="#FFCC66";
-        document.getElementById("gender").value="남";
-    }else if (gender==" 여 "){
-        document.getElementById("genderw").style.background="#FFA500";
-        document.getElementById("genderm").style.background="#FFCC66";
-        document.getElementById("gender").value="여";
+function gendercheck(gender) {
+    if (gender == " 남 ") {
+        document.getElementById("genderm").style.background = "black";
+        document.getElementById("genderm").style.color = "white";
+        document.getElementById("genderw").style.background = "#ccff33";
+        document.getElementById("genderw").style.color = "black";
+        document.getElementById("gender").value = "남";
+    } else if (gender == " 여 ") {
+        document.getElementById("genderw").style.background = "black";
+        document.getElementById("genderw").style.color = "white";
+        document.getElementById("genderm").style.background = "#ccff33";
+        document.getElementById("genderm").style.color = "black";
+        document.getElementById("gender").value = "여";
     }
-
 }

@@ -12,7 +12,7 @@
     </select>
 
     <insert id="saveUser" parameterType="com.ict.finalproject.vo.MemberVO">
-        INSERT INTO user_tbl(username, password, role,name,nickname,addr,addr_details,zip_code,birthdate,gender,tel,is_info_disclosure)
+        INSERT INTO user_tbl(username, password, role,name,nickname,addr,addr_details,zip_code,birthdate,gender,tel,is_info_disclosure,mate_popup_date)
         VALUES(#{username}, #{password}, #{role},#{name},#{nickname},#{addr},#{addr_details},
         <if test="zip_code != null and zip_code != ''">
             #{zip_code}
@@ -21,7 +21,7 @@
             NULL
         </if>
         ,#{birthdate},#{gender},
-        #{tel}, #{is_info_disclosure})
+        #{tel}, #{is_info_disclosure},now())
     </insert>
     <select id="idDoubleCheck"  resultType="int">
         select count(username) from user_tbl where username =#{param1}
@@ -41,6 +41,27 @@
     </update>
 
     <select id="getUsers" resultType="com.ict.finalproject.vo.MemberVO">
-        select username,usercode from user_tbl where username=#{param1}
+        select username,usercode,role from user_tbl where username=#{param1}
     </select>
+    <select id="disableCheck" resultType="com.ict.finalproject.vo.MemberVO">
+        select password,is_disabled,disabled_date ,disabled_start_date from user_tbl where username=#{param1}
+    </select>
+    <update id="enableUser">
+        update user_tbl set is_disabled=0 ,disabled_date=null where username=#{param1}
+    </update>
+    <insert id="addpoint_change_code">
+        INSERT INTO point_change_tbl (point_code)
+        SELECT point_code FROM point_tbl WHERE usercode = #{param1}
+
+    </insert>
+    <select id="is_googleSelect">
+        select count(username) from user_tbl where  username=#{username} and is_google=0
+    </select>
+    <select id="googleSelect">
+        select count(username) from user_tbl where username=#{username} and is_google=1
+    </select>
+    <insert id="googleJoins">
+        insert into user_tbl(username,name,nickname,is_google,is_info_disclosure) values(#{username},#{name},#{nickname},1,0)
+    </insert>
 </mapper>
+
